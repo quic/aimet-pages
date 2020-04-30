@@ -1,0 +1,130 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Greedy Compression Ratio Selection &#8212; AIMET Documentation: ver 1.7.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AIMET Documentation: ver 1.7.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Greedy Compression Ratio Selection</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#how-it-works">How it works</a></li>
+<li><a class="reference internal" href="#per-layer-exploration">Per-layer Exploration</a></li>
+<li><a class="reference internal" href="#compression-ratio-selection">Compression Ratio Selection</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-greedy-compression-ratio-selection">
+<span id="ug-greedy-comp-ratio-selection"></span><h1>AIMET Greedy Compression Ratio Selection<a class="headerlink" href="#aimet-greedy-compression-ratio-selection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The model compression methods, Spatial SVD and Channel Pruning work on per layer basis. Not all the layers in the given model are equally compressible. Compression of individual layers of a given model can have varying impact on the final accuracy of the model. Greedy Per Layer Compression Ratio Selection Algorithm is used to assess the sensitivity of applicable layers to compression and find appropriate compression-ratio for each individual layers. The algorithm makes sure that the entire model has highest remaining accuracy and also meets the given target compression-ratio.</p>
+</div>
+<div class="section" id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<p>The Greedy Compression Ratio Selection algorithm executes the following two steps:</p>
+<ul class="simple">
+<li><p>Per-layer exploration</p></li>
+<li><p>Compression-ratio selection</p></li>
+</ul>
+<p>The following figure provides a high level overview and is followed by details for each step.</p>
+<img alt="../_images/greedy_1.png" src="../_images/greedy_1.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<img alt="../_images/greedy_2.png" src="../_images/greedy_2.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>where, the Eval dictionary is represented as-</p>
+<img alt="../_images/greedy_3.png" src="../_images/greedy_3.png" />
+</div>
+<div class="section" id="per-layer-exploration">
+<h2>Per-layer Exploration<a class="headerlink" href="#per-layer-exploration" title="Permalink to this headline">¶</a></h2>
+<p>For each layer, produces a column in the compression-ratio vs. model-performance table. This column captures the over all network performance values as the layer is compressed by predefined range of compression ratio candidates, while all other layers are left unmodified.</p>
+<img alt="../_images/greedy_4.jpg" src="../_images/greedy_4.jpg" />
+<p>In the above figure, you see an example model with 4 layers, and 10 compression-ratio candidates (which is the default setting). Note that the table does not capture the eval score for the last candidate which is always compression-ratio=1.0 (since this score is the baseline score and known already).</p>
+<p><strong>Monotonic Fit</strong>: In some cases it is observed that the model performance is not a strict increasing function of increasing compression-ratios. To help with the greedy selection procedure, AIMET can apply a curve-fit scheme to try and fit the model-performance numbers for a given layer using a monotonically increasing function. The functionality is disabled by default.</p>
+</div>
+<div class="section" id="compression-ratio-selection">
+<h2>Compression Ratio Selection<a class="headerlink" href="#compression-ratio-selection" title="Permalink to this headline">¶</a></h2>
+<p>This step is the core of the algorithm. It considers the  compression-ratio vs. model-performance table for each applicable layer from the previous step, target compression ratio and function to calculate the cost of the compressed model depending on the compression method (Spatial SVD, Channel Pruning) used. It starts with a constant accuracy and finds the corresponding compression ratio for every applicable layer by interpolating from compression-ratio vs. model-performance evaluation table. The algorithm, then calculates total cost of the model to see if we have met our target compression ratio or not. Binary search algorithm is used to find the solution quickly.  Finally it returns list of selected compression ratios for all applicable layers. This way,  the algorithm achieves the highest remaining final accuracy of the compressed model and meet target compression ratio.</p>
+<p>The following figure illustrates that for a given accuracy, the compression ratio for each layer is different.</p>
+<img alt="../_images/greedy_5.jpg" src="../_images/greedy_5.jpg" />
+<p>As suggested by above diagram, the algorithm picks a lower compression ratio (higher compression) for layers which are more compressible and pick a higher compression ratio (lower compression) for layers which are less compressible (For lesser compressible layers the accuracy falls drstically if compression ratio is lowered).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AIMET Documentation: ver 1.7.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
