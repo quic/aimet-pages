@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /local/mnt/workspace/fmayer/aimet-public/mltt
+CMAKE_SOURCE_DIR = /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /local/mnt/workspace/fmayer/aimet-public/build
+CMAKE_BINARY_DIR = /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -81,7 +81,7 @@ list_install_components/fast: list_install_components
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
-	cd /local/mnt/workspace/fmayer/aimet-public/build && /usr/bin/cpack --config ./CPackConfig.cmake
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && /usr/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -104,7 +104,7 @@ install/strip/fast: preinstall/fast
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	cd /local/mnt/workspace/fmayer/aimet-public/build && /usr/bin/cpack --config ./CPackSourceConfig.cmake /local/mnt/workspace/fmayer/aimet-public/build/CPackSourceConfig.cmake
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && /usr/bin/cpack --config ./CPackSourceConfig.cmake /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -159,14 +159,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(CMAKE_COMMAND) -E cmake_progress_start /local/mnt/workspace/fmayer/aimet-public/build/CMakeFiles /local/mnt/workspace/fmayer/aimet-public/build/Docs/CMakeFiles/progress.marks
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /local/mnt/workspace/fmayer/aimet-public/build/CMakeFiles 0
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(CMAKE_COMMAND) -E cmake_progress_start /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/CMakeFiles /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/Docs/CMakeFiles/progress.marks
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/clean
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/clean
 .PHONY : clean
 
 # The main clean target
@@ -176,22 +176,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/preinstall
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/preinstall
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 Docs/CMakeFiles/doc.dir/rule:
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/CMakeFiles/doc.dir/rule
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(MAKE) -f CMakeFiles/Makefile2 Docs/CMakeFiles/doc.dir/rule
 .PHONY : Docs/CMakeFiles/doc.dir/rule
 
 # Convenience name for target.
@@ -201,7 +201,7 @@ doc: Docs/CMakeFiles/doc.dir/rule
 
 # fast build rule for target.
 doc/fast:
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(MAKE) -f Docs/CMakeFiles/doc.dir/build.make Docs/CMakeFiles/doc.dir/build
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(MAKE) -f Docs/CMakeFiles/doc.dir/build.make Docs/CMakeFiles/doc.dir/build
 .PHONY : doc/fast
 
 # Help Target
@@ -231,6 +231,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

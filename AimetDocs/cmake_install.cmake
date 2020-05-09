@@ -1,4 +1,4 @@
-# Install script for directory: /local/mnt/workspace/fmayer/aimet-public/mltt/Docs
+# Install script for directory: /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt/Docs
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,13 +39,13 @@ endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/local/mnt/workspace/fmayer/aimet-public/build/staging/Docs")
+   "/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/staging/Docs")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/local/mnt/workspace/fmayer/aimet-public/build/staging" TYPE DIRECTORY FILES "/local/mnt/workspace/fmayer/aimet-public/build/Docs" REGEX "/CMakeFiles[^/]*$" EXCLUDE REGEX "/Makefile$" EXCLUDE REGEX "/[^/]*\\.cmake$" EXCLUDE)
+file(INSTALL DESTINATION "/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/staging" TYPE DIRECTORY FILES "/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/Docs" REGEX "/CMakeFiles[^/]*$" EXCLUDE REGEX "/Makefile$" EXCLUDE REGEX "/[^/]*\\.cmake$" EXCLUDE)
 endif()
 

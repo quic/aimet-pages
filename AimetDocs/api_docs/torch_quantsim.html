@@ -69,21 +69,134 @@
 <span id="api-torch-quantsim"></span><h1>AIMET PyTorch Quantization SIM API<a class="headerlink" href="#aimet-pytorch-quantization-sim-api" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="top-level-api">
 <h2>Top-level API<a class="headerlink" href="#top-level-api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.quantsim.QuantizationSimModel">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.quantsim.</code><code class="sig-name descname">QuantizationSimModel</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">quant_scheme=&lt;QuantScheme.post_training_tf_enhanced: 2&gt;</em>, <em class="sig-param">rounding_mode='nearest'</em>, <em class="sig-param">default_output_bw=8</em>, <em class="sig-param">default_param_bw=8</em>, <em class="sig-param">in_place=False</em>, <em class="sig-param">config_file=None</em>, <em class="sig-param">input_shapes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.QuantizationSimModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements mechanism to add quantization simulations ops to a model. This allows for off-target simulation of
+inference accuracy. Also allows the model to be fine-tuned to counter the effects of quantization.</p>
+<p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to add simulation ops to</p></li>
+<li><p><strong>quant_scheme</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>]) – Quantization scheme. Supported options are ‘tf_enhanced’ or ‘tf’ or using Quant Scheme Enum
+QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced</p></li>
+<li><p><strong>rounding_mode</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Rounding mode. Supported options are ‘nearest’ or ‘stochastic’</p></li>
+<li><p><strong>default_output_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Default bitwidth (4-31) to use for quantizing layer inputs and outputs</p></li>
+<li><p><strong>default_param_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Default bitwidth (4-31) to use for quantizing layer parameters</p></li>
+<li><p><strong>in_place</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True, then the given ‘model’ is modified in-place to add quant-sim nodes.
+Only suggested use of this option is when the user wants to avoid creating a copy of the model</p></li>
+<li><p><strong>config_file</strong> – Configuration file for model quantizers</p></li>
+<li><p><strong>input_shapes</strong> – List of input shapes to the model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>The following API can be used to Compute Encodings for Model</strong></p>
+<dl class="method">
+<dt id="aimet_torch.quantsim.QuantizationSimModel.compute_encodings">
+<code class="sig-prename descclassname">QuantizationSimModel.</code><code class="sig-name descname">compute_encodings</code><span class="sig-paren">(</span><em class="sig-param">forward_pass_callback</em>, <em class="sig-param">forward_pass_callback_args</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.QuantizationSimModel.compute_encodings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes encodings for all quantization sim nodes in the model. It is also used to find initial encodings for
+Range Learning</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forward_pass_callback</strong> – A callback function that simply runs forward passes on the model. This callback
+function should use representative data for the forward pass, so the calculated encodings work for all
+data samples. This callback internally chooses the number of data samples it wants to use for calculating
+encodings.</p></li>
+<li><p><strong>forward_pass_callback_args</strong> – These argument(s) are passed to the forward_pass_callback as-is. Up to
+the user to determine the type of this parameter. E.g. could be simply an integer representing the number
+of data samples to use. Or could be a tuple of parameters or an object representing something more complex.
+If set to None, forward_pass_callback will be invoked with no parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>The following APIs can be used to save and restore the quantized model</strong></p>
+<dl class="method">
+<dt id="aimet_torch.quantsim.save_checkpoint">
+<code class="sig-prename descclassname">quantsim.</code><code class="sig-name descname">save_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.save_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>This API provides a way for the user to save a checkpoint of the quantized model which can
+be loaded at a later point to continue fine-tuning e.g.
+See also load_checkpoint()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quant_sim_model</strong> (<a class="reference internal" href="#aimet_torch.quantsim.QuantizationSimModel" title="aimet_torch.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a>) – QuantizationSimModel to save checkpoint for</p></li>
+<li><p><strong>file_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to the file where you want to save the checkpoint</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="method">
+<dt id="aimet_torch.quantsim.load_checkpoint">
+<code class="sig-prename descclassname">quantsim.</code><code class="sig-name descname">load_checkpoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.load_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the quantized model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to the file where you want to save the checkpoint</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#aimet_torch.quantsim.QuantizationSimModel" title="aimet_torch.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A new instance of the QUantizationSimModel created after loading the checkpoint</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>The following API can be used to Export the Model to target</strong></p>
+<dl class="method">
+<dt id="aimet_torch.quantsim.QuantizationSimModel.export">
+<code class="sig-prename descclassname">QuantizationSimModel.</code><code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">filename_prefix</em>, <em class="sig-param">input_shape</em>, <em class="sig-param">set_onnx_layer_names=True</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.QuantizationSimModel.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method exports out the quant-sim model so it is ready to be run on-target.</p>
+<p>Specifically, the following are saved</p>
+<ol class="arabic simple">
+<li><p>The sim-model is exported to a regular PyTorch model without any simulation ops</p></li>
+<li><p>The quantization encodings are exported to a separate JSON-formatted file that can
+then be imported by the on-target runtime (if desired)</p></li>
+<li><p>An equivalent model in ONNX format is exported. In addition, nodes in the ONNX model are named
+the same as the corresponding PyTorch module names. This helps with matching ONNX node to their quant
+encoding from #2.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – path where to store model pth and encodings</p></li>
+<li><p><strong>filename_prefix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Prefix to use for filenames of the model pth and encodings files</p></li>
+<li><p><strong>input_shape</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]]) – shape of the model input as a tuple. If the model takes more than one input, specify this as
+a list of shapes.</p></li>
+<li><p><strong>set_onnx_layer_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If ONNX layer names should be set while exporting the model. Default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>

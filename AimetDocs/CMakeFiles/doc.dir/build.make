@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /local/mnt/workspace/fmayer/aimet-public/mltt
+CMAKE_SOURCE_DIR = /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /local/mnt/workspace/fmayer/aimet-public/build
+CMAKE_BINARY_DIR = /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build
 
 # Utility rule file for doc.
 
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /local/mnt/workspace/fmayer/aimet-public/build
 include Docs/CMakeFiles/doc.dir/progress.make
 
 Docs/CMakeFiles/doc:
-	cd /local/mnt/workspace/fmayer/aimet-public/build/Docs && /usr/bin/cmake -E env LD_LIBRARY_PATH=/local/mnt/workspace/fmayer/aimet-public/build/artifacts:/usr/local/lib/python3.6/dist-packages/aimet_common/x86_64-linux-gnu:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda-10.0/lib64/:/usr/local/cuda-10.0/extras/CUPTI/lib64:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64 PYTHONPATH=/local/mnt/workspace/fmayer/aimet-public/build/artifacts:/local/mnt/workspace/fmayer/aimet-public/mltt/TrainingExtensions/torch/src/python/:/local/mnt/workspace/fmayer/aimet-public/mltt/TrainingExtensions/tensorflow/src/python/:/local/mnt/workspace/fmayer/aimet-public/mltt/TrainingExtensions/common/src/python/ sphinx-build -b html /local/mnt/workspace/fmayer/aimet-public/mltt/Docs /local/mnt/workspace/fmayer/aimet-public/build/Docs
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/Docs && /usr/bin/cmake -E env LD_LIBRARY_PATH=/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/artifacts:/usr/local/lib/python3.6/dist-packages/aimet_common/x86_64-linux-gnu:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda-10.0/lib64/:/usr/local/cuda-10.0/extras/CUPTI/lib64:/usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64 PYTHONPATH=/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/artifacts:/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt/TrainingExtensions/torch/src/python/:/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt/TrainingExtensions/tensorflow/src/python/:/local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt/TrainingExtensions/common/src/python/ sphinx-build -b html /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt/Docs /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/Docs
 
 doc: Docs/CMakeFiles/doc
 doc: Docs/CMakeFiles/doc.dir/build.make
@@ -67,10 +67,10 @@ Docs/CMakeFiles/doc.dir/build: doc
 .PHONY : Docs/CMakeFiles/doc.dir/build
 
 Docs/CMakeFiles/doc.dir/clean:
-	cd /local/mnt/workspace/fmayer/aimet-public/build/Docs && $(CMAKE_COMMAND) -P CMakeFiles/doc.dir/cmake_clean.cmake
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/Docs && $(CMAKE_COMMAND) -P CMakeFiles/doc.dir/cmake_clean.cmake
 .PHONY : Docs/CMakeFiles/doc.dir/clean
 
 Docs/CMakeFiles/doc.dir/depend:
-	cd /local/mnt/workspace/fmayer/aimet-public/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /local/mnt/workspace/fmayer/aimet-public/mltt /local/mnt/workspace/fmayer/aimet-public/mltt/Docs /local/mnt/workspace/fmayer/aimet-public/build /local/mnt/workspace/fmayer/aimet-public/build/Docs /local/mnt/workspace/fmayer/aimet-public/build/Docs/CMakeFiles/doc.dir/DependInfo.cmake --color=$(COLOR)
+	cd /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/mltt/Docs /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/Docs /local/mnt/workspace/jenkins-slave/workspace/AIMET_MIRROR-CD-PIPELINE/build/Docs/CMakeFiles/doc.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : Docs/CMakeFiles/doc.dir/depend
 

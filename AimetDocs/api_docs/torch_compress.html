@@ -121,9 +121,45 @@ Manual mode if desired.</p>
 </div>
 <div class="section" id="top-level-api-for-compression">
 <h2>Top-level API for Compression<a class="headerlink" href="#top-level-api-for-compression" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.compress.ModelCompressor">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.compress.</code><code class="sig-name descname">ModelCompressor</code><a class="headerlink" href="#aimet_torch.compress.ModelCompressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>AIMET model compressor: Enables model compression using various schemes</p>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="method">
+<dt id="aimet_torch.compress.ModelCompressor.compress_model">
+<em class="property">static </em><code class="sig-prename descclassname">ModelCompressor.</code><code class="sig-name descname">compress_model</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">eval_callback</em>, <em class="sig-param">eval_iterations</em>, <em class="sig-param">input_shape</em>, <em class="sig-param">compress_scheme</em>, <em class="sig-param">cost_metric</em>, <em class="sig-param">parameters</em>, <em class="sig-param">trainer=None</em>, <em class="sig-param">visualization_url=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.compress.ModelCompressor.compress_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compress a given model using the specified parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to compress</p></li>
+<li><p><strong>eval_callback</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Evaluation callback. Expected signature is evaluate(model, iterations, use_cuda).
+Expected to return an accuracy metric.</p></li>
+<li><p><strong>eval_iterations</strong> – Iterations to run evaluation for</p></li>
+<li><p><strong>trainer</strong> – Training Class: Contains a callable, train_model, which takes model, layer which is being fine
+tuned and an optional parameter train_flag as a parameter
+None: If per layer fine tuning is not required while creating the final compressed model</p></li>
+<li><p><strong>input_shape</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>) – Shape of the input tensor for model</p></li>
+<li><p><strong>compress_scheme</strong> (<a class="reference internal" href="tensorflow_compress.html#aimet_common.defs.CompressionScheme" title="aimet_common.defs.CompressionScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionScheme</span></code></a>) – Compression scheme. See the enum for allowed values</p></li>
+<li><p><strong>cost_metric</strong> (<a class="reference internal" href="tensorflow_compress.html#aimet_common.defs.CostMetric" title="aimet_common.defs.CostMetric"><code class="xref py py-class docutils literal notranslate"><span class="pre">CostMetric</span></code></a>) – Cost metric to use for the compression-ratio (either mac or memory)</p></li>
+<li><p><strong>parameters</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_torch.defs.SpatialSvdParameters" title="aimet_torch.defs.SpatialSvdParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialSvdParameters</span></code></a>, <a class="reference internal" href="#aimet_torch.defs.WeightSvdParameters" title="aimet_torch.defs.WeightSvdParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">WeightSvdParameters</span></code></a>, <a class="reference internal" href="#aimet_torch.defs.ChannelPruningParameters" title="aimet_torch.defs.ChannelPruningParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChannelPruningParameters</span></code></a>]) – Compression parameters specific to given compression scheme</p></li>
+<li><p><strong>visualization_url</strong> – url the user will need to input where visualizations will appear</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionStats</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A tuple of the compressed model, and compression statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>

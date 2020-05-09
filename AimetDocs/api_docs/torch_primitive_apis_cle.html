@@ -84,6 +84,38 @@ saved to be plugged into high bias fold API.</p>
 </div>
 <div class="section" id="clssetinfo-definition">
 <h2>ClsSetInfo Definition<a class="headerlink" href="#clssetinfo-definition" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.cross_layer_equalization.ClsSetInfo">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.</code><code class="sig-name descname">ClsSetInfo</code><span class="sig-paren">(</span><em class="sig-param">cls_pair_1</em>, <em class="sig-param">cls_pair_2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class hold information about the layers in a CLS set, along with corresponding scaling factors
+and other information like if there is a ReLU activation function between the CLS set layers</p>
+<p>Constructor takes 2 pairs if Depth-wise separable layer is being folded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls_pair_1</strong> (<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetLayerPairInfo</span></code></a>) – Pair between two conv or conv and depth-wise conv</p></li>
+<li><p><strong>cls_pair_2</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetLayerPairInfo</span></code></a>]) – Pair between depth-wise conv and point-wise conv</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo">
+<em class="property">class </em><code class="sig-name descname">ClsSetLayerPairInfo</code><span class="sig-paren">(</span><em class="sig-param">layer1</em>, <em class="sig-param">layer2</em>, <em class="sig-param">scale_factor</em>, <em class="sig-param">relu_activation_between_layers</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Models a pair of layers that were scaled using CLS. And related information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer1</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>) – Layer whose bias is folded</p></li>
+<li><p><strong>layer2</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>) – Layer to which bias of previous layer’s bias is folded</p></li>
+<li><p><strong>scale_factor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Scale Factor found from Cross Layer Scaling to scale BN parameters</p></li>
+<li><p><strong>relu_activation_between_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If the activation between layer1 and layer2 is Relu</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -91,14 +123,71 @@ saved to be plugged into high bias fold API.</p>
 <div class="section" id="higher-level-apis-for-cross-layer-equalization">
 <h2>Higher Level APIs for Cross Layer Equalization<a class="headerlink" href="#higher-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
 <p><strong>API for Batch Norm Folding</strong></p>
+<dl class="function">
+<dt id="aimet_torch.batch_norm_fold.fold_all_batch_norms">
+<code class="sig-prename descclassname">aimet_torch.batch_norm_fold.</code><code class="sig-name descname">fold_all_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">input_shapes</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.batch_norm_fold.fold_all_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold all batch_norm layers in a model into corresponding conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model</p></li>
+<li><p><strong>input_shapes</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]]) – Input shapes for the model (can be one or multiple inputs)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of pairs of layers [(Conv/Linear, BN layer that got folded)]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>API for Cross Layer Scaling</strong></p>
+<dl class="function">
+<dt id="aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_model">
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_model</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">input_shapes</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses cross-layer scaling to scale all applicable layers in the given model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to scale</p></li>
+<li><p><strong>input_shapes</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]]) – Input shape for the model (can be one or multiple inputs)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>CLS information for each CLS set</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>API for High Bias Folding</strong></p>
+<dl class="function">
+<dt id="aimet_torch.cross_layer_equalization.HighBiasFold.bias_fold">
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">cls_set_info_list</em>, <em class="sig-param">bn_layers</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.HighBiasFold.bias_fold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+<li><p><strong>bn_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -139,14 +228,65 @@ saved to be plugged into high bias fold API.</p>
 <div class="section" id="lower-level-apis-for-cross-layer-equalization">
 <h2>Lower Level APIs for Cross Layer Equalization<a class="headerlink" href="#lower-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
 <p><strong>API for Batch Norm Folding</strong></p>
+<dl class="function">
+<dt id="aimet_torch.batch_norm_fold.fold_given_batch_norms">
+<code class="sig-prename descclassname">aimet_torch.batch_norm_fold.</code><code class="sig-name descname">fold_given_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">layer_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.batch_norm_fold.fold_given_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold a given set of batch_norm layers into conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – Model</p></li>
+<li><p><strong>layer_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Linear</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Linear</span></code>]]]]) – Pairs of conv and batch_norm layers to use for folding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>API for Cross Layer Scaling</strong></p>
+<dl class="function">
+<dt id="aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_cls_sets">
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_cls_sets</code><span class="sig-paren">(</span><em class="sig-param">cls_sets</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_cls_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale multiple CLS sets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cls_sets</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>]]]) – List of CLS sets</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Scaling factors calculated and applied for each CLS set in order</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>API for High bias folding</strong></p>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">cls_set_info_list</em>, <em class="sig-param">bn_layers</em><span class="sig-paren">)</span></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+<li><p><strong>bn_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>

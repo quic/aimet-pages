@@ -86,8 +86,73 @@ saved to be plugged into high bias fold API.</p>
 <div class="section" id="higher-level-apis-for-cross-layer-equalization">
 <h2>Higher Level APIs for Cross Layer Equalization<a class="headerlink" href="#higher-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
 <p><strong>API for Batch Norm Folding</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.batch_norm_fold.fold_all_batch_norms">
+<code class="sig-prename descclassname">aimet_tensorflow.batch_norm_fold.</code><code class="sig-name descname">fold_all_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.batch_norm_fold.fold_all_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold all batch_norm layers in a model into corresponding conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tf.Session</p></li>
+<li><p><strong>input_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Name of the starting op in the given graph or a list of names in case of multi-input model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of output op names of the model, used to help ConnectedGraph determine valid ops
+(to ignore training ops for example).  If None, all ops in the model are considered valid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(&lt;class ‘tensorflow.python.client.session.Session’&gt;, typing.List[typing.Tuple[tensorflow.python.framework.ops.Operation, tensorflow.python.framework.ops.Operation]])</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A new session with edited graph and a list of pairs of layers [(Conv/Linear, BN layer that got folded)]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p><strong>API for Cross Layer Scaling</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_model">
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_model</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses cross-layer scaling to scale all applicable layers in the given model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Session containing graph to scale</p></li>
+<li><p><strong>input_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Names of starting ops in the model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of output op names of the model, used to help ConnectedGraph determine valid ops
+(to ignore training ops for example).  If None, all ops in the model are considered valid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(&lt;class ‘tensorflow.python.client.session.Session’&gt;, typing.List[<a class="reference internal" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="aimet_tensorflow.cross_layer_equalization.ClsSetInfo">aimet_tensorflow.cross_layer_equalization.ClsSetInfo</a>])</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated session, CLS information for each CLS set</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p><strong>API for High Bias Folding</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.cross_layer_equalization.HighBiasFold.bias_fold">
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">folded_pairs</em>, <em class="sig-param">cls_set_info_list</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.HighBiasFold.bias_fold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Current session</p></li>
+<li><p><strong>folded_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="aimet_tensorflow.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated session after graph updates from hbf</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="code-examples-for-higher-level-apis">
 <h2>Code Examples for Higher Level APIs<a class="headerlink" href="#code-examples-for-higher-level-apis" title="Permalink to this headline">¶</a></h2>
@@ -134,20 +199,129 @@ saved to be plugged into high bias fold API.</p>
 <div class="section" id="lower-level-apis-for-cross-layer-equalization">
 <h2>Lower Level APIs for Cross Layer Equalization<a class="headerlink" href="#lower-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
 <p><strong>API for Batch Norm Folding on subsets of convolution-batchnorm layer pairs</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.batch_norm_fold.fold_given_batch_norms">
+<code class="sig-prename descclassname">aimet_tensorflow.batch_norm_fold.</code><code class="sig-name descname">fold_given_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em>, <em class="sig-param">layer_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.batch_norm_fold.fold_given_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Api to fold custom set of bn layers in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tensorflow session</p></li>
+<li><p><strong>input_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – starting op in model or a list of starting ops in the model</p></li>
+<li><p><strong>layer_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]) – List of tuple with conv and bn op layers as tf.Operation and
+a flag to indicate fold upstream or downstream</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of output op names of the model, used to help ConnectedGraph determine valid ops
+(to ignore training ops for example).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated_session after fold</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>API for Cross Layer Scaling on subset of conv layer groups</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_cls_sets">
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_cls_sets</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">cls_sets</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_cls_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale multiple CLS sets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Current session</p></li>
+<li><p><strong>cls_sets</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]]) – List of CLS sets</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Scaling factors calculated and applied for each CLS set in order</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p><strong>API for High bias folding</strong></p>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">folded_pairs</em>, <em class="sig-param">cls_set_info_list</em><span class="sig-paren">)</span></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Current session</p></li>
+<li><p><strong>folded_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="aimet_tensorflow.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated session after graph updates from hbf</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="custom-datatype-used">
 <h2>Custom Datatype used<a class="headerlink" href="#custom-datatype-used" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.cross_layer_equalization.ClsSetInfo">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.</code><code class="sig-name descname">ClsSetInfo</code><span class="sig-paren">(</span><em class="sig-param">cls_pair_1</em>, <em class="sig-param">cls_pair_2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class hold information about the layers in a CLS set, along with corresponding scaling factors
+for CLS set layers</p>
+<dl class="class">
+<dt id="aimet_tensorflow.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo">
+<em class="property">class </em><code class="sig-name descname">ClsSetLayerPairInfo</code><span class="sig-paren">(</span><em class="sig-param">layer1</em>, <em class="sig-param">layer2</em>, <em class="sig-param">scale_factor</em>, <em class="sig-param">relu_activation_between_layers</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Models a pair of layers that were scaled using CLS. And related information.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer1</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>) – layer as tf.Operation</p></li>
+<li><p><strong>layer2</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>) – layer as tf.Operation</p></li>
+<li><p><strong>scale_factor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – scale factors as np.ndarray</p></li>
+<li><p><strong>relu_activation_between_layers</strong> – list of flags per layer set indicating        if they have Relu activations in-between.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="aimet_tensorflow.cross_layer_equalization.ClsSetInfo.map_cls_sets_to_new_session">
+<em class="property">static </em><code class="sig-name descname">map_cls_sets_to_new_session</code><span class="sig-paren">(</span><em class="sig-param">tf_names_op_dict</em>, <em class="sig-param">cls_set_info_list</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo.map_cls_sets_to_new_session" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Helper function to updates ops stored during cls to be used by high bias fold with updated session.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tf_names_op_dict</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]) – map of tf op names to ops</p></li>
+<li><p><strong>cls_set_info_list</strong> – list of ClsSetInfo type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None /cls_set_info_list updated in-place</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>

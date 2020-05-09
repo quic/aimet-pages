@@ -122,9 +122,48 @@ Manual mode if desired.</p>
 </div>
 <div class="section" id="top-level-api-for-compression">
 <h2>Top-level API for Compression<a class="headerlink" href="#top-level-api-for-compression" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.compress.ModelCompressor">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.compress.</code><code class="sig-name descname">ModelCompressor</code><a class="headerlink" href="#aimet_tensorflow.compress.ModelCompressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>aimet model compressor: Enables model compression using various schemes</p>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="method">
+<dt id="aimet_tensorflow.compress.ModelCompressor.compress_model">
+<em class="property">static </em><code class="sig-prename descclassname">ModelCompressor.</code><code class="sig-name descname">compress_model</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">working_dir</em>, <em class="sig-param">eval_callback</em>, <em class="sig-param">eval_iterations</em>, <em class="sig-param">input_shape</em>, <em class="sig-param">compress_scheme</em>, <em class="sig-param">cost_metric</em>, <em class="sig-param">parameters</em>, <em class="sig-param">trainer=None</em>, <em class="sig-param">visualization_url=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.compress.ModelCompressor.compress_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compress a given model using the specified parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Model, represented by a TF session, to compress</p></li>
+<li><p><strong>working_dir</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – File path to save compressed TensorFlow meta file</p></li>
+<li><p><strong>eval_callback</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Evaluation callback. Expected signature is evaluate(model, iterations, use_cuda).
+Expected to return an accuracy metric.</p></li>
+<li><p><strong>eval_iterations</strong> – Iterations to run evaluation for</p></li>
+<li><p><strong>trainer</strong> – Training Class: Contains a callable, train_model, which takes model, layer which is being fine
+tuned and an optional parameter train_flag as a parameter
+None: If per layer fine tuning is not required while creating the final compressed model</p></li>
+<li><p><strong>input_shape</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>) – Shape of the input tensor for model</p></li>
+<li><p><strong>compress_scheme</strong> (<a class="reference internal" href="#aimet_common.defs.CompressionScheme" title="aimet_common.defs.CompressionScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionScheme</span></code></a>) – Compression scheme. See the enum for allowed values</p></li>
+<li><p><strong>cost_metric</strong> (<a class="reference internal" href="#aimet_common.defs.CostMetric" title="aimet_common.defs.CostMetric"><code class="xref py py-class docutils literal notranslate"><span class="pre">CostMetric</span></code></a>) – Cost metric to use for the compression-ratio (either mac or memory)</p></li>
+<li><p><strong>parameters</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_tensorflow.defs.SpatialSvdParameters" title="aimet_tensorflow.defs.SpatialSvdParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialSvdParameters</span></code></a>, <a class="reference internal" href="#aimet_tensorflow.defs.ChannelPruningParameters" title="aimet_tensorflow.defs.ChannelPruningParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChannelPruningParameters</span></code></a>]) – Compression parameters specific to given compression scheme</p></li>
+<li><p><strong>trainer</strong> – Training function
+None: If per layer fine tuning is not required while creating the final compressed model</p></li>
+<li><p><strong>visualization_url</strong> – url the user will need to input where visualizations will appear</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionStats</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A tuple of the compressed model session, and compression statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -590,9 +629,89 @@ to cost of the original model.</p></li>
 </div>
 <div class="section" id="weight-svd-top-level-api">
 <h2>Weight SVD Top-level API<a class="headerlink" href="#weight-svd-top-level-api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.svd.Svd">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.svd.</code><code class="sig-name descname">Svd</code><span class="sig-paren">(</span><em class="sig-param">graph</em>, <em class="sig-param">checkpoint</em>, <em class="sig-param">metric</em>, <em class="sig-param">output_file='./svd_graph'</em>, <em class="sig-param">svd_type='svd'</em>, <em class="sig-param">num_layers=0</em>, <em class="sig-param">layers=None</em>, <em class="sig-param">layer_ranks=None</em>, <em class="sig-param">num_ranks=20</em>, <em class="sig-param">gpu=True</em>, <em class="sig-param">debug=False</em>, <em class="sig-param">no_evaluation=False</em>, <em class="sig-param">layer_selection_threshold=0.6</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.svd.Svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for performing singular value decomposition on a tensorflow model.</p>
+<p>The Svd class enables model compression through singular value decomposition (SVD).
+It can analyze convolution and fully connected layers and perform
+some analysis to find the optimal ranks for balancing compression and the
+accuracy of the network.</p>
+<p>Constructor for the Svd class</p>
+<p>Constructs the Svd class from a set of options passed in at construction. The class takes
+a number of named arguments which are detailed below.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> – The file path to the meta graph.</p></li>
+<li><p><strong>checkpoint</strong> – The file path to the tensorflow checkpoint file.</p></li>
+<li><p><strong>metric</strong> – The metric to use for determining the optimal compression. Either
+‘mac’ for optimizing compression to minimize multiplies and accumulates or ‘memory’ which
+optimizes for overall memory footprint. Defaults to ‘memory’</p></li>
+<li><p><strong>output_file</strong> – The file path for saving the compressed tensorflow graph.
+aimet will save to the directory specified, using output_file as a filename prefix</p></li>
+<li><p><strong>svd_type</strong> – Indicates which algorithm should be used, either
+‘svd’ or ‘ssvd’. Defaults to ‘svd’.</p></li>
+<li><p><strong>num_layers</strong> – The number of layers to compress. Defaults to ‘0’ which uses a
+heuristic to determine the optimal number of layers to compress.</p></li>
+<li><p><strong>layers</strong> – A list of op names to compress. All other layers will be ignored.
+Overrides num_layers and sets it to the length of this list.</p></li>
+<li><p><strong>layer_ranks</strong> – required only if no_evaluation is set to True. A list of tuples to compress
+layers specified in layers argument.</p></li>
+<li><p><strong>num_ranks</strong> – The number of ranks (compression_points) to evaluate for compression.
+Defaults to 20. Value should be greater than 2.</p></li>
+<li><p><strong>gpu</strong> – Indicates if the algorithm should run on GPU or CPU. Defaults to GPU. To
+use CPU set to false</p></li>
+<li><p><strong>debug</strong> – If true debug messages will be printed. Defaults to False.</p></li>
+<li><p><strong>no_evaluation</strong> – If true, ranks will be set manually from user. Defaults to False.</p></li>
+<li><p><strong>layer_selection_threshold</strong> – Threshold (0-1) to use to select the top layers in the network</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>ValueError: An error occurred processing one of the input parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+<dl class="method">
+<dt id="aimet_tensorflow.svd.Svd.compress_net">
+<code class="sig-prename descclassname">Svd.</code><code class="sig-name descname">compress_net</code><span class="sig-paren">(</span><em class="sig-param">generator</em>, <em class="sig-param">eval_names=None</em>, <em class="sig-param">run_graph=&lt;function evaluate_graph&gt;</em>, <em class="sig-param">eval_func=&lt;function default_eval_func&gt;</em>, <em class="sig-param">error_margin=2</em>, <em class="sig-param">iterations=100</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.svd.Svd.compress_net" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresses the network using SVD</p>
+<p>Runs rank selection on the network, and compresses it using the method and parameters
+passed during construction of the Svd object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>generator</strong> – The generator which should be used for generating data for quantization</p></li>
+<li><p><strong>eval_names</strong> – The list of names to use for calculating model performance</p></li>
+<li><p><strong>run_graph</strong> – The function to use for running data through the graph and evaluating
+the network’s performance. This function must return only a single number representing the
+avg performance of the model over the dataset batches.
+See the ‘graph_eval’ module’s ‘evaluate_graph’ function for the prototype</p></li>
+<li><p><strong>eval_func</strong> – The function to use for evaluating the network performance. This function should always
+return a single number that can be used for comparing different graph’s performance.
+(The default is accuracy)</p></li>
+<li><p><strong>error_margin</strong> – The acceptable degradation in network accuracy from the original.
+1 for 1% drop, etc. Defaults to 2%.</p></li>
+<li><p><strong>iterations</strong> – The number of iterations (data batches) to run through the network for analysis</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An object containing compression statistics</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>ValueError: An invalid parameter was passed</p></li>
+<li><p>RuntimeError: An error occurred analyzing or compressing the network. The associated error
+and other information will be returned with the error.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
