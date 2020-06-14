@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>AIMET PyTorch Compression API &#8212; AIMET Documentation: ver 1.7.0</title>
+    <title>AIMET PyTorch Compression API &#8212; AI Model Efficiency Toolkit Documentation: ver 1.9.0</title>
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="torch_quantization.html" title="AIMET PyTorch Quantization APIs"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AIMET Documentation: ver 1.7.0</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver 1.9.0</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="torch.html" accesskey="U">AIMET PyTorch APIs</a> &#187;</li> 
       </ul>
@@ -482,7 +482,7 @@ to cost of the original model.</p></li>
 </pre></div>
 </div>
 <p><strong>Evaluation function</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">eval_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">eval_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is intended to be the user-defined model evaluation function.</span>
 <span class="sd">    AIMET requires the above signature. So if the user&#39;s eval function does not</span>
@@ -498,13 +498,14 @@ to cost of the original model.</p></li>
 <span class="sd">    :param use_cuda: If true, evaluate using gpu acceleration</span>
 <span class="sd">    :return: single float number (accuracy) representing model&#39;s performance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="o">.</span><span class="mi">5</span>
 </pre></div>
 </div>
 <p><strong>Compressing using Spatial SVD in auto mode with multiplicity = 8 for rank rounding</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_auto_mode</span><span class="p">():</span>
 
     <span class="c1"># load trained MNIST model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
 
     <span class="c1"># Specify the necessary parameters</span>
     <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
@@ -533,7 +534,7 @@ to cost of the original model.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_manual_mode</span><span class="p">():</span>
 
     <span class="c1"># Load a trained MNIST model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
 
     <span class="c1"># Specify the necessary parameters</span>
     <span class="n">manual_params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">([</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
@@ -559,7 +560,7 @@ to cost of the original model.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weight_svd_auto_mode</span><span class="p">():</span>
 
     <span class="c1"># Load trained MNIST model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
 
     <span class="c1"># Specify the necessary parameters</span>
     <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
@@ -590,7 +591,7 @@ to cost of the original model.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weight_svd_manual_mode</span><span class="p">():</span>
 
     <span class="c1"># Load a trained MNIST model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
 
     <span class="c1"># Specify the necessary parameters</span>
     <span class="n">manual_params</span> <span class="o">=</span> <span class="n">WeightSvdParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">([</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
@@ -616,7 +617,7 @@ to cost of the original model.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">channel_pruning_auto_mode</span><span class="p">():</span>
 
     <span class="c1"># Load trained MNIST model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
 
     <span class="c1"># Specify the necessary parameters</span>
     <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
@@ -649,7 +650,7 @@ to cost of the original model.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">channel_pruning_manual_mode</span><span class="p">():</span>
 
     <span class="c1"># Load a trained MNIST model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
 
     <span class="c1"># Specify the necessary parameters</span>
     <span class="n">manual_params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">([</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)])</span>
@@ -699,7 +700,7 @@ to cost of the original model.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_auto_mode_with_layerwise_finetuning</span><span class="p">():</span>
 
     <span class="c1"># load trained MNIST model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
 
     <span class="c1"># Specify the necessary parameters</span>
     <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
@@ -745,7 +746,7 @@ to cost of the original model.</p></li>
         <li class="right" >
           <a href="torch_quantization.html" title="AIMET PyTorch Quantization APIs"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AIMET Documentation: ver 1.7.0</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver 1.9.0</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="torch.html" >AIMET PyTorch APIs</a> &#187;</li> 
       </ul>

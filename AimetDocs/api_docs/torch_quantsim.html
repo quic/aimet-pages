@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>AIMET PyTorch Quantization SIM API &#8212; AIMET Documentation: ver 1.7.0</title>
+    <title>AIMET PyTorch Quantization SIM API &#8212; AI Model Efficiency Toolkit Documentation: ver 1.9.0</title>
     <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
@@ -29,7 +29,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AIMET Documentation: ver 1.7.0</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver 1.9.0</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -71,7 +71,7 @@
 <h2>Top-level API<a class="headerlink" href="#top-level-api" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="aimet_torch.quantsim.QuantizationSimModel">
-<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.quantsim.</code><code class="sig-name descname">QuantizationSimModel</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">quant_scheme=&lt;QuantScheme.post_training_tf_enhanced: 2&gt;</em>, <em class="sig-param">rounding_mode='nearest'</em>, <em class="sig-param">default_output_bw=8</em>, <em class="sig-param">default_param_bw=8</em>, <em class="sig-param">in_place=False</em>, <em class="sig-param">config_file=None</em>, <em class="sig-param">input_shapes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.QuantizationSimModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.quantsim.</code><code class="sig-name descname">QuantizationSimModel</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">input_shapes</em>, <em class="sig-param">quant_scheme=&lt;QuantScheme.post_training_tf_enhanced: 2&gt;</em>, <em class="sig-param">rounding_mode='nearest'</em>, <em class="sig-param">default_output_bw=8</em>, <em class="sig-param">default_param_bw=8</em>, <em class="sig-param">in_place=False</em>, <em class="sig-param">config_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.QuantizationSimModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements mechanism to add quantization simulations ops to a model. This allows for off-target simulation of
 inference accuracy. Also allows the model to be fine-tuned to counter the effects of quantization.</p>
 <p>Constructor</p>
@@ -79,6 +79,7 @@ inference accuracy. Also allows the model to be fine-tuned to counter the effect
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to add simulation ops to</p></li>
+<li><p><strong>input_shapes</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]]) – List of input shapes to the model</p></li>
 <li><p><strong>quant_scheme</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>]) – Quantization scheme. Supported options are ‘tf_enhanced’ or ‘tf’ or using Quant Scheme Enum
 QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced</p></li>
 <li><p><strong>rounding_mode</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Rounding mode. Supported options are ‘nearest’ or ‘stochastic’</p></li>
@@ -86,8 +87,7 @@ QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced</p></li>
 <li><p><strong>default_param_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Default bitwidth (4-31) to use for quantizing layer parameters</p></li>
 <li><p><strong>in_place</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True, then the given ‘model’ is modified in-place to add quant-sim nodes.
 Only suggested use of this option is when the user wants to avoid creating a copy of the model</p></li>
-<li><p><strong>config_file</strong> – Configuration file for model quantizers</p></li>
-<li><p><strong>input_shapes</strong> – List of input shapes to the model</p></li>
+<li><p><strong>config_file</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Configuration file for model quantizers</p></li>
 </ul>
 </dd>
 </dl>
@@ -236,7 +236,7 @@ a list of shapes.</p></li>
 </pre></div>
 </div>
 <p><strong>Evaluation function</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">eval_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">eval_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is intended to be the user-defined model evaluation function.</span>
 <span class="sd">    AIMET requires the above signature. So if the user&#39;s eval function does not</span>
@@ -252,14 +252,18 @@ a list of shapes.</p></li>
 <span class="sd">    :param use_cuda: If true, evaluate using gpu acceleration</span>
 <span class="sd">    :return: single float number (accuracy) representing model&#39;s performance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="o">.</span><span class="mi">5</span>
 </pre></div>
 </div>
 <p><strong>Quantize and fine-tune a trained model</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">quantize_model</span><span class="p">(</span><span class="n">trainer_function</span><span class="p">):</span>
 
-    <span class="n">model</span> <span class="o">=</span> <span class="n">mnist_torch_model</span><span class="o">.</span><span class="n">mnist_model</span><span class="o">.</span><span class="n">Net</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">mnist_torch_model</span><span class="o">.</span><span class="n">Net</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">))</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
 
-    <span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">default_output_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">default_output_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">input_shapes</span><span class="o">=</span><span class="n">input_shape</span><span class="p">,</span>
+                               <span class="n">config_file</span><span class="o">=</span><span class="s1">&#39;../../../TrainingExtensions/common/src/python/aimet_common/quantsim_config/&#39;</span>
+                                           <span class="s1">&#39;default_config.json&#39;</span><span class="p">)</span>
 
     <span class="c1"># Quantize the untrained MNIST model</span>
     <span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">forward_pass_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -268,7 +272,7 @@ a list of shapes.</p></li>
     <span class="n">trainer_function</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_batches</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="c1"># Export the model</span>
-    <span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;quantized_mnist&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;quantized_mnist&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -286,7 +290,7 @@ a list of shapes.</p></li>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AIMET Documentation: ver 1.7.0</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver 1.9.0</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
