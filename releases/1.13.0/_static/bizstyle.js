@@ -36,6 +36,6 @@ $(window).resize(function(){
         $("li.nav-item-0 a").text("Top");
     }
     else {
-        $("li.nav-item-0 a").text("AI Model Efficiency Toolkit Documentation: ver 1.11.0");
+        $("li.nav-item-0 a").text("AI Model Efficiency Toolkit Documentation: ver 1.13.0");
     }
 });
