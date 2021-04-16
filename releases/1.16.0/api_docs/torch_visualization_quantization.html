@@ -1,0 +1,192 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Visualization for Quantization API &#8212; AI Model Efficiency Toolkit Documentation: ver tf-gpu_1.16.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AIMET TensorFlow APIs" href="tensorflow.html" />
+    <link rel="prev" title="AIMET Visualization Compression API" href="torch_visualization_compression.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tensorflow.html" title="AIMET TensorFlow APIs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="torch_visualization_compression.html" title="AIMET Visualization Compression API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-gpu_1.16.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="torch.html" accesskey="U">AIMET PyTorch APIs</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Visualization for Quantization API</a><ul>
+<li><a class="reference internal" href="#top-level-api-quantization">Top-level API Quantization</a></li>
+<li><a class="reference internal" href="#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="torch_visualization_compression.html"
+                        title="previous chapter">AIMET Visualization Compression API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tensorflow.html"
+                        title="next chapter">AIMET TensorFlow APIs</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-visualization-for-quantization-api">
+<h1>AIMET Visualization for Quantization API<a class="headerlink" href="#aimet-visualization-for-quantization-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="top-level-api-quantization">
+<h2>Top-level API Quantization<a class="headerlink" href="#top-level-api-quantization" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples">
+<h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">start_bokeh_server_session</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">equalize_model</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.examples.imagenet_dataloader</span> <span class="kn">import</span> <span class="n">ImageNetDataLoader</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.examples.supervised_classification_pipeline</span> <span class="kn">import</span> \
+    <span class="n">create_stand_alone_supervised_classification_evaluator</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.utils</span> <span class="kn">import</span> <span class="n">IterFirstX</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">batch_norm_fold</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">visualize_model</span>
+</pre></div>
+</div>
+<p><strong>Comparing Model After Optimization</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_changes_in_model_after_and_before_cle</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code example for visualizating model before and after Cross Layer Equalization optimization</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">visualization_url</span><span class="p">,</span> <span class="n">process</span> <span class="o">=</span> <span class="n">start_bokeh_server_session</span><span class="p">(</span><span class="mi">8002</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">model_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">batch_norm_fold</span><span class="o">.</span><span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model_copy</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+
+    <span class="n">equalize_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+    <span class="n">visualize_model</span><span class="o">.</span><span class="n">visualize_changes_after_optimization</span><span class="p">(</span><span class="n">model_copy</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">visualization_url</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Visualizing weight ranges in Model</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_weight_ranges_model</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code example for model visualization</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">visualization_url</span><span class="p">,</span> <span class="n">process</span> <span class="o">=</span> <span class="n">start_bokeh_server_session</span><span class="p">(</span><span class="mi">8002</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+    <span class="n">batch_norm_fold</span><span class="o">.</span><span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+
+    <span class="c1"># Usually it is observed that if we do BatchNorm fold the layer&#39;s weight range increases.</span>
+    <span class="c1"># This helps in visualizing layer&#39;s weight</span>
+    <span class="n">visualize_model</span><span class="o">.</span><span class="n">visualize_weight_ranges</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">visualization_url</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Visualizing Relative weight ranges in Model</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_relative_weight_ranges_model</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code example for model visualization</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">visualization_url</span><span class="p">,</span> <span class="n">process</span> <span class="o">=</span> <span class="n">start_bokeh_server_session</span><span class="p">(</span><span class="mi">8002</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+    <span class="n">batch_norm_fold</span><span class="o">.</span><span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+
+    <span class="c1"># Usually it is observed that if we do BatchNorm fold the layer&#39;s weight range increases.</span>
+    <span class="c1"># This helps in finding layers which can be equalized to get better performance on hardware</span>
+    <span class="n">visualize_model</span><span class="o">.</span><span class="n">visualize_relative_weight_ranges_to_identify_problematic_layers</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">visualization_url</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tensorflow.html" title="AIMET TensorFlow APIs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="torch_visualization_compression.html" title="AIMET Visualization Compression API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-gpu_1.16.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="torch.html" >AIMET PyTorch APIs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
