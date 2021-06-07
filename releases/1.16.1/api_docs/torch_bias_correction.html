@@ -71,6 +71,30 @@
 <span id="api-torch-bias-correction"></span><h1>AIMET PyTorch Bias Correction API<a class="headerlink" href="#aimet-pytorch-bias-correction-api" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="bias-correction-api">
 <h2>Bias Correction API<a class="headerlink" href="#bias-correction-api" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="aimet_torch.bias_correction.correct_bias">
+<code class="sig-prename descclassname">aimet_torch.bias_correction.</code><code class="sig-name descname">correct_bias</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">quant_params</em>, <em class="sig-param">num_quant_samples</em>, <em class="sig-param">data_loader</em>, <em class="sig-param">num_bias_correct_samples</em>, <em class="sig-param">conv_bn_dict=None</em>, <em class="sig-param">perform_only_empirical_bias_corr=True</em>, <em class="sig-param">layers_to_ignore=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.bias_correction.correct_bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corrects bias for each Conv layer of model (unless ignored). A combination of Analytical and Empirical Bias
+Correction is used i.e. all the layers which can be corrected using Analytical Bias Correction are corrected
+using Analytical Bias Correction and remaining layers are corrected using Empirical method.</p>
+<p>Returns an in-place corrected floating point model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to be corrected</p></li>
+<li><p><strong>quant_params</strong> (<a class="reference internal" href="#aimet_torch.quantsim.QuantParams" title="aimet_torch.quantsim.QuantParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantParams</span></code></a>) – Named tuple for quantization simulation for bias correction</p></li>
+<li><p><strong>num_quant_samples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of samples of images to pass through quantization sim for bias correction.</p></li>
+<li><p><strong>data_loader</strong> – data loader for the model</p></li>
+<li><p><strong>num_bias_correct_samples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of samples for Bias correction</p></li>
+<li><p><strong>conv_bn_dict</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, <a class="reference internal" href="#aimet_common.bias_correction.ConvBnInfoType" title="aimet_common.bias_correction.ConvBnInfoType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvBnInfoType</span></code></a>]]) – Dict of conv and bn with information related to activation. If None, the function calc it</p></li>
+<li><p><strong>perform_only_empirical_bias_corr</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Default True. If true will perform only empirical Bias Corr for all layers
+irrespective of the fact that layer is eligible for Analytical Bias Corr.</p></li>
+<li><p><strong>layers_to_ignore</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]]) – list of layer names for which we need to skip bias correction.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -127,6 +151,25 @@ Activation types supported are Relu and Relu6</p>
 </div>
 <div class="section" id="quantization-params">
 <h2>Quantization Params<a class="headerlink" href="#quantization-params" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.quantsim.QuantParams">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.quantsim.</code><code class="sig-name descname">QuantParams</code><span class="sig-paren">(</span><em class="sig-param">weight_bw=8</em>, <em class="sig-param">act_bw=8</em>, <em class="sig-param">round_mode='nearest'</em>, <em class="sig-param">quant_scheme=&lt;QuantScheme.post_training_tf_enhanced: 2&gt;</em>, <em class="sig-param">config_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.quantsim.QuantParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data type to hold quantization related params.</p>
+<p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weight_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Weight bitwidth (4-31) to use for quantizing layer weights. Default = 8</p></li>
+<li><p><strong>act_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Activation bitwidth(4-31) to use for quantizing layer activations. Default = 8</p></li>
+<li><p><strong>round_mode</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Rounding mode. Supported options are ‘nearest’ or ‘stochastic’</p></li>
+<li><p><strong>quant_scheme</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="torch_quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Quantization scheme. Supported options are ‘tf_enhanced’ or ‘tf’ or using Quant Scheme Enum
+QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced</p></li>
+<li><p><strong>config_file</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path to Configuration file for model quantizers</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
