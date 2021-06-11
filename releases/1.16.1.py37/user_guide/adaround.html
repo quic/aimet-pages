@@ -1,0 +1,154 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET AdaRound &#8212; AI Model Efficiency Toolkit Documentation: ver 1.17.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver 1.17.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET AdaRound</a></li>
+<li><a class="reference internal" href="#adaround-use-cases">AdaRound Use Cases</a></li>
+<li><a class="reference internal" href="#common-terminology">Common terminology</a></li>
+<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
+<li><a class="reference internal" href="#not-recommended">Not recommended</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-adaround">
+<span id="ug-adaround"></span><h1>AIMET AdaRound<a class="headerlink" href="#aimet-adaround" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>AIMET quantization features, by default, use the “nearest rounding” technique for achieving quantization.
+In the following figure, a single weight value in a weight tensor is shown as an illustrative example. When using the
+“nearest rounding” technique, this weight value is quantized to the nearest integer value. The Adaptive Rounding
+(AdaRound) feature, uses a smaller subset of the unlabelled training data to adaptively round the weights of modules
+with weights. In the following figure, the weight value is quantized to the integer value far from it. AdaRound,
+optimizes a loss function using the unlabelled training data to adaptively decide whether to quantize a specific
+weight to the integer value near it or away from it. Using the AdaRound quantization, a model is able to achieve an
+accuracy closer to the FP32 model, while using low bit-width integer quantization.</p>
+<p>When creating a QuantizationSimModel using the AdaRounded model, use the QuantizationSimModel provided API for
+setting and freezing parameter encodings before computing the encodings. Please refer the code example in the AdaRound
+API section.</p>
+</div></blockquote>
+<a class="reference internal image-reference" href="../_images/adaround.png"><img alt="../_images/adaround.png" src="../_images/adaround.png" style="width: 900px;" /></a>
+</div>
+<div class="section" id="adaround-use-cases">
+<h1>AdaRound Use Cases<a class="headerlink" href="#adaround-use-cases" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="common-terminology">
+<h1>Common terminology<a class="headerlink" href="#common-terminology" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><ul class="simple">
+<li><p>BC - Bias Correction</p></li>
+<li><p>BNF - Batch Norm Folding</p></li>
+<li><p>CLE - Cross Layer Equalization</p></li>
+<li><p>HBF -  High Bias Folding</p></li>
+<li><p>QAT - Quantization Aware Training</p></li>
+<li><p>{ } - An optional step in the use case</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="use-cases">
+<h1>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><ol class="arabic simple">
+<li><dl class="simple">
+<dt>{BNF} –&gt; {CLE} –&gt; AdaRound</dt><dd><p>Applying BNF and CLE are optional steps before applying AdaRound. Some models benefit from applying CLE
+while some don’t get any benefit.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>AdaRound –&gt; QAT</dt><dd><p>AdaRound is a post-training quantization feature. But, for some models applying BNF and CLE may not be beneficial.
+For these models, QAT after AdaRound may be beneficial. AdaRound is considered as a better weights initialization
+step which helps for faster QAT.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="not-recommended">
+<h1>Not recommended<a class="headerlink" href="#not-recommended" title="Permalink to this headline">¶</a></h1>
+<p>Applying BC either before or after AdaRound is not recommended.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>AdaRound –&gt; BC</p></li>
+<li><p>BC –&gt; AdaRound</p></li>
+</ol>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver 1.17.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
