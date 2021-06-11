@@ -1,0 +1,381 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Encoding Format Specification &#8212; AI Model Efficiency Toolkit Documentation: ver 1.17.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver 1.17.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Encoding Format Specification</a></li>
+<li><a class="reference internal" href="#versioning">1. Versioning</a></li>
+<li><a class="reference internal" href="#version-0-4-0-up-to">2. Version 0.4.0 (up to)</a><ul>
+<li><a class="reference internal" href="#encoding-specification">2.1. Encoding Specification</a></li>
+<li><a class="reference internal" href="#encoding-file-example-for-pytorch">2.2. Encoding File Example for PyTorch</a></li>
+<li><a class="reference internal" href="#encoding-file-example-for-tensorflow">2.3. Encoding File Example for TensorFlow</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#version-0-5-0">3. Version 0.5.0</a><ul>
+<li><a class="reference internal" href="#id1">3.1. Encoding Specification</a></li>
+<li><a class="reference internal" href="#id2">3.2. Encoding File Example for PyTorch</a></li>
+<li><a class="reference internal" href="#id3">3.3. Encoding File Example for TensorFlow</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <p id="api-quantization-encoding-spec">AIMET Quantization Simulation determines scale/offset values for activation and parameter tensors in the model.
+This scale/offset information is also referred to as ‘quantization encoding’.
+When a model is exported from the AIMET Quantization Simulation feature,
+an encoding file is also exported that contains quantization encodings for the model.
+This encoding file can then be used by an inference runtime when running the model on-target.</p>
+<p>The following specification describes the format of this encoding file produced by AIMET.</p>
+<div class="section" id="encoding-format-specification">
+<h1>Encoding Format Specification<a class="headerlink" href="#encoding-format-specification" title="Permalink to this headline">¶</a></h1>
+<p>The encodings from Quantization simulation can be exported for usage on run-time. The encoding file uses a JSON syntax.
+The file format is usable with both PyTorch and TensorFlow models, that maps tensor names with the encodings.</p>
+</div>
+<div class="section" id="versioning">
+<h1>1. Versioning<a class="headerlink" href="#versioning" title="Permalink to this headline">¶</a></h1>
+<p>Encoding format will follow <code class="docutils literal notranslate"><span class="pre">XX.YY.ZZ</span></code> versioning format as describe below,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">XX</span></code> = Major Revision</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">YY</span></code> = Minor Revision</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZZ</span></code> = Patching version</p></li>
+</ul>
+<p>Change in major revision should indicate substantial change to the format, updates to minor version indicates additional information element being added to encoding format and might require update to fully consume the encodings.  The patching version shall be updated to indicate minor updates to quantization simulation e.g. bug fix etc.</p>
+</div>
+<div class="section" id="version-0-4-0-up-to">
+<h1>2. Version 0.4.0 (up to)<a class="headerlink" href="#version-0-4-0-up-to" title="Permalink to this headline">¶</a></h1>
+<p>The encoding format as defined below is backward compatible and shall applicable to all exported encoding up to version 0.4. In case, where versioning information is missing the encoding is assumed to follow version 0.4 format.</p>
+<div class="section" id="encoding-specification">
+<h2>2.1. Encoding Specification<a class="headerlink" href="#encoding-specification" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>“version”: “string”
+“activation_encodings”:
+{
+    &lt;tensor_name&gt;: [Encoding, …]
+}
+“param_encodings”
+{
+    &lt;tensor_name&gt;: [Encoding, …]
+}
+</pre></div>
+</div>
+<p>Where,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;version”</span></code> is set to “0.4.0”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;tensor_name&gt;</span></code> is a string representing the tensor in onnx or tensorflow graph.</p></li>
+</ul>
+<p>Encoding is as defined below,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Encoding</span><span class="p">:{</span>
+   <span class="n">bitwidth</span><span class="p">:</span> <span class="n">integer</span>
+   <span class="n">is_symmetric</span><span class="p">:</span> <span class="n">string</span>
+   <span class="nb">max</span><span class="p">:</span> <span class="nb">float</span>
+   <span class="nb">min</span><span class="p">:</span> <span class="nb">float</span>
+   <span class="n">offset</span><span class="p">:</span> <span class="n">integer</span>
+   <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Where,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bitwidth</span></code>: constraints &gt;=4 and &lt;=32</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_symmetric</span></code>: allowed choices “True”, “False”</p></li>
+</ul>
+<p>if a tensor is assigned <strong>more than one</strong> Encoding then the encoding is at per channel basis.</p>
+</div>
+<div class="section" id="encoding-file-example-for-pytorch">
+<h2>2.2. Encoding File Example for PyTorch<a class="headerlink" href="#encoding-file-example-for-pytorch" title="Permalink to this headline">¶</a></h2>
+<p>On PyTorch, the tensor names shall be derived from the ONNX named model representation as depicted below on a sample model.</p>
+<a class="reference external image-reference" href="../images/mapping_between_onnx_tensor_names_and_encodings.png"><img alt="Mapping between ONNX tensor names and encodings" src="../_images/mapping_between_onnx_tensor_names_and_encodings.png" /></a>
+<p>Given below is the sample format with keys and values for encodings JSON output file on PyTorch.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>{
+    “version”: “0.4.0”
+    &quot;activation_encodings&quot;: {
+        &quot;20&quot;:
+        [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 2.6086959838867188,
+                &quot;min&quot;: -2.109158515930176,
+                &quot;offset&quot;: -114.0,
+                &quot;scale&quot;: 0.018501389771699905
+            }
+        ],
+        &quot;21&quot;:
+        [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 2.558866932988167,
+                &quot;min&quot;: -0.12636379897594452,
+                &quot;offset&quot;: -12.0,
+                &quot;scale&quot;: 0.010530316270887852
+            }
+        ],
+    },
+    &quot;param_encodings&quot;: {
+        &quot;conv2.weight&quot;:
+        [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 0.06318144500255585,
+                &quot;min&quot;: -0.06268782913684845,
+                &quot;offset&quot;: -127.0,
+                &quot;scale&quot;: 0.0004936049808748066
+            }
+        ],
+        &quot;fc1.weight&quot;:
+         [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 0.05589814856648445,
+                &quot;min&quot;: -0.05546144023537636,
+                &quot;offset&quot;: -127.0,
+                &quot;scale&quot;: 0.0004367042565718293
+            }
+        ],
+    }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="encoding-file-example-for-tensorflow">
+<h2>2.3. Encoding File Example for TensorFlow<a class="headerlink" href="#encoding-file-example-for-tensorflow" title="Permalink to this headline">¶</a></h2>
+<p>Given below is a sample format with the keys and values for encodings on TensorFlow graph (in JSON format).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>{
+    “version”: “0.4.0”
+    &quot;activation_encodings&quot;: {
+        &quot;conv2d/Relu:0&quot;:
+        [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 2.184721499681473,
+                &quot;min&quot;: -0.10788747668266296,
+                &quot;offset&quot;: 11,
+                &quot;scale&quot;: 0.0089906234367221
+            }
+        ],
+        &quot;conv2d_1/Relu:0&quot;:
+        [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 2.1020304188132286,
+                &quot;min&quot;: -0.10380396991968155,
+                &quot;offset&quot;: 11,
+                &quot;scale&quot;: 0.008650330936207491
+            }
+        ],
+    },
+    &quot;param_encodings&quot;: {
+        &quot;conv2d/Conv2D/ReadVariableOp:0&quot;:
+        [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 0.1462666392326355,
+                &quot;min&quot;: -0.1451239287853241,
+                &quot;offset&quot;: 126,
+                &quot;scale&quot;: 0.0011427081098743512
+            }
+        ],
+        &quot;conv2d_1/Conv2D/ReadVariableOp:0&quot;:
+        [
+            {
+                &quot;bitwidth&quot;: 8,
+                &quot;is_symmetric&quot;: “False”,
+                &quot;max&quot;: 0.08333279937505722,
+                &quot;min&quot;: -0.08268175274133682,
+                &quot;offset&quot;: 126,
+                &quot;scale&quot;: 0.0006510374592799766
+            }
+        ]
+    }
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="version-0-5-0">
+<h1>3. Version 0.5.0<a class="headerlink" href="#version-0-5-0" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>3.1. Encoding Specification<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>“version”: “string”
+“activation_encodings”:
+{
+    &lt;tensor_name&gt;: [Encoding, …]
+}
+“param_encodings”
+{
+    &lt;tensor_name&gt;: [Encoding, …]
+}
+</pre></div>
+</div>
+<p>Where,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;version”</span></code> is set to “0.5.0”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;tensor_name&gt;</span></code> is a string representing the tensor in onnx or tensorflow graph.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">‘Encoding’</span></code> structure shall include an encoding field <code class="docutils literal notranslate"><span class="pre">“dtype”</span></code> to specify the datatype used for simulating the tensor.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Encoding</span><span class="p">:{</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">string</span>
+    <span class="n">bitwidth</span><span class="p">:</span> <span class="n">integer</span>
+    <span class="n">is_symmetric</span><span class="p">:</span> <span class="n">string</span>
+    <span class="nb">max</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="nb">min</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">offset</span><span class="p">:</span> <span class="n">integer</span>
+    <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Where,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dtype</span></code>: allowed choices “int”, “float”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bitwidth</span></code>: constraints &gt;=4 and &lt;=32</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">is_symmetric</span></code>: allowed choices “True”, “False”</p></li>
+</ul>
+<p>when <code class="docutils literal notranslate"><span class="pre">dtype</span></code> is set to <code class="docutils literal notranslate"><span class="pre">‘float’</span></code>, Encoding shall have the following fields</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Encoding</span><span class="p">:{</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">string</span>
+    <span class="n">bitwidth</span><span class="p">:</span> <span class="n">integer</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">bitwidth</span></code> defines the precision of the tensor being generated by the producer and consumed by the
+downstream consumer(s).</p>
+</div>
+<div class="section" id="id2">
+<h2>3.2. Encoding File Example for PyTorch<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Given below is a snippet of the sample format with change highlighted.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>{
+    “version”: “0.5.0”
+    &quot;activation_encodings&quot;: {
+        &quot;20&quot;:
+        [
+            {
+                “dtype”: “int”
+                &quot;bitwidth&quot;: 8,
+                 ...
+            }
+        ],
+         ...
+    },
+    &quot;param_encodings&quot;: {
+        &quot;conv2.weight&quot;:
+        [
+            {
+                “dtype”: “int”
+                &quot;bitwidth&quot;: 8,
+                ...
+            }
+        ],
+         ...
+   }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>3.3. Encoding File Example for TensorFlow<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Given below is a snippet of the sample format with change highlighted.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>{
+    “version”: “0.5.0”
+    &quot;activation_encodings&quot;: {
+        &quot;conv2d/Relu:0&quot;:
+        [
+            {
+                “dtype”: “float”
+                &quot;bitwidth&quot;: 16,
+        ],
+         ...
+    },
+    &quot;param_encodings&quot;: {
+        &quot;conv2d/Conv2D/ReadVariableOp:0&quot;:
+        [
+            {
+                “dtype”: “float”
+                &quot;bitwidth&quot;: 16,
+            }
+        ],
+         ...
+}
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver 1.17.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
