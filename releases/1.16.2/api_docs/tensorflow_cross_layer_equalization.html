@@ -1,0 +1,176 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET TensorFlow Cross Layer Equalization APIs &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET TensorFlow Cross Layer Equalization APIs</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li><a class="reference internal" href="#code-example">Code Example</a></li>
+<li><a class="reference internal" href="#primitive-apis">Primitive APIs</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-tensorflow-cross-layer-equalization-apis">
+<span id="api-tf-cle"></span><h1>AIMET TensorFlow Cross Layer Equalization APIs<a class="headerlink" href="#aimet-tensorflow-cross-layer-equalization-apis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>AIMET functionality for TensorFlow Cross Layer Equalization supports three techniques-</dt><dd><ul class="simple">
+<li><p>BatchNorm Folding</p></li>
+<li><p>Cross Layer Scaling</p></li>
+<li><p>High Bias Fold</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="cross-layer-equalization-api">
+<h2>Cross Layer Equalization API<a class="headerlink" href="#cross-layer-equalization-api" title="Permalink to this headline">¶</a></h2>
+<p>Listed below is a comprehensive API to apply all available techniques under cross layer equalization.
+It performs ‘auto’ detection of candidate layers and applies the techniques.
+If there are no BatchNorm layers in a given model, BatchNorm fold and high bias fold shall be skipped.</p>
+<p><strong>API(s) for Cross Layer Equalization</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.cross_layer_equalization.equalize_model">
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.</code><code class="sig-name descname">equalize_model</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">start_op_names</em>, <em class="sig-param">output_op_names</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.equalize_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>High-level API to perform Cross-Layer Equalization (CLE) on the given model. The model is equalized in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – tf.compat.v1.Session with model to equalize</p></li>
+<li><p><strong>start_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Names of starting ops in the given model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of output op names of the model, used to help ConnectedGraph determine valid ops
+(to ignore training ops for example).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated session after bn fold, cls and hbf.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="code-example">
+<h2>Code Example<a class="headerlink" href="#code-example" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># tensorflow</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications.resnet50</span> <span class="kn">import</span> <span class="n">ResNet50</span>
+
+<span class="c1"># Cross layer Equalization related imports</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">equalize_model</span>
+</pre></div>
+</div>
+<p><strong>Cross Layer Equalization in auto mode comprehensive</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cross_layer_equalization_auto</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; perform auto cross layer equalization &quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="c1"># get starting op name to invoke api for cle</span>
+    <span class="n">input_op_name</span> <span class="o">=</span> <span class="s1">&#39;input_1&#39;</span>
+    <span class="n">output_op_name</span> <span class="o">=</span> <span class="s1">&#39;fc1000/Softmax&#39;</span>
+
+    <span class="c1"># Equalize a model with Batchnorms</span>
+    <span class="c1"># Performs BatchNorm fold, replacing Relu6 with Relu, Cross layer scaling and High bias fold</span>
+    <span class="c1"># use the new session returned for further evaluations on TF graph</span>
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="n">new_session</span> <span class="o">=</span> <span class="n">equalize_model</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">input_op_name</span><span class="p">,</span> <span class="n">output_op_name</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="primitive-apis">
+<h2>Primitive APIs<a class="headerlink" href="#primitive-apis" title="Permalink to this headline">¶</a></h2>
+<p>If the user would like to call the APIs individually, then the following APIs can be used-</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tensorflow_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
