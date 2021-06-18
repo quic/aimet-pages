@@ -1,0 +1,257 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET TensorFlow Quantization SIM API &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET TensorFlow Quantization SIM API</a><ul>
+<li><a class="reference internal" href="#top-level-api">Top-level API</a></li>
+<li><a class="reference internal" href="#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-tensorflow-quantization-sim-api">
+<span id="api-tf-quantsim"></span><h1>AIMET TensorFlow Quantization SIM API<a class="headerlink" href="#aimet-tensorflow-quantization-sim-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="top-level-api">
+<h2>Top-level API<a class="headerlink" href="#top-level-api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.quantsim.QuantizationSimModel">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.quantsim.</code><code class="sig-name descname">QuantizationSimModel</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">starting_op_names</em>, <em class="sig-param">output_op_names</em>, <em class="sig-param">quant_scheme='tf_enhanced'</em>, <em class="sig-param">rounding_mode='nearest'</em>, <em class="sig-param">default_output_bw=8</em>, <em class="sig-param">default_param_bw=8</em>, <em class="sig-param">use_cuda=True</em>, <em class="sig-param">config_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.quantsim.QuantizationSimModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a QuantSim model by adding quantization simulations ops to a given model.</p>
+<p>This enables</p>
+<ol class="arabic simple">
+<li><p>off-target simulation of inference accuracy</p></li>
+<li><p>the model to be fine-tuned to counter the effects of quantization</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – The input model as session to add quantize ops to</p></li>
+<li><p><strong>starting_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of starting op names of the model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of output op names of the model</p></li>
+<li><p><strong>quant_scheme</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="torch_quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>]) – Quantization Scheme, currently supported schemes are post_training_tf and
+post_training_tf_enhanced, defaults to post_training_tf_enhanced</p></li>
+<li><p><strong>rounding_mode</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The round scheme to used. One of: ‘nearest’ or ‘stochastic’, defaults to ‘nearest’.</p></li>
+<li><p><strong>default_output_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – bitwidth to use for activation tensors, defaults to 8</p></li>
+<li><p><strong>default_param_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – bitwidth to use for parameter tensors, defaults to 8</p></li>
+<li><p><strong>use_cuda</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True, places quantization ops on GPU. Defaults to True</p></li>
+<li><p><strong>config_file</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path to a config file to use to specify rules for placing quant ops in the model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An object which can be used to perform quantization on a tensorflow graph</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>ValueError: An error occurred processing one of the input parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>The following API can be used to Compute Encodings for Model</strong></p>
+<dl class="method">
+<dt id="aimet_tensorflow.quantsim.QuantizationSimModel.compute_encodings">
+<code class="sig-prename descclassname">QuantizationSimModel.</code><code class="sig-name descname">compute_encodings</code><span class="sig-paren">(</span><em class="sig-param">forward_pass_callback</em>, <em class="sig-param">forward_pass_callback_args</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.quantsim.QuantizationSimModel.compute_encodings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes encodings for all quantization sim nodes in the model.
+This is also used to set initial encodings for Range Learning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forward_pass_callback</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>], <code class="docutils literal notranslate"><span class="pre">None</span></code>]) – A callback function that is expected to runs forward passes on a session.
+This callback function should use representative data for the forward pass, so the calculated
+encodings work for all data samples. This callback internally chooses the number of data samples
+it wants to use for calculating encodings.</p></li>
+<li><p><strong>forward_pass_callback_args</strong> – These argument(s) are passed to the forward_pass_callback as-is. Up to
+the user to determine the type of this parameter. E.g. could be simply an integer representing the number
+of data samples to use. Or could be a tuple of parameters or an object representing something more
+complex.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>The following API can be used to Export the Model to target</strong></p>
+<dl class="method">
+<dt id="aimet_tensorflow.quantsim.QuantizationSimModel.export">
+<code class="sig-prename descclassname">QuantizationSimModel.</code><code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">filename_prefix</em>, <em class="sig-param">orig_sess=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.quantsim.QuantizationSimModel.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method exports out the quant-sim model so it is ready to be run on-target.</p>
+<p>Specifically, the following are saved</p>
+<ol class="arabic simple">
+<li><p>The sim-model is exported to a regular tensorflow meta/checkpoint without any simulation ops</p></li>
+<li><p>The quantization encodings are exported to a separate JSON-formatted file that can
+then be imported by the on-target runtime (if desired)</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – path where to store model pth and encodings</p></li>
+<li><p><strong>filename_prefix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Prefix to use for filenames of the model pth and encodings files</p></li>
+<li><p><strong>orig_sess</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>]) – optional param to pass in original session without quant nodes for export</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Encoding format is described in the <a class="reference internal" href="quantization_encoding_specification.html#api-quantization-encoding-spec"><span class="std std-ref">Quantization Encoding Specification</span></a></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples">
+<h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="c1"># Import the tensorflow quantisim</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow</span> <span class="kn">import</span> <span class="n">quantsim</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.common</span> <span class="kn">import</span> <span class="n">graph_eval</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils</span> <span class="kn">import</span> <span class="n">graph_saver</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">QuantScheme</span>
+<span class="kn">from</span> <span class="nn">tensorflow.examples.tutorials.mnist</span> <span class="kn">import</span> <span class="n">input_data</span>
+</pre></div>
+</div>
+<p><strong>Quantize with Range Learning</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">quantize_model</span><span class="p">(</span><span class="n">generator</span><span class="p">):</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+
+    <span class="c1"># load graph</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">graph_saver</span><span class="o">.</span><span class="n">load_model_from_meta</span><span class="p">(</span><span class="s1">&#39;models/mnist_save.meta&#39;</span><span class="p">,</span> <span class="s1">&#39;models/mnist_save&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward_callback</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+        <span class="n">graph_eval</span><span class="o">.</span><span class="n">evaluate_graph</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">],</span> <span class="n">graph_eval</span><span class="o">.</span><span class="n">default_eval_func</span><span class="p">,</span> <span class="n">iterations</span><span class="p">)</span>
+
+    <span class="c1"># Create quantsim model to quantize the network using the default 8 bit params/activations</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">quantsim</span><span class="o">.</span><span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">starting_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;reshape_input&#39;</span><span class="p">],</span> <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dense_1/BiasAdd&#39;</span><span class="p">],</span>
+                                        <span class="n">quant_scheme</span><span class="o">=</span><span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span><span class="p">,</span>
+                                        <span class="n">config_file</span><span class="o">=</span><span class="s1">&#39;../../../TrainingExtensions/common/src/python/aimet_common/&#39;</span>
+                                                    <span class="s1">&#39;quantsim_config/default_config.json&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Compute encodings</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">forward_callback</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Do some fine-tuning</span>
+    <span class="n">training_helper</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">generator</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Example Fine-tuning step</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">training_helper</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">generator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A Helper function to fine-tune MNIST model&quot;&quot;&quot;</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">graph</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">session</span>
+    <span class="k">with</span> <span class="n">g</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s2">&quot;reshape_input:0&quot;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s2">&quot;labels:0&quot;</span><span class="p">)</span>
+        <span class="n">fc1_w</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s2">&quot;dense_1/MatMul/ReadVariableOp:0&quot;</span><span class="p">)</span>
+
+        <span class="n">ce</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s2">&quot;xent:0&quot;</span><span class="p">)</span>
+        <span class="c1"># Using Adam optimizer</span>
+        <span class="n">train_step</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;TempAdam&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">ce</span><span class="p">)</span>
+        <span class="n">graph_eval</span><span class="o">.</span><span class="n">initialize_uninitialized_vars</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+        <span class="c1"># Input data for MNIST</span>
+        <span class="n">mnist</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">read_data_sets</span><span class="p">(</span><span class="s1">&#39;./data&#39;</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Using 100 iterations and batch of size 50</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">next_batch</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">train_step</span><span class="p">,</span> <span class="n">fc1_w</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Find accuracy of model every 10 iterations</span>
+                <span class="n">perf</span> <span class="o">=</span> <span class="n">graph_eval</span><span class="o">.</span><span class="n">evaluate_graph</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">],</span> <span class="n">graph_eval</span><span class="o">.</span><span class="n">default_eval_func</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Quantized performance: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">perf</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
+
+    <span class="c1"># close session</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
