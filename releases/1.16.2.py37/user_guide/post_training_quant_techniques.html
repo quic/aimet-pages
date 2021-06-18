@@ -1,0 +1,172 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Post-Training Quantization Techniques &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2.py37</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2.py37</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Post-Training Quantization Techniques</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#user-flow">User Flow</a></li>
+<li><a class="reference internal" href="#faqs">FAQs</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-post-training-quantization-techniques">
+<span id="ug-post-training-quantization"></span><h1>AIMET Post-Training Quantization Techniques<a class="headerlink" href="#aimet-post-training-quantization-techniques" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>It is observed that some ML models show reduced inference accuracy when run on quantized hardware due to approximation noises. AIMET provides quantization post-training techniques that help adjust the parameters in the model such that the model becomes more quantization-friendly. AIMET post-quantization techniques are designed to be applied on pre-trained ML models. These techniques are explained as part of the “Data-Free Quantization Through Weight Equalization and Bias Correction” paper at ICCV 2019 - <a class="reference external" href="https://arxiv.org/abs/1906.04721">https://arxiv.org/abs/1906.04721</a></p>
+</div>
+<div class="section" id="user-flow">
+<h2>User Flow<a class="headerlink" href="#user-flow" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><img alt="../_images/flow_diagram_cle.png" src="../_images/flow_diagram_cle.png" />
+</div></blockquote>
+<ol class="arabic">
+<li><p>BatchNorm Folding: This feature will fold in the batch-norm layers (if present) into surrounding layers.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><a class="reference internal" href="visualization_quant.html#ug-quantization-visualization"><span class="std std-ref">Quantization Visualization</span></a>: AIMET provides visualization tools that help guide the user to determine if AIMET post-training quantization techniques are useful for a given model. Specifically, the visualization tools will show per-channel ranges of parameters to highlight if there is big discrepancy in ranges between different channels in a layer.</p>
+<blockquote>
+<div><img alt="../_images/cle_5.png" src="../_images/cle_5.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Replace ReLU6 with ReLU: This feature replaces ReLU6 layers with ReLU layers. This is needed for the subsequent cross-layer scaling step. However, this replacement can lead to a drop in accuracy for some models. If this drop in accuracy is not acceptable, the user may be better off not using the post-training quantization techniques.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Cross Layer Scaling: In some models, the parameter ranges for different channels in a layer show a wide variance. This feature attempts to equalize the parameter ranges across different channels. As seen below, the ranges of weights per channel in a layer vary significantly.  Cross-Layer Scaling scales layer’s per channel weights of consecutive layers. This helps increase the range for layers with low range and reduce range for layers with high range. Therefore, different channels have similar range and same quantizaion parameters can be used for weights across all channels.</p>
+<blockquote>
+<div><img alt="../_images/cle_1.png" src="../_images/cle_1.png" />
+</div></blockquote>
+<p>As shown below, AIMET takes in a model and equalizes the distribution of weights per channel of consecutive layers. The scaling factor is calculated and used to scale the weights. The output of the model remains the same and the dynamic range of weight distribution is reduced.</p>
+<blockquote>
+<div><img alt="../_images/cle_4.png" src="../_images/cle_4.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>High Bias Fold: Cross-layer scaling may result in high bias parameter values for some layers. This technique folds some of the bias of a layer into the subsequent layer’s parameters. High-bias fold requires batch-norm parameters to operate on. If the original model did not batch-norm parameters for a given layer, the high-bias fold technique will not be applied to that layer.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Bias Correction: Quantization sometimes leads to a shift in layer outputs. This techniques helps correct this shift by adjusting the bias parameters of that layer. Bias parameter is iteratively corrected/updated for each layer. The layer whose bias has to be corrected, and all the layers above it, are quantized. There are two techniques, namely  Empirical Bias Correction and Analytical Bias Correction that are supported for bias correction.</p></li>
+</ol>
+<p>In empirical bias correction technique, representative data is passed through both the FP32 model and quantized model. Outputs are extracted for the layer to be corrected from both the models and used for correcting the bias parameter as shown below which describes correcting bias for a single layer. This process continues for all layers in the model.</p>
+<img alt="../_images/bias_correction_empirical.png" src="../_images/bias_correction_empirical.png" />
+<p>In analytical bias correction, data from BatchNorms - when present are used for correction factor estimation instead of passing data through model as in empirical case.</p>
+<img alt="../_images/bias_correction_analytical.png" src="../_images/bias_correction_analytical.png" />
+</div>
+<div class="section" id="faqs">
+<h2>FAQs<a class="headerlink" href="#faqs" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>How many samples of data are required to perform Bias Correction?</dt><dd><p><em>Bias Correction requires a representative set of dataset. We have observed that providing 500-1000 samples works well.</em></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Which is better Empirical Bias Correction or Analytical + Empirical Bias Correction?</dt><dd><p><em>If speed is not a bottleneck, then it is suggested to use Empirical Bias Correction, else the hybrid approach of combining both.</em></p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Markus Nagel, Mart van Baalen, Tijmen Blankevoort, Max Welling. “Data-Free Quantization Through Weight Equalization and Bias Correction.” IEEE International Conference on Computer Vision (ICCV), Seoul, October 2019.</p></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2.py37</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,152 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Visualization for Quantization &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2.py37</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2.py37</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Visualization for Quantization</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#design">Design</a></li>
+<li><a class="reference internal" href="#quantization">Quantization</a><ul>
+<li><a class="reference internal" href="#pytorch">PyTorch</a></li>
+<li><a class="reference internal" href="#tensorflow">TensorFlow</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-visualization-for-quantization">
+<span id="ug-quantization-visualization"></span><h1>AIMET Visualization for Quantization<a class="headerlink" href="#aimet-visualization-for-quantization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>AIMET Visualization adds analytical capability to the AIMET tool (which helps quantize and compress ML models) through visualization. It provide more detailed insights in to AIMET features as users are able to analyze a model’s layers in terms of compressibility and also highlight potential issues when applying quantization. The tool also assists in displaying progress for computationally heavy tasks.</p>
+</div>
+<div class="section" id="design">
+<h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
+<p>Given a model, a user can start a Bokeh server session and then invoke functions which will produce visualizations to help analyze and understand the model before using AIMET features from quantization and compression</p>
+<img alt="../_images/vis_1.png" src="../_images/vis_1.png" />
+</div>
+<div class="section" id="quantization">
+<h2>Quantization<a class="headerlink" href="#quantization" title="Permalink to this headline">¶</a></h2>
+<p>During quantization, common parameters are used throughout a layer for converting the floating point weight values to INT8. If the dynamic range in weights is very high the quantization will not be very granular. To equalize the weight range we apply Cross Layer Equalization.
+In order to understand if we need to apply Cross Layer Equalization, we can visualize the weight range for every channel in a layer. If the weight range varies a lot over the various channels, applying cross layer equalization helps in improving the Quantization accuracy.</p>
+<img alt="../_images/vis_3.png" src="../_images/vis_3.png" />
+<div class="section" id="pytorch">
+<h3>PyTorch<a class="headerlink" href="#pytorch" title="Permalink to this headline">¶</a></h3>
+<p>In PyTorch, we can visualize the weights for a model. We can also visualize the weight ranges for a model before and after Cross Layer Equalization.
+There are three main functions a user can invoke:</p>
+<ol class="arabic simple">
+<li><p>User can analyze relative weight ranges of model to see potentially problematic layers for quantization</p></li>
+<li><p>User can understand each layer in the model</p></li>
+<li><p>User can visualize the model, comparing weights before and after quantization.</p></li>
+</ol>
+</div>
+<div class="section" id="tensorflow">
+<h3>TensorFlow<a class="headerlink" href="#tensorflow" title="Permalink to this headline">¶</a></h3>
+<p>In TensorFlow, we can visualize the weight ranges and relative weight ranges over various channels in a layer.
+User can also use the same functions to see the changes in a layer weight ranges before and after Cross Layer Equalization.</p>
+<p>There are two main functions a user can invoke:</p>
+<ol class="arabic simple">
+<li><p>User can analyze relative weight ranges of a layer to see potentially problematic layers for quantization</p></li>
+<li><p>User can visualize weight ranges of a layer and see the various statistics for weights</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="starting-a-bokeh-server-session">
+<h2>Starting a Bokeh Server Session:<a class="headerlink" href="#starting-a-bokeh-server-session" title="Permalink to this headline">¶</a></h2>
+<p>AIMET uses Bokeh for plotting. To visualize plots using Bokeh, user needs to start a Bokeh server. Following instructions show how Bokeh server can be started.</p>
+<ol class="arabic">
+<li><p>Start a Bokeh server by typing this command: bokeh serve - -allow-websocket-origin=&lt;host name&gt;:&lt;port number&gt; –port=&lt;port number&gt;</p>
+<blockquote>
+<div><p>–allow-websocket-origin tells the Bokeh server which network addresses to listen on, again not typically needed for local It is not need just to view locally.</p>
+<p class="attribution">—port tells the Bokeh server what network port to listen on rather than the default port of 5006</p>
+</div></blockquote>
+</li>
+<li><dl class="simple">
+<dt>Finally, go to the URL to see the visualizations.</dt><dd><ol class="loweralpha simple">
+<li><p>The session-id here is: optimization. So the URL would look something like this:</p></li>
+<li><p><a class="reference external" href="http:/">http:/</a>/&lt;host name&gt;:&lt;port number&gt;/?&amp;bokeh-session-id=optimization</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.16.2.py37</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
