@@ -1,0 +1,373 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>PyTorch Model Guidelines &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.17.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AIMET PyTorch Quantization APIs" href="torch_quantization.html" />
+    <link rel="prev" title="AIMET PyTorch APIs" href="torch.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="torch_quantization.html" title="AIMET PyTorch Quantization APIs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="torch.html" title="AIMET PyTorch APIs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.17.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="torch.html" accesskey="U">AIMET PyTorch APIs</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">PyTorch Model Guidelines</a><ul>
+<li><a class="reference internal" href="#aimet-model-dependencies">AIMET model dependencies</a></li>
+<li><a class="reference internal" href="#model-validator-utility">Model Validator Utility</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="torch.html"
+                        title="previous chapter">AIMET PyTorch APIs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="torch_quantization.html"
+                        title="next chapter">AIMET PyTorch Quantization APIs</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pytorch-model-guidelines">
+<span id="api-torch-model-validator"></span><h1>PyTorch Model Guidelines<a class="headerlink" href="#pytorch-model-guidelines" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="aimet-model-dependencies">
+<h2>AIMET model dependencies<a class="headerlink" href="#aimet-model-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>In order to make full use of AIMET features, there are several guidelines users are encouraged to follow when defining
+PyTorch models.</p>
+<p><strong>Model should support conversion to onnx</strong></p>
+<p>The model definition should support conversion to onnx, user could check compatibility of model for onnx conversion as
+shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">dummy_input</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">onnx_file_name</span><span class="o">&gt;</span><span class="p">):</span>
+</pre></div>
+</div>
+<p><strong>Define layers as modules instead of using torch.nn.functional equivalents</strong></p>
+<p>When using activation functions and other stateless layers, PyTorch will allow the user to either</p>
+<ul class="simple">
+<li><p>define the layers as modules (instantiated in the constructor and used in the forward pass), or</p></li>
+<li><p>use a torch.nn.functional equivalent purely in the forward pass</p></li>
+</ul>
+<p>For AIMET quantization simulation model to add simulation nodes, AIMET requires the former (layers defined as modules).
+Changing the model definition to use modules instead of functionals, is mathematically equivalent and does not require
+the model to be retrained.</p>
+<p>As an example, if the user had:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Users should instead define their model as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>This will not be possible in certain cases where operations can only be represented as functionals and not as class
+definitions, but should be followed whenever possible.</p>
+<p><strong>Avoid reuse of class defined modules</strong></p>
+<p>Modules defined in the class definition should only be used once. If any modules are being reused, instead define a new
+identical module in the class definition.
+For example, if the user had:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Users should instead define their model as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>Use only torch.Tensor or tuples of torch.Tensors as model/submodule inputs and outputs</strong></p>
+<p>Modules should use tensor or tuples of tensor for inputs and output in order to support conversion of the model to onnx.
+For example, if the user had:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>def __init__(self,...):
+...
+def forward(self, inputs: Dict[str, torch.Tensor]):
+    ...
+    x = self.conv1(inputs[‘image_rgb’])
+    rgb_output = self.relu1(x)
+    ...
+    x = self.conv2(inputs[‘image_bw&#39;])
+    bw_output = self.relu2(x)
+    ...
+    return { &#39;rgb&#39;: rgb_output, &#39;bw&#39;: bw_output }
+</pre></div>
+</div>
+<p>Users should instead define their model as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_rgb</span><span class="p">,</span> <span class="n">image_bw</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">image_rgb</span><span class="p">)</span>
+    <span class="n">rgb_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">image_bw</span><span class="p">)</span>
+    <span class="n">bw_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="n">rgb_output</span><span class="p">,</span> <span class="n">bw_output</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="model-validator-utility">
+<h2>Model Validator Utility<a class="headerlink" href="#model-validator-utility" title="Permalink to this headline">¶</a></h2>
+<p>AIMET provides a model validator utility to help check whether AIMET feature can be applied on a Pytorch model. The
+model validator currently checks for the following conditions:</p>
+<ul class="simple">
+<li><p>No modules are reused</p></li>
+<li><p>Operations have modules associated with them and are not defined as Functionals (excluding a set of known operations)</p></li>
+</ul>
+<p>In this section, we present models failing the validation checks, and show how to run the model validator, as well as
+how to fix the models so the validation checks pass.</p>
+<p><strong>Example 1: Model with reused modules</strong></p>
+<p>We begin with the following model, which contains two relu modules sharing the same module instance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ModelWithReusedNodes</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Model that reuses a relu module. Expects input of shape (1, 3, 32, 32) &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ModelWithReusedNodes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2592</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="hll">        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="hll">        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Import the model validator:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aimet_torch.model_validator.model_validator</span> <span class="kn">import</span> <span class="n">ModelValidator</span>
+</pre></div>
+</div>
+<p>Run the model validator on the model by passing in the model as well as model input:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">validate_example_model</span><span class="p">():</span>
+
+    <span class="c1"># Load the model to validate</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ModelWithReusedNodes</span><span class="p">()</span>
+
+    <span class="c1"># Output of ModelValidator.validate_model will be True if model is valid, False otherwise</span>
+    <span class="n">ModelValidator</span><span class="o">.</span><span class="n">validate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_input</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>For each validation check run on the model, a logger print will appear:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span> <span class="n">Running</span> <span class="n">validator</span> <span class="n">check</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">validate_for_reused_modules</span> <span class="n">at</span> <span class="mh">0x7f127685a598</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>If the validation check finds any issues with the model, the log will contain information for how to resolve the model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Utils</span> <span class="o">-</span> <span class="n">WARNING</span> <span class="o">-</span> <span class="n">The</span> <span class="n">following</span> <span class="n">modules</span> <span class="n">are</span> <span class="n">used</span> <span class="n">more</span> <span class="n">than</span> <span class="n">once</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">model</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;relu1&#39;</span><span class="p">]</span>
+<span class="n">AIMET</span> <span class="n">features</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">designed</span> <span class="n">to</span> <span class="n">work</span> <span class="k">with</span> <span class="n">reused</span> <span class="n">modules</span><span class="o">.</span> <span class="n">Please</span> <span class="n">redefine</span> <span class="n">your</span> <span class="n">model</span> <span class="n">to</span> <span class="n">use</span> <span class="n">distinct</span> <span class="n">modules</span> <span class="k">for</span>
+<span class="n">each</span> <span class="n">instance</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Finally, at the end of the validation, any failing checks will be logged:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span> <span class="n">The</span> <span class="n">following</span> <span class="n">validator</span> <span class="n">checks</span> <span class="n">failed</span><span class="p">:</span>
+<span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span>     <span class="o">&lt;</span><span class="n">function</span> <span class="n">validate_for_reused_modules</span> <span class="n">at</span> <span class="mh">0x7f127685a598</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>In this case, the validate_for_reused_modules check informs that the relu1 module is being used multiple times in the
+model. We rewrite the model by defining a separate relu instance for each usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ModelWithoutReusedNodes</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Model that is fixed to not reuse modules. Expects input of shape (1, 3, 32, 32) &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ModelWithoutReusedNodes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2592</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="hll">        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Now, after rerunning the model validator, all checks pass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span> <span class="n">Running</span> <span class="n">validator</span> <span class="n">check</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">validate_for_reused_modules</span> <span class="n">at</span> <span class="mh">0x7ff577373598</span><span class="o">&gt;</span>
+<span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span> <span class="n">Running</span> <span class="n">validator</span> <span class="n">check</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">validate_for_missing_modules</span> <span class="n">at</span> <span class="mh">0x7ff5703eff28</span><span class="o">&gt;</span>
+<span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span> <span class="n">All</span> <span class="n">validation</span> <span class="n">checks</span> <span class="n">passed</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>Example 2: Model with functionals</strong></p>
+<p>We start with the following model, which uses a torch linear functional layer in the forward pass:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ModelWithFunctionalLinear</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Model that uses a torch functional linear layer. Expects input of shape (1, 3, 32, 32) &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ModelWithFunctionalLinear</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="hll">        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2592</span><span class="p">))</span>
+</span>        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Running the model validator shows the validate_for_missing_modules check failing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span> <span class="n">Running</span> <span class="n">validator</span> <span class="n">check</span> <span class="o">&lt;</span><span class="n">function</span> <span class="n">validate_for_missing_modules</span> <span class="n">at</span> <span class="mh">0x7f9dd9bd90d0</span><span class="o">&gt;</span>
+<span class="n">Utils</span> <span class="o">-</span> <span class="n">WARNING</span> <span class="o">-</span> <span class="n">Ops</span> <span class="k">with</span> <span class="n">missing</span> <span class="n">modules</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;matmul_8&#39;</span><span class="p">]</span>
+<span class="n">This</span> <span class="n">can</span> <span class="n">be</span> <span class="n">due</span> <span class="n">to</span> <span class="n">several</span> <span class="n">reasons</span><span class="p">:</span>
+<span class="mf">1.</span> <span class="n">There</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">mapping</span> <span class="k">for</span> <span class="n">the</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">ConnectedGraph</span><span class="o">.</span><span class="n">op_type_map</span><span class="o">.</span> <span class="n">Add</span> <span class="n">a</span> <span class="n">mapping</span> <span class="k">for</span> <span class="n">ConnectedGraph</span> <span class="n">to</span> <span class="n">recognize</span> <span class="ow">and</span>
+<span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="nb">map</span> <span class="n">the</span> <span class="n">op</span><span class="o">.</span>
+<span class="mf">2.</span> <span class="n">The</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">defined</span> <span class="k">as</span> <span class="n">a</span> <span class="n">functional</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">forward</span> <span class="n">function</span><span class="p">,</span> <span class="n">instead</span> <span class="n">of</span> <span class="k">as</span> <span class="n">a</span> <span class="k">class</span> <span class="nc">module</span><span class="o">.</span> <span class="n">Redefine</span> <span class="n">the</span> <span class="n">op</span> <span class="k">as</span> <span class="n">a</span>
+<span class="k">class</span> <span class="nc">module</span> <span class="k">if</span> <span class="n">possible</span><span class="o">.</span> <span class="n">Else</span><span class="p">,</span> <span class="n">check</span> <span class="mf">3.</span>
+<span class="mf">3.</span> <span class="n">This</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">one</span> <span class="n">that</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">defined</span> <span class="k">as</span> <span class="n">a</span> <span class="k">class</span> <span class="nc">module</span><span class="p">,</span> <span class="n">but</span> <span class="n">has</span> <span class="ow">not</span> <span class="n">been</span> <span class="n">added</span> <span class="n">to</span> <span class="n">ConnectedGraph</span><span class="o">.</span><span class="n">functional_ops</span><span class="o">.</span>
+<span class="n">Add</span> <span class="n">to</span> <span class="k">continue</span><span class="o">.</span>
+<span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span> <span class="n">The</span> <span class="n">following</span> <span class="n">validator</span> <span class="n">checks</span> <span class="n">failed</span><span class="p">:</span>
+<span class="n">Utils</span> <span class="o">-</span> <span class="n">INFO</span> <span class="o">-</span>      <span class="o">&lt;</span><span class="n">function</span> <span class="n">validate_for_missing_modules</span> <span class="n">at</span> <span class="mh">0x7f9dd9bd90d0</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The check has identified matmul_8 as an operation with a missing pytorch module. In this case, it is due to reason #2
+in the log, in which the layer has been defined as a functional in the forward function. We rewrite the model by
+defining the layer as a module instead in order to resolve the issue.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ModelWithoutFunctionalLinear</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Model that is fixed to use a linear module instead of functional. Expects input of shape (1, 3, 32, 32) &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ModelWithoutFunctionalLinear</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2592</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span>        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2592</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="hll">        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span>        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="torch_quantization.html" title="AIMET PyTorch Quantization APIs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="torch.html" title="AIMET PyTorch APIs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.17.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="torch.html" >AIMET PyTorch APIs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
