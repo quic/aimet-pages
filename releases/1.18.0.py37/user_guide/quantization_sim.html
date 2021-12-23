@@ -1,0 +1,177 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Quantization Simulation &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.18.0.py37</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.18.0.py37</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Quantization Simulation</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#user-flow">User Flow</a></li>
+<li><a class="reference internal" href="#quantization-noise">Quantization Noise</a></li>
+<li><a class="reference internal" href="#what-happens-under-the-hood">What happens under the hood</a></li>
+<li><a class="reference internal" href="#placement-of-quantization-simulation-ops-in-the-model">Placement of quantization simulation ops in the model</a></li>
+<li><a class="reference internal" href="#recommendations-for-quantization-aware-fine-tuning">Recommendations for quantization-aware fine-tuning</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-quantization-simulation">
+<span id="ug-quantsim"></span><h1>AIMET Quantization Simulation<a class="headerlink" href="#aimet-quantization-simulation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>When ML models are run on quantized hardware, the runtime tools (like Qualcomm Neural Processing SDK) will convert the floating-point parameters of the model into fixed-point parameters. This conversion generally leads to a loss in accuracy. AIMET model quantization feature helps alleviate this problem. AIMET provides functionality to change the model to simulate the effects of quantized hardware. This allows the user to then re-train the model further (called fine-tuning) to recover the loss in accuracy. As a final step, AIMET provides functionality to export the model such that it can then be run on target via a runtime.</p>
+</div>
+<div class="section" id="user-flow">
+<h2>User Flow<a class="headerlink" href="#user-flow" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/quant_1.png" src="../_images/quant_1.png" />
+<p>The above explains a typical work flow a AIMET user can follow to make use of the quantization support. The steps are as follows</p>
+<ol class="arabic simple">
+<li><p>The AIMET user will create their model in one of the supported training frameworks (PyTorch or TensorFlow)</p></li>
+<li><p>User trains their model</p></li>
+<li><p>After the user has a working and trained model, she/he can invoke the AIMET quantization APIs to created a quantized version of the model. During this step, AIMET uses a dataloader passed in by the user to analyze the model and determine the best quantization encodings on a per-layer basis.</p></li>
+<li><p>User will further train the quantized version of the model. The user can re-train the model just like in Step 2. The model will learn to counter the effect of quantization noise. Please see <a class="reference internal" href="#qat-recommendations"><span class="std std-ref">some recommendations</span></a> for quantization-aware fine-tuning.</p></li>
+<li><p>User uses AIMET to save the model and the per-layer quantization encodings</p></li>
+<li><p>These can be fed to a runtime like Qualcomm Neural Processing SDK to run the model on target (AIMET Importing encodings into quantized runtimes)</p></li>
+</ol>
+</div>
+<div class="section" id="quantization-noise">
+<h2>Quantization Noise<a class="headerlink" href="#quantization-noise" title="Permalink to this headline">¶</a></h2>
+<p>The diagram below explains how quantization noise is introduced to a model when its input, output or parameters are quantized and dequantized.</p>
+<blockquote>
+<div><img alt="../_images/quant_3.png" src="../_images/quant_3.png" />
+</div></blockquote>
+<p>Since dequantizated value may not be exactly the same as quantized value, the difference between the two values is the quantization noise.</p>
+</div>
+<div class="section" id="what-happens-under-the-hood">
+<h2>What happens under the hood<a class="headerlink" href="#what-happens-under-the-hood" title="Permalink to this headline">¶</a></h2>
+<p>As explained above, in Step 3, AIMET analyzes the model and determines the optimal quantization encodings per-layer.</p>
+<img alt="../_images/quant_2.png" src="../_images/quant_2.png" />
+<p>To analyze, AIMET passes some training samples through the model and using hooks, captures the tensors as they are outputted from each layer. A histogram is created to model the distribution of the floating point numbers in the output tensor for each layer.</p>
+<p>Using the distribution of the floating point numbers in the output tensor for each layer, AIMET will use a scheme called “Enhanced TensorFlow” to determine the best encodings to convert the floating point numbers to fixed point. An encoding for a layer consists of four numbers:</p>
+<ul class="simple">
+<li><p>Min:     Numbers below these are clamped</p></li>
+<li><p>Max:    Numbers above these are clamped</p></li>
+<li><p>Delta:   Granularity of the fixed point numbers (is a function of the bit-width selected)</p></li>
+<li><p>Offset:  Offset from zero</p></li>
+</ul>
+<dl class="simple">
+<dt>The delta and offset can be calculated using min and max and vice versa using the equations:</dt><dd><p><span class="math notranslate nohighlight">\(delta = \frac{min - max}{{2}^{bitwidth} - 1}\)</span> and <span class="math notranslate nohighlight">\(offset = \frac{-min}{delta}\)</span></p>
+</dd>
+</dl>
+<p>During the fine-tuning phase in Step 4, the following happens in the forward pass:</p>
+<img alt="../_images/quant_4.png" src="../_images/quant_4.png" />
+<p>Weights from a given layer are first quantized to fixed point and then de-quantized back to floating point. And the same is done with the output tensor from the layer itself.
+AIMET achieves this by wrapping existing layers with a custom layer that add this functionality in PyTorch, and inserting quantization ops between layers in TensorFlow.</p>
+<img alt="../_images/quant_5.png" src="../_images/quant_5.png" />
+<p>In the backward pass, AIMET will backprop normally. This is achieved by keeping the full-resolution floating point weights as shadow weights to be used during backprop.</p>
+</div>
+<div class="section" id="placement-of-quantization-simulation-ops-in-the-model">
+<h2>Placement of quantization simulation ops in the model<a class="headerlink" href="#placement-of-quantization-simulation-ops-in-the-model" title="Permalink to this headline">¶</a></h2>
+<p>AIMET allows the configuration of quantizer placement in accordance with a set of rules specified in a json configuration file if provided when the Quantization Simulation API is called.
+In the configuration file, quantizers can be turned on and off, and/or configured with asymmetric or symmetric encodings.
+The general use case for this file would be for users to match the quantization rules for a particular runtime they would like to simulate.</p>
+<p>The configuration file contains six main sections, in increasing amounts of specificity:</p>
+<img alt="../_images/quantsim_config_file.png" src="../_images/quantsim_config_file.png" />
+<p>Rules defined in a more general section can be overruled by subsequent rules defined in a more specific case.
+For example, one may specify in “defaults” for no layers to be quantized, but then turn on quantization for specific layers in the “op_type” section.</p>
+<p>It is advised for the user to begin with the default configuration file under</p>
+<p>aimet_common/quantsim_config/default_config.json</p>
+</div>
+<div class="section" id="recommendations-for-quantization-aware-fine-tuning">
+<span id="qat-recommendations"></span><h2>Recommendations for quantization-aware fine-tuning<a class="headerlink" href="#recommendations-for-quantization-aware-fine-tuning" title="Permalink to this headline">¶</a></h2>
+<p>Here are some general guidelines that can aid in improving performance or faster convergence with Quantization-aware Training (QAT):</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Initialization:</dt><dd><ul>
+<li><p>Often it can be beneficial to first apply <a class="reference internal" href="post_training_quant_techniques.html#ug-post-training-quantization"><span class="std std-ref">post-training quantization</span></a> (Cross layer equalization (CLE) and bias correction) before applying QAT. This is especially beneficial if there is large drop in INT8 performance compared to the FP32 baseline.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Hyper-parameters:</dt><dd><ul>
+<li><p>Number of epochs: 15-20 epochs are generally sufficient for convergence</p></li>
+<li><p>Learning rate: Comparable (or one order higher) to FP32 model’s final learning rate at convergence. Results in AIMET are with learning of the order 1e-6.</p></li>
+<li><p>Learning rate schedule: Divide learning rate by 10 every 5-10 epochs</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.18.0.py37</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
