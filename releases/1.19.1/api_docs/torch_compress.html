@@ -1,0 +1,723 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET PyTorch Compression API &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.19.1</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AIMET Visualization Compression API" href="torch_visualization_compression.html" />
+    <link rel="prev" title="AIMET PyTorch Quantization APIs" href="torch_quantization.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="torch_visualization_compression.html" title="AIMET Visualization Compression API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="torch_quantization.html" title="AIMET PyTorch Quantization APIs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.19.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="torch.html" accesskey="U">AIMET PyTorch APIs</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET PyTorch Compression API</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li><a class="reference internal" href="#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li><a class="reference internal" href="#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li><a class="reference internal" href="#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li><a class="reference internal" href="#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li><a class="reference internal" href="#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li><a class="reference internal" href="#configuration-definitions">Configuration Definitions</a></li>
+<li><a class="reference internal" href="#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="torch_quantization.html"
+                        title="previous chapter">AIMET PyTorch Quantization APIs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="torch_visualization_compression.html"
+                        title="next chapter">AIMET Visualization Compression API</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-pytorch-compression-api">
+<h1>AIMET PyTorch Compression API<a class="headerlink" href="#aimet-pytorch-compression-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>AIMET supports the following model compression techniques for PyTorch models</dt><dd><ul class="simple">
+<li><p>Weight SVD</p></li>
+<li><p>Spatial SVD</p></li>
+<li><p>Channel Pruning</p></li>
+</ul>
+</dd>
+<dt>For all of these compression techniques there are two modes in which you can invoke the AIMET API</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Auto Mode: In <strong>Auto</strong> mode, AIMET will determine the optimal way to compress each layer of</dt><dd><p>the model given an overall target compression ratio. Greedy Compression Ratio Selection Algorithm is used to pick appropriate compression ratios for each layer.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Manual Mode: In <strong>Manual</strong> mode, the user can pass in the desired compression-ratio per layer</dt><dd><p>to AIMET. AIMET will apply the specified compression technique for each of the
+layers to achieve the desired compression-ratio per layer. It is recommended that
+the user start with Auto mode, and then tweak per-layer compression-ratios using
+Manual mode if desired.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="top-level-api-for-compression">
+<h2>Top-level API for Compression<a class="headerlink" href="#top-level-api-for-compression" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="greedy-selection-parameters">
+<h2>Greedy Selection Parameters<a class="headerlink" href="#greedy-selection-parameters" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_common.defs.GreedySelectionParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">GreedySelectionParameters</code><span class="sig-paren">(</span><em class="sig-param">target_comp_ratio</em>, <em class="sig-param">num_comp_ratio_candidates=10</em>, <em class="sig-param">use_monotonic_fit=False</em>, <em class="sig-param">saved_eval_scores_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_common.defs.GreedySelectionParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for the Greedy compression-ratio selection algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_comp_ratio</strong> – Target compression ratio. Expressed as value between 0 and 1.
+Compression ratio is the ratio of cost of compressed model to cost of the original model.</p></li>
+<li><p><strong>num_comp_ratio_candidates</strong> – Number of comp-ratio candidates to analyze per-layer
+More candidates allows more granular distribution of compression at the cost
+of increased run-time during analysis. Default value=10. Value should be greater than 1.</p></li>
+<li><p><strong>use_monotonic_fit</strong> – If True, eval scores in the eval dictionary are fitted to a monotonically increasing
+function. This is useful if you see the eval dict scores for some layers are not monotonically increasing.
+By default, this option is set to False.</p></li>
+<li><p><strong>saved_eval_scores_dict</strong> – Path to the eval_scores dictionary pickle file that was
+saved in a previous run. This is useful to speed-up experiments when trying
+different target compression-ratios for example. aimet will save eval_scores
+dictionary pickle file automatically in a ./data directory relative to the
+current path. num_comp_ratio_candidates parameter will be ignored when this option is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="tar-selection-parameters">
+<h2>TAR Selection Parameters<a class="headerlink" href="#tar-selection-parameters" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.defs.TarRankSelectionParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.defs.</code><code class="sig-name descname">TarRankSelectionParameters</code><span class="sig-paren">(</span><em class="sig-param">num_rank_indices</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.TarRankSelectionParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for the TAR compression-ratio selection algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>num_rank_indices</strong> – Number of rank indices for ratio selection.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="spatial-svd-configuration">
+<h2>Spatial SVD Configuration<a class="headerlink" href="#spatial-svd-configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.defs.SpatialSvdParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.defs.</code><code class="sig-name descname">SpatialSvdParameters</code><span class="sig-paren">(</span><em class="sig-param">mode</em>, <em class="sig-param">params</em>, <em class="sig-param">multiplicity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.SpatialSvdParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for spatial svd compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<a class="reference internal" href="#aimet_torch.defs.SpatialSvdParameters.Mode" title="aimet_torch.defs.SpatialSvdParameters.Mode"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mode</span></code></a>) – Either auto mode or manual mode</p></li>
+<li><p><strong>params</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_torch.defs.SpatialSvdParameters.ManualModeParams" title="aimet_torch.defs.SpatialSvdParameters.ManualModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManualModeParams</span></code></a>, <a class="reference internal" href="#aimet_torch.defs.SpatialSvdParameters.AutoModeParams" title="aimet_torch.defs.SpatialSvdParameters.AutoModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoModeParams</span></code></a>]) – Parameters for the mode selected</p></li>
+<li><p><strong>multiplicity</strong> – The multiplicity to which ranks/input channels will get rounded. Default: 1</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="aimet_torch.defs.SpatialSvdParameters.AutoModeParams">
+<em class="property">class </em><code class="sig-name descname">AutoModeParams</code><span class="sig-paren">(</span><em class="sig-param">greedy_select_params</em>, <em class="sig-param">modules_to_ignore=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.SpatialSvdParameters.AutoModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for auto-mode compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greedy_select_params</strong> (<a class="reference internal" href="#aimet_common.defs.GreedySelectionParameters" title="aimet_common.defs.GreedySelectionParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">GreedySelectionParameters</span></code></a>) – Params for greedy comp-ratio selection algorithm</p></li>
+<li><p><strong>modules_to_ignore</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]]) – List of modules to ignore (None indicates nothing to ignore)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_torch.defs.SpatialSvdParameters.ManualModeParams">
+<em class="property">class </em><code class="sig-name descname">ManualModeParams</code><span class="sig-paren">(</span><em class="sig-param">list_of_module_comp_ratio_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.SpatialSvdParameters.ManualModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for manual-mode spatial svd compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_module_comp_ratio_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.defs.ModuleCompRatioPair" title="aimet_torch.defs.ModuleCompRatioPair"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleCompRatioPair</span></code></a>]) – List of (module, comp-ratio) pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_torch.defs.SpatialSvdParameters.Mode">
+<em class="property">class </em><code class="sig-name descname">Mode</code><a class="headerlink" href="#aimet_torch.defs.SpatialSvdParameters.Mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mode enumeration</p>
+<dl class="attribute">
+<dt id="aimet_torch.defs.SpatialSvdParameters.Mode.auto">
+<code class="sig-name descname">auto</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_torch.defs.SpatialSvdParameters.Mode.auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto mode</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_torch.defs.SpatialSvdParameters.Mode.manual">
+<code class="sig-name descname">manual</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_torch.defs.SpatialSvdParameters.Mode.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manual mode</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="weight-svd-configuration">
+<h2>Weight SVD Configuration<a class="headerlink" href="#weight-svd-configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.defs.WeightSvdParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.defs.</code><code class="sig-name descname">WeightSvdParameters</code><span class="sig-paren">(</span><em class="sig-param">mode</em>, <em class="sig-param">params</em>, <em class="sig-param">multiplicity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.WeightSvdParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for weight svd compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<a class="reference internal" href="#aimet_torch.defs.WeightSvdParameters.Mode" title="aimet_torch.defs.WeightSvdParameters.Mode"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mode</span></code></a>) – Either auto mode or manual mode</p></li>
+<li><p><strong>params</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_torch.defs.WeightSvdParameters.ManualModeParams" title="aimet_torch.defs.WeightSvdParameters.ManualModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManualModeParams</span></code></a>, <a class="reference internal" href="#aimet_torch.defs.WeightSvdParameters.AutoModeParams" title="aimet_torch.defs.WeightSvdParameters.AutoModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoModeParams</span></code></a>]) – Parameters for the mode selected</p></li>
+<li><p><strong>multiplicity</strong> – The multiplicity to which ranks/input channels will get rounded. Default: 1</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="aimet_torch.defs.WeightSvdParameters.AutoModeParams">
+<em class="property">class </em><code class="sig-name descname">AutoModeParams</code><span class="sig-paren">(</span><em class="sig-param">rank_select_scheme</em>, <em class="sig-param">select_params</em>, <em class="sig-param">modules_to_ignore=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.WeightSvdParameters.AutoModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for auto-mode compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rank_select_scheme</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">RankSelectScheme</span></code>) – supports two options greedy and tar</p></li>
+<li><p><strong>select_params</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_common.defs.GreedySelectionParameters" title="aimet_common.defs.GreedySelectionParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">GreedySelectionParameters</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TarRankSelectionParameters</span></code>]) – Params for greedy/TAR comp-ratio selection algorithm</p></li>
+<li><p><strong>modules_to_ignore</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]]) – List of modules to ignore (None indicates nothing to ignore)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_torch.defs.WeightSvdParameters.ManualModeParams">
+<em class="property">class </em><code class="sig-name descname">ManualModeParams</code><span class="sig-paren">(</span><em class="sig-param">list_of_module_comp_ratio_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.WeightSvdParameters.ManualModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for manual-mode weight svd compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_module_comp_ratio_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.defs.ModuleCompRatioPair" title="aimet_torch.defs.ModuleCompRatioPair"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleCompRatioPair</span></code></a>]) – List of (module, comp-ratio) pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_torch.defs.WeightSvdParameters.Mode">
+<em class="property">class </em><code class="sig-name descname">Mode</code><a class="headerlink" href="#aimet_torch.defs.WeightSvdParameters.Mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mode enumeration</p>
+<dl class="attribute">
+<dt id="aimet_torch.defs.WeightSvdParameters.Mode.auto">
+<code class="sig-name descname">auto</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_torch.defs.WeightSvdParameters.Mode.auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto mode</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_torch.defs.WeightSvdParameters.Mode.manual">
+<code class="sig-name descname">manual</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_torch.defs.WeightSvdParameters.Mode.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manual mode</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="channel-pruning-configuration">
+<h2>Channel Pruning Configuration<a class="headerlink" href="#channel-pruning-configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.defs.ChannelPruningParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.defs.</code><code class="sig-name descname">ChannelPruningParameters</code><span class="sig-paren">(</span><em class="sig-param">data_loader</em>, <em class="sig-param">num_reconstruction_samples</em>, <em class="sig-param">allow_custom_downsample_ops</em>, <em class="sig-param">mode</em>, <em class="sig-param">params</em>, <em class="sig-param">multiplicity=1</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.ChannelPruningParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for channel pruning compression</p>
+<dl class="class">
+<dt id="aimet_torch.defs.ChannelPruningParameters.AutoModeParams">
+<em class="property">class </em><code class="sig-name descname">AutoModeParams</code><span class="sig-paren">(</span><em class="sig-param">greedy_select_params</em>, <em class="sig-param">modules_to_ignore=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.ChannelPruningParameters.AutoModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for auto-mode compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greedy_select_params</strong> (<a class="reference internal" href="#aimet_common.defs.GreedySelectionParameters" title="aimet_common.defs.GreedySelectionParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">GreedySelectionParameters</span></code></a>) – Params for greedy comp-ratio selection algorithm</p></li>
+<li><p><strong>modules_to_ignore</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]]) – List of modules to ignore (None indicates nothing to ignore)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_torch.defs.ChannelPruningParameters.ManualModeParams">
+<em class="property">class </em><code class="sig-name descname">ManualModeParams</code><span class="sig-paren">(</span><em class="sig-param">list_of_module_comp_ratio_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.ChannelPruningParameters.ManualModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for manual-mode channel pruning compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_module_comp_ratio_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.defs.ModuleCompRatioPair" title="aimet_torch.defs.ModuleCompRatioPair"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleCompRatioPair</span></code></a>]) – List of (module, comp-ratio) pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_torch.defs.ChannelPruningParameters.Mode">
+<em class="property">class </em><code class="sig-name descname">Mode</code><a class="headerlink" href="#aimet_torch.defs.ChannelPruningParameters.Mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mode enumeration</p>
+<dl class="attribute">
+<dt id="aimet_torch.defs.ChannelPruningParameters.Mode.auto">
+<code class="sig-name descname">auto</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_torch.defs.ChannelPruningParameters.Mode.auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto mode: AIMET computes optimal comp-ratio per layer</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_torch.defs.ChannelPruningParameters.Mode.manual">
+<code class="sig-name descname">manual</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_torch.defs.ChannelPruningParameters.Mode.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manual mode: User specifies comp-ratio per layer</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="configuration-definitions">
+<h2>Configuration Definitions<a class="headerlink" href="#configuration-definitions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">CostMetric</code></dt>
+<dd><p>Enumeration of metrics to measure cost of a model/layer</p>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">mac</code><em class="property"> = 1</em></dt>
+<dd><p>MAC: Cost modeled for compute requirements</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">memory</code><em class="property"> = 2</em></dt>
+<dd><p>Memory: Cost modeled for space requirements</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">CompressionScheme</code></dt>
+<dd><p>Enumeration of compression schemes supported in aimet</p>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">channel_pruning</code><em class="property"> = 3</em></dt>
+<dd><p>Channel Pruning</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">spatial_svd</code><em class="property"> = 2</em></dt>
+<dd><p>Spatial SVD</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">weight_svd</code><em class="property"> = 1</em></dt>
+<dd><p>Weight SVD</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="class">
+<dt id="aimet_torch.defs.ModuleCompRatioPair">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.defs.</code><code class="sig-name descname">ModuleCompRatioPair</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">comp_ratio</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.defs.ModuleCompRatioPair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pair of torch.nn.module and a compression-ratio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> – Module of type torch.nn.module</p></li>
+<li><p><strong>comp_ratio</strong> – Compression ratio. Compression ratio is the ratio of cost of compressed model
+to cost of the original model.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples">
+<h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+
+<span class="c1"># Compression-related imports</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">CostMetric</span><span class="p">,</span> <span class="n">CompressionScheme</span><span class="p">,</span> <span class="n">GreedySelectionParameters</span><span class="p">,</span> <span class="n">RankSelectScheme</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.defs</span> <span class="kn">import</span> <span class="n">WeightSvdParameters</span><span class="p">,</span> <span class="n">SpatialSvdParameters</span><span class="p">,</span> <span class="n">ChannelPruningParameters</span><span class="p">,</span> \
+    <span class="n">ModuleCompRatioPair</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.compress</span> <span class="kn">import</span> <span class="n">ModelCompressor</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.examples</span> <span class="kn">import</span> <span class="n">mnist_torch_model</span>
+</pre></div>
+</div>
+<p><strong>Evaluation function</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">eval_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is intended to be the user-defined model evaluation function.</span>
+<span class="sd">    AIMET requires the above signature. So if the user&#39;s eval function does not</span>
+<span class="sd">    match this signature, please create a simple wrapper.</span>
+
+<span class="sd">    Note: Honoring the number of iterations is not absolutely necessary.</span>
+<span class="sd">    However if all evaluations run over an entire epoch of validation data,</span>
+<span class="sd">    the runtime for AIMET compression will obviously be higher.</span>
+
+<span class="sd">    :param model: Model to evaluate</span>
+<span class="sd">    :param eval_iterations: Number of iterations to use for evaluation.</span>
+<span class="sd">            None for entire epoch.</span>
+<span class="sd">    :param use_cuda: If true, evaluate using gpu acceleration</span>
+<span class="sd">    :return: single float number (accuracy) representing model&#39;s performance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">.5</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Spatial SVD in auto mode with multiplicity = 8 for rank rounding</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_auto_mode</span><span class="p">():</span>
+
+    <span class="c1"># load trained MNIST model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+                                              <span class="n">num_comp_ratio_candidates</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">auto_params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">AutoModeParams</span><span class="p">(</span><span class="n">greedy_params</span><span class="p">,</span>
+                                                      <span class="n">modules_to_ignore</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">])</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                                  <span class="n">params</span><span class="o">=</span><span class="n">auto_params</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">spatial_svd</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>     <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Spatial SVD in manual mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_manual_mode</span><span class="p">():</span>
+
+    <span class="c1"># Load a trained MNIST model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">manual_params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">([</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                                                           <span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)])</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">manual</span><span class="p">,</span>
+                                  <span class="n">params</span><span class="o">=</span><span class="n">manual_params</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">spatial_svd</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>    <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Weight SVD in auto mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weight_svd_auto_mode</span><span class="p">():</span>
+
+    <span class="c1"># Load trained MNIST model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+                                              <span class="n">num_comp_ratio_candidates</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">rank_select</span> <span class="o">=</span> <span class="n">RankSelectScheme</span><span class="o">.</span><span class="n">greedy</span>
+    <span class="n">auto_params</span> <span class="o">=</span> <span class="n">WeightSvdParameters</span><span class="o">.</span><span class="n">AutoModeParams</span><span class="p">(</span><span class="n">rank_select_scheme</span><span class="o">=</span><span class="n">rank_select</span><span class="p">,</span>
+                                                     <span class="n">select_params</span><span class="o">=</span><span class="n">greedy_params</span><span class="p">,</span>
+                                                     <span class="n">modules_to_ignore</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">])</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">WeightSvdParameters</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">WeightSvdParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                                 <span class="n">params</span><span class="o">=</span><span class="n">auto_params</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">weight_svd</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>     <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Weight SVD in manual mode with multiplicity = 8 for rank rounding</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weight_svd_manual_mode</span><span class="p">():</span>
+
+    <span class="c1"># Load a trained MNIST model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">manual_params</span> <span class="o">=</span> <span class="n">WeightSvdParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">([</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                                                          <span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)])</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">WeightSvdParameters</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">WeightSvdParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">manual</span><span class="p">,</span>
+                                 <span class="n">params</span><span class="o">=</span><span class="n">manual_params</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">weight_svd</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>    <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Channel Pruning in auto mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">channel_pruning_auto_mode</span><span class="p">():</span>
+
+    <span class="c1"># Load trained MNIST model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+                                              <span class="n">num_comp_ratio_candidates</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">auto_params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">AutoModeParams</span><span class="p">(</span><span class="n">greedy_params</span><span class="p">,</span>
+                                                          <span class="n">modules_to_ignore</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">])</span>
+
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">mnist_torch_model</span><span class="o">.</span><span class="n">DataLoaderMnist</span><span class="p">(</span><span class="n">cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="p">(</span><span class="n">data_loader</span><span class="o">=</span><span class="n">data_loader</span><span class="o">.</span><span class="n">train_loader</span><span class="p">,</span>
+                                      <span class="n">num_reconstruction_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                                      <span class="n">allow_custom_downsample_ops</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">mode</span><span class="o">=</span><span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                                      <span class="n">params</span><span class="o">=</span><span class="n">auto_params</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">channel_pruning</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>     <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Channel Pruning in manual mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">channel_pruning_manual_mode</span><span class="p">():</span>
+
+    <span class="c1"># Load a trained MNIST model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">manual_params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">([</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)])</span>
+
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">mnist_torch_model</span><span class="o">.</span><span class="n">DataLoaderMnist</span><span class="p">(</span><span class="n">cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="p">(</span><span class="n">data_loader</span><span class="o">=</span><span class="n">data_loader</span><span class="o">.</span><span class="n">train_loader</span><span class="p">,</span>
+                                      <span class="n">num_reconstruction_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                                      <span class="n">allow_custom_downsample_ops</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">mode</span><span class="o">=</span><span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">manual</span><span class="p">,</span>
+                                      <span class="n">params</span><span class="o">=</span><span class="n">manual_params</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">channel_pruning</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>    <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Example Training Object</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Trainer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Example trainer class &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layer_db</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">train_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Trains a model</span>
+<span class="sd">        :param model: Model to be trained</span>
+<span class="sd">        :param layer: layer which has to be fine tuned</span>
+<span class="sd">        :param train_flag: Default: True. If ture the model gets trained</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">train_flag</span><span class="p">:</span>
+            <span class="n">mnist_torch_model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">batch_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_layer_db</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Spatial SVD in auto mode with layer-wise fine tuning</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_auto_mode_with_layerwise_finetuning</span><span class="p">():</span>
+
+    <span class="c1"># load trained MNIST model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_trained_on_GPU.pth&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+                                              <span class="n">num_comp_ratio_candidates</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">auto_params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">AutoModeParams</span><span class="p">(</span><span class="n">greedy_params</span><span class="p">,</span>
+                                                      <span class="n">modules_to_ignore</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">])</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                                  <span class="n">params</span><span class="o">=</span><span class="n">auto_params</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">spatial_svd</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="n">Trainer</span><span class="p">())</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>     <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="torch_visualization_compression.html" title="AIMET Visualization Compression API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="torch_quantization.html" title="AIMET PyTorch Quantization APIs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.19.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="torch.html" >AIMET PyTorch APIs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

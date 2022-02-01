@@ -1,0 +1,194 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>PyTorch Model Guidelines &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.19.1</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.19.1</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pytorch-model-guidelines">
+<span id="api-torch-model-guidelines"></span><h1>PyTorch Model Guidelines<a class="headerlink" href="#pytorch-model-guidelines" title="Permalink to this headline">¶</a></h1>
+<p>In order to make full use of AIMET features, there are several guidelines users are encouraged to follow when defining
+PyTorch models.</p>
+<p><strong>Model should support conversion to onnx</strong></p>
+<p>The model definition should support conversion to onnx, user could check compatibility of model for onnx conversion as
+shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">dummy_input</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">onnx_file_name</span><span class="o">&gt;</span><span class="p">):</span>
+</pre></div>
+</div>
+<p><strong>Model should be jit traceable</strong></p>
+<p>The model definition should be jit traceable, user could check compatibility of model for jit tracing as
+shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">dummy_input</span><span class="o">&gt;</span><span class="p">):</span>
+</pre></div>
+</div>
+<p><strong>Define layers as modules instead of using torch.nn.functional equivalents</strong></p>
+<p>When using activation functions and other stateless layers, PyTorch will allow the user to either</p>
+<ul class="simple">
+<li><p>define the layers as modules (instantiated in the constructor and used in the forward pass), or</p></li>
+<li><p>use a torch.nn.functional equivalent purely in the forward pass</p></li>
+</ul>
+<p>For AIMET quantization simulation model to add simulation nodes, AIMET requires the former (layers defined as modules).
+Changing the model definition to use modules instead of functionals, is mathematically equivalent and does not require
+the model to be retrained.</p>
+<p>As an example, if the user had:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Users should instead define their model as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>This will not be possible in certain cases where operations can only be represented as functionals and not as class
+definitions, but should be followed whenever possible.</p>
+<p>Also, User can also automate this by using <a class="reference internal" href="torch_model_preparer.html#api-torch-model-preparer"><span class="std std-ref">Model Preparer API</span></a></p>
+<p><strong>Avoid reuse of class defined modules</strong></p>
+<p>Modules defined in the class definition should only be used once. If any modules are being reused, instead define a new
+identical module in the class definition.
+For example, if the user had:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Users should instead define their model as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Also, User can also automate this by using <a class="reference internal" href="torch_model_preparer.html#api-torch-model-preparer"><span class="std std-ref">Model Preparer API</span></a></p>
+<p><strong>Use only torch.Tensor or tuples of torch.Tensors as model/submodule inputs and outputs</strong></p>
+<p>Modules should use tensor or tuples of tensor for inputs and output in order to support conversion of the model to onnx.
+For example, if the user had:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;image_rgb&#39;</span><span class="p">])</span>
+    <span class="n">rgb_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;image_bw&#39;</span><span class="p">])</span>
+    <span class="n">bw_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;rgb&#39;</span><span class="p">:</span> <span class="n">rgb_output</span><span class="p">,</span> <span class="s1">&#39;bw&#39;</span><span class="p">:</span> <span class="n">bw_output</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Users should instead define their model as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_rgb</span><span class="p">,</span> <span class="n">image_bw</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">image_rgb</span><span class="p">)</span>
+    <span class="n">rgb_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">image_bw</span><span class="p">)</span>
+    <span class="n">bw_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="n">rgb_output</span><span class="p">,</span> <span class="n">bw_output</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.19.1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
