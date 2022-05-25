@@ -1,0 +1,122 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Channel Pruning &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.20.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.20.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Channel Pruning</a><ul>
+<li><a class="reference internal" href="#overall-procedure">Overall Procedure</a></li>
+<li><a class="reference internal" href="#channel-selection">Channel Selection</a></li>
+<li><a class="reference internal" href="#winnowing">Winnowing</a></li>
+<li><a class="reference internal" href="#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-channel-pruning">
+<h1>AIMET Channel Pruning<a class="headerlink" href="#aimet-channel-pruning" title="Permalink to this headline">¶</a></h1>
+<p>Channel Pruning is a model compression technique that reduces less-important input channels from layers in a given model. Currently AIMET supports Channel Pruning of Conv2d layers.</p>
+<div class="section" id="overall-procedure">
+<h2>Overall Procedure<a class="headerlink" href="#overall-procedure" title="Permalink to this headline">¶</a></h2>
+<p>The following picture explains the different steps in Channel Pruning a given layer. These steps are repeated for all layers selected to be compressed in the order of their occurrence from the top of the model.</p>
+<img alt="../_images/channel_pruning_1.png" src="../_images/channel_pruning_1.png" />
+<p>These individual steps are explained in more detail in the following sub-sections.</p>
+</div>
+<div class="section" id="channel-selection">
+<h2>Channel Selection<a class="headerlink" href="#channel-selection" title="Permalink to this headline">¶</a></h2>
+<p>For a given layer and a given compression ratio Channel Selection analyzes the magnitude of each input channel (based on the kernel weights for that channel) and chooses the channels with the least magnitude to be pruned.</p>
+</div>
+<div class="section" id="winnowing">
+<h2>Winnowing<a class="headerlink" href="#winnowing" title="Permalink to this headline">¶</a></h2>
+<p>Winnowing is used to remove input channels of weight matrix obtained from Channel Selection resulting in compressed tensors</p>
+<img alt="../_images/cp_2.png" src="../_images/cp_2.png" />
+<p>Once one or more input channels for a layer are removed, then it means corresponding output channels of a upstream layer could also be removed to get further compression gains. Note that the presence of skip-connections or residuals sometimes prevents upstream layers from getting output-pruned.</p>
+<img alt="../_images/cp_3.jpg" src="../_images/cp_3.jpg" />
+<p>For more details on winnowing, please see this</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="winnowing.html">Winnowing</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="weight-reconstruction">
+<h2>Weight Reconstruction<a class="headerlink" href="#weight-reconstruction" title="Permalink to this headline">¶</a></h2>
+<p>As a final step in Channel Pruning, AIMET will adjust the weight and bias parameters of a layer that was pruned in an attempt to try and match the outputs of that layer to closely match the outputs prior to pruning.This is done by collecting random samples of the output of the layer from the original model and the corresponding input samples from the pruned model for that layer. AIMET then performs linear regression to adjust the layer parameters.</p>
+<img alt="../_images/cp_4.jpg" src="../_images/cp_4.jpg" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.20.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
