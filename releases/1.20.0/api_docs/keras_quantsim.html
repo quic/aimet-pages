@@ -1,0 +1,198 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Keras Quantization SIM API &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.20.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.20.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Keras Quantization SIM API</a><ul>
+<li><a class="reference internal" href="#top-level-api">Top-level API</a></li>
+<li><a class="reference internal" href="#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-keras-quantization-sim-api">
+<span id="api-keras-quantsim"></span><h1>AIMET Keras Quantization SIM API<a class="headerlink" href="#aimet-keras-quantization-sim-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="top-level-api">
+<h2>Top-level API<a class="headerlink" href="#top-level-api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.keras.quantsim.QuantizationSimModel">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.keras.quantsim.</code><code class="sig-name descname">QuantizationSimModel</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">quant_scheme='tf_enhanced'</em>, <em class="sig-param">rounding_mode='nearest'</em>, <em class="sig-param">default_output_bw=8</em>, <em class="sig-param">default_param_bw=8</em>, <em class="sig-param">in_place=False</em>, <em class="sig-param">config_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.keras.quantsim.QuantizationSimModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements mechanism to add quantization simulations ops to a model. This allows for off-target simulation of
+inference accuracy. Also allows the model to be fine-tuned to counter the effects of quantization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – Model to quantize</p></li>
+<li><p><strong>quant_scheme</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="torch_quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Quantization Scheme, currently supported schemes are post_training_tf and
+post_training_tf_enhanced, defaults to post_training_tf_enhanced</p></li>
+<li><p><strong>rounding_mode</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The round scheme to used. One of: ‘nearest’ or ‘stochastic’, defaults to ‘nearest’.</p></li>
+<li><p><strong>default_output_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – bitwidth to use for activation tensors, defaults to 8</p></li>
+<li><p><strong>default_param_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – bitwidth to use for parameter tensors, defaults to 8</p></li>
+<li><p><strong>in_place</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True, then the given ‘model’ is modified in-place to add quant-sim nodes.
+Only suggested use of this option is when the user wants to avoid creating a copy of the model</p></li>
+<li><p><strong>config_file</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path to a config file to use to specify rules for placing quant ops in the model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>The following API can be used to Compute Encodings for Model</strong></p>
+<dl class="method">
+<dt id="aimet_tensorflow.keras.quantsim.QuantizationSimModel.compute_encodings">
+<code class="sig-prename descclassname">QuantizationSimModel.</code><code class="sig-name descname">compute_encodings</code><span class="sig-paren">(</span><em class="sig-param">forward_pass_callback</em>, <em class="sig-param">forward_pass_callback_args</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.keras.quantsim.QuantizationSimModel.compute_encodings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes encodings for all quantization sim nodes in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forward_pass_callback</strong> – A callback function that is expected to runs forward passes on a model.
+This callback function should use representative data for the forward pass, so the calculated
+encodings work for all data samples.</p></li>
+<li><p><strong>forward_pass_callback_args</strong> – These argument(s) are passed to the forward_pass_callback as-is. Up to
+the user to determine the type of this parameter. E.g. could be simply an integer representing the number
+of data samples to use. Or could be a tuple of parameters or an object representing something more
+complex.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>The following API can be used to Export the Model to target</strong></p>
+<dl class="method">
+<dt id="aimet_tensorflow.keras.quantsim.QuantizationSimModel.export">
+<code class="sig-prename descclassname">QuantizationSimModel.</code><code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">filename_prefix</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.keras.quantsim.QuantizationSimModel.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method exports out the quant-sim model so it is ready to be run on-target.</p>
+<p>Specifically, the following are saved</p>
+<ol class="arabic simple">
+<li><p>The sim-model is exported to a regular Keras model without any simulation ops</p></li>
+<li><p>The quantization encodings are exported to a separate JSON-formatted file that can
+then be imported by the on-target runtime (if desired)</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – path where to store model pth and encodings</p></li>
+<li><p><strong>filename_prefix</strong> – Prefix to use for filenames of the model pth and encodings files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Encoding format is described in the <a class="reference internal" href="quantization_encoding_specification.html#api-quantization-encoding-spec"><span class="std std-ref">Quantization Encoding Specification</span></a></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples">
+<h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras</span> <span class="kn">import</span> <span class="n">quantsim</span>
+</pre></div>
+</div>
+<p><strong>Quantize with Fine tuning</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">quantize_model</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">applications</span><span class="o">.</span><span class="n">resnet50</span><span class="o">.</span><span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">quantsim</span><span class="o">.</span><span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="c1"># Generate some dummy data</span>
+    <span class="n">dummy_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">dummy_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,))</span>
+    <span class="n">dummy_y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">to_categorical</span><span class="p">(</span><span class="n">dummy_y</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="c1"># Compute encodings</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">),</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span><span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">evaluate</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="o">=</span><span class="p">(</span><span class="n">dummy_x</span><span class="p">,</span> <span class="n">dummy_y</span><span class="p">))</span>
+
+    <span class="c1"># Do some fine-tuning</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">dummy_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">dummy_y</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.20.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
