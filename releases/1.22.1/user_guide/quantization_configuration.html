@@ -1,0 +1,197 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Quantization Simulation Configuration &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quantization Simulation Configuration</a><ul>
+<li><a class="reference internal" href="#how-to-configure-individual-configuration-file-sections">How to configure individual Configuration File Sections</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quantization-simulation-configuration">
+<span id="ug-quantsim-config"></span><h1>Quantization Simulation Configuration<a class="headerlink" href="#quantization-simulation-configuration" title="Permalink to this headline">¶</a></h1>
+<p>AIMET allows the configuration of quantizer placement in accordance with a set of rules specified in a json configuration file if provided when the Quantization Simulation API is called.
+In the configuration file, quantizers can be turned on and off, and/or configured with asymmetric or symmetric encodings.
+The general use case for this file would be for users to match the quantization rules for a particular Runtime they would like to simulate.</p>
+<p>The configuration file contains six main sections, in increasing amounts of specificity:</p>
+<img alt="../_images/quantsim_config_file.png" src="../_images/quantsim_config_file.png" />
+<p>Rules defined in a more general section can be overruled by subsequent rules defined in a more specific case.
+For example, one may specify in “defaults” for no layers to be quantized, but then turn on quantization for specific layers in the “op_type” section.</p>
+<p>It is advised for the user to begin with the default configuration file under</p>
+<p>aimet_common/quantsim_config/default_config.json</p>
+<div class="section" id="how-to-configure-individual-configuration-file-sections">
+<h2>How to configure individual Configuration File Sections<a class="headerlink" href="#how-to-configure-individual-configuration-file-sections" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p><strong>defaults</strong>:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;defaults&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;ops&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_output_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;strict_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;unsigned_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;per_channel_quantization&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>The “defaults” section shown above, configures the following:</dt><dd><ul class="simple">
+<li><p>All the Ops’ output are quantized</p></li>
+<li><p>All the parameters (Weights and Biases) are quantized</p></li>
+<li><p>Strict Symmetric quantization is disabled.</p></li>
+<li><p>Unsigned symmetric quantization is enabled</p></li>
+<li><p>Per Channel Quantization is disabled.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Based on the Runtime support available to a specific hardware, the user can modify the configuration. In addition, for any Op and parameter the default configuration above could be overridden as shown in the sections below.</p>
+<ol class="arabic simple" start="2">
+<li><p><strong>params</strong>:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;bias&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;is_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+</pre></div>
+</div>
+<p>In the “defaults” section, all the params (weights and bias) are configured to be quantized. In this “params” section,
+for the Bias param, quantization is disabled.</p>
+<ol class="arabic simple" start="3">
+<li><p><strong>op_type</strong>:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;op_type&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;Squeeze&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_output_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span>
+      <span class="p">},</span>
+</pre></div>
+</div>
+<p>The above configuration snippet is not part of the default_config.json file. It is shown here for illustrative purposes.
+In this “op_type” section, the default ops configuration in the “defaults” section is overridden for the “Squeeze” Op.
+For the “Squeeze” Op, the quantization has been disabled.</p>
+<ol class="arabic simple" start="4">
+<li><p><strong>supergroups</strong>:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;supergroups&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Conv&quot;</span><span class="p">,</span> <span class="s2">&quot;Relu&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Conv&quot;</span><span class="p">,</span> <span class="s2">&quot;Clip&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Add&quot;</span><span class="p">,</span> <span class="s2">&quot;Relu&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Gemm&quot;</span><span class="p">,</span> <span class="s2">&quot;Relu&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+</pre></div>
+</div>
+<p>Supergroups are a sequence of Ops which are treated together as single Op by the Runtime. In order to simulate the
+Runtime behavior, QuatntSim treats each sequence of Ops configured in this section as a single Op. For example,
+the “op_list”: [“Conv, “relu”] is a Supergroup. In this case, QuantSim does not quantize the output of the “Conv” Op
+but quantizes the output of the “Relu” Op.</p>
+<ol class="arabic simple" start="5">
+<li><p><strong>model_input</strong>:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;model_input&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_input_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>
+    <span class="p">},</span>
+</pre></div>
+</div>
+<p>The “model_input” section is used to configure the quantization of the input to the model. In the above example,
+the model’s input is quantized.</p>
+<p>Note:
+If you prefer to NOT quantize the input to the model,  remove the line, “is_input_quantized”: “True”. Do not set it to False.</p>
+<ol class="arabic simple" start="6">
+<li><p><strong>model_output</strong>:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;model_output&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The “model_output” section is used to configure the quantization of the output of the model. In the above example,
+the model’s output is not quantized by leaving the entry blank.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

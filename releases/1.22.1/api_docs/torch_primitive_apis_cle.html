@@ -1,0 +1,401 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET PyTorch Cross Layer Equalization Primitive API &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET PyTorch Cross Layer Equalization Primitive API</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li><a class="reference internal" href="#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li><a class="reference internal" href="#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li><a class="reference internal" href="#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li><a class="reference internal" href="#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-pytorch-cross-layer-equalization-primitive-api">
+<h1>AIMET PyTorch Cross Layer Equalization Primitive API<a class="headerlink" href="#aimet-pytorch-cross-layer-equalization-primitive-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>If a user wants to modify the order of Cross Layer equalization, not use some features or manually tweak the list of
+layers that need to be equalized, the following APIs can be used.</p>
+<p>Higher level APIs can be used for using one or more features one after the other. It automatically finds the layers to
+be folded or scaled.</p>
+<p>Lower level APIs can be used to manually tweak the list of layers to be folded. The user has to pass the list of
+layers in the correct order that they appear in the model.</p>
+<p>Note: Before using High Bias fold, Cross Layer Scaling (CLS) needs to be applied and scaling factors obtained from
+CLS need to be plugged in to High Bias Fold. And, if there are batchnorm layers, they need to be folded and the info
+saved to be plugged into high bias fold API.</p>
+</div>
+<div class="section" id="clssetinfo-definition">
+<h2>ClsSetInfo Definition<a class="headerlink" href="#clssetinfo-definition" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.cross_layer_equalization.ClsSetInfo">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.</code><code class="sig-name descname">ClsSetInfo</code><span class="sig-paren">(</span><em class="sig-param">cls_pair_1</em>, <em class="sig-param">cls_pair_2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class hold information about the layers in a CLS set, along with corresponding scaling factors
+and other information like if there is a ReLU activation function between the CLS set layers</p>
+<p>Constructor takes 2 pairs if Depth-wise separable layer is being folded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls_pair_1</strong> (<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetLayerPairInfo</span></code></a>) – Pair between two conv or conv and depth-wise conv</p></li>
+<li><p><strong>cls_pair_2</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetLayerPairInfo</span></code></a>]) – Pair between depth-wise conv and point-wise conv</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo">
+<em class="property">class </em><code class="sig-name descname">ClsSetLayerPairInfo</code><span class="sig-paren">(</span><em class="sig-param">layer1</em>, <em class="sig-param">layer2</em>, <em class="sig-param">scale_factor</em>, <em class="sig-param">relu_activation_between_layers</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Models a pair of layers that were scaled using CLS. And related information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer1</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>) – Layer whose bias is folded</p></li>
+<li><p><strong>layer2</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>) – Layer to which bias of previous layer’s bias is folded</p></li>
+<li><p><strong>scale_factor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Scale Factor found from Cross Layer Scaling to scale BN parameters</p></li>
+<li><p><strong>relu_activation_between_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If the activation between layer1 and layer2 is Relu</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="higher-level-apis-for-cross-layer-equalization">
+<h2>Higher Level APIs for Cross Layer Equalization<a class="headerlink" href="#higher-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
+<p><strong>API for Batch Norm Folding</strong></p>
+<dl class="function">
+<dt id="aimet_torch.batch_norm_fold.fold_all_batch_norms">
+<code class="sig-prename descclassname">aimet_torch.batch_norm_fold.</code><code class="sig-name descname">fold_all_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">input_shapes</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.batch_norm_fold.fold_all_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold all batch_norm layers in a model into the weight of the corresponding conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model</p></li>
+<li><p><strong>input_shapes</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]]) – Input shapes for the model (can be one or multiple inputs)</p></li>
+<li><p><strong>fold_to_scale</strong> – If True, fold BatchNorms to quantization scale parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Linear</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv1d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ConvTranspose2d</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm1d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>]]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of pairs of layers [(Conv/Linear, BN layer that got folded)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>API for Cross Layer Scaling</strong></p>
+<dl class="function">
+<dt id="aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_model">
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_model</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">input_shapes</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses cross-layer scaling to scale all applicable layers in the given model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to scale</p></li>
+<li><p><strong>input_shapes</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]]) – Input shape for the model (can be one or multiple inputs)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>CLS information for each CLS set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>API for High Bias Folding</strong></p>
+<dl class="function">
+<dt id="aimet_torch.cross_layer_equalization.HighBiasFold.bias_fold">
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">cls_set_info_list</em>, <em class="sig-param">bn_layers</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.HighBiasFold.bias_fold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+<li><p><strong>bn_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ConvTranspose2d</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples-for-higher-level-apis">
+<h2>Code Examples for Higher Level APIs<a class="headerlink" href="#code-examples-for-higher-level-apis" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">batch_norm_fold</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">cross_layer_equalization</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">utils</span>
+</pre></div>
+</div>
+<p><strong>Cross Layer Equalization in auto mode calling each API</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cross_layer_equalization_auto_step_by_step</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+    <span class="c1"># Fold BatchNorm layers</span>
+    <span class="n">folded_pairs</span> <span class="o">=</span> <span class="n">batch_norm_fold</span><span class="o">.</span><span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+    <span class="n">bn_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">conv_bn</span> <span class="ow">in</span> <span class="n">folded_pairs</span><span class="p">:</span>
+        <span class="n">bn_dict</span><span class="p">[</span><span class="n">conv_bn</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">conv_bn</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Replace any ReLU6 layers with ReLU</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">replace_modules_of_type1_with_type2</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">)</span>
+
+    <span class="c1"># Perform cross-layer scaling on applicable layer sets</span>
+    <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+
+    <span class="c1"># Perform high-bias fold</span>
+    <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">HighBiasFold</span><span class="o">.</span><span class="n">bias_fold</span><span class="p">(</span><span class="n">cls_set_info_list</span><span class="p">,</span> <span class="n">bn_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lower-level-apis-for-cross-layer-equalization">
+<h2>Lower Level APIs for Cross Layer Equalization<a class="headerlink" href="#lower-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
+<p><strong>API for Batch Norm Folding</strong></p>
+<dl class="function">
+<dt id="aimet_torch.batch_norm_fold.fold_given_batch_norms">
+<code class="sig-prename descclassname">aimet_torch.batch_norm_fold.</code><code class="sig-name descname">fold_given_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">layer_pairs</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.batch_norm_fold.fold_given_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold a given set of batch_norm layers into conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – Model</p></li>
+<li><p><strong>layer_pairs</strong> – Pairs of conv and batch_norm layers to use for folding</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>API for Cross Layer Scaling</strong></p>
+<dl class="function">
+<dt id="aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_cls_sets">
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_cls_sets</code><span class="sig-paren">(</span><em class="sig-param">cls_sets</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.cross_layer_equalization.CrossLayerScaling.scale_cls_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale multiple CLS sets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cls_sets</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>]]]) – List of CLS sets</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Scaling factors calculated and applied for each CLS set in order</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>API for High bias folding</strong></p>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">aimet_torch.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">cls_set_info_list</em>, <em class="sig-param">bn_layers</em><span class="sig-paren">)</span></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_torch.cross_layer_equalization.ClsSetInfo" title="aimet_torch.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+<li><p><strong>bn_layers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ConvTranspose2d</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples-for-lower-level-apis">
+<h2>Code Examples for Lower Level APIs<a class="headerlink" href="#code-examples-for-lower-level-apis" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.examples.mobilenet</span> <span class="kn">import</span> <span class="n">MobileNetV2</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">batch_norm_fold</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">cross_layer_equalization</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">utils</span>
+</pre></div>
+</div>
+<p><strong>Cross Layer Equalization in manual mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cross_layer_equalization_manual</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+    <span class="c1"># Batch Norm Fold</span>
+    <span class="c1"># Create a list of conv/linear and BN layers for folding forward or backward</span>
+    <span class="n">layer_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">bn1</span><span class="p">),</span>
+                  <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bn1</span><span class="p">)]</span>
+
+    <span class="c1"># Save the corresponding BN layers (needed only for high bias folding)</span>
+    <span class="n">bn_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">conv_bn</span> <span class="ow">in</span> <span class="n">layer_list</span><span class="p">:</span>
+        <span class="n">bn_dict</span><span class="p">[</span><span class="n">conv_bn</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">conv_bn</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">batch_norm_fold</span><span class="o">.</span><span class="n">fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_list</span><span class="p">)</span>
+
+    <span class="c1"># Replace any ReLU6 layers with ReLU</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">replace_modules_of_type1_with_type2</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">)</span>
+
+    <span class="c1"># Cross Layer Scaling</span>
+    <span class="c1"># Create a list of consecutive conv layers to be equalized</span>
+    <span class="n">consecutive_layer_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv1</span><span class="p">),</span>
+                              <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv2</span><span class="p">)]</span>
+
+    <span class="n">scaling_factor_list</span> <span class="o">=</span> <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_cls_sets</span><span class="p">(</span><span class="n">consecutive_layer_list</span><span class="p">)</span>
+
+    <span class="c1"># High Bias Fold</span>
+    <span class="c1"># Create a list of consecutive conv layers whose previous layers bias has to be folded to next layers bias</span>
+    <span class="n">ClsSetInfo</span> <span class="o">=</span> <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">ClsSetInfo</span>
+    <span class="n">ClsPairInfo</span> <span class="o">=</span> <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span>
+    <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">ClsSetInfo</span><span class="p">(</span><span class="n">ClsPairInfo</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">scaling_factor_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">True</span><span class="p">)),</span>
+                         <span class="n">ClsSetInfo</span><span class="p">(</span><span class="n">ClsPairInfo</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv1</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layer1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="n">scaling_factor_list</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">True</span><span class="p">))]</span>
+
+    <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">HighBiasFold</span><span class="o">.</span><span class="n">bias_fold</span><span class="p">(</span><span class="n">cls_set_info_list</span><span class="p">,</span> <span class="n">bn_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Cross Layer Equalization in manual mode for Depthwise Separable layer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cross_layer_equalization_depthwise_layers</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">MobileNetV2</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="c1"># Batch Norm Fold</span>
+    <span class="c1"># Create a list of conv/linear and BN layers for folding forward or backward</span>
+    <span class="n">layer_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                  <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">4</span><span class="p">])]</span>
+
+    <span class="c1"># Save the corresponding BN layers (needed only for high bias folding)</span>
+    <span class="n">bn_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">conv_bn</span> <span class="ow">in</span> <span class="n">layer_list</span><span class="p">:</span>
+        <span class="n">bn_dict</span><span class="p">[</span><span class="n">conv_bn</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">conv_bn</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">batch_norm_fold</span><span class="o">.</span><span class="n">fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_list</span><span class="p">)</span>
+
+    <span class="c1"># Replace any ReLU6 layers with ReLU</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">replace_modules_of_type1_with_type2</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">)</span>
+
+    <span class="c1"># Cross Layer Scaling</span>
+    <span class="c1"># Create a list of consecutive conv layers to be equalized</span>
+    <span class="n">consecutive_layer_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span>
+    <span class="n">scaling_factor_list</span> <span class="o">=</span> <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_cls_sets</span><span class="p">(</span><span class="n">consecutive_layer_list</span><span class="p">)</span>
+
+    <span class="c1"># High Bias Fold</span>
+    <span class="c1"># Create a list of consecutive conv layers whose previous layers bias has to be folded to next layers bias</span>
+    <span class="n">ClsSetInfo</span> <span class="o">=</span> <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">ClsSetInfo</span>
+    <span class="n">ClsPairInfo</span> <span class="o">=</span> <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span>
+    <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">ClsSetInfo</span><span class="p">(</span><span class="n">ClsPairInfo</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scaling_factor_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="kc">True</span><span class="p">)),</span>
+                         <span class="n">ClsSetInfo</span><span class="p">(</span><span class="n">ClsPairInfo</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">scaling_factor_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="kc">True</span><span class="p">))]</span>
+
+    <span class="n">cross_layer_equalization</span><span class="o">.</span><span class="n">HighBiasFold</span><span class="o">.</span><span class="n">bias_fold</span><span class="p">(</span><span class="n">cls_set_info_list</span><span class="p">,</span> <span class="n">bn_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
