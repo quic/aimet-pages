@@ -1,0 +1,160 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Model Quantization &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Model Quantization</a><ul>
+<li><a class="reference internal" href="#how-does-aimet-help">How does AIMET help?</a></li>
+<li><a class="reference internal" href="#list-of-aimet-quantization-techniques">List of AIMET quantization techniques</a></li>
+<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-model-quantization">
+<span id="ug-model-quantization"></span><h1>AIMET Model Quantization<a class="headerlink" href="#aimet-model-quantization" title="Permalink to this headline">¶</a></h1>
+<p>Quantization refers to the process of deploying trained FP32 models on low-precision fixed-point integer hardware.
+Quantization can provide dramatic gains in inferences/second and dramatically reduced power requirements for model
+inference. However, it can be challenging to maintain model accuracy when running on quantized runtimes, say in INT8
+precision.</p>
+<div class="section" id="how-does-aimet-help">
+<h2>How does AIMET help?<a class="headerlink" href="#how-does-aimet-help" title="Permalink to this headline">¶</a></h2>
+<p>AIMET provides various optimization techniques that help improve the quantized accuracy of ML models. “Quantized
+accuracy” refers to the accuracy of FP32 models when they are quantized and run on quantized target runtimes.</p>
+<p>AIMET quantization techniques can be categorized into two buckets</p>
+<p>1. <strong>Post-training techniques</strong>: These techniques require a few unlabeled data samples and don’t require any model
+training. So they are easier to run. For some models these techniques provide very good gains to get quantized accuracy
+close to the original FP32 accuracy. For other models and tasks, they may not be sufficient by themselves to get to an
+acceptable accuracy target.</p>
+<p>2. <strong>Quantization-aware training (QAT)</strong>: These techniques can generalize to help most models improve quantized accuracy. They do
+require additional training for a few more epochs. This additional training is also sometimes referred to as fine-tuning.
+To get the best benefits, just like with regular training, QAT would need the user to choose the right hyper-parameters.
+So QAT is a little more involved technique from the user perspective and also can take longer to run.</p>
+<p>AIMET is designed to combine the above techniques and we often find that this produces the best possible results.</p>
+</div>
+<div class="section" id="list-of-aimet-quantization-techniques">
+<h2>List of AIMET quantization techniques<a class="headerlink" href="#list-of-aimet-quantization-techniques" title="Permalink to this headline">¶</a></h2>
+<p><strong>Post-training techniques</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="quantization_sim.html#ug-quantsim"><span class="std std-ref">Calibration</span></a>: Use data samples to find optimal per-tensor or per-channel quantization parameters (like scale/offsets)</p></li>
+<li><p><a class="reference internal" href="post_training_quant_techniques.html#ug-post-training-quantization"><span class="std std-ref">Cross-Layer Equalization</span></a>: Equalizes weight ranges in consecutive layers</p></li>
+<li><p><a class="reference internal" href="post_training_quant_techniques.html#ug-post-training-quantization"><span class="std std-ref">Bias Correction</span></a>: Corrects for a shift in layer outputs due to quantization noise</p></li>
+<li><p><a class="reference internal" href="adaround.html#ug-adaround"><span class="std std-ref">Adaptive Rounding</span></a>: Learn optimal rounding for weight tensors</p></li>
+</ul>
+<p><strong>Quantization Aware Training</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="quantization_sim.html#ug-quantsim"><span class="std std-ref">Quantization-aware Training (QAT)</span></a>: Fine-tune a simulated quantized model to adapt model weights to minimize quantization noise</p></li>
+<li><p><a class="reference internal" href="quantization_sim.html#ug-quantsim"><span class="std std-ref">QAT with range-learning</span></a>: Fine-tune a simulated quantized model to adapt model weights <strong>and scale/offsets</strong> to minimize quantization noise</p></li>
+</ul>
+<p><strong>Visualizations</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="visualization_quant.html#ug-quantization-visualization"><span class="std std-ref">Visualizations</span></a>: AIMET provides visualization tools that help guide the user to determine if AIMET post-training quantization techniques are useful for a given model</p></li>
+</ul>
+<p>Please see the <a class="reference internal" href="quantization_feature_guidebook.html#ug-quant-guidebook"><span class="std std-ref">Quantization Guidebook</span></a> - which includes some practical advice on using the Quantization features, and how to combine the features.</p>
+</div>
+<div class="section" id="use-cases">
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p><strong>Predict on-target accuracy</strong>: AIMET enables a user to simulate the effects of quantization to get a first order estimate of the model’s accuracy when run on quantized targets. This is useful to get an estimate of on-target accuracy without needing an actual target platform. Note that to create a simulation model, AIMET uses representative data samples to compute per-layer quantization encodings.</p>
+<blockquote>
+<div><img alt="../_images/quant_use_case_1.PNG" src="../_images/quant_use_case_1.PNG" />
+</div></blockquote>
+</li>
+<li><p><strong>Fine-tune model for computed per-layer encodings</strong>: AIMET enables a user to compute per-layer quantization encodings using representative data samples. And it further enables the user to use a training pipeline to fine-tune the model to improve quantized accuracy given these computed encodings.</p>
+<blockquote>
+<div><img alt="../_images/quant_use_case_2.PNG" src="../_images/quant_use_case_2.PNG" />
+</div></blockquote>
+</li>
+<li><dl>
+<dt><strong>Post-training quantization (no fine-tuning)</strong>: In some cases, a user may want to not further train the model to improve quantized accuracy. Some reasons for this may be</dt><dd><blockquote>
+<div><ul class="simple">
+<li><p>May not have access to a training pipeline for this model</p></li>
+<li><p>May not have access to labeled training data to use for fine-tuning</p></li>
+<li><p>May want to avoid the time and effort it would take to pick the right hyper-parameters and train the model</p></li>
+</ul>
+</div></blockquote>
+<p>In the above scenarios, AIMET provides a set of post-training quantization techniques that alter the model parameters to enable better quantized accuracy. These techniques are designed to fix for specific equalization issues in the model and may not work for all models.</p>
+<img alt="../_images/quant_use_case_3.PNG" src="../_images/quant_use_case_3.PNG" />
+</dd>
+</dl>
+</li>
+<li><p><a class="reference internal" href="auto_quant.html#ug-auto-quant"><span class="std std-ref">AutoQuant</span></a>: AIMET provides an API that integrates all the post-training quantization techniques.</p></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

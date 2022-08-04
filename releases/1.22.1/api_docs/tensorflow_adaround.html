@@ -1,0 +1,276 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET TensorFlow AdaRound API &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET TensorFlow AdaRound API</a><ul>
+<li><a class="reference internal" href="#top-level-api">Top-level API</a></li>
+<li><a class="reference internal" href="#adaround-parameters">Adaround Parameters</a></li>
+<li><a class="reference internal" href="#enum-definition">Enum Definition</a></li>
+<li><a class="reference internal" href="#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-tensorflow-adaround-api">
+<span id="api-tf-adaround"></span><h1>AIMET TensorFlow AdaRound API<a class="headerlink" href="#aimet-tensorflow-adaround-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="top-level-api">
+<h2>Top-level API<a class="headerlink" href="#top-level-api" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="aimet_tensorflow.adaround.adaround_weight.Adaround.apply_adaround">
+<code class="sig-prename descclassname">aimet_tensorflow.adaround.adaround_weight.Adaround.</code><code class="sig-name descname">apply_adaround</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">starting_op_names</em>, <em class="sig-param">output_op_names</em>, <em class="sig-param">params</em>, <em class="sig-param">path</em>, <em class="sig-param">filename_prefix</em>, <em class="sig-param">default_param_bw=4</em>, <em class="sig-param">default_quant_scheme=&lt;QuantScheme.post_training_tf_enhanced: 2&gt;</em>, <em class="sig-param">default_config_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.adaround.adaround_weight.Adaround.apply_adaround" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Tf session - model with optimized weight rounding of every op (Conv and Linear) and also saves the
+corresponding quantization encodings to a separate JSON-formatted file that can then be imported by
+QuantSim for inference or QAT</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Tf session with model to adaround</p></li>
+<li><p><strong>starting_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of starting op names of the model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of output op names of the model</p></li>
+<li><p><strong>params</strong> (<a class="reference internal" href="#aimet_tensorflow.adaround.adaround_weight.AdaroundParameters" title="aimet_tensorflow.adaround.adaround_weight.AdaroundParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdaroundParameters</span></code></a>) – Parameters for adaround</p></li>
+<li><p><strong>path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – path where to store parameter encodings</p></li>
+<li><p><strong>filename_prefix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Prefix to use for filename of the encodings file</p></li>
+<li><p><strong>default_param_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Default bitwidth (4-31) to use for quantizing layer parameters. Default 4</p></li>
+<li><p><strong>default_quant_scheme</strong> (<a class="reference internal" href="torch_quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>) – Quantization scheme. Supported options are QuantScheme.post_training_tf or
+QuantScheme.post_training_tf_enhanced. Default QuantScheme.post_training_tf_enhanced</p></li>
+<li><p><strong>default_config_file</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Default configuration file for model quantizers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Tf session with Adarounded weight and saves corresponding parameter encodings JSON file
+at provided path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="adaround-parameters">
+<h2>Adaround Parameters<a class="headerlink" href="#adaround-parameters" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.adaround.adaround_weight.AdaroundParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.adaround.adaround_weight.</code><code class="sig-name descname">AdaroundParameters</code><span class="sig-paren">(</span><em class="sig-param">data_set</em>, <em class="sig-param">num_batches</em>, <em class="sig-param">default_num_iterations=10000</em>, <em class="sig-param">default_reg_param=0.01</em>, <em class="sig-param">default_beta_range=(20</em>, <em class="sig-param">2)</em>, <em class="sig-param">default_warm_start=0.2</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.adaround.adaround_weight.AdaroundParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for Adaround</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_set</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetV2</span></code>) – TF Data set</p></li>
+<li><p><strong>num_batches</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of batches</p></li>
+<li><p><strong>default_num_iterations</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of iterations to adaround each layer. Default 10000</p></li>
+<li><p><strong>default_reg_param</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Regularization parameter, trading off between rounding loss vs reconstruction loss.
+Default 0.01</p></li>
+<li><p><strong>default_beta_range</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>) – Start and stop beta parameter for annealing of rounding loss (start_beta, end_beta).
+Default (20, 2)</p></li>
+<li><p><strong>default_warm_start</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – warm up period, during which rounding loss has zero effect. Default 20% (0.2)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="enum-definition">
+<h2>Enum Definition<a class="headerlink" href="#enum-definition" title="Permalink to this headline">¶</a></h2>
+<p><strong>Quant Scheme Enum</strong></p>
+<dl class="class">
+<dt id="aimet_common.defs.QuantScheme">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">QuantScheme</code><a class="headerlink" href="#aimet_common.defs.QuantScheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumeration of Quant schemes</p>
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.post_training_percentile">
+<code class="sig-name descname">post_training_percentile</code><em class="property"> = 6</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.post_training_percentile" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, adjusted minimum and maximum values are selected based on the percentile value passed.
+The Quantization encodings are calculated using the adjusted minimum and maximum value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.post_training_tf">
+<code class="sig-name descname">post_training_tf</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.post_training_tf" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, the absolute minimum and maximum value of the Tensor are used to compute the Quantization
+encodings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.post_training_tf_enhanced">
+<code class="sig-name descname">post_training_tf_enhanced</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.post_training_tf_enhanced" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, searches and selects the optimal minimum and maximum value that minimizes the Quantization Noise.
+The Quantization encodings are calculated using the selected minimum and maximum value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.training_range_learning_with_tf_enhanced_init">
+<code class="sig-name descname">training_range_learning_with_tf_enhanced_init</code><em class="property"> = 4</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.training_range_learning_with_tf_enhanced_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, the encoding values are initialized with the post_training_tf_enhanced scheme. Then, the encodings
+are learned during training.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.training_range_learning_with_tf_init">
+<code class="sig-name descname">training_range_learning_with_tf_init</code><em class="property"> = 3</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.training_range_learning_with_tf_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, the encoding values are initialized with the post_training_tf scheme. Then, the encodings are
+learned during training.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="code-examples">
+<h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">QuantScheme</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.examples.test_models</span> <span class="kn">import</span> <span class="n">keras_model</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.adaround.adaround_weight</span> <span class="kn">import</span> <span class="n">Adaround</span><span class="p">,</span> <span class="n">AdaroundParameters</span>
+
+</pre></div>
+</div>
+<p><strong>Evaluation function</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dummy_forward_pass</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is intended to be the user-defined model evaluation function.</span>
+<span class="sd">    AIMET requires the above signature. So if the user&#39;s eval function does not</span>
+<span class="sd">    match this signature, please create a simple wrapper.</span>
+<span class="sd">    :param session: Session with model to be evaluated</span>
+<span class="sd">    :param _: These argument(s) are passed to the forward_pass_callback as-is. Up to</span>
+<span class="sd">            the user to determine the type of this parameter. E.g. could be simply an integer representing the number</span>
+<span class="sd">            of data samples to use. Or could be a tuple of parameters or an object representing something more complex.</span>
+<span class="sd">            If set to None, forward_pass_callback will be invoked with no parameters.</span>
+<span class="sd">    :return: single float number (accuracy) representing model&#39;s performance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">input_tensor</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s1">&#39;conv2d_input:0&#39;</span><span class="p">)</span>
+    <span class="n">output_tensor</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_tensor_by_name</span><span class="p">(</span><span class="s1">&#39;keras_model/Softmax:0&#39;</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output_tensor</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">input_tensor</span><span class="p">:</span> <span class="n">input_data</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+<p><strong>After applying AdaRound to the model, the AdaRounded session and associated encodings are returned</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">apply_adaround_example</span><span class="p">():</span>
+
+    <span class="n">AimetLogger</span><span class="o">.</span><span class="n">set_level_for_all_areas</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+
+    <span class="n">_</span> <span class="o">=</span> <span class="n">keras_model</span><span class="p">()</span>
+    <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+    <span class="n">dataset_size</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">possible_batches</span> <span class="o">=</span> <span class="n">dataset_size</span> <span class="o">//</span> <span class="n">batch_size</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">dataset_size</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+
+    <span class="n">session</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">get_default_graph</span><span class="p">())</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">AdaroundParameters</span><span class="p">(</span><span class="n">data_set</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">num_batches</span><span class="o">=</span><span class="n">possible_batches</span><span class="p">,</span> <span class="n">default_num_iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">starting_op_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;conv2d_input&#39;</span><span class="p">]</span>
+    <span class="n">output_op_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;keras_model/Softmax&#39;</span><span class="p">]</span>
+
+    <span class="c1"># W4A8</span>
+    <span class="n">param_bw</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">output_bw</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">quant_scheme</span> <span class="o">=</span> <span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span>
+
+    <span class="c1"># Returns session with adarounded weights and their corresponding encodings</span>
+    <span class="n">adarounded_session</span> <span class="o">=</span> <span class="n">Adaround</span><span class="o">.</span><span class="n">apply_adaround</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">starting_op_names</span><span class="p">,</span> <span class="n">output_op_names</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span>
+                                                 <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="o">=</span><span class="n">param_bw</span><span class="p">,</span>
+                                                 <span class="n">default_quant_scheme</span><span class="o">=</span><span class="n">quant_scheme</span><span class="p">,</span> <span class="n">default_config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Create QuantSim using adarounded_session</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">adarounded_session</span><span class="p">,</span> <span class="n">starting_op_names</span><span class="p">,</span> <span class="n">output_op_names</span><span class="p">,</span> <span class="n">quant_scheme</span><span class="p">,</span>
+                               <span class="n">default_output_bw</span><span class="o">=</span><span class="n">output_bw</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="o">=</span><span class="n">param_bw</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Set and freeze encodings to use same quantization grid and then invoke compute encodings</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">set_and_freeze_param_encodings</span><span class="p">(</span><span class="n">encoding_path</span><span class="o">=</span><span class="s1">&#39;./dummy.encodings&#39;</span><span class="p">)</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">dummy_forward_pass</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">adarounded_session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.1</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
