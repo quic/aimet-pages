@@ -1,0 +1,143 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>TensorFlow Model Guidelines &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.2a</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AIMET TensorFlow Quantization APIs" href="tensorflow_quantization.html" />
+    <link rel="prev" title="AIMET TensorFlow APIs" href="tensorflow.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tensorflow_quantization.html" title="AIMET TensorFlow Quantization APIs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tensorflow.html" title="AIMET TensorFlow APIs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.2a</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="tensorflow.html" accesskey="U">AIMET TensorFlow APIs</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tensorflow.html"
+                        title="previous chapter">AIMET TensorFlow APIs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tensorflow_quantization.html"
+                        title="next chapter">AIMET TensorFlow Quantization APIs</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tensorflow-model-guidelines">
+<h1>TensorFlow Model Guidelines<a class="headerlink" href="#tensorflow-model-guidelines" title="Permalink to this headline">¶</a></h1>
+<p>In order to make full use of AIMET features, there are several guidelines users should follow when defining
+TensorFlow models.</p>
+<p><strong>If model has BatchNormalization (BN) layers</strong></p>
+<p>If model has BatchNormalization (BN) layers, then user should set it’s trainble flag to False and recompile the model
+before AIMET usage. This is one of the limitations with TensorFlow 2.x but If you are using TensorFlow 1.x,
+then this step is not required:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.graph</span> <span class="kn">import</span> <span class="n">update_keras_bn_ops_trainable_flag</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">update_keras_bn_ops_trainable_flag</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">load_save_path</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="aimet_tensorflow.utils.graph.update_keras_bn_ops_trainable_flag">
+<code class="sig-prename descclassname">aimet_tensorflow.utils.graph.</code><code class="sig-name descname">update_keras_bn_ops_trainable_flag</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">trainable</em>, <em class="sig-param">load_save_path</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.utils.graph.update_keras_bn_ops_trainable_flag" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>helper method to update Keras BN ops trainable state in a given keras model.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code>) – Keras model to be updated with BN ops trainable flag</p></li>
+<li><p><strong>trainable</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – bool flag to indicate trainable to be set to true or false</p></li>
+<li><p><strong>load_save_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – temp folder to perform load/save, cleans up file created</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated keras model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p><strong>If model has Recurrent (RNN, LSTM etc.) layers</strong></p>
+<p>Recurrent layers (RNN, LSTM) are not supported with TensorFlow 2.x and only supported with TensorFlow 1.x.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tensorflow_quantization.html" title="AIMET TensorFlow Quantization APIs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tensorflow.html" title="AIMET TensorFlow APIs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.22.2a</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Main Page</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="tensorflow.html" >AIMET TensorFlow APIs</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
