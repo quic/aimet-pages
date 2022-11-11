@@ -1,0 +1,239 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Installation and Setup &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.23.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.23.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Installation and Setup</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li><a class="reference internal" href="#install-gpu-packages">Install GPU packages</a></li>
+<li><a class="reference internal" href="#install-aimet-packages">Install AIMET packages</a></li>
+<li><a class="reference internal" href="#install-common-debian-packages">Install common debian packages</a></li>
+<li><a class="reference internal" href="#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li><a class="reference internal" href="#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li><a class="reference internal" href="#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li><a class="reference internal" href="#post-installation-steps">Post installation steps</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-installation-and-setup">
+<span id="ug-installation"></span><h1>AIMET Installation and Setup<a class="headerlink" href="#aimet-installation-and-setup" title="Permalink to this headline">¶</a></h1>
+<p>This page provides instructions to install AIMET package on Ubuntu 18.04 LTS with Nvidia GPU. Please follow the instructions in the order provided, unless specified otherwise.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><strong>NOTE:</strong></dt><dd><ol class="arabic simple">
+<li><p>Please pre-pend the “apt-get install” and “pip3 install” commands with “sudo -H” as appropriate.</p></li>
+<li><p>These instructions assume that pip packages will be installed in the path: /usr/local/lib/python3.8/dist-packages. If that is not the case, please modify it accordingly.</p></li>
+</ol>
+</dd>
+</dl>
+<div class="section" id="install-prerequisite-packages">
+<h3>Install prerequisite packages<a class="headerlink" href="#install-prerequisite-packages" title="Permalink to this headline">¶</a></h3>
+<p>Install the basic pre-requisite packages as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python3</span><span class="mf">.8</span> <span class="n">python3</span><span class="mf">.8</span><span class="o">-</span><span class="n">dev</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">--</span><span class="n">assume</span><span class="o">-</span><span class="n">yes</span> <span class="n">wget</span> <span class="n">gnupg2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-gpu-packages">
+<h3>Install GPU packages<a class="headerlink" href="#install-gpu-packages" title="Permalink to this headline">¶</a></h3>
+<p><strong>NOTE:</strong></p>
+<ol class="arabic simple">
+<li><p>Do this section ONLY for the PyTorch or Tensorflow GPU packages.</p></li>
+<li><p>Visit this page <a class="reference external" href="https://developer.nvidia.com/cuda-11.1.1-download-archive">https://developer.nvidia.com/cuda-11.1.1-download-archive</a> to obtain the exact and up-to-date installation instructions for your environment.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">developer</span><span class="o">.</span><span class="n">download</span><span class="o">.</span><span class="n">nvidia</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">compute</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">ubuntu1804</span><span class="o">/</span><span class="n">x86_64</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="n">ubuntu1804</span><span class="o">.</span><span class="n">pin</span>
+<span class="n">mv</span> <span class="n">cuda</span><span class="o">-</span><span class="n">ubuntu1804</span><span class="o">.</span><span class="n">pin</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">preferences</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="n">repository</span><span class="o">-</span><span class="n">pin</span><span class="o">-</span><span class="mi">600</span>
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">developer</span><span class="o">.</span><span class="n">download</span><span class="o">.</span><span class="n">nvidia</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">compute</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="mf">11.1.1</span><span class="o">/</span><span class="n">local_installers</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="n">repo</span><span class="o">-</span><span class="n">ubuntu1804</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">local_11</span><span class="mf">.1.1</span><span class="o">-</span><span class="mf">455.32.00</span><span class="o">-</span><span class="mi">1</span><span class="n">_amd64</span><span class="o">.</span><span class="n">deb</span>
+<span class="n">dpkg</span> <span class="o">-</span><span class="n">i</span> <span class="n">cuda</span><span class="o">-</span><span class="n">repo</span><span class="o">-</span><span class="n">ubuntu1804</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">local_11</span><span class="mf">.1.1</span><span class="o">-</span><span class="mf">455.32.00</span><span class="o">-</span><span class="mi">1</span><span class="n">_amd64</span><span class="o">.</span><span class="n">deb</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">add</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="n">repo</span><span class="o">-</span><span class="n">ubuntu1804</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">local</span><span class="o">/</span><span class="mi">7</span><span class="n">fa2af80</span><span class="o">.</span><span class="n">pub</span>
+<span class="n">echo</span> <span class="s2">&quot;deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64 /&quot;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">sources</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">cuda</span><span class="o">.</span><span class="n">list</span>
+<span class="n">echo</span> <span class="s2">&quot;deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64 /&quot;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">sources</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">nvidia</span><span class="o">-</span><span class="n">ml</span><span class="o">.</span><span class="n">list</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="o">-</span><span class="n">y</span> <span class="n">install</span> <span class="n">cuda</span>
+
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">developer</span><span class="o">.</span><span class="n">download</span><span class="o">.</span><span class="n">nvidia</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">compute</span><span class="o">/</span><span class="n">machine</span><span class="o">-</span><span class="n">learning</span><span class="o">/</span><span class="n">repos</span><span class="o">/</span><span class="n">ubuntu1804</span><span class="o">/</span><span class="n">x86_64</span><span class="o">/</span><span class="n">nvidia</span><span class="o">-</span><span class="n">machine</span><span class="o">-</span><span class="n">learning</span><span class="o">-</span><span class="n">repo</span><span class="o">-</span><span class="n">ubuntu1804_1</span><span class="mf">.0.0</span><span class="o">-</span><span class="mi">1</span><span class="n">_amd64</span><span class="o">.</span><span class="n">deb</span>
+<span class="n">dpkg</span> <span class="o">-</span><span class="n">i</span> <span class="n">nvidia</span><span class="o">-</span><span class="n">machine</span><span class="o">-</span><span class="n">learning</span><span class="o">-</span><span class="n">repo</span><span class="o">-</span><span class="n">ubuntu1804_1</span><span class="mf">.0.0</span><span class="o">-</span><span class="mi">1</span><span class="n">_amd64</span><span class="o">.</span><span class="n">deb</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-aimet-packages">
+<h3>Install AIMET packages<a class="headerlink" href="#install-aimet-packages" title="Permalink to this headline">¶</a></h3>
+<p>Go to <a class="reference external" href="https://github.com/quic/aimet/releases">https://github.com/quic/aimet/releases</a> and identify the release tag of the package you want to install.</p>
+<p>Set the &lt;variant_string&gt; to ONE of the following depending on your desired variant</p>
+<ol class="arabic simple">
+<li><p>For the PyTorch GPU variant, use “torch_gpu”</p></li>
+<li><p>For the PyTorch CPU variant, use “torch_cpu”</p></li>
+<li><p>For the TensorFlow GPU variant, use “tf_gpu”</p></li>
+<li><p>For the TensorFlow CPU variant, use “tf_cpu”</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">AIMET_VARIANT</span><span class="o">=&lt;</span><span class="n">variant_string</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Replace &lt;release_tag&gt; in the steps below with the appropriate tag:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">AIMET_VARIANT</span><span class="o">=&lt;</span><span class="n">variant_string</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Set the package download URL as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">download_url</span><span class="o">=</span><span class="s2">&quot;https://github.com/quic/aimet/releases/download/$</span><span class="si">{release_tag}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Set the common suffix for the package files as follows:</p>
+<p><strong>NOTE:</strong> Set wheel_file_suffix to cp38-cp38-linux_x86_64.whl OR cp36-cp36m-linux_x86_64 OR cp37-cp37m-linux_x86_64 OR py3-none-any as appropriate depending on the actual wheel filename(s) on the <a class="reference external" href="https://github.com/quic/aimet/releases">https://github.com/quic/aimet/releases</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">wheel_file_suffix</span><span class="o">=</span><span class="s2">&quot;cp38-cp38-linux_x86_64.whl&quot;</span>
+</pre></div>
+</div>
+<p>Install the AIMET packages in the order specified below:</p>
+<p><strong>NOTE:</strong> Python dependencies will automatically get installed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python3 -m pip install ${download_url}/AimetCommon-${AIMET_VARIANT}_${release_tag}-${wheel_file_suffix}
+
+# Install ONE of the following depending on the variant
+python3 -m pip install ${download_url}/AimetTorch-${AIMET_VARIANT}_${release_tag}-${wheel_file_suffix} -f https://download.pytorch.org/whl/torch_stable.html
+# OR
+python3 -m pip install ${download_url}/AimetTensorflow-${AIMET_VARIANT}_${release_tag}-${wheel_file_suffix}
+
+python3 -m pip install ${download_url}/Aimet-${AIMET_VARIANT}_${release_tag}-${wheel_file_suffix}
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-common-debian-packages">
+<h3>Install common debian packages<a class="headerlink" href="#install-common-debian-packages" title="Permalink to this headline">¶</a></h3>
+<p>Install the common debian packages as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">dist</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">aimet_common</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">reqs_deb_common</span><span class="o">.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">xargs</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="o">--</span><span class="n">assume</span><span class="o">-</span><span class="n">yes</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-tensorflow-gpu-debian-packages">
+<h3>Install tensorflow GPU debian packages<a class="headerlink" href="#install-tensorflow-gpu-debian-packages" title="Permalink to this headline">¶</a></h3>
+<p><strong>NOTE:</strong> Do this ONLY for the TensorFlow GPU package.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">dist</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">aimet_tensorflow</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">reqs_deb_tf_gpu</span><span class="o">.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">xargs</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="o">--</span><span class="n">assume</span><span class="o">-</span><span class="n">yes</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-torch-gpu-debian-packages">
+<h3>Install torch GPU debian packages<a class="headerlink" href="#install-torch-gpu-debian-packages" title="Permalink to this headline">¶</a></h3>
+<p><strong>NOTE:</strong> Do this ONLY for the PyTorch GPU package.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">dist</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">aimet_torch</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">reqs_deb_torch_gpu</span><span class="o">.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">xargs</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="o">--</span><span class="n">assume</span><span class="o">-</span><span class="n">yes</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="replace-pillow-with-pillow-simd">
+<h3>Replace Pillow with Pillow-SIMD<a class="headerlink" href="#replace-pillow-with-pillow-simd" title="Permalink to this headline">¶</a></h3>
+<p><strong>Optional:</strong> Replace the Pillow package with Pillow-SIMD as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">uninstall</span> <span class="o">-</span><span class="n">y</span> <span class="n">pillow</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">Pillow</span><span class="o">-</span><span class="n">SIMD</span><span class="o">==</span><span class="mf">7.0.0</span><span class="o">.</span><span class="n">post3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="post-installation-steps">
+<h3>Post installation steps<a class="headerlink" href="#post-installation-steps" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">/</span><span class="n">libjpeg</span><span class="o">.</span><span class="n">so</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> Do the following step ONLY for the PyTorch or Tensorflow GPU packages.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># If you installed the CUDA 11.x drivers</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="mf">11.0</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span>
+<span class="c1"># OR if you installed the CUDA 10.x drivers</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">-</span><span class="mf">10.0</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="environment-setup">
+<h2>Environment setup<a class="headerlink" href="#environment-setup" title="Permalink to this headline">¶</a></h2>
+<p>Set the common environment variables as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.8</span><span class="o">/</span><span class="n">dist</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">aimet_common</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">envsetup</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Add the AIMET package location to the environment path as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export LD_LIBRARY_PATH=/usr/local/lib/python3.8/dist-packages/aimet_common:$LD_LIBRARY_PATH
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.23.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
