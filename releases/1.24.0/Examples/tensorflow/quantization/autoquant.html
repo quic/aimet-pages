@@ -1,0 +1,688 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AutoQuant &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</title>
+    <link rel="stylesheet" href="../../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script type="text/javascript" src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../user_guide/index.html">
+              <img class="logo" src="../../../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AutoQuant</a><ul>
+<li><a class="reference internal" href="#Overall-flow">Overall flow</a></li>
+<li><a class="reference internal" href="#What-this-notebook-is-not">What this notebook is not</a><ul>
+<li><a class="reference internal" href="#Dataset">Dataset</a></li>
+<li><a class="reference internal" href="#1.-Example-evaluation-and-training-pipeline">1. Example evaluation and training pipeline</a></li>
+<li><a class="reference internal" href="#2.-Load-a-pretrained-FP32-model">2. Load a pretrained FP32 model</a></li>
+<li><a class="reference internal" href="#3.-Determine-the-baseline-FP32-accuracy">3. Determine the baseline FP32 accuracy</a></li>
+<li><a class="reference internal" href="#4.-Define-Constants-and-Helper-functions">4. Define Constants and Helper functions</a></li>
+<li><a class="reference internal" href="#Prepare-unlabeled-dataset">Prepare unlabeled dataset</a></li>
+<li><a class="reference internal" href="#Prepare-the-evaluation-callback-function">Prepare the evaluation callback function</a></li>
+<li><a class="reference internal" href="#5.-Apply-AutoQuant">5. Apply AutoQuant</a></li>
+<li><a class="reference internal" href="#Optionally-set-AdaRound-Parameters">Optionally set AdaRound Parameters</a></li>
+<li><a class="reference internal" href="#Run-AutoQuant">Run AutoQuant</a></li>
+<li><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars and line breaks on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="AutoQuant">
+<h1>AutoQuant<a class="headerlink" href="#AutoQuant" title="Permalink to this headline">¶</a></h1>
+<p>This notebook shows a working code example of how to use AIMET AutoQuant feature.</p>
+<p>AIMET offers a suite of neural network post-training quantization techniques. Often, applying these techniques in a specific sequence, results in better accuracy and performance. Without the AutoQuant feature, the AIMET user needs to manually try out various combinations of AIMET quantization features. This manual process is error-prone and often time-consuming.</p>
+<p>The AutoQuant feature, analyzes the model, determines the sequence of AIMET quantization techniques and applies these techniques. In addition, the user can specify the amount of accuracy drop that can be tolerated, in the AutoQuant API. As soon as this threshold accuracy is reached, AutoQuant stops applying any additional quantization technique. In summary, the AutoQuant feature saves time and automates the quantization of the neural networks.</p>
+<div class="section" id="Overall-flow">
+<h2>Overall flow<a class="headerlink" href="#Overall-flow" title="Permalink to this headline">¶</a></h2>
+<p>This notebook covers the following 1. Instantiate the example evaluation and training pipeline 2. Load a pretrained FP32 model 3. Determine the baseline FP32 accuracy 4. Define constants and helper functions 5. Apply AutoQuant</p>
+</div>
+<div class="section" id="What-this-notebook-is-not">
+<h2>What this notebook is not<a class="headerlink" href="#What-this-notebook-is-not" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>This notebook is not designed to show state-of-the-art AutoQuant results. For example, it uses a relatively quantization-friendly model like Resnet18. Also, some optimization parameters are deliberately chosen to have the notebook execute more quickly.</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="Dataset">
+<h3>Dataset<a class="headerlink" href="#Dataset" title="Permalink to this headline">¶</a></h3>
+<p>This notebook relies on the ImageNet dataset for the task of image classification. If you already have a version of the dataset readily available, please use that. Else, please download the dataset from appropriate location (e.g. <a class="reference external" href="https://image-net.org/challenges/LSVRC/2012/index">https://image-net.org/challenges/LSVRC/2012/index</a>.php#) and convert them into tfrecords.</p>
+<p><strong>Note1</strong>: The ImageNet tfrecords dataset typically has the following characteristics and the dataloader provided in this example notebook rely on these - A folder containing tfrecords files starting with <strong>‘train’</strong> for training files and <strong>‘valid’</strong> for validation files. Each tfrecord file should have features: <strong>‘image/encoded’</strong> for image data and <strong>‘image/class/label’</strong> for its corresponding class.</p>
+<p><strong>Note2</strong>: To speed up the execution of this notebook, you may use a reduced subset of the ImageNet dataset. E.g. the entire ILSVRC2012 dataset has 1000 classes, 1000 training samples per class and 50 validation samples per class. But for the purpose of running this notebook, you could perhaps reduce the dataset to say 2 samples per class and then convert it into tfrecords. This exercise is left upto the reader and is not necessary.</p>
+<p>Edit the cell below and specify the directory where the downloaded ImageNet dataset is saved.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>DATASET_DIR = &#39;/path/to/tfrecords/dir/&#39;       # Please replace this with a real directory
+</pre></div>
+</div>
+</div>
+<p>We disable logs at the INFO level and disable eager execution. We set verbosity to the level as displayed (ERROR), so TensorFlow will display all messages that have the label ERROR (or more critical).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import os
+os.environ[&#39;TF_CPP_MIN_LOG_LEVEL&#39;] = &#39;2&#39;
+
+import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="1.-Example-evaluation-and-training-pipeline">
+<h3>1. Example evaluation and training pipeline<a class="headerlink" href="#1.-Example-evaluation-and-training-pipeline" title="Permalink to this headline">¶</a></h3>
+<p>The following is an example training and validation loop for this image classification task.</p>
+<ul class="simple">
+<li><p><strong>Does AIMET have any limitations on how the training, validation pipeline is written?</strong> Not really. We will see later that AIMET will modify the user’s model to create a QuantizationSim model which is still a TensorFlow model. This QuantizationSim model can be used in place of the original model when doing inference or training.</p></li>
+<li><p><strong>Does AIMET put any limitation on the interface of evaluate() or train() methods?</strong> Not really. You should be able to use your existing evaluate and train routines as-is.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from Examples.common import image_net_config
+from Examples.tensorflow.utils.image_net_evaluator import ImageNetDataLoader
+from Examples.tensorflow.utils.image_net_evaluator import ImageNetEvaluator
+
+class ImageNetDataPipeline:
+    &quot;&quot;&quot;
+    Provides APIs for model evaluation and fine-tuning using ImageNet Dataset.
+    &quot;&quot;&quot;
+
+    @staticmethod
+    def get_val_dataloader():
+        &quot;&quot;&quot;
+        Instantiates a validation dataloader for ImageNet dataset and returns it
+        &quot;&quot;&quot;
+        data_loader = ImageNetDataLoader(DATASET_DIR,
+                                         image_size=image_net_config.dataset[&#39;image_size&#39;],
+                                         batch_size=image_net_config.evaluation[&#39;batch_size&#39;],
+                                         format_bgr=True)
+
+        return data_loader
+
+    @staticmethod
+    def evaluate(sess: tf.compat.v1.Session) -&gt; float:
+        &quot;&quot;&quot;
+        Given a TF session, evaluates its Top-1 accuracy on the validation dataset
+        :param sess: The sess graph to be evaluated.
+        :return: The accuracy for the sample with the maximum accuracy.
+        &quot;&quot;&quot;
+        evaluator = ImageNetEvaluator(DATASET_DIR, training_inputs=[&#39;keras_learning_phase:0&#39;],
+                                      data_inputs=[&#39;input_1:0&#39;], validation_inputs=[&#39;labels:0&#39;],
+                                      image_size=image_net_config.dataset[&#39;image_size&#39;],
+                                      batch_size=image_net_config.evaluation[&#39;batch_size&#39;],
+                                      format_bgr=True)
+
+        return evaluator.evaluate(sess)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="2.-Load-a-pretrained-FP32-model">
+<h3>2. Load a pretrained FP32 model<a class="headerlink" href="#2.-Load-a-pretrained-FP32-model" title="Permalink to this headline">¶</a></h3>
+<p>For this example notebook, we are going to load a pretrained ResNet50 model from keras and covert it to a tensorflow session. Similarly, you can load any pretrained tensorflow model instead.</p>
+<p>Calling clear_session() releases the global state: this helps avoid clutter from old models and layers, especially when memory is limited.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from tensorflow.keras.applications.resnet import ResNet50
+
+tf.keras.backend.clear_session()
+
+input_shape = (224, 224, 3)
+model = ResNet50(weights=&#39;imagenet&#39;, input_shape=input_shape)
+</pre></div>
+</div>
+</div>
+<p>The following utility method in AIMET sets BN layers in the model to eval mode. This allows AIMET to more easily read the BN parameters from the graph. Eventually we will fold BN layers into adjacent conv layers.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from aimet_tensorflow.utils.graph import update_keras_bn_ops_trainable_flag
+
+model = update_keras_bn_ops_trainable_flag(model, False, load_save_path=&#39;./&#39;)
+</pre></div>
+</div>
+</div>
+<p>AIMET features currently support tensorflow sessions. <strong>add_image_net_computational_nodes_in_graph</strong> adds an output layer, softmax and loss functions to the Resnet50 model graph.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from Examples.tensorflow.utils.add_computational_nodes_in_graph import add_image_net_computational_nodes_in_graph
+
+sess = tf.compat.v1.keras.backend.get_session()
+
+# Creates the computation graph of ResNet within the tensorflow session.
+add_image_net_computational_nodes_in_graph(sess, model.output.name, image_net_config.dataset[&#39;images_classes&#39;])
+</pre></div>
+</div>
+</div>
+<p>Since all tensorflow input and output tensors have names, we identify the tensors needed by AIMET APIs here.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>input_tensor_name = model.input.name
+input_op_name, _ = input_tensor_name.split(&quot;:&quot;)
+output_tensor_name = model.output.name
+output_op_name, _ = output_tensor_name.split(&quot;:&quot;)
+</pre></div>
+</div>
+</div>
+<p>We are checking if TensorFlow is using CPU or CUDA device. This example code will use CUDA if available in your current execution environment.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>use_cuda = tf.test.is_gpu_available(cuda_only=True)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="3.-Determine-the-baseline-FP32-accuracy">
+<h3>3. Determine the baseline FP32 accuracy<a class="headerlink" href="#3.-Determine-the-baseline-FP32-accuracy" title="Permalink to this headline">¶</a></h3>
+<p>Let’s determine the FP32 (floating point 32-bit) accuracy of this model using evaluate() routine</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>accuracy = ImageNetDataPipeline.evaluate(sess=sess)
+print(accuracy)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="4.-Define-Constants-and-Helper-functions">
+<h3>4. Define Constants and Helper functions<a class="headerlink" href="#4.-Define-Constants-and-Helper-functions" title="Permalink to this headline">¶</a></h3>
+<p>In this section the constants and helper functions needed to run this example are defined.</p>
+<ul class="simple">
+<li><p><strong>EVAL_DATASET_SIZE</strong> A typical value is 5000. To execute this example faster this value has been set to 50</p></li>
+<li><p><strong>CALIBRATION_DATASET_SIZE</strong> A typical value is 2000. To execute this example faster this value has been set to 20</p></li>
+<li><p><strong>BATCH_SIZE</strong> User sets the batch size. As an example, set to 10</p></li>
+</ul>
+<p>The helper function **_create_sampled_data_loader()** returns a DataLoader based on the dataset and the number of samples provided.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>EVAL_DATASET_SIZE = 50
+CALIBRATION_DATASET_SIZE = 20
+BATCH_SIZE = 10
+
+_sampled_datasets = {}
+
+def _create_sampled_dataset(dataset: tf.compat.v1.data.Dataset,
+                            num_samples: int) -&gt; tf.compat.v1.data.Dataset:
+    if num_samples in _sampled_datasets:
+        return _sampled_datasets[num_samples]
+
+    with dataset._graph.as_default():
+        SHUFFLE_BUFFER_SIZE = 300 # NOTE: Adjust the buffer size as necessary.
+        SHUFFLE_SEED = 22222
+        dataset = dataset.shuffle(buffer_size=SHUFFLE_BUFFER_SIZE, seed=SHUFFLE_SEED)\
+                         .take(num_samples)\
+                         .batch(BATCH_SIZE)
+        _sampled_datasets[num_samples] = dataset
+        return dataset
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="Prepare-unlabeled-dataset">
+<h3>Prepare unlabeled dataset<a class="headerlink" href="#Prepare-unlabeled-dataset" title="Permalink to this headline">¶</a></h3>
+<p>The AutoQuant feature utilizes an unlabeled dataset to achieve quantization. Below cell shows how to get an unlabeled Dataset object from a labeled Dataset.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>eval_dataset = ImageNetDataPipeline.get_val_dataloader().dataset
+
+with eval_dataset._graph.as_default():
+    image_dataset = eval_dataset.map(lambda images, labels: images)
+    unlabeled_dataset = image_dataset.batch(BATCH_SIZE)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Prepare-the-evaluation-callback-function">
+<h3>Prepare the evaluation callback function<a class="headerlink" href="#Prepare-the-evaluation-callback-function" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>eval_callback()</strong> function takes the session object to evaluate and the number of samples to use as arguments. If the <strong>num_samples</strong> argument is None, the whole evaluation dataset is used to evaluate the model.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+from aimet_tensorflow.utils.common import iterate_tf_dataset
+from typing import Optional
+
+
+def eval_callback(sess: tf.compat.v1.Session,
+                  num_samples: Optional[int] = None) -&gt; float:
+    if num_samples is None:
+        num_samples = EVAL_DATASET_SIZE
+
+    sampled_dataset = _create_sampled_dataset(eval_dataset, num_samples)
+
+    with sess.graph.as_default():
+        sess.run(tf.compat.v1.global_variables_initializer())
+        input_tensor = sess.graph.get_tensor_by_name(input_tensor_name)
+        output_tensor = sess.graph.get_tensor_by_name(output_tensor_name)
+
+        num_correct_predictions = 0
+        for images, labels in iterate_tf_dataset(sampled_dataset):
+            prob = sess.run(output_tensor, feed_dict={input_tensor: images})
+            predictions = np.argmax(prob, axis=1)
+            num_correct_predictions += np.sum(predictions == labels)
+
+        return int(num_correct_predictions) / num_samples
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="5.-Apply-AutoQuant">
+<h3>5. Apply AutoQuant<a class="headerlink" href="#5.-Apply-AutoQuant" title="Permalink to this headline">¶</a></h3>
+<p>As a first step, the AutoQuant object is created.</p>
+<p>The <strong>allowed_accuracy_drop</strong> parameter is set by the user to convey to the AutoQuant feature, how much accuracy drop is tolerated by the user. AutoQuant applies a series of quantization features. When the allowed accuracy is reached, AutoQuant stops applying any subsequent quantization feature. Please refer AutoQuant User Guide and API documentation for complete details.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from aimet_tensorflow.auto_quant import AutoQuant
+
+auto_quant = AutoQuant(allowed_accuracy_drop=0.01,
+                       unlabeled_dataset=unlabeled_dataset,
+                       eval_callback=eval_callback)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Optionally-set-AdaRound-Parameters">
+<h3>Optionally set AdaRound Parameters<a class="headerlink" href="#Optionally-set-AdaRound-Parameters" title="Permalink to this headline">¶</a></h3>
+<p>The AutoQuant feature internally uses default parameters to execute the AdaRound step. If and only if necessary, the default AdaRound Parameters should be modified using the API shown below.</p>
+<p><strong>Note:</strong> To execute this example faster, the default value of the <strong>num_iterations</strong> parameter has been reduced from 10000 to 2000</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from aimet_tensorflow.adaround.adaround_weight import AdaroundParameters
+
+ADAROUND_DATASET_SIZE = 2000
+adaround_dataset = _create_sampled_dataset(image_dataset, ADAROUND_DATASET_SIZE)
+adaround_params = AdaroundParameters(adaround_dataset,
+                                     num_batches=ADAROUND_DATASET_SIZE // BATCH_SIZE)
+auto_quant.set_adaround_params(adaround_params)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Run-AutoQuant">
+<h3>Run AutoQuant<a class="headerlink" href="#Run-AutoQuant" title="Permalink to this headline">¶</a></h3>
+<p>This step applies the AutoQuant feature. The best possible quantized model, the associated eval_score and the path to the AdaRound encoding files are returned.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>sess, accuracy, encoding_path =\
+    auto_quant.apply(tf.compat.v1.keras.backend.get_session(),
+                     starting_op_names=[input_op_name],
+                     output_op_names=[output_op_name])
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print(accuracy)
+print(encoding_path)
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="Summary">
+<h3>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h3>
+<p>Hope this notebook was useful for you to understand how to use AIMET AutoQuant feature.</p>
+<p>Few additional resources - Refer to the AIMET API docs to know more details of the APIs and parameters - Refer to the other example notebooks to understand how to use AIMET CLE and AdaRound features in a standalone fashion.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

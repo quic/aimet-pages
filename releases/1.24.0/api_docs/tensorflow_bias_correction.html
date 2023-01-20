@@ -1,0 +1,452 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET TensorFlow Bias Correction API &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET TensorFlow Bias Correction API</a><ul>
+<li><a class="reference internal" href="#user-guide-link">User Guide Link</a></li>
+<li><a class="reference internal" href="#bias-correction-api">Bias Correction API</a></li>
+<li><a class="reference internal" href="#input-parameter-types">Input Parameter Types</a></li>
+<li><a class="reference internal" href="#data-input-type">Data Input Type</a></li>
+<li><a class="reference internal" href="#code-examples-for-bias-correction">Code Examples for Bias Correction</a></li>
+<li><a class="reference internal" href="#bias-correction-per-layer-api">Bias Correction Per Layer API</a></li>
+<li><a class="reference internal" href="#code-example-for-per-layer-bias-correction">Code Example for Per-Layer Bias Correction</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-tensorflow-bias-correction-api">
+<span id="api-tf-bias-correction"></span><h1>AIMET TensorFlow Bias Correction API<a class="headerlink" href="#aimet-tensorflow-bias-correction-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="user-guide-link">
+<h2>User Guide Link<a class="headerlink" href="#user-guide-link" title="Permalink to this headline">¶</a></h2>
+<p>To learn more about this technique, please see <a class="reference internal" href="../user_guide/post_training_quant_techniques.html#ug-post-training-quantization"><span class="std std-ref">Cross-Layer Equalization</span></a></p>
+</div>
+<div class="section" id="bias-correction-api">
+<h2>Bias Correction API<a class="headerlink" href="#bias-correction-api" title="Permalink to this headline">¶</a></h2>
+<p>Bias correction is performed after Cross layer equalization on models.
+Main api to perform bias correction on entire model is listed below.</p>
+<dl class="function">
+<dt id="aimet_tensorflow.bias_correction.BiasCorrection.correct_bias">
+<code class="sig-prename descclassname">aimet_tensorflow.bias_correction.BiasCorrection.</code><code class="sig-name descname">correct_bias</code><span class="sig-paren">(</span><em class="sig-param">reference_model</em>, <em class="sig-param">bias_correct_params</em>, <em class="sig-param">quant_params</em>, <em class="sig-param">data_set</em>, <em class="sig-param">conv_bn_dict=None</em>, <em class="sig-param">perform_only_empirical_bias_corr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.bias_correction.BiasCorrection.correct_bias" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Top level function for bias correction</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference_model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tf.compat.v1.Session for the model to be corrected.</p></li>
+<li><p><strong>bias_correct_params</strong> (<a class="reference internal" href="#aimet_tensorflow.bias_correction.BiasCorrectionParams" title="aimet_tensorflow.bias_correction.BiasCorrectionParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiasCorrectionParams</span></code></a>) – input params for bias correction</p></li>
+<li><p><strong>quant_params</strong> (<a class="reference internal" href="#aimet_tensorflow.bias_correction.QuantParams" title="aimet_tensorflow.bias_correction.QuantParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantParams</span></code></a>) – QuantParams type with params for quantization simulation for bias correction.</p></li>
+<li><p><strong>data_set</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetV2</span></code>) – input data set</p></li>
+<li><p><strong>conv_bn_dict</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <a class="reference internal" href="torch_bias_correction.html#aimet_common.bias_correction.ConvBnInfoType" title="aimet_common.bias_correction.ConvBnInfoType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvBnInfoType</span></code></a>]]) – Dict of conv and bn with activation info. If None, the function looks for it.
+This can be obtained on the model with bns and convs using
+BiasCorrection.find_all_convs_bn_with_activation() api.</p></li>
+<li><p><strong>perform_only_empirical_bias_corr</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – a flag to indicate only empirical bias correction is to be performed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>updated session with corrected bias for given ops</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="input-parameter-types">
+<h2>Input Parameter Types<a class="headerlink" href="#input-parameter-types" title="Permalink to this headline">¶</a></h2>
+<p><strong>Quantization Params</strong></p>
+<dl class="class">
+<dt id="aimet_tensorflow.bias_correction.QuantParams">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.bias_correction.</code><code class="sig-name descname">QuantParams</code><span class="sig-paren">(</span><em class="sig-param">quant_mode='tf_enhanced'</em>, <em class="sig-param">round_mode='nearest'</em>, <em class="sig-param">use_cuda=True</em>, <em class="sig-param">ops_to_ignore=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.bias_correction.QuantParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quant Params to be passed in by user</p>
+<p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quant_mode</strong> – Indicates which quantization algorithm should be used, either
+‘tf’ or ‘tf_enhanced’. Defaults to ‘tf_enhanced’</p></li>
+<li><p><strong>round_mode</strong> – The round scheme to used. One of: ‘nearest’ or ‘stochastic’. Default is ‘nearest’.</p></li>
+<li><p><strong>use_cuda</strong> – flag to indicate if GPU is to be used</p></li>
+<li><p><strong>ops_to_ignore</strong> – ops to be ignored</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p><strong>Bias Correction Params</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.bias_correction.BiasCorrectionParams">
+<code class="sig-prename descclassname">aimet_tensorflow.bias_correction.</code><code class="sig-name descname">BiasCorrectionParams</code><span class="sig-paren">(</span><em class="sig-param">batch_size: int, num_quant_samples: int, num_bias_correct_samples: int, input_op_names: List[str], output_op_names: List[str]</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.bias_correction.BiasCorrectionParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input for bias correction to be passed by the user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> – input batch size to be used</p></li>
+<li><p><strong>num_quant_samples</strong> – samples to be used for quantization</p></li>
+<li><p><strong>num_bias_correct_samples</strong> – samples to be used for bias correction</p></li>
+<li><p><strong>input_op_names</strong> – list of input op names of the given model</p></li>
+<li><p><strong>output_op_names</strong> – list of output op names of the given model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="data-input-type">
+<h2>Data Input Type<a class="headerlink" href="#data-input-type" title="Permalink to this headline">¶</a></h2>
+<p><strong>Format expected is tf.Data.DataSet type</strong></p>
+<p>Dataset represents the input data as a tensor or nested structures of
+tensors, one per input to model along with an iterator that operates on them.</p>
+</div>
+<div class="section" id="code-examples-for-bias-correction">
+<h2>Code Examples for Bias Correction<a class="headerlink" href="#code-examples-for-bias-correction" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># tensorflow</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications.resnet50</span> <span class="kn">import</span> <span class="n">ResNet50</span>
+
+<span class="c1"># Cross layer Equalization related imports</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">equalize_model</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">GraphSearchUtils</span><span class="p">,</span> <span class="n">CrossLayerScaling</span><span class="p">,</span> <span class="n">HighBiasFold</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.batch_norm_fold</span> <span class="kn">import</span> <span class="n">fold_all_batch_norms</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.batch_norm_fold</span> <span class="kn">import</span> <span class="n">fold_given_batch_norms</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.graph_saver</span> <span class="kn">import</span> <span class="n">save_and_load_graph</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.op.conv</span> <span class="kn">import</span> <span class="n">BiasUtils</span>
+
+<span class="c1"># Bias correction related imports</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.bias_correction</span> <span class="kn">import</span> <span class="n">BiasCorrectionParams</span><span class="p">,</span> <span class="n">QuantParams</span><span class="p">,</span> <span class="n">BiasCorrection</span>
+</pre></div>
+</div>
+<p><strong>Only Empirical Bias correction on a given model</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bias_correction_empirical</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform bias correction on a given model</span>
+<span class="sd">    :param dataset: Data passed by user as tf.Dataset type.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="c1"># input parameters for bias correction</span>
+    <span class="c1"># populate required parameters in two data types QuantParams and BiasCorrectParams</span>
+
+    <span class="n">quant_params</span> <span class="o">=</span> <span class="n">QuantParams</span><span class="p">(</span><span class="n">quant_mode</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">,</span>
+                               <span class="n">round_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                               <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">ops_to_ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">bias_correction_params</span> <span class="o">=</span> <span class="n">BiasCorrectionParams</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">num_quant_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">num_bias_correct_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                                  <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="c1"># run bias correction on the model</span>
+        <span class="n">_new_session</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">correct_bias</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">bias_correction_params</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">,</span> <span class="n">dataset</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Empirical and Analytical Bias correction on a given model</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bias_correction_empirical_analytical</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform bias correction on a given model (mix of empirical and analytical)</span>
+<span class="sd">    :param dataset: Data passed by user as tf.Dataset type.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="c1"># input parameters for bias correction</span>
+    <span class="c1"># populate required parameters in two data types QuantParams and BiasCorrectParams</span>
+
+    <span class="n">quant_params</span> <span class="o">=</span> <span class="n">QuantParams</span><span class="p">(</span><span class="n">quant_mode</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">,</span>
+                               <span class="n">round_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                               <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">ops_to_ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">bias_correction_params</span> <span class="o">=</span> <span class="n">BiasCorrectionParams</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">num_quant_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">num_bias_correct_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                                  <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="c1"># run empirical and analytical bias correction on the model</span>
+        <span class="n">_new_session</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">correct_bias</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">bias_correction_params</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">,</span>
+                                                   <span class="n">dataset</span><span class="p">,</span>
+                                                   <span class="n">perform_only_empirical_bias_corr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Empirical and Analytical Bias correction on a given model after performing CLE</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bias_correction_after_cle</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform bias correction on a given model (mix of empirical and analytical) after</span>
+<span class="sd">    cross layer equalization.</span>
+<span class="sd">    :param dataset: Data passed by user as tf.Dataset type.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="c1"># input parameters for bias correction</span>
+    <span class="c1"># populate required parameters in two data types QuantParams and BiasCorrectParams</span>
+
+    <span class="n">quant_params</span> <span class="o">=</span> <span class="n">QuantParams</span><span class="p">(</span><span class="n">quant_mode</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">,</span>
+                               <span class="n">round_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                               <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">ops_to_ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">bias_correction_params</span> <span class="o">=</span> <span class="n">BiasCorrectionParams</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">num_quant_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">num_bias_correct_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                                  <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+
+        <span class="c1"># store conv bns info before performing CLE</span>
+        <span class="n">conv_bn_dict</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">find_all_convs_bn_with_activation</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span>
+                                                                        <span class="n">start_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                                                        <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+        <span class="c1"># perform CLE</span>
+        <span class="n">sess_after_cle</span> <span class="o">=</span> <span class="n">equalize_model</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">start_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span> <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+        <span class="c1"># run empirical and analytical bias correction on the model</span>
+        <span class="n">_new_session</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">correct_bias</span><span class="p">(</span><span class="n">sess_after_cle</span><span class="p">,</span> <span class="n">bias_correction_params</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">,</span>
+                                                   <span class="n">dataset</span><span class="p">,</span>
+                                                   <span class="n">conv_bn_dict</span><span class="o">=</span><span class="n">conv_bn_dict</span><span class="p">,</span>
+                                                   <span class="n">perform_only_empirical_bias_corr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bias-correction-per-layer-api">
+<h2>Bias Correction Per Layer API<a class="headerlink" href="#bias-correction-per-layer-api" title="Permalink to this headline">¶</a></h2>
+<p>Empirical/ analytical Bias correction can also be performed on a
+subset of selected layers in a given model using the api listed below.</p>
+<dl class="function">
+<dt id="aimet_tensorflow.bias_correction.BiasCorrection.bias_correction_per_layer">
+<code class="sig-prename descclassname">aimet_tensorflow.bias_correction.BiasCorrection.</code><code class="sig-name descname">bias_correction_per_layer</code><span class="sig-paren">(</span><em class="sig-param">reference_model</em>, <em class="sig-param">corrected_model</em>, <em class="sig-param">bias_correct_params</em>, <em class="sig-param">layer_name_to_be_corrected</em>, <em class="sig-param">data_set</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.bias_correction.BiasCorrection.bias_correction_per_layer" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Helper function to perform empirical bias correction per layer.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference_model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tensorflow session for reference model</p></li>
+<li><p><strong>corrected_model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tensorflow session for corrected model</p></li>
+<li><p><strong>bias_correct_params</strong> (<a class="reference internal" href="#aimet_tensorflow.bias_correction.BiasCorrectionParams" title="aimet_tensorflow.bias_correction.BiasCorrectionParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiasCorrectionParams</span></code></a>) – bias correction params</p></li>
+<li><p><strong>layer_name_to_be_corrected</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – name of layer on which bias correction is to be performed</p></li>
+<li><p><strong>quant_params</strong> – Quantization specific params from user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None, updates corrected model in-place.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="aimet_tensorflow.bias_correction.BiasCorrection.analytical_bias_correction_per_layer">
+<code class="sig-prename descclassname">aimet_tensorflow.bias_correction.BiasCorrection.</code><code class="sig-name descname">analytical_bias_correction_per_layer</code><span class="sig-paren">(</span><em class="sig-param">corrected_model</em>, <em class="sig-param">layer</em>, <em class="sig-param">preceeding_bn_layer_info</em>, <em class="sig-param">quant_params</em>, <em class="sig-param">is_first_conv=False</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.bias_correction.BiasCorrection.analytical_bias_correction_per_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform bn based bias correction (analytical bc).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corrected_model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tensorflow session for corrected model</p></li>
+<li><p><strong>layer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>) – conv/linear layer to be corrected</p></li>
+<li><p><strong>preceeding_bn_layer_info</strong> (<a class="reference internal" href="torch_bias_correction.html#aimet_common.bias_correction.ConvBnInfoType" title="aimet_common.bias_correction.ConvBnInfoType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvBnInfoType</span></code></a>) – corresponding preceeding bn/ activation info</p></li>
+<li><p><strong>quant_params</strong> (<a class="reference internal" href="#aimet_tensorflow.bias_correction.QuantParams" title="aimet_tensorflow.bias_correction.QuantParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantParams</span></code></a>) – Quantization specific params from user</p></li>
+<li><p><strong>is_first_conv</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – flag to indicate if it’s the first conv layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None, updates corrected_model in place</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="code-example-for-per-layer-bias-correction">
+<h2>Code Example for Per-Layer Bias Correction<a class="headerlink" href="#code-example-for-per-layer-bias-correction" title="Permalink to this headline">¶</a></h2>
+<p><strong>Empirical Bias correction on one layer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bias_correction_single_layer_empirical</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; perform bias correction on one layer &quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="c1"># input parameters for bias correction</span>
+    <span class="c1"># populate required parameters in two data types QuantParams and BiasCorrectParams</span>
+
+    <span class="n">quant_params</span> <span class="o">=</span> <span class="n">QuantParams</span><span class="p">(</span><span class="n">quant_mode</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">,</span>
+                               <span class="n">round_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                               <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">ops_to_ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">bias_correction_params</span> <span class="o">=</span> <span class="n">BiasCorrectionParams</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                  <span class="n">num_quant_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">num_bias_correct_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                  <span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                                  <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="c1"># initialize model with zero bias</span>
+        <span class="n">sess</span> <span class="o">=</span> <span class="n">BiasUtils</span><span class="o">.</span><span class="n">initialize_model_with_bias</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">bias_correction_params</span><span class="o">.</span><span class="n">input_op_names</span><span class="p">,</span>
+                                                    <span class="n">bias_correction_params</span><span class="o">.</span><span class="n">output_op_names</span><span class="p">)</span>
+
+        <span class="c1"># pick a layer for bias correction</span>
+        <span class="n">example_conv_layer</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2a/Conv2D&#39;</span><span class="p">)</span>
+
+        <span class="c1"># invoke bias correction of one layer</span>
+        <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">bias_correction_per_layer</span><span class="p">(</span><span class="n">reference_model</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span>
+                                                 <span class="n">corrected_model</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span>
+                                                 <span class="n">bias_correct_params</span><span class="o">=</span><span class="n">bias_correction_params</span><span class="p">,</span>
+                                                 <span class="n">layer_name_to_be_corrected</span><span class="o">=</span><span class="n">example_conv_layer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                 <span class="n">quant_params</span><span class="o">=</span><span class="n">quant_params</span><span class="p">,</span>
+                                                 <span class="n">data_set</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Analytical Bias correction on one layer</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bias_correction_single_layer_analytical</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; perform analytical bias correction on one layer &quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="c1"># input parameters for bias correction</span>
+    <span class="c1"># populate required parameters in two data types QuantParams and BiasCorrectParams</span>
+
+    <span class="n">quant_params</span> <span class="o">=</span> <span class="n">QuantParams</span><span class="p">(</span><span class="n">quant_mode</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">,</span>
+                               <span class="n">round_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                               <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">ops_to_ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="c1"># initialize model with zero bias</span>
+        <span class="n">sess</span> <span class="o">=</span> <span class="n">BiasUtils</span><span class="o">.</span><span class="n">initialize_model_with_bias</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+        <span class="c1"># pick a layer for bias correction</span>
+        <span class="n">example_conv_layer</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2a/Conv2D&#39;</span><span class="p">)</span>
+
+        <span class="c1"># get candidate conv bns in the model</span>
+        <span class="n">convs_bn_activation_info_dict</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">find_all_convs_bn_with_activation</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span>
+                                                                                         <span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                                                                         <span class="p">[</span><span class="s1">&#39;fc1000/Softmax&#39;</span><span class="p">])</span>
+
+        <span class="c1"># make sure to pick example_conv_layer that has a bn op associated with it</span>
+        <span class="k">if</span> <span class="n">example_conv_layer</span> <span class="ow">in</span> <span class="n">convs_bn_activation_info_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+            <span class="n">preceding_bn_layer_info</span> <span class="o">=</span> <span class="n">convs_bn_activation_info_dict</span><span class="p">[</span><span class="n">example_conv_layer</span><span class="p">]</span>
+
+            <span class="c1"># invoke analytical bias correction on this layer</span>
+            <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">analytical_bias_correction_per_layer</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span>
+                                                                <span class="n">example_conv_layer</span><span class="p">,</span>
+                                                                <span class="n">preceding_bn_layer_info</span><span class="p">,</span>
+                                                                <span class="n">quant_params</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

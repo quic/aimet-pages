@@ -1,0 +1,162 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET Keras BatchNorm Re-estimation APIs &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../user_guide/index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET Keras BatchNorm Re-estimation APIs</a><ul>
+<li><a class="reference internal" href="#examples-notebook-link">Examples Notebook Link</a></li>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#top-level-apis">Top-level APIs</a></li>
+<li><a class="reference internal" href="#code-example">Code Example</a></li>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-keras-batchnorm-re-estimation-apis">
+<span id="api-keras-bn-reestimation"></span><h1>AIMET Keras BatchNorm Re-estimation APIs<a class="headerlink" href="#aimet-keras-batchnorm-re-estimation-apis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="examples-notebook-link">
+<h2>Examples Notebook Link<a class="headerlink" href="#examples-notebook-link" title="Permalink to this headline">¶</a></h2>
+<p>For an end-to-end notebook showing how to use Keras Quantization-Aware Training with BatchNorm Re-estimation, please see <a class="reference internal" href="../Examples/tensorflow/quantization/keras/bn_reestimation.html"><span class="doc">here</span></a>.</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>AIMET functionality for Keras BatchNorm Re-estimation recalculates the batchnorm statistics based on the model after
+QAT. By doing so, we aim to make our model learn batchnorm statistics from from stable outputs after QAT, rather than from likely noisy outputs during QAT.</p>
+</div>
+<div class="section" id="top-level-apis">
+<h2>Top-level APIs<a class="headerlink" href="#top-level-apis" title="Permalink to this headline">¶</a></h2>
+<p><strong>API for BatchNorm Re-estimation</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.keras.bn_reestimation.reestimate_bn_stats">
+<code class="sig-prename descclassname">aimet_tensorflow.keras.bn_reestimation.</code><code class="sig-name descname">reestimate_bn_stats</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">bn_re_estimation_dataset</em>, <em class="sig-param">bn_num_batches=100</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.keras.bn_reestimation.reestimate_bn_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>top level api for end user directly call
+:type model: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code>
+:param model: tf.keras.Model
+:type bn_re_estimation_dataset: <code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetV2</span></code>
+:param bn_re_estimation_dataset: Training dataset
+:type bn_num_batches: <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>
+:param bn_num_batches: The number of batches to be used for reestimation
+:rtype: <code class="xref py py-class docutils literal notranslate"><span class="pre">Handle</span></code>
+:returns: Handle that undos the effect of BN reestimation upon handle.remove()</p>
+</dd></dl>
+
+<p><strong>API for BatchNorm fold to scale</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.keras.batch_norm_fold.fold_all_batch_norms_to_scale">
+<code class="sig-prename descclassname">aimet_tensorflow.keras.batch_norm_fold.</code><code class="sig-name descname">fold_all_batch_norms_to_scale</code><span class="sig-paren">(</span><em class="sig-param">sim</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.keras.batch_norm_fold.fold_all_batch_norms_to_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold all batch_norm layers in a model into corresponding conv/linear layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sim</strong> (<a class="reference internal" href="keras_quantsim.html#aimet_tensorflow.keras.quantsim.QuantizationSimModel" title="aimet_tensorflow.keras.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a>) – quantized keras model to fold all batch norms</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="code-example">
+<h2>Code Example<a class="headerlink" href="#code-example" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.bn_reestimation</span> <span class="kn">import</span> <span class="n">reestimate_bn_stats</span>
+</pre></div>
+</div>
+<p><strong>Prepare BatchNorm Re-estimation dataset</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">])</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+<span class="n">dummy_inputs</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Perform BatchNorm Re-estimation</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reestimate_bn_stats</span><span class="p">(</span><span class="n">qsim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Perform BatchNorm Fold to scale</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fold_all_batch_norms_to_scale</span><span class="p">(</span><span class="n">qsim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<p>Please see The AIMET Keras ModelPreparer API limitations:</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

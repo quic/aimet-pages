@@ -1,0 +1,186 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AI Model Efficiency Toolkit User Guide &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AIMET Model Quantization" href="model_quantization.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="model_quantization.html" title="AIMET Model Quantization"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AI Model Efficiency Toolkit User Guide</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#release-information">Release Information</a></li>
+<li><a class="reference internal" href="#installation-guide">Installation Guide</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="model_quantization.html"
+                        title="next chapter">AIMET Model Quantization</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ai-model-efficiency-toolkit-user-guide">
+<span id="ug-index"></span><h1>AI Model Efficiency Toolkit User Guide<a class="headerlink" href="#ai-model-efficiency-toolkit-user-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>AI Model Efficiency Toolkit (AIMET) is a software toolkit that enables users to quantize and compress models.
+Quantization is a must for efficient edge inference using fixed-point AI accelerators.</p>
+<p>AIMET optimizes pre-trained models (e.g., FP32 trained models) using post-training and fine-tuning techniques that
+minimize accuracy loss incurred during quantization or compression.</p>
+<p>AIMET currently supports PyTorch, TensorFlow, and Keras models.</p>
+<img alt="../_images/AIMET_index_no_fine_tune.png" src="../_images/AIMET_index_no_fine_tune.png" />
+<p>The above picture shows a high-level view of the workflow when using AIMET. The user will start with a trained
+model in either the PyTorch, TensorFlow, or Keras training framework. This trained model is passed to AIMET using APIs
+for compression and quantization. AIMET returns a compressed/quantized version of the model
+that the users can fine-tune (or train further for a small number of epochs) to recover lost accuracy. Users can then
+export via ONNX/meta/h5 to an on-target runtime like Qualcomm® Neural Processing SDK.</p>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>AIMET supports two sets of model optimization techniques:</p>
+<ul class="simple">
+<li><p>Model Quantization: AIMET can simulate behavior of quantized HW for a given trained
+model. This model can be optimized using Post-Training Quantization (PTQ) and fine-tuning (Quantization Aware Training
+- QAT) techniques.</p></li>
+<li><p>Model Compression: AIMET supports multiple model compression techniques that allow the
+user to take a trained model and remove redundancies, resulting in a smaller model that runs faster on target.</p></li>
+</ul>
+</div>
+<div class="section" id="release-information">
+<h2>Release Information<a class="headerlink" href="#release-information" title="Permalink to this headline">¶</a></h2>
+<p>For information specific to this release, please see <a class="reference internal" href="release_notes.html#ug-release-notes"><span class="std std-ref">Release Notes</span></a> and <a class="reference internal" href="known_issues.html#ug-known-issues"><span class="std std-ref">Known Issues</span></a>.</p>
+</div>
+<div class="section" id="installation-guide">
+<h2>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h2>
+<p>Please visit the <a class="reference internal" href="../install/index.html#ug-installation"><span class="std std-ref">AIMET Installation</span></a> for more details.</p>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Please refer to the following documentation:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_compression.html#compression-ratio-selection">Compression ratio selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_compression.html#model-compression">Model Compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_docs/torch.html">AIMET APIs for PyTorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_docs/keras.html">AIMET APIs for Keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#running-the-notebooks">Running the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="line-block">
+<div class="line">AI Model Efficiency Toolkit is a product of Qualcomm Innovation Center, Inc.</div>
+<div class="line">Qualcomm® Neural Processing SDK is a product of Qualcomm Technologies, Inc. and/or its subsidiaries.</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="model_quantization.html" title="AIMET Model Quantization"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>AIMET QuantAnalyzer &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">AIMET QuantAnalyzer</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#detailed-analysis-descriptions">Detailed Analysis Descriptions</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="aimet-quantanalyzer">
+<span id="ug-quant-analyzer"></span><h1>AIMET QuantAnalyzer<a class="headerlink" href="#aimet-quantanalyzer" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The QuantAnalyzer feature analyzes the model for quantization and points out sensitive parts/hotspots in the model.
+The analyses are performed automatically, and only requires the user to pass in callbacks for performing forward pass and evaluation, and optionally a dataloader for MSE loss analysis.</p>
+<p>For each analysis, QuantAnalyzer outputs json and/or html files containing data and plots for easy visualization.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>To call the QuantAnalyzer API, users need to provide the following:</dt><dd><ul class="simple">
+<li><p>An FP32 pretrained model for analysis</p></li>
+<li><p>A dummy input for the model which can contain random values, but must match the shape of the model’s expected input</p></li>
+<li><p>A user defined function for passing 500-1000 representative data samples through the model for quantization calibration.</p></li>
+<li><p>A user defined function for passing labeled data through the model for evaluation, returning an accuracy metric</p></li>
+<li><p>(Optional, for runing MSE loss analysis) A dataloader providing unlabeled data to be passed through the model</p></li>
+</ul>
+</dd>
+</dl>
+<p>Other quantization related settings are also provided in the call to analyze a model.
+Please refer to <a class="reference internal" href="../api_docs/torch_quant_analyzer.html"><span class="doc">PyTorch QuantAnalyzer API Docs</span></a> for more information on how to call the QuantAnalyzer feature.</p>
+<p><strong>Note</strong>: Typically on quantized runtimes, batch normalization layers will be folded where possible.
+So that users do not have to call a separate API to do so, QuantAnalyzer automatically performs Batch Norm Folding prior to running its analyses.</p>
+</div>
+<div class="section" id="detailed-analysis-descriptions">
+<h2>Detailed Analysis Descriptions<a class="headerlink" href="#detailed-analysis-descriptions" title="Permalink to this headline">¶</a></h2>
+<p>QuantAnalyzer performs the following analyses:</p>
+<ol class="arabic">
+<li><dl>
+<dt>Sensitivity analysis to weight and activation quantization:</dt><dd><p>QuantAnalyzer compares the accuracies of the original FP32 model, an activation-only quantized model, and a weight-only quantized model.</p>
+<p>This helps users determine which AIMET quantization technique(s) will be more beneficial for the model.
+For example, in situations where the model is more sensitive to activation quantization, PTQ techniques like Adaptive Rounding or Cross Layer Equalization might not be very helpful.</p>
+<p>Accuracy values for each model are printed as part of AIMET logging.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Per layer quantizer enablement analysis:</dt><dd><p>Sometimes the accuracy drop incurred from quantization can be attributed to only a subset of quantizers within the model.
+QuantAnalyzer performs analyses to find such layers by enabling and disabling individual quantizers to observe how the model accuracy changes.</p>
+<p>The following two types of quantizer enablement analyses are performed:</p>
+<ol class="arabic simple">
+<li><p>Disable all quantizers across the model and, for each layer, enable only that layer’s output quantizer and perform evaluation with the provided callback.
+This results in accuracy values obtained for each layer in the model when only that layer’s quantizer is enabled, allowing users to observe effects of individual layer quantization and pinpoint culprit layer(s) and hotspots.</p></li>
+<li><p>Enable all quantizers across the model and, for each layer, disable only that layer’s output quantizer and perform evaluation with the provided callback.
+Once again, accuracy values are produced for each layer in the model when only that layer’s quantizer is disabled.</p></li>
+</ol>
+<p>As a result of these analyses, AIMET outputs per_layer_quant_enabled.html and per_layer_quant_disabled.html respectively, containing plots mapping layers on the x-axis to model accuracy on the y-axis.</p>
+<p>JSON files per_layer_quant_enabled.json and per_layer_quant_disabled.json are also produced, containing the data shown in the .html plots.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Per layer encodings min-max range analysis:</dt><dd><p>As part of quantization, encoding parameters for each quantizer must be obtained.
+These parameters include scale, offset, min, and max, and are used for mapping floating point values to quantized integer values.</p>
+<p>QuantAnalyzer tracks the min and max encoding parameters computed by each quantizer in the model as a result of forward passes through the model with representative data (from which the scale and offset values can be directly obtained).</p>
+<p>As a result of this analysis, AIMET outputs html plots and json files for each activation quantizer and each parameter quantizer (contained in the min_max_ranges folder), containing the encoding min/max values for each.</p>
+<p>If Per Channel Quantization (PCQ) is enabled, encoding min and max values for all the channels of each weight will be shown.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Per layer statistics histogram:</dt><dd><p>Under the TF Enhanced quantization scheme, encoding min/max values for each quantizer are obtained by collecting a histogram of tensor values seen at that quantizer and potentially tossing out outliers.</p>
+<p>When this quantization scheme is selected, QuantAnalyzer will output plots for each quantizer in the model, displaying the histogram of tensor values seen at that quantizer.
+These plots are available as part of the activations_pdf and weights_pdf folders, containing a separate .html plot for each quantizer.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Per layer MSE loss:</dt><dd><p>An optional analysis QuantAnalyzer can do is to monitor each layer’s output in the original FP32 model as well as the corresponding layer output in the quantized model, and calculate the MSE loss between the two.
+This helps identify which layers may contribute more to quantization noise.</p>
+<p>To enable this optional analysis, users need to pass in a dataloader for QuantAnalyzer to read from.
+Approximately 256 samples/images are sufficient.</p>
+<p>A per_layer_mse_loss.html file will be generated containing a plot mapping layer quantizers on the x-axis to MSE loss on the y-axis.
+A corresponding per_layer_mse_loss.json file will also be generated containing data corresponding to the .html file.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>

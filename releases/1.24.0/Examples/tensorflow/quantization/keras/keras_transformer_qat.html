@@ -1,0 +1,546 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Quantization-Aware Training with a Keras Transformer Model &#8212; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</title>
+    <link rel="stylesheet" href="../../../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script type="text/javascript" src="../../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../user_guide/index.html">
+              <img class="logo" src="../../../../_static/brain_logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../../../user_guide/index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quantization-Aware Training with a Keras Transformer Model</a><ul>
+<li><a class="reference internal" href="#Overall-flow">Overall flow</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars and line breaks on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Quantization-Aware-Training-with-a-Keras-Transformer-Model">
+<h1>Quantization-Aware Training with a Keras Transformer Model<a class="headerlink" href="#Quantization-Aware-Training-with-a-Keras-Transformer-Model" title="Permalink to this headline">¶</a></h1>
+<p>This notebook shows a working code example of how to use AIMET to perform QAT (Quantization-aware training) for transformer models built in Keras. QAT is an AIMET feature adding quantization simulation ops (also called fake quantization ops sometimes) to a trained ML model and using a standard training pipeline to fine-tune or train the model for a few epochs. The resulting model should show improved accuracy on quantized ML accelerators.</p>
+<div class="section" id="Overall-flow">
+<h2>Overall flow<a class="headerlink" href="#Overall-flow" title="Permalink to this headline">¶</a></h2>
+<p>This notebook covers the following 1. Load the dataset 2. Create the model in Keras 3. Train and evaluate the model 4. Quantize the model with QuantSim 5. Fine-tune the quantized model accuracy with QAT</p>
+<p><strong>*1. Load the dataset*</strong></p>
+<p>This notebook relies on the IMDB dataset for sentiment analysis, as provided by Keras.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from tensorflow import keras
+
+vocab_size = 20000  # Only consider the top 20k words
+maxlen = 200  # Only consider the first 200 words of each movie review
+
+(x_train, y_train), (x_val, y_val) = keras.datasets.imdb.load_data(num_words=vocab_size)
+print(len(x_train), &quot;Training sequences&quot;)
+print(len(x_val), &quot;Validation sequences&quot;)
+
+x_train = keras.preprocessing.sequence.pad_sequences(x_train, maxlen=maxlen)
+x_val = keras.preprocessing.sequence.pad_sequences(x_val, maxlen=maxlen)
+</pre></div>
+</div>
+</div>
+<p>Currently, only Keras models built using the Sequential or Functional APIs are compatible with QuantSim - models making use of subclassed layers are incompatible. Therefore, we use the Functional API to create the model used in this example.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import tensorflow as tf
+from tensorflow.keras import layers
+
+embed_dim = 32  # Embedding size for each token
+num_heads = 2  # Number of attention heads
+ff_dim = 32  # Hidden layer size in feed forward network inside transformer
+
+############## FUNCTIONAL MODEL ##############
+inputs = layers.Input(shape=(maxlen,))
+
+# Embedding Layer
+positions = tf.range(start=0, limit=maxlen, delta=1)
+positions = layers.Embedding(input_dim=maxlen, output_dim=embed_dim)(positions)
+x = layers.Embedding(input_dim=vocab_size, output_dim=embed_dim)(inputs)
+x = x + positions
+
+# Transformer Block
+x = layers.MultiHeadAttention(num_heads=num_heads, key_dim=embed_dim)(x, x)
+x = layers.Dropout(0.1)(x)
+x = layers.LayerNormalization(epsilon=1e-6)(x)
+x = layers.Dense(ff_dim, activation=&quot;relu&quot;)(x)
+x = layers.Dense(embed_dim)(x)
+x = layers.Dropout(0.1)(x)
+x = layers.LayerNormalization(epsilon=1e-6)(x)
+
+# Output layers
+x = layers.GlobalAveragePooling1D()(x)
+x = layers.Dropout(0.1)(x)
+x = layers.Dense(20, activation=&quot;relu&quot;)(x)
+x = layers.Dropout(0.1)(x)
+outputs = layers.Dense(2, activation=&quot;softmax&quot;)(x)
+################################################
+
+functional_model = keras.Model(inputs=inputs, outputs=outputs)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>*3. Train and evaluate the model to get a baseline accuracy*</strong></p>
+<p>Before we can quantize the model and apply QAT, the FP32 model must be trained so that we can get a baseline accuracy.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>functional_callback = tf.keras.callbacks.TensorBoard(log_dir=&quot;./log/functional&quot;, histogram_freq=1)
+functional_model.compile(optimizer=&quot;adam&quot;, loss=&quot;sparse_categorical_crossentropy&quot;, metrics=[&quot;accuracy&quot;])
+history = functional_model.fit(
+    x_train, y_train, batch_size=32, epochs=1, validation_data=(x_val, y_val), callbacks=[functional_callback]
+)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span># Evaluate the model on the test data using `evaluate`
+print(&quot;Evaluate model on test data&quot;)
+results = functional_model.evaluate(x_val, y_val, batch_size=128)
+print(&quot;test loss, test acc:&quot;, results)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>*4. Create a QuantizationSim Model and determine quantized accuracy*</strong></p>
+<p><strong>Create Quantization Sim Model</strong></p>
+<p>Now we use AIMET to create a QuantizationSimModel. This basically means that AIMET will insert fake quantization ops in the model graph and will configure them. A few of the parameters are explained here - <strong>quant_scheme</strong>: We set this to “QuantScheme.post_training_tf_enhanced” - Supported options are ‘tf_enhanced’ or ‘tf’ or using Quant Scheme Enum QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced - <strong>default_output_bw</strong>: Setting this to 8, essentially means that
+we are asking AIMET to perform all activation quantizations in the model using integer 8-bit precision - <strong>default_param_bw</strong>: Setting this to 8, essentially means that we are asking AIMET to perform all parameter quantizations in the model using integer 8-bit precision</p>
+<p>There are other parameters that are set to default values in this example. Please check the AIMET API documentation of QuantizationSimModel to see reference documentation for all the parameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from aimet_common.defs import QuantScheme
+from aimet_tensorflow.keras.quantsim import QuantizationSimModel
+
+model = QuantizationSimModel(model=functional_model,
+                             quant_scheme=QuantScheme.post_training_tf_enhanced,
+                             rounding_mode=&#39;nearest&#39;,
+                             default_output_bw=8,
+                             default_param_bw=8)
+</pre></div>
+</div>
+</div>
+<p>QuantSim works by wrapping each layer in the model with a Quantization Wrapper that simulates the effects of quantization on the inputs, outputs, and parameters of the layer (visualized below). A regular Conv2D Keras layer is displayed on the right, while a Conv2D layer after a quantization wrapper has been applied is displayed on the left. <img alt="A regular Conv2d layer" src="../../../../_images/keras_pre_quant_layer.png" />    <img alt="A Conv2D layer after a quantization wrapper has been applied" src="../../../../_images/keras_post_quant_layer.png" /></p>
+<p>If a multi-head attention layer is encountered in the model, the original layer is replaced with a custom quantizable version that gives the QuantizationSimModel access to the inputs and outputs of internal ops within the layer, so that quantization wrappers can be applied at a more granular level than the entire MHA layer. This is necessary in order to accurately simulate the effects of on-target quantization.</p>
+<p>This works by making use of Keras’s built-in <code class="docutils literal notranslate"><span class="pre">clone_layer</span></code> function, which allows us to clone and modify the FP32 model layer by layer. A more detailed call flow diagram is displayed below. <img alt="Keras QuantSim call flow" src="../../../../_images/keras_quantsim_callflow.png" /></p>
+<hr class="docutils" />
+<p><strong>Compute Encodings</strong></p>
+<p>Even though AIMET has added ‘quantizer’ nodes to the model graph but the model is not ready to be used yet. Before we can use the sim model for inference or training, we need to find appropriate scale/offset quantization parameters for each ‘quantizer’ node. For activation quantization nodes, we need to pass unlabeled data samples through the model to collect range statistics which will then let AIMET calculate appropriate scale/offset quantization parameters. This process is sometimes referred
+to as calibration. AIMET simply refers to it as ‘computing encodings’.</p>
+<p>So we create a routine to pass unlabeled data samples through the model. This should be fairly simple - use the existing train or validation data loader to extract some samples and pass them to the model. We don’t need to compute any loss metric etc. So we can just ignore the model output for this purpose. A few pointers regarding the data samples - In practice, we need a very small percentage of the overall data samples for computing encodings. - It may be beneficial if the samples used for
+computing encoding are well distributed. It’s not necessary that all classes need to be covered etc. since we are only looking at the range of values at every layer activation. However, we definitely want to avoid an extreme scenario like all positive or negative samples are used.</p>
+<p>The following shows an example of a routine that passes unlabeled samples through the model for computing encodings. This routine can be written in many different ways, this is just an example.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>model.compute_encodings(lambda m, _: m(x_val[0:1000]), None)
+model.export(&#39;./data&#39;, &#39;model&#39;) # Once the encodings have been computed, export them for later inspection
+</pre></div>
+</div>
+</div>
+<p>Next, we can evaluate the performance of the quantized model</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>model.model.compile(optimizer=&quot;adam&quot;, loss=&quot;sparse_categorical_crossentropy&quot;, metrics=[&quot;accuracy&quot;]) # must compile model before evaluating
+
+print(&quot;Evaluate quantized model on test data&quot;)
+results = model.model.evaluate(x_val, y_val, batch_size=128)
+print(&quot;test loss, test acc:&quot;, results)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>*5. Perform QAT*</strong></p>
+<p>To perform quantization aware training (QAT), we simply train the model for a few more epochs (typically 15-20). As with any training job, hyper-parameters need to be searched for optimal results. Good starting points are to use a learning rate on the same order as the ending learning rate when training the original model, and to drop the learning rate by a factor of 10 every 5 epochs or so. For the purpose of this example notebook, we are going to train only for 1 epoch. But feel free to change
+these parameters as you see fit.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>quantized_callback = tf.keras.callbacks.TensorBoard(log_dir=&quot;./log/quantized&quot;)
+history = model.model.fit(
+    x_train[0:1024], y_train[0:1024], batch_size=32, epochs=1, validation_data=(x_val, y_val), callbacks=[quantized_callback]
+)
+</pre></div>
+</div>
+</div>
+<p>Now, let’s compute and export the encodings of the model after performing QAT. When comparing the encodings file generated by this step and the encodings generated before quantization, there should be some differences. These differences are an artifact of QAT.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>model.compute_encodings(lambda m, _: m(x_val[0:3000]), None)
+model.export(&#39;./data&#39;, &#39;model_after_qat&#39;)
+</pre></div>
+</div>
+</div>
+<p>Finally, let’s evaluate the validation accuracy of our model after QAT</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>print(&quot;Evaluate quantized model (post QAT) on test data&quot;)
+results = model.model.evaluate(x_val, y_val, batch_size=128)
+print(&quot;test loss, test acc:&quot;, results)
+</pre></div>
+</div>
+</div>
+<p>We can also use tensorboard to visualize the FP32 and quantized models to see how they are different from one another. Comparing the two, we can see that most layers are now replaced with a quantization wrapped simulating the effects of quantization at the input and output nodes of the layer. In the case of more complex layers, like multi-head attention, QuantSim has custom pipelines to insert quantization wrappers around more elementary ops within the layer.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>%tensorboard --logdir logs
+from tensorboard import notebook
+
+notebook.display(height=1000)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>*Summary*</strong></p>
+<p>Hope this notebook was useful for you to understand how to use AIMET with Keras models. Few additional resources Refer to the AIMET API docs to know more details of the APIs and optional parameters Refer to the other example notebooks to understand how to use AIMET post-training quantization techniques and the vanilla QAT method (without range-learning)</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../../user_guide/index.html">AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.24.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Qualcomm Innovation Center, Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.1.
+    </div>
+  </body>
+</html>
