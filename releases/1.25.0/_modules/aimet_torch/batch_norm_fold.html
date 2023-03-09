@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.batch_norm_fold &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.25.0</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.25.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.batch_norm_fold</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.batch_norm_fold</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.5</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2019, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; Optimization code to fold batch-norm layers &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span>
+<span class="kn">from</span> <span class="nn">torch.nn.modules.batchnorm</span> <span class="kn">import</span> <span class="n">BatchNorm1d</span><span class="p">,</span> <span class="n">BatchNorm2d</span>
+<span class="kn">from</span> <span class="nn">torch.nn.modules.conv</span> <span class="kn">import</span> <span class="n">_ConvTransposeNd</span>
+
+<span class="kn">import</span> <span class="nn">aimet_common.libpymo</span> <span class="k">as</span> <span class="nn">libpymo</span>
+
+<span class="kn">from</span> <span class="nn">aimet_common.bias_correction</span> <span class="kn">import</span> <span class="n">ConvBnPatternHandler</span>
+<span class="kn">from</span> <span class="nn">aimet_common.graph_pattern_matcher</span> <span class="kn">import</span> <span class="n">PatternType</span>
+<span class="kn">from</span> <span class="nn">aimet_common.graph_searcher</span> <span class="kn">import</span> <span class="n">GraphSearcher</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+
+<span class="c1"># pylint: disable=unused-import</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.defs</span> <span class="kn">import</span> <span class="n">PassThroughOp</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.meta.connectedgraph</span> <span class="kn">import</span> <span class="n">ConnectedGraph</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.qc_quantize_op</span> <span class="kn">import</span> <span class="n">QcQuantizeWrapper</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.tensor_quantizer</span> <span class="kn">import</span> <span class="n">LearnedGridTensorQuantizer</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">BatchNormFoldiing</span><span class="p">)</span>
+
+
+<span class="n">LayerType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">,</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">_supported_layers</span> <span class="o">=</span> <span class="n">LayerType</span><span class="o">.</span><span class="n">__args__</span>
+
+<span class="n">BatchNormType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">BatchNorm1d</span><span class="p">,</span> <span class="n">BatchNorm2d</span><span class="p">]</span>
+<span class="n">_supported_batchnorms</span> <span class="o">=</span> <span class="n">BatchNormType</span><span class="o">.</span><span class="n">__args__</span>
+
+
+<span class="k">def</span> <span class="nf">_delete_bn_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">bn_layer_list</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">BatchNormType</span><span class="p">]):</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">replace_modules_with_instances_of_new_type</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layer_list</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">)</span>
+
+
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">_expand_shape_to_4d</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParams</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Expand the shape of the weight into 4d.  &quot;&quot;&quot;</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dims</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span>
+
+    <span class="k">if</span> <span class="n">dims</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">weight_tensor</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">orig_shape</span> <span class="o">=</span> <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">_4d_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orig_shape</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="o">-</span><span class="n">dims</span><span class="p">)])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">_4d_shape</span>
+            <span class="k">yield</span> <span class="n">weight_tensor</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">orig_shape</span>
+
+
+<span class="k">def</span> <span class="nf">_call_mo_batch_norm_fold</span><span class="p">(</span><span class="n">weight</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                             <span class="n">bias</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                             <span class="n">bn</span><span class="p">:</span> <span class="n">BatchNormType</span><span class="p">,</span>
+                             <span class="n">fold_backward</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calls C++ batch norm folding API.</span>
+
+<span class="sd">    :param weight: Weight or scale tensor to fold BN into.</span>
+<span class="sd">    :param bias: Bias tensor to fold BN into.</span>
+<span class="sd">    :param bn: Batch Norm layer</span>
+<span class="sd">    :param fold_backward: True if BatchNorm comes after Conv/Linear layer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">bn_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BNParams</span><span class="p">()</span>
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">runningMean</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">running_mean</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">running_var</span> <span class="o">+</span> <span class="n">bn</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">runningVar</span> <span class="o">=</span> <span class="n">sigma</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParams</span><span class="p">()</span>
+
+        <span class="n">weight_tensor</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">bias_tensor</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParams</span><span class="p">()</span>
+
+        <span class="n">bias_tensor</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">bias</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bias_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">is_bias_valid</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">with</span> <span class="n">_expand_shape_to_4d</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">):</span>
+            <span class="n">_bias</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="n">bn_params</span><span class="p">,</span> <span class="n">weight_tensor</span><span class="p">,</span> <span class="n">bias_tensor</span><span class="p">,</span> <span class="n">is_bias_valid</span><span class="p">,</span> <span class="n">fold_backward</span><span class="p">)</span>
+
+        <span class="n">bias</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">_bias</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">bias</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">bias</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape_as</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">weight</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                         <span class="n">device</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                         <span class="n">dtype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape_as</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+        <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_BatchNormFoldingNotSupported</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_fold_to_scale</span><span class="p">(</span><span class="n">conv_wrapper</span><span class="p">:</span> <span class="n">QcQuantizeWrapper</span><span class="p">,</span> <span class="n">bn_wrapper</span><span class="p">:</span> <span class="n">QcQuantizeWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold BatchNorm into the scale and bias of the given layer.</span>
+
+<span class="sd">    :param conv_wrapper: QcQuantizeWrapper that wraps conv or linear layer.</span>
+<span class="sd">    :param bn_wrapper: QcQuantizeWrapper that wraps bn.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># pylint: disable=protected-access, too-many-locals, too-many-branches, bad-whitespace, too-many-statements</span>
+    <span class="n">conv</span> <span class="o">=</span> <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">_module_to_wrap</span>
+    <span class="n">bn</span> <span class="o">=</span> <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">_module_to_wrap</span>
+
+    <span class="n">weight_quantizer</span> <span class="o">=</span> <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weight_quantizer</span><span class="p">,</span> <span class="n">LearnedGridTensorQuantizer</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">_BatchNormFoldingNotSupported</span><span class="p">(</span>
+            <span class="s2">&quot;BatchNorm folding to scale supports LearnedGridTensorQuantizer only; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">weight_quantizer</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">output_quantizer</span> <span class="o">=</span> <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">output_quantizer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_BatchNormFoldingNotSupported</span><span class="p">(</span>
+            <span class="s2">&quot;BatchNorm should belong to the same supergroup with the layer to be folded to.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;bias&quot;</span> <span class="ow">in</span> <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">:</span>
+        <span class="n">bias_quantizer</span> <span class="o">=</span> <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s2">&quot;bias&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">bias_quantizer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">_BatchNormFoldingNotSupported</span><span class="p">(</span>
+                <span class="s2">&quot;Can&#39;t fold BatchNorm to scale if bias quantizer is enabled.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="n">encodings</span> <span class="o">=</span> <span class="n">weight_quantizer</span><span class="o">.</span><span class="n">encoding</span>
+
+    <span class="k">if</span> <span class="n">encodings</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encodings</span><span class="p">,</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TfEncoding</span><span class="p">):</span>
+        <span class="n">encodings</span> <span class="o">=</span> <span class="p">[</span><span class="n">encodings</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">_ConvTransposeNd</span><span class="p">)</span> <span class="ow">and</span> <span class="n">conv</span><span class="o">.</span><span class="n">groups</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_BatchNormFoldingNotSupported</span><span class="p">(</span>
+            <span class="s2">&quot;BatchNorm folding to scale is not supported for grouped ConvTransposeNd.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Add quantization noise to the BN params (bn weight &amp; bn bias) before folding.</span>
+    <span class="c1"># NOTE: Quantization of foldable batchnorms is automatically disabled when</span>
+    <span class="c1">#       initializing quantsim. However, it is still safer to call _quantize_params here</span>
+    <span class="c1">#       as we can&#39;t guarantee this is always the case.</span>
+    <span class="c1">#       For example, the user can manually enable quantization of batchnorms, etc...</span>
+    <span class="c1">#       (FYI: _quantize_params takes effect only when the parameter quantizers are enabled)</span>
+    <span class="k">with</span> <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">_quantize_params</span><span class="p">():</span>
+        <span class="n">_fold_to_weight</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">,</span> <span class="n">fold_backward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">weight</span>
+        <span class="n">sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">running_var</span> <span class="o">+</span> <span class="n">bn</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+
+        <span class="n">new_encodings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">old_encoding</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">encodings</span><span class="p">,</span> <span class="n">gamma</span><span class="o">/</span><span class="n">sigma</span><span class="p">):</span>
+            <span class="n">new_encoding</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TfEncoding</span><span class="p">()</span>
+            <span class="n">new_encoding</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">new_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">*</span> <span class="n">c</span>
+                <span class="n">new_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">*</span> <span class="n">c</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">*</span> <span class="n">c</span>
+                <span class="n">new_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">*</span> <span class="n">c</span>
+            <span class="n">new_encoding</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">offset</span>
+            <span class="n">new_encoding</span><span class="o">.</span><span class="n">bw</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">bw</span>
+            <span class="n">new_encodings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_encoding</span><span class="p">)</span>
+
+        <span class="n">weight_quantizer</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">new_encodings</span>
+
+    <span class="c1"># Copy batchnorm&#39;s output quantizers to conv output quantizers</span>
+    <span class="k">for</span> <span class="n">conv_output_quantizer</span><span class="p">,</span> <span class="n">bn_output_quantizer</span> <span class="ow">in</span>\
+            <span class="nb">zip</span><span class="p">(</span><span class="n">conv_wrapper</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">,</span> <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">):</span>
+        <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">enabled</span>
+
+        <span class="k">if</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">encoding</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TfEncoding</span><span class="p">()</span>
+            <span class="n">encoding</span><span class="o">.</span><span class="n">delta</span>  <span class="o">=</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">delta</span>
+            <span class="n">encoding</span><span class="o">.</span><span class="n">max</span>    <span class="o">=</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">max</span>
+            <span class="n">encoding</span><span class="o">.</span><span class="n">min</span>    <span class="o">=</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">min</span>
+            <span class="n">encoding</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">offset</span>
+            <span class="n">encoding</span><span class="o">.</span><span class="n">bw</span>     <span class="o">=</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">bw</span>
+            <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span>
+
+        <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="s2">&quot;bias&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">:</span>
+        <span class="n">bias_quantizer</span> <span class="o">=</span> <span class="n">LearnedGridTensorQuantizer</span><span class="p">(</span><span class="n">weight_quantizer</span><span class="o">.</span><span class="n">bitwidth</span><span class="p">,</span>
+                                                    <span class="n">weight_quantizer</span><span class="o">.</span><span class="n">round_mode</span><span class="p">,</span>
+                                                    <span class="n">weight_quantizer</span><span class="o">.</span><span class="n">quant_scheme</span><span class="p">,</span>
+                                                    <span class="n">weight_quantizer</span><span class="o">.</span><span class="n">use_symmetric_encodings</span><span class="p">,</span>
+                                                    <span class="n">enabled_by_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                    <span class="n">data_type</span><span class="o">=</span><span class="n">weight_quantizer</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+        <span class="n">bias_quantizer</span><span class="o">.</span><span class="n">_ch_axis</span> <span class="o">=</span> <span class="n">weight_quantizer</span><span class="o">.</span><span class="n">_ch_axis</span>
+        <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s2">&quot;bias&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bias_quantizer</span>
+
+
+<span class="k">def</span> <span class="nf">_fold_to_weight</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">:</span> <span class="n">LayerType</span><span class="p">,</span> <span class="n">bn</span><span class="p">:</span> <span class="n">BatchNormType</span><span class="p">,</span> <span class="n">fold_backward</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold BatchNorm into the weight and bias of the given layer.</span>
+
+<span class="sd">    :param conv_linear: Conv or linear layer to fold BN into.</span>
+<span class="sd">    :param bn: BatchNorm to fold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Transpose weights to C, N, H, W from N, C, H, W since axis are flipped for transposed conv</span>
+    <span class="c1"># However depthwise conv layers are always N, 1, H, W whether transposed-conv or not, so no need to transpose</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">groups</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">conv_linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out_channels</span> <span class="o">=</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">out_features</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span>\
+                       <span class="k">else</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">out_channels</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">out_channels</span><span class="p">,</span>
+                           <span class="n">device</span><span class="o">=</span><span class="n">conv_linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                           <span class="n">dtype</span><span class="o">=</span><span class="n">conv_linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span>
+
+    <span class="n">_call_mo_batch_norm_fold</span><span class="p">(</span><span class="n">conv_linear</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">bn</span><span class="p">,</span> <span class="n">fold_backward</span><span class="o">=</span><span class="n">fold_backward</span><span class="p">)</span>
+
+    <span class="c1"># Transpose weight back to N, C, H, W for transposed Conv2D, for non-depthwise layers</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">groups</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">conv_linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="fold_given_batch_norms"><a class="viewcode-back" href="../../api_docs/torch_primitive_apis_cle.html#aimet_torch.batch_norm_fold.fold_given_batch_norms">[docs]</a><span class="k">def</span> <span class="nf">fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_pairs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold a given set of batch_norm layers into conv layers</span>
+
+<span class="sd">    :param model: Model</span>
+<span class="sd">    :param layer_pairs: Pairs of conv and batch_norm layers to use for folding</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># pylint: disable=protected-access</span>
+    <span class="n">conv_bn_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bn_conv_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">is_batchnorm</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">):</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">_module_to_wrap</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">_supported_batchnorms</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_conv_linear</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">):</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">_module_to_wrap</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">_supported_layers</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">layer_pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_batchnorm</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">is_conv_linear</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">bn</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">conv</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">bn_conv_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bn</span><span class="p">,</span> <span class="n">conv</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">is_conv_linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">is_batchnorm</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">conv</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="n">bn</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">conv_bn_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">))</span>
+
+    <span class="n">_fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                            <span class="n">conv_bn_pairs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]],</span>
+                            <span class="n">bn_conv_pairs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold a given set of batch_norm layers into conv layers</span>
+
+<span class="sd">    :param model: Model</span>
+<span class="sd">    :param conv_bn_pairs: List of (conv, bn) pairs to fold</span>
+<span class="sd">    :param bn_conv_pairs: List of (bn, conv) pairs to fold</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># pylint: disable=protected-access</span>
+    <span class="k">for</span> <span class="n">bn</span><span class="p">,</span> <span class="n">conv</span> <span class="ow">in</span> <span class="n">bn_conv_pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward folding to scale is not possible. Got </span><span class="si">{</span><span class="n">conv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">bn_modules</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">_fold</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">,</span> <span class="n">fold_backward</span><span class="p">):</span>
+        <span class="n">is_wrapped</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bn</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_wrapped</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bn</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">)</span>
+                <span class="n">_fold_to_scale</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">)</span>
+                <span class="n">bn_modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">_module_to_wrap</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_fold_to_weight</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">,</span> <span class="n">fold_backward</span><span class="o">=</span><span class="n">fold_backward</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">_BatchNormFoldingNotSupported</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">bn_name</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_layer_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn</span><span class="p">)</span>
+            <span class="n">conv_name</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_layer_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">conv</span><span class="p">)</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to fold </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">. [Reason] </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">bn_name</span><span class="p">,</span> <span class="n">conv_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bn_modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">_module_to_wrap</span> <span class="k">if</span> <span class="n">is_wrapped</span> <span class="k">else</span> <span class="n">bn</span><span class="p">)</span>
+
+
+    <span class="k">with</span> <span class="n">utils</span><span class="o">.</span><span class="n">in_eval_mode</span><span class="p">(</span><span class="n">model</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">conv</span><span class="p">,</span> <span class="n">bn</span> <span class="ow">in</span> <span class="n">conv_bn_pairs</span><span class="p">:</span>
+            <span class="n">_fold</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">,</span> <span class="n">fold_backward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">bn</span><span class="p">,</span> <span class="n">conv</span> <span class="ow">in</span> <span class="n">bn_conv_pairs</span><span class="p">:</span>
+            <span class="n">_fold</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">,</span> <span class="n">fold_backward</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">_delete_bn_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_modules</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">find_all_batch_norms_to_fold</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find all possible batch norm layers that can be folded. And returns a list of pairs such that (bn, layer)</span>
+<span class="sd">    means bn will be forward-folded into layer and (layer, bn) means bn will be backward-folded into layer</span>
+<span class="sd">    :param model: Model to search</span>
+<span class="sd">    :param input_shapes: Input shapes to use for the model (can be one or multiple inputs)</span>
+<span class="sd">    :param dummy_input: A dummy input to the model. Can be a Tensor or a Tuple of Tensors</span>
+<span class="sd">    :return: List of pairs of bn and layers to fold bn into</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">inp_tensor_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">create_rand_tensors_given_shapes</span><span class="p">(</span><span class="n">input_shapes</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+    <span class="n">connected_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inp_tensor_list</span><span class="p">)</span>
+    <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span> <span class="o">=</span> <span class="n">_find_all_batch_norms_to_fold</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">,</span> <span class="n">connected_graph</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">conv_bn_pairs</span> <span class="o">+</span> <span class="n">bn_conv_pairs</span>
+
+
+<span class="k">def</span> <span class="nf">_find_all_batch_norms_to_fold</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+        <span class="n">input_shapes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]],</span>
+        <span class="n">connected_graph</span><span class="p">:</span> <span class="n">ConnectedGraph</span><span class="p">,</span>
+        <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">LayerType</span><span class="p">,</span> <span class="n">BatchNormType</span><span class="p">]],</span>
+           <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">BatchNormType</span><span class="p">,</span> <span class="n">LayerType</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find all possible batch norm layers that can be folded. And returns a list of pairs such that (bn, layer)</span>
+<span class="sd">    means bn will be forward-folded into layer and (layer, bn) means bn will be backward-folded into layer</span>
+<span class="sd">    :param model: Model to search</span>
+<span class="sd">    :param input_shapes: Input shapes to use for the model (can be one or multiple inputs)</span>
+<span class="sd">    :param connected_graph: Connected graph associated with the model.</span>
+<span class="sd">    :param dummy_input: A dummy input to the model. Can be a Tensor or a Tuple of Tensors</span>
+<span class="sd">    :return: A list of (layer, bn) pairs and a list of (bn, layer) pairs,</span>
+<span class="sd">             where `bn` can be folded into to `layer`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conv_linear_bn_activation_info_dict</span> <span class="o">=</span> <span class="n">_find_all_conv_bn_with_activation</span><span class="p">(</span><span class="n">connected_graph</span><span class="p">)</span>
+
+    <span class="c1"># To mark BN&#39;s already picked for backward folding</span>
+    <span class="n">bn_picked_for_folding</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">ordered_conv_fc_nodes</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_ordered_lists_of_conv_fc</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+
+    <span class="n">conv_bn_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Backward fold is given priority over Forward fold</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">ordered_conv_fc_nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">conv_linear_bn_activation_info_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">_is_valid_bn_fold</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="n">bn_info</span> <span class="o">=</span> <span class="n">conv_linear_bn_activation_info_dict</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">bn_info</span><span class="o">.</span><span class="n">output_bn</span> <span class="ow">and</span> <span class="n">bn_info</span><span class="o">.</span><span class="n">output_bn</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bn_picked_for_folding</span><span class="p">:</span>
+                <span class="n">conv_bn_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">module</span><span class="p">,</span> <span class="n">bn_info</span><span class="o">.</span><span class="n">output_bn</span><span class="o">.</span><span class="n">get_module</span><span class="p">()))</span>
+                <span class="n">bn_picked_for_folding</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bn_info</span><span class="o">.</span><span class="n">output_bn</span><span class="p">)</span>
+
+    <span class="n">bn_conv_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">ordered_conv_fc_nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">conv_linear_bn_activation_info_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">_is_valid_bn_fold</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">bn_info</span> <span class="o">=</span> <span class="n">conv_linear_bn_activation_info_dict</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">bn_info</span><span class="o">.</span><span class="n">input_bn</span> <span class="ow">and</span> <span class="n">bn_info</span><span class="o">.</span><span class="n">input_bn</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bn_picked_for_folding</span><span class="p">:</span>
+                <span class="n">bn_conv_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bn_info</span><span class="o">.</span><span class="n">input_bn</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">module</span><span class="p">))</span>
+                <span class="n">bn_picked_for_folding</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bn_info</span><span class="o">.</span><span class="n">input_bn</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span>
+
+
+<span class="k">def</span> <span class="nf">_is_valid_bn_fold</span><span class="p">(</span><span class="n">conv</span><span class="p">:</span> <span class="n">LayerType</span><span class="p">,</span> <span class="n">fold_backward</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine if a given layer can successfully absorb a BatchNorm given the layer type and parameters</span>
+<span class="sd">    :param conv: The Conv/Linear layer to fold a BatchNorm into.</span>
+<span class="sd">    :param fold_backward: True if BatchNorm comes after Conv/Linear layer</span>
+<span class="sd">    :return: True if a BatchNorm layer can be folded without causing output error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fold_backward</span><span class="p">:</span>
+        <span class="c1"># Cannot fold BN -&gt; Conv with padding. AIMET does not support forward folding to grouped or DW Conv</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">)):</span>
+            <span class="n">valid</span> <span class="o">&amp;=</span> <span class="nb">all</span><span class="p">(</span><span class="n">item</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">conv</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span>
+            <span class="n">valid</span> <span class="o">&amp;=</span> <span class="n">conv</span><span class="o">.</span><span class="n">groups</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="c1"># AIMET does not support forward folding to ConvTranspose</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">):</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># AIMET does not support backwards folding to grouped ConvTranspose</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">):</span>
+            <span class="n">valid</span> <span class="o">&amp;=</span> <span class="n">conv</span><span class="o">.</span><span class="n">groups</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">conv</span><span class="o">.</span><span class="n">in_channels</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">valid</span>
+
+
+<span class="k">def</span> <span class="nf">fold_all_batch_norms_to_weight</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+        <span class="n">input_shapes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]],</span>
+        <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">LayerType</span><span class="p">,</span> <span class="n">BatchNormType</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold all batch_norm layers in a model into the weight of the corresponding conv layers</span>
+
+<span class="sd">    :param model: Model</span>
+<span class="sd">    :param input_shapes: Input shapes for the model (can be one or multiple inputs)</span>
+<span class="sd">    :param dummy_input: A dummy input to the model. Can be a Tensor or a Tuple of Tensors</span>
+<span class="sd">    :return: A list of pairs of layers [(Conv/Linear, BN layer that got folded)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">DataParallel</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fold_all_batch_norms_to_weight</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dummy_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">inp_tensor_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">create_rand_tensors_given_shapes</span><span class="p">(</span><span class="n">input_shapes</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">inp_tensor_list</span> <span class="o">=</span> <span class="n">dummy_input</span>
+    <span class="n">connected_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inp_tensor_list</span><span class="p">)</span>
+    <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span> <span class="o">=</span> <span class="n">_find_all_batch_norms_to_fold</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">,</span> <span class="n">connected_graph</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+
+    <span class="n">_fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">conv_bn_pairs</span> <span class="o">+</span> <span class="p">[(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span><span class="p">,</span> <span class="n">conv</span> <span class="ow">in</span> <span class="n">bn_conv_pairs</span><span class="p">]</span>
+
+
+<span class="n">fold_all_batch_norms</span> <span class="o">=</span> <span class="n">fold_all_batch_norms_to_weight</span>
+
+
+<div class="viewcode-block" id="fold_all_batch_norms_to_scale"><a class="viewcode-back" href="../../api_docs/torch_batchnorm_re_estimation.html#aimet_torch.batch_norm_fold.fold_all_batch_norms_to_scale">[docs]</a><span class="k">def</span> <span class="nf">fold_all_batch_norms_to_scale</span><span class="p">(</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+        <span class="n">input_shapes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">QcQuantizeWrapper</span><span class="p">,</span> <span class="n">QcQuantizeWrapper</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold all batch_norm layers in a model into the quantization scale parameter</span>
+<span class="sd">    of the corresponding conv layers</span>
+
+<span class="sd">    :param sim: QuantizationSimModel</span>
+<span class="sd">    :param input_shapes: Input shapes for the model (can be one or multiple inputs)</span>
+<span class="sd">    :return: A list of pairs of layers [(Conv/Linear, BN layer that got folded)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># pylint: disable=protected-access</span>
+    <span class="k">assert</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">sim</span><span class="o">.</span><span class="n">connected_graph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span>
+    <span class="n">connected_graph</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">connected_graph</span>
+
+    <span class="n">quant_wrappers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">quant_wrapper</span><span class="o">.</span><span class="n">_module_to_wrap</span><span class="p">:</span> <span class="n">quant_wrapper</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">quant_wrapper</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">quant_wrappers</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span> <span class="o">=</span> <span class="n">_find_all_batch_norms_to_fold</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">,</span> <span class="n">connected_graph</span><span class="p">)</span>
+    <span class="n">conv_bn_pairs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">quant_wrappers</span><span class="p">[</span><span class="n">conv</span><span class="p">],</span> <span class="n">quant_wrappers</span><span class="p">[</span><span class="n">bn</span><span class="p">])</span> <span class="k">for</span> <span class="n">conv</span><span class="p">,</span> <span class="n">bn</span> <span class="ow">in</span> <span class="n">conv_bn_pairs</span>
+    <span class="p">]</span>
+    <span class="n">bn_conv_pairs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">quant_wrappers</span><span class="p">[</span><span class="n">bn</span><span class="p">],</span> <span class="n">quant_wrappers</span><span class="p">[</span><span class="n">conv</span><span class="p">])</span> <span class="k">for</span> <span class="n">bn</span><span class="p">,</span> <span class="n">conv</span> <span class="ow">in</span> <span class="n">bn_conv_pairs</span>
+    <span class="p">]</span>
+
+    <span class="n">_fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">conv_bn_pairs</span> <span class="o">+</span> <span class="p">[(</span><span class="n">conv</span><span class="p">,</span> <span class="n">bn</span><span class="p">)</span> <span class="k">for</span> <span class="n">bn</span><span class="p">,</span> <span class="n">conv</span> <span class="ow">in</span> <span class="n">bn_conv_pairs</span><span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">find_all_conv_bn_with_activation</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses searcher to find preceding and next bn layers for a conv/linear layer</span>
+<span class="sd">    :param model: PyTorch model</span>
+<span class="sd">    :param input_shape: shape of input to the model</span>
+<span class="sd">    :return: dictionary of conv/linear layers with associated bn op / activation info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">inp_tensor_list</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">create_rand_tensors_given_shapes</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+    <span class="n">connected_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inp_tensor_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_find_all_conv_bn_with_activation</span><span class="p">(</span><span class="n">connected_graph</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_find_all_conv_bn_with_activation</span><span class="p">(</span><span class="n">connected_graph</span><span class="p">:</span> <span class="n">ConnectedGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses searcher to find preceding and next bn layers for a conv/linear layer</span>
+<span class="sd">    :param connected_graph: ConnectedGraph object.</span>
+<span class="sd">    :return: dictionary of conv/linear layers with associated bn op / activation info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># initialize all patterns to be matched and associated call back functions</span>
+    <span class="n">patterns_with_callbacks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">layer_select_handler</span> <span class="o">=</span> <span class="n">ConvBnPatternHandler</span><span class="p">()</span>
+    <span class="n">conv_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Conv1d&#39;</span><span class="p">,</span> <span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;ConvTranspose&#39;</span><span class="p">]</span>
+    <span class="n">linear_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Gemm&#39;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">op_type</span> <span class="ow">in</span> <span class="n">conv_types</span> <span class="o">+</span> <span class="n">linear_types</span><span class="p">:</span>
+        <span class="n">patterns_with_callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PatternType</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;BatchNormalization&#39;</span><span class="p">,</span> <span class="n">op_type</span><span class="p">],</span>
+                                                   <span class="n">action</span><span class="o">=</span><span class="n">layer_select_handler</span><span class="p">))</span>
+        <span class="n">patterns_with_callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PatternType</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="p">[</span><span class="n">op_type</span><span class="p">,</span> <span class="s1">&#39;BatchNormalization&#39;</span><span class="p">],</span>
+                                                   <span class="n">action</span><span class="o">=</span><span class="n">layer_select_handler</span><span class="p">))</span>
+
+    <span class="c1"># create graph searcher instance with connected graph and patterns to search</span>
+    <span class="n">graph_searcher</span> <span class="o">=</span> <span class="n">GraphSearcher</span><span class="p">(</span><span class="n">connected_graph</span><span class="p">,</span> <span class="n">patterns_with_callbacks</span><span class="p">)</span>
+
+    <span class="c1"># get all conv/linear and bn info</span>
+    <span class="n">graph_searcher</span><span class="o">.</span><span class="n">find_all_patterns_in_graph_apply_actions</span><span class="p">()</span>
+    <span class="n">convs_bn_activation_dict</span> <span class="o">=</span> <span class="n">layer_select_handler</span><span class="o">.</span><span class="n">get_conv_linear_bn_info_dict</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">convs_bn_activation_dict</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_onnx.quantsim &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.25.0</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.25.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_onnx.quantsim</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_onnx.quantsim</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.8</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+<span class="sd">&quot;&quot;&quot; Implementation for simulating models running on Quantized hardware &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">onnxruntime</span> <span class="k">as</span> <span class="nn">ort</span>
+<span class="kn">from</span> <span class="nn">onnx</span> <span class="kn">import</span> <span class="n">helper</span><span class="p">,</span> <span class="n">onnx_pb</span><span class="p">,</span> <span class="n">mapping</span>
+<span class="kn">from</span> <span class="nn">onnxruntime</span> <span class="kn">import</span> <span class="n">SessionOptions</span><span class="p">,</span> <span class="n">GraphOptimizationLevel</span><span class="p">,</span> <span class="n">InferenceSession</span>
+<span class="kn">from</span> <span class="nn">onnxruntime.quantization.onnx_quantizer</span> <span class="kn">import</span> <span class="n">ONNXModel</span>
+
+<span class="kn">from</span> <span class="nn">aimet_common</span> <span class="kn">import</span> <span class="n">libpymo</span>
+<span class="kn">from</span> <span class="nn">aimet_common</span> <span class="kn">import</span> <span class="n">libquant_info</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">QuantScheme</span>
+<span class="kn">from</span> <span class="nn">aimet_common.quantsim</span> <span class="kn">import</span> <span class="n">encoding_version</span><span class="p">,</span> <span class="n">extract_global_quantizer_args</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">save_json_yaml</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx.meta.connectedgraph</span> <span class="kn">import</span> <span class="n">ConnectedGraph</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx.qc_quantize_op</span> <span class="kn">import</span> <span class="n">QcQuantizeOp</span><span class="p">,</span> <span class="n">OpMode</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx.quantsim_config.quantsim_config</span> <span class="kn">import</span> <span class="n">QuantSimConfigurator</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx.utils</span> <span class="kn">import</span> <span class="n">make_dummy_input</span><span class="p">,</span> <span class="n">add_hook_to_get_activation</span><span class="p">,</span> <span class="n">remove_activation_hooks</span>
+
+<span class="n">WORKING_DIR</span> <span class="o">=</span> <span class="s1">&#39;/tmp/quantsim/&#39;</span>
+
+<span class="n">op_types_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;branch&quot;</span><span class="p">,</span> <span class="s2">&quot;Flatten&quot;</span><span class="p">,</span> <span class="s2">&quot;Gather&quot;</span><span class="p">,</span> <span class="s2">&quot;Reshape&quot;</span><span class="p">,</span> <span class="s2">&quot;Shape&quot;</span><span class="p">,</span> <span class="s2">&quot;Unsqueeze&quot;</span><span class="p">,</span> <span class="s2">&quot;Squeeze&quot;</span><span class="p">,</span> <span class="s2">&quot;Split&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;Compress&quot;</span><span class="p">,</span> <span class="s2">&quot;Tile&quot;</span><span class="p">,</span> <span class="s2">&quot;Transpose&quot;</span><span class="p">,</span> <span class="s2">&quot;Identity&quot;</span><span class="p">]</span>
+
+<span class="n">data_types_to_quantize</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="QuantizationSimModel"><a class="viewcode-back" href="../../api_docs/onnx_quantsim.html#aimet_onnx.quantsim.QuantizationSimModel">[docs]</a><span class="k">class</span> <span class="nc">QuantizationSimModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates a QuantizationSimModel model by adding quantization simulations ops to a given model &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-arguments</span>
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">model</span><span class="p">:</span> <span class="n">onnx_pb</span><span class="o">.</span><span class="n">ModelProto</span><span class="p">,</span>
+                 <span class="n">quant_scheme</span><span class="p">:</span> <span class="n">QuantScheme</span> <span class="o">=</span> <span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span><span class="p">,</span>
+                 <span class="n">rounding_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                 <span class="n">default_param_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+                 <span class="n">default_activation_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+                 <span class="n">use_symmetric_encodings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">device</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        :param model: ONNX model or path to model</span>
+<span class="sd">        :param quant_scheme: Quantization scheme (e.g. QuantScheme.post_training_tf)</span>
+<span class="sd">        :param rounding_mode: Rounding mode (e.g. nearest)</span>
+<span class="sd">        :param default_param_bw: Quantization bitwidth for parameter</span>
+<span class="sd">        :param default_activation_bw: Quantization bitwidth for activation</span>
+<span class="sd">        :param use_symmetric_encodings: True if symmetric encoding is used.  False otherwise.</span>
+<span class="sd">        :param use_cuda: True if using CUDA to run quantization op. False otherwise.</span>
+<span class="sd">        :param config_file: Path to Configuration file for model quantizers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ONNXModel</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ONNXModel</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_quant_scheme</span> <span class="o">=</span> <span class="n">quant_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rounding_mode</span> <span class="o">=</span> <span class="n">rounding_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_param_bw</span> <span class="o">=</span> <span class="n">default_param_bw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_activation_bw</span> <span class="o">=</span> <span class="n">default_activation_bw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use_symmetric_encodings</span> <span class="o">=</span> <span class="n">use_symmetric_encodings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use_cuda</span> <span class="o">=</span> <span class="n">use_cuda</span>
+        <span class="k">if</span> <span class="s1">&#39;CUDAExecutionProvider&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ort</span><span class="o">.</span><span class="n">get_available_providers</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_use_cuda</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_cuda</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_op_domain</span> <span class="o">=</span> <span class="s2">&quot;aimet.customop.cuda&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">providers</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;CUDAExecutionProvider&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;device_id&#39;</span><span class="p">:</span> <span class="n">device</span><span class="p">}),</span> <span class="s1">&#39;CPUExecutionProvider&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_op_domain</span> <span class="o">=</span> <span class="s2">&quot;aimet.customop.cpu&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">providers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CPUExecutionProvider&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_dtypes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_param_names</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_activations_to_quantize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_quantization_nodes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">providers</span><span class="p">)</span>
+
+        <span class="n">quantsim_configurator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_configuration_</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quant_args</span> <span class="o">=</span> <span class="n">extract_global_quantizer_args</span><span class="p">(</span><span class="n">quant_scheme</span><span class="p">,</span> <span class="n">quantsim_configurator</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_configuration_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add configuration based on config file</span>
+<span class="sd">        :param config_file: Path to Configuration file for model quantizers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">quantsim_configurator</span> <span class="o">=</span> <span class="n">QuantSimConfigurator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span><span class="p">,</span> <span class="n">config_file</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">_default_activation_bw</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_param_bw</span><span class="p">)</span>
+        <span class="n">quantsim_configurator</span><span class="o">.</span><span class="n">configure_quantizers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">quantsim_configurator</span>
+
+    <span class="k">def</span> <span class="nf">_get_param_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the names of params</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">initializer</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">mapping</span><span class="o">.</span><span class="n">TENSOR_TYPE_TO_NP_TYPE</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">data_type</span><span class="p">]</span> <span class="ow">in</span> <span class="n">data_types_to_quantize</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span> <span class="ow">and</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_activations_to_quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the names of activations to quantize</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fill_activation_dtypes</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">op_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">op_types_to_ignore</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span> <span class="ow">and</span> \
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_is_op_quantizable</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_op_quantizable</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="p">:</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39;_updated&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_is_op_quantizable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the given activation should be quantized</span>
+
+<span class="sd">        :param name: Name of the activation</span>
+<span class="sd">        :return: True if the activation should be quantized</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if activation is used as an input to another node</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_dtypes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1"># Check activation datatype</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_dtypes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_types_to_quantize</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">fill_activation_dtypes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the data type for each activation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">activations</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_graph_intermediate_activations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">())</span>
+        <span class="n">hooks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">activations</span><span class="p">:</span>
+            <span class="n">hooks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_hook_to_get_activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">make_dummy_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">sess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">providers</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">)):</span>
+            <span class="n">act_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">activation_dtypes</span><span class="p">[</span><span class="n">act_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="n">remove_activation_hooks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">hooks</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_quantization_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call insert functions for quantization nodes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_insert_param_quantization_nodes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_insert_activation_quantization_nodes</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_insert_param_quantization_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert quantization node for each param tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">replace_input_of_all_nodes</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_qdq&#39;</span><span class="p">)</span>
+
+            <span class="n">quant_info</span> <span class="o">=</span> <span class="n">libquant_info</span><span class="o">.</span><span class="n">QcQuantizeInfo</span><span class="p">()</span>
+            <span class="n">custom_node</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">make_node</span><span class="p">(</span>
+                <span class="n">op_type</span><span class="o">=</span><span class="s1">&#39;QcQuantizeOp&#39;</span><span class="p">,</span>
+                <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_qdq&#39;</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;QcQuantizeOp_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
+                <span class="n">domain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_op_domain</span><span class="p">,</span>
+                <span class="n">op_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">quant_info</span><span class="o">=</span><span class="n">libpymo</span><span class="o">.</span><span class="n">PtrToInt64</span><span class="p">(</span><span class="n">quant_info</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">custom_node</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">QcQuantizeOp</span><span class="p">(</span><span class="n">quant_info</span><span class="o">=</span><span class="n">quant_info</span><span class="p">,</span>
+                                                          <span class="n">quant_scheme</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_quant_scheme</span><span class="p">,</span>
+                                                          <span class="n">rounding_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rounding_mode</span><span class="p">,</span>
+                                                          <span class="n">encodings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                          <span class="n">op_mode</span><span class="o">=</span><span class="n">OpMode</span><span class="o">.</span><span class="n">oneShotQuantizeDequantize</span><span class="p">,</span>
+                                                          <span class="n">bitwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_param_bw</span><span class="p">,</span>
+                                                          <span class="n">use_symmetric_encodings</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_use_symmetric_encodings</span>
+                                                          <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_insert_activation_quantization_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert quantization node for each activation tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">replace_input_of_all_nodes</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_updated&#39;</span><span class="p">)</span>
+            <span class="n">quant_info</span> <span class="o">=</span> <span class="n">libquant_info</span><span class="o">.</span><span class="n">QcQuantizeInfo</span><span class="p">()</span>
+            <span class="n">custom_node</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">make_node</span><span class="p">(</span>
+                <span class="n">op_type</span><span class="o">=</span><span class="s1">&#39;QcQuantizeOp&#39;</span><span class="p">,</span>
+                <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_updated&#39;</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;QcQuantizeOp_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
+                <span class="n">domain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_op_domain</span><span class="p">,</span>
+                <span class="n">op_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">quant_info</span><span class="o">=</span><span class="n">libpymo</span><span class="o">.</span><span class="n">PtrToInt64</span><span class="p">(</span><span class="n">quant_info</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">custom_node</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">QcQuantizeOp</span><span class="p">(</span><span class="n">quant_info</span><span class="o">=</span><span class="n">quant_info</span><span class="p">,</span>
+                                                          <span class="n">quant_scheme</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_quant_scheme</span><span class="p">,</span>
+                                                          <span class="n">rounding_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rounding_mode</span><span class="p">,</span>
+                                                          <span class="n">encodings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                          <span class="n">op_mode</span><span class="o">=</span><span class="n">OpMode</span><span class="o">.</span><span class="n">updateStats</span><span class="p">,</span>
+                                                          <span class="n">bitwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_activation_bw</span><span class="p">,</span>
+                                                          <span class="n">use_symmetric_encodings</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_use_symmetric_encodings</span>
+                                                          <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_build_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">providers</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build and return onnxruntime inference session</span>
+<span class="sd">        :param providers: providers to execute onnxruntime</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sess_options</span> <span class="o">=</span> <span class="n">SessionOptions</span><span class="p">()</span>
+        <span class="n">shared_library</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">libquant_info</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="n">shared_library</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">shared_library</span><span class="p">,</span> <span class="s2">&quot;libaimet_onnxrt_ops.so&quot;</span><span class="p">)</span>
+        <span class="n">sess_options</span><span class="o">.</span><span class="n">register_custom_ops_library</span><span class="p">(</span><span class="n">shared_library</span><span class="p">)</span>
+        <span class="n">sess_options</span><span class="o">.</span><span class="n">graph_optimization_level</span> <span class="o">=</span> <span class="n">GraphOptimizationLevel</span><span class="o">.</span><span class="n">ORT_DISABLE_ALL</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">InferenceSession</span><span class="p">(</span>
+            <span class="n">path_or_bytes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">(),</span>
+            <span class="n">sess_options</span><span class="o">=</span><span class="n">sess_options</span><span class="p">,</span>
+            <span class="n">providers</span><span class="o">=</span><span class="n">providers</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">session</span>
+
+    <span class="k">def</span> <span class="nf">get_qc_quantize_op</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return dict of qc quantize ops</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span>
+
+    <span class="k">def</span> <span class="nf">save_model_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save model to given path</span>
+<span class="sd">        :param filename_prefix: filename to save the onnx model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">WORKING_DIR</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">WORKING_DIR</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_model_to_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WORKING_DIR</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.onnx&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="QuantizationSimModel.compute_encodings"><a class="viewcode-back" href="../../api_docs/onnx_quantsim.html#aimet_onnx.quantsim.QuantizationSimModel.compute_encodings">[docs]</a>    <span class="k">def</span> <span class="nf">compute_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forward_pass_callback</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute and return the encodings of each tensor quantizer</span>
+
+<span class="sd">        :param forward_pass_callback: A callback function that simply runs forward passes on the model. This callback</span>
+<span class="sd">            function should use representative data for the forward pass, so the calculated encodings work for all</span>
+<span class="sd">            data samples. This callback internally chooses the number of data samples it wants to use for calculating</span>
+<span class="sd">            encodings.</span>
+<span class="sd">        :param forward_pass_callback_args: These argument(s) are passed to the forward_pass_callback as-is. Up to</span>
+<span class="sd">            the user to determine the type of this parameter. E.g. could be simply an integer representing the number</span>
+<span class="sd">            of data samples to use. Or could be a tuple of parameters or an object representing something more complex.</span>
+<span class="sd">            If set to None, forward_pass_callback will be invoked with no parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">forward_pass_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">op_name</span><span class="p">,</span> <span class="n">qc_op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">qc_op</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">()</span>
+            <span class="n">qc_op</span><span class="o">.</span><span class="n">op_mode</span> <span class="o">=</span> <span class="n">OpMode</span><span class="o">.</span><span class="n">quantizeDequantize</span></div>
+
+    <span class="k">def</span> <span class="nf">_export_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding_file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export encodings to json and yaml file</span>
+<span class="sd">        :param encoding_file_path: path to save the encoding files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">update_encoding_dict_entry_int</span><span class="p">(</span><span class="n">encoding_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">op_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">encoding_dict</span><span class="p">[</span><span class="n">op_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">encodings</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+                                      <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">encodings</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+                                      <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">encodings</span><span class="o">.</span><span class="n">delta</span><span class="p">,</span>
+                                      <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">encodings</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span>
+                                      <span class="s1">&#39;bitwidth&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">encodings</span><span class="o">.</span><span class="n">bw</span><span class="p">,</span>
+                                      <span class="s1">&#39;is_symmetric&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">use_symmetric_encodings</span><span class="p">,</span>
+                                      <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">}</span>
+
+        <span class="n">param_encodings</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+                <span class="n">update_encoding_dict_entry_int</span><span class="p">(</span><span class="n">param_encodings</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">activation_encodings</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+                <span class="n">update_encoding_dict_entry_int</span><span class="p">(</span><span class="n">activation_encodings</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">encodings_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="n">encoding_version</span><span class="p">,</span>
+                          <span class="s1">&#39;activation_encodings&#39;</span><span class="p">:</span> <span class="n">activation_encodings</span><span class="p">,</span>
+                          <span class="s1">&#39;param_encodings&#39;</span><span class="p">:</span> <span class="n">param_encodings</span><span class="p">,</span>
+                          <span class="s1">&#39;quantizer_args&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">quant_args</span><span class="p">}</span>
+
+        <span class="n">save_json_yaml</span><span class="p">(</span><span class="n">encoding_file_path</span><span class="p">,</span> <span class="n">encodings_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_remove_nodes_and_save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove quantization nodes and save model to file</span>
+<span class="sd">        :param file_path: path to save onnx model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nodes_to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s1">&#39;QcQuantizeOp&#39;</span><span class="p">:</span>
+                <span class="n">nodes_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">replace_input_of_all_nodes</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_qdq&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_updated&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">(</span><span class="n">nodes_to_remove</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_updated&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_model_to_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="QuantizationSimModel.export"><a class="viewcode-back" href="../../api_docs/onnx_quantsim.html#aimet_onnx.quantsim.QuantizationSimModel.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute encodings and export to files</span>
+<span class="sd">        :param path: dir to save encoding files</span>
+<span class="sd">        :param filename_prefix: filename to save encoding files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_export_encodings</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.encodings&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remove_nodes_and_save_model</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.onnx&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

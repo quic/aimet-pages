@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_tensorflow.keras.batch_norm_fold &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.25.0</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.25.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_docs/index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_tensorflow.keras.batch_norm_fold</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_tensorflow.keras.batch_norm_fold</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.5</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2021-2022, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; Utility for batch norm fold in tf 2.x &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.python.keras.engine.functional</span> <span class="kn">import</span> <span class="n">Functional</span>
+<span class="kn">from</span> <span class="nn">tensorflow.python.keras.layers.core</span> <span class="kn">import</span> <span class="n">TFOpLambda</span>
+
+<span class="kn">import</span> <span class="nn">aimet_common.libpymo</span> <span class="k">as</span> <span class="nn">libpymo</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.utils</span> <span class="kn">import</span> <span class="n">common</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.utils.op.batchnorm</span> <span class="kn">import</span> <span class="n">BNUtils</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">Utils</span><span class="p">)</span>
+
+<span class="n">LAYER_TYPE</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2DTranspose</span><span class="p">,</span>
+                   <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DepthwiseConv2D</span><span class="p">]</span>
+
+<span class="n">PAIR_TYPE</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">LAYER_TYPE</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">,</span> <span class="nb">bool</span><span class="p">],</span>
+                  <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">,</span> <span class="n">LAYER_TYPE</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span>
+
+<span class="n">BN_TYPE</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span>
+<span class="c1"># Todo: search for more types of convolution</span>
+<span class="n">LINEAR_TYPE</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span>
+<span class="n">CONV_TYPE</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span>
+<span class="n">FLATTEN_TYPE</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">PerChannelQuantizerType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enumeration of ConvLinear Input/Output/Param PerChannel Quantizers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">INPUTS</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">OUPUTS</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">PARAMS</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">class</span> <span class="nc">ConvLinearParamType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enumeration of ConvLinear Param Type</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">WEIGHTS</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">BIAS</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">_check_layer_to_find_pattern</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span>
+                                 <span class="n">conv_linear_with_bn_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CONV_TYPE</span><span class="p">,</span> <span class="n">LINEAR_TYPE</span><span class="p">],</span>
+                                                                <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">BN_TYPE</span><span class="p">]]],</span>
+                                 <span class="n">layer_out_node_ref</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                                 <span class="n">has_seen</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CONV_TYPE</span><span class="p">,</span> <span class="n">BN_TYPE</span><span class="p">,</span> <span class="n">FLATTEN_TYPE</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    find all paths in the model considering all inputs.</span>
+
+<span class="sd">    :param cur_layer: layer to investigate for finding a pattern</span>
+<span class="sd">    :param conv_linear_with_bn_dict: dictionary to store possible conv_bn pairs,</span>
+<span class="sd">        key: Dense or Conv layer &amp; Value: list of BNS;</span>
+<span class="sd">        first index in this list shows bn_in and the second index shows bn_out</span>
+<span class="sd">    :param layer_out_node_ref: dictionary includes layer_ref as a key, outbound nodes as value</span>
+<span class="sd">    :param has_seen: for storing the layer which is useful for finding pattern in the next layers;</span>
+<span class="sd">        index 0 is for conv op, index 2 is for bn op and index 3 is for storing flatten/reshape op</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-branches</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">,</span> <span class="n">CONV_TYPE</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">conv_linear_with_bn_dict</span><span class="p">[</span><span class="n">cur_layer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cur_layer</span><span class="o">.</span><span class="n">activation</span> <span class="ow">is</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">activations</span><span class="o">.</span><span class="n">linear</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="p">(</span><span class="n">cur_layer</span> <span class="ow">in</span> <span class="n">layer_out_node_ref</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer_out_node_ref</span><span class="p">[</span><span class="n">cur_layer</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cur_layer</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">,</span> <span class="n">BN_TYPE</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">conv_linear_with_bn_dict</span><span class="p">:</span>
+                <span class="n">conv_linear_with_bn_dict</span><span class="p">[</span><span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cur_layer</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">conv_linear_with_bn_dict</span><span class="p">[</span><span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">cur_layer</span><span class="p">]</span>
+            <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cur_layer</span> <span class="ow">in</span> <span class="n">layer_out_node_ref</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer_out_node_ref</span><span class="p">[</span><span class="n">cur_layer</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cur_layer</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">,</span> <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cur_layer</span> <span class="ow">in</span> <span class="n">layer_out_node_ref</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer_out_node_ref</span><span class="p">[</span><span class="n">cur_layer</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">has_seen</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cur_layer</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">,</span> <span class="n">LINEAR_TYPE</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">has_seen</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">conv_linear_with_bn_dict</span><span class="p">[</span><span class="n">cur_layer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">has_seen</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">has_seen</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_add_children_layer_before_parent_layer</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span> <span class="n">node_layer_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                                            <span class="n">layer_out_node_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                                            <span class="n">visited_layers</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">],</span>
+                                            <span class="n">reversed_ordered_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to use topological sorting for finding all the layers which are accessible</span>
+<span class="sd">    from the specific input_layer in the opposite order of occurrence.</span>
+
+<span class="sd">    :param cur_layer:layer that we want to find path from</span>
+<span class="sd">    :param node_layer_map: dictionary includes node_ref as a key, in_layers and out_layer as value</span>
+<span class="sd">    :param layer_out_node_map: dictionary includes layer_ref as a key, outbound nodes as value</span>
+<span class="sd">    :param visited_layers: Set of all layers that have been visited</span>
+<span class="sd">    :param reversed_ordered_layers: List of layers in the opposite order of occurrence</span>
+<span class="sd">        for the layers that we have visited so far</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Mark the current layer as visited.</span>
+    <span class="n">visited_layers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cur_layer</span> <span class="ow">in</span> <span class="n">layer_out_node_map</span><span class="p">:</span>
+        <span class="c1"># Recur for all the layers adjacent to this layer</span>
+        <span class="k">for</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="n">layer_out_node_map</span><span class="p">[</span><span class="n">cur_layer</span><span class="p">]:</span>
+            <span class="n">next_layer</span> <span class="o">=</span> <span class="n">node_layer_map</span><span class="p">[</span><span class="n">next_node</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">next_layer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited_layers</span><span class="p">:</span>
+                <span class="n">_add_children_layer_before_parent_layer</span><span class="p">(</span><span class="n">next_layer</span><span class="p">,</span> <span class="n">node_layer_map</span><span class="p">,</span>
+                                                        <span class="n">layer_out_node_map</span><span class="p">,</span> <span class="n">visited_layers</span><span class="p">,</span>
+                                                        <span class="n">reversed_ordered_layers</span><span class="p">)</span>
+            <span class="n">reversed_ordered_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reversed_ordered_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_ordered_layers</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                        <span class="n">layer_out_node_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to return the list with all the layers in which layers come before parent layer.</span>
+
+<span class="sd">    :param node_layer_map: dictionary includes node_ref as a key, in_layers and out_layer as value</span>
+<span class="sd">    :param layer_out_node_map: dictionary includes layer_ref as a key, outbound nodes as value</span>
+<span class="sd">    :return: ordered_layers: List of all layers in the order of occurrence</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># to find the input layers of the model</span>
+    <span class="n">input_layers</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">find_input_layers</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">)</span>
+
+    <span class="c1">#  Set of all layers that have been visited (to cut short duplicate traversals)</span>
+    <span class="n">visited_layers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="c1"># List of all layers in the opposite of order of occurrence</span>
+    <span class="n">reversed_ordered_layers</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">input_layer</span> <span class="ow">in</span> <span class="n">input_layers</span><span class="p">:</span>
+        <span class="n">_add_children_layer_before_parent_layer</span><span class="p">(</span><span class="n">input_layer</span><span class="p">,</span> <span class="n">node_layer_map</span><span class="p">,</span> <span class="n">layer_out_node_map</span><span class="p">,</span>
+                                                <span class="n">visited_layers</span><span class="p">,</span> <span class="n">reversed_ordered_layers</span><span class="p">)</span>
+
+    <span class="c1"># reverse the list because layers are in reverse order</span>
+    <span class="n">ordered_layers</span> <span class="o">=</span> <span class="n">reversed_ordered_layers</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># # filter ordered ops for only valid ops</span>
+    <span class="c1"># ordered_ops = [op for op in ordered_ops if op in valid_ops]</span>
+
+    <span class="k">return</span> <span class="n">ordered_layers</span>
+
+
+<span class="k">def</span> <span class="nf">_get_ordered_conv_linears</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                              <span class="n">layer_out_node_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CONV_TYPE</span><span class="p">,</span> <span class="n">LINEAR_TYPE</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper to select a list of conv_linears in the order of occurence</span>
+
+<span class="sd">    :param node_layer_map: dictionary includes node_ref as a key, in_layers and out_layer as value</span>
+<span class="sd">    :param layer_out_node_map: dictionary includes layer_ref as a key, outbound nodes as value</span>
+<span class="sd">    :return: return List of conv/linear layer refs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># get ordered layers list in node_layer map dictionary</span>
+    <span class="n">list_of_ordered_layers</span> <span class="o">=</span> <span class="n">_get_ordered_layers</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">,</span> <span class="n">layer_out_node_map</span><span class="p">)</span>
+
+    <span class="c1"># look for conv layers</span>
+    <span class="n">ordered_conv_linears</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">list_of_ordered_layers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">)):</span>
+            <span class="n">ordered_conv_linears</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ordered_conv_linears</span>
+
+
+<span class="k">def</span> <span class="nf">_fill_conv_linear_bn_dict</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span> <span class="n">node_layer_ref</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                              <span class="n">layer_out_node_ref</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                              <span class="n">has_seen</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CONV_TYPE</span><span class="p">,</span> <span class="n">BN_TYPE</span><span class="p">,</span> <span class="n">FLATTEN_TYPE</span><span class="p">]],</span>
+                              <span class="n">visited_layer</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">],</span>
+                              <span class="n">conv_linear_with_bn_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CONV_TYPE</span><span class="p">,</span> <span class="n">LINEAR_TYPE</span><span class="p">],</span>
+                                                             <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">BN_TYPE</span><span class="p">]]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    fill conv_linear_bn_dict for the model</span>
+
+<span class="sd">    :param cur_layer: dictionary includes node_ref as a key, in_layers and out_layer as value</span>
+<span class="sd">    :param node_layer_ref: dictionary includes node_ref as a key, in_layers and out_layer as value</span>
+<span class="sd">    :param layer_out_node_ref: dictionary includes layer_ref as a key, outbound nodes as value</span>
+<span class="sd">    :paramm has_seen: for storing the layer which is useful for finding pattern in the next layers;</span>
+<span class="sd">        index 0 is for conv op, index 2 is for bn op and index 3 is for storing flatten/reshape op</span>
+<span class="sd">    :param visited_layer: to store all the layers that have been visited so far in the dictionary</span>
+<span class="sd">    :param conv_linear_with_bn_dict: dictionary of all possible conv_bn pairs,</span>
+<span class="sd">        key: Dense or Conv layer &amp; Value: list of BNS;</span>
+<span class="sd">        first index in this list shows bn_in and the second index shows bn_out</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Mark the current layer as visited to prevent passing from one layer more than once</span>
+    <span class="n">visited_layer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">)</span>
+
+    <span class="n">_check_layer_to_find_pattern</span><span class="p">(</span><span class="n">cur_layer</span><span class="p">,</span> <span class="n">conv_linear_with_bn_dict</span><span class="p">,</span> <span class="n">layer_out_node_ref</span><span class="p">,</span> <span class="n">has_seen</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cur_layer</span> <span class="ow">in</span> <span class="n">layer_out_node_ref</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="n">layer_out_node_ref</span><span class="p">[</span><span class="n">cur_layer</span><span class="p">]:</span>
+            <span class="n">next_layer</span> <span class="o">=</span> <span class="n">node_layer_ref</span><span class="p">[</span><span class="n">next_node</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">next_layer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited_layer</span><span class="p">:</span>
+                <span class="n">_fill_conv_linear_bn_dict</span><span class="p">(</span><span class="n">next_layer</span><span class="p">,</span> <span class="n">node_layer_ref</span><span class="p">,</span> <span class="n">layer_out_node_ref</span><span class="p">,</span> <span class="n">has_seen</span><span class="p">,</span>
+                                          <span class="n">visited_layer</span><span class="p">,</span> <span class="n">conv_linear_with_bn_dict</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">has_seen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">has_seen</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">has_seen</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_find_possible_convs_linears_bn</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">layer_out_node_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span>\
+        <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CONV_TYPE</span><span class="p">,</span> <span class="n">LINEAR_TYPE</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">BN_TYPE</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    find all possible convs_linears_bn by traversing all paths in the model considering all inputs</span>
+
+<span class="sd">    :param node_layer_map:  dictionary includes node_ref as a key, in_layers and out_layer as value</span>
+<span class="sd">    :param layer_out_node_map: dictionary includes layer_ref as a key, outbound nodes as value</span>
+<span class="sd">    :return: return dictionary of all possible conv_bn pairs,</span>
+<span class="sd">        key: Dense or Conv layer &amp; Value: list of BNS;</span>
+<span class="sd">        first index in this list shows bn_in and the second index shows bn_out</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">input_layers</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">find_input_layers</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">)</span>
+    <span class="n">visited_layer</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">conv_linear_with_bn_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">input_layer</span> <span class="ow">in</span> <span class="n">input_layers</span><span class="p">:</span>
+        <span class="n">_fill_conv_linear_bn_dict</span><span class="p">(</span><span class="n">input_layer</span><span class="p">,</span> <span class="n">node_layer_map</span><span class="p">,</span> <span class="n">layer_out_node_map</span><span class="p">,</span>
+                                  <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">visited_layer</span><span class="p">,</span> <span class="n">conv_linear_with_bn_dict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">conv_linear_with_bn_dict</span>
+
+
+<span class="k">def</span> <span class="nf">_get_bn_params</span><span class="p">(</span><span class="n">bn</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BNParams</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper to populate BN params from given BN Layer, required for fold</span>
+
+<span class="sd">    :param bn: BatchNorm Layer</span>
+<span class="sd">    :return: return bn params in libpymo.TensorParams() format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bn_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BNParams</span><span class="p">()</span>
+
+    <span class="n">bn_params</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">bn_params</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">bn_params</span><span class="o">.</span><span class="n">runningMean</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">moving_mean</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">bn_params</span><span class="o">.</span><span class="n">runningVar</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">moving_variance</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">epsilon</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">moving_variance</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">var_with_epsilon</span> <span class="o">=</span> <span class="n">var</span> <span class="o">+</span> <span class="n">epsilon</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_with_epsilon</span><span class="p">)</span>
+    <span class="n">bn_params</span><span class="o">.</span><span class="n">runningVar</span> <span class="o">=</span> <span class="n">sigma</span>
+
+    <span class="k">return</span> <span class="n">bn_params</span>
+
+
+<span class="k">def</span> <span class="nf">_get_bias_tensor</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">:</span> <span class="n">LAYER_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParams</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get bias tensor in given conv layer.</span>
+
+<span class="sd">    Packs bias in the format required for BN fold</span>
+<span class="sd">    (libpymo.TensorParams()).</span>
+<span class="sd">    :param conv_linear: conv Layer</span>
+<span class="sd">    :return: return bias param in libpymo.TensorParams() format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bias_tensor</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParams</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">bias_tensor</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bias_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bias_tensor</span>
+
+
+<span class="k">def</span> <span class="nf">_get_weight_tensor_transpose_reshape</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">:</span> <span class="n">LAYER_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParams</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get weight tensor from conv layer.</span>
+
+<span class="sd">    Converts to right format - performs transpose and reshape.</span>
+<span class="sd">    Packs it to the format required for BN fold (libpymo.TensorParams()).</span>
+<span class="sd">    :param conv_linear: conv layer</span>
+<span class="sd">    :return: return weight tensor in libpymo.TensorParams() format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Weight tensor libpymo format</span>
+    <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParams</span><span class="p">()</span>
+
+    <span class="c1"># linear array to be sent for bn fold</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DepthwiseConv2D</span><span class="p">):</span>
+        <span class="c1"># Depthwise conv layers in TF have outputs(Noc) set to 1.</span>
+        <span class="c1"># we will use format [Nic, Noc, kh, kw] -</span>
+        <span class="c1"># to be compatible with cpp backend.</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># [Nic, Noc, kh, kw]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">):</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">shape</span><span class="p">))</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="c1"># [Noc, Nic, kh, kw]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2DTranspose</span><span class="p">):</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># [Noc, Nic, kh, kw]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">):</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># [Noc, Nic, kh, kw]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;_get_weight_tensor_transpose_reshape(): Operation type unsupported&quot;</span><span class="p">)</span>
+
+    <span class="n">weight_tensor</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+
+    <span class="k">return</span> <span class="n">weight_tensor</span>
+
+
+<span class="k">class</span> <span class="nc">PassThroughOp</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a pass-through op, used for purpose of making an op a no-op</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=arguments-differ</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is a function to return input as an output</span>
+<span class="sd">        :param inputs: input to pass through</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">inputs</span>
+
+<span class="c1"># pylint: disable=too-many-branches</span>
+<span class="k">def</span> <span class="nf">_delete_bn_from_functional</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+                               <span class="n">bn_layers_to_remove</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function is used to remove ALL batch normalization layers from a functional model passed via the</span>
+<span class="sd">    bn_layers_to_remove parameter. Removing in place is not possible for functional models as the layers inbound and</span>
+<span class="sd">    outbound connections are immutable. This function returns a new model with the batch normalization layers removed.</span>
+<span class="sd">    param model: model to remove bn_layers from</span>
+<span class="sd">    param bn_layers_to_remove: list of batch normalization layers to remove from the model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># In order to do this, we first need to know the original models inbound and outbound connections to each layer.</span>
+    <span class="c1"># We then need to create a new model with the same inbound and outbound connections, but with the batch normalization</span>
+    <span class="c1"># layers removed. This is done by rerouting the inbound nodes of the batch normalization layers to the inbound nodes</span>
+    <span class="c1"># of the next layer. This can be seen in the following diagram:</span>
+    <span class="c1">#</span>
+    <span class="c1"># Original model flow -------------------------&gt;</span>
+    <span class="c1">#   ______________        ______________        ______________</span>
+    <span class="c1">#  |             |       |             |       |             |</span>
+    <span class="c1">#  |    Conv     |  -X-&gt; |  Batch Norm |  -X-&gt; |    ReLU     |</span>
+    <span class="c1">#  |_____________|       |_____________|     ^ |_____________|</span>
+    <span class="c1">#  New model flow   \                       /</span>
+    <span class="c1">#                    \                     /</span>
+    <span class="c1">#                     \___________________/</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+
+    <span class="c1"># Step 1: Get the inbound and outbound connections for each layer in the model</span>
+
+    <span class="c1"># Auxiliary dictionary to describe the network graph</span>
+    <span class="n">network_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;input_layers_of&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;new_output_tensor_of&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+
+    <span class="c1"># Set the input layers of each layer</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">_outbound_nodes</span><span class="p">:</span>  <span class="c1"># pylint: disable=protected-access</span>
+            <span class="n">layer_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">outbound_layer</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="n">layer_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;input_layers_of&#39;</span><span class="p">]:</span>
+                <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;input_layers_of&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span><span class="n">layer_name</span><span class="p">:</span> <span class="p">[</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">]})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;input_layers_of&#39;</span><span class="p">][</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Set the output tensor of the input layer</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="c1"># If the model has multiple inputs, we need to set the output tensor of each input layer</span>
+        <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;new_output_tensor_of&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">inp</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;new_output_tensor_of&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">input</span><span class="p">})</span>
+
+    <span class="c1"># Step 2: Create a new model with the batch normalization layers removed by iterating through the layers in the model</span>
+    <span class="c1"># and using the inbound and outbound connections to rerouting around the batch normalization layers.</span>
+
+    <span class="n">model_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">InputLayer</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Determine input tensors of the given layer</span>
+        <span class="n">layer_input</span> <span class="o">=</span> <span class="p">[</span><span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;new_output_tensor_of&#39;</span><span class="p">][</span><span class="n">layer_aux</span><span class="p">]</span>
+                       <span class="k">for</span> <span class="n">layer_aux</span> <span class="ow">in</span> <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;input_layers_of&#39;</span><span class="p">][</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">]]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer_input</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">layer_input</span> <span class="o">=</span> <span class="n">layer_input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Reroute around batch normalization layers if the layer is in the list of layers to remove</span>
+        <span class="k">if</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">bn_layers_to_remove</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Removing Batch Normalization layer </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">outbound_node</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">_outbound_nodes</span><span class="p">:</span>  <span class="c1"># pylint: disable=protected-access</span>
+                <span class="c1"># Find and replace the Batch Normalization output layers input that holds the Batch Normalization layer</span>
+                <span class="c1"># node and replace it with the input layers of the Batch Normalization layer.</span>
+                <span class="c1"># For example, if ReLU&#39;s inputs are [conv1_bn] and conv1_bn&#39;s inputs are [conv1], then we replace</span>
+                <span class="c1"># ReLU&#39;s inputs with [conv1]</span>
+
+                <span class="n">all_batch_norms_inbound_layers_names</span> <span class="o">=</span> \
+                    <span class="p">[</span><span class="n">inbound_node</span><span class="o">.</span><span class="n">inbound_layers</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">inbound_node</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">_inbound_nodes</span><span class="p">]</span>  <span class="c1"># pylint: disable=protected-access</span>
+
+                <span class="c1"># Go through all the outbound layers of the batch normalization layer and replace the batch normalization</span>
+                <span class="c1"># layer name with the input layer names of the batch normalization layer.</span>
+                <span class="n">batch_norms_outbound_layers_new_inbound_layers_names</span> <span class="o">=</span> \
+                    <span class="p">[</span><span class="n">outlayer</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">all_batch_norms_inbound_layers_names</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">outlayer</span> <span class="ow">in</span> <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;input_layers_of&#39;</span><span class="p">][</span><span class="n">outbound_node</span><span class="o">.</span><span class="n">outbound_layer</span><span class="o">.</span><span class="n">name</span><span class="p">]]</span>
+
+                <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;input_layers_of&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span><span class="n">outbound_node</span><span class="o">.</span><span class="n">outbound_layer</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">batch_norms_outbound_layers_new_inbound_layers_names</span><span class="p">})</span>
+
+                <span class="c1"># The above updates our dict for the mapping of the inputs but we need to also update what Keras thinks</span>
+                <span class="c1"># the inputs are. This is done by updating the inbound nodes of the output layer of the Batch Normalization.</span>
+                <span class="c1"># THIS IS ONLY FOR MAPPING THE INPUTS TO BUILD A NEW MODEL. The original models underlinig structure is</span>
+                <span class="c1"># not changed.</span>
+                <span class="n">outbound_node</span><span class="o">.</span><span class="n">outbound_layer</span><span class="o">.</span><span class="n">_inbound_nodes</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">inbound_nodes</span>  <span class="c1"># pylint: disable=protected-access</span>
+
+        <span class="c1"># Otherwise, treat like a normal layer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Since we are rerouting around the batch normalization layers, we need to temporarily remove the inbound and</span>
+            <span class="c1"># outbound nodes of the batch normalization layers so that the model can be built correctly and not duplicate</span>
+            <span class="c1"># the non batch normalization layers inbound/outbound nodes.</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">_inbound_nodes</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># pylint: disable=protected-access</span>
+            <span class="c1"># Special case for when there is a Lambda opertaion with multiple inputs. For example, x = y + z.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">TFOpLambda</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_input</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="o">*</span><span class="n">layer_input</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">layer_input</span><span class="p">)</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">_outbound_nodes</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># pylint: disable=protected-access</span>
+
+            <span class="c1"># Set new output tensor (in this case, it will be the same as the original model)</span>
+            <span class="n">network_dict</span><span class="p">[</span><span class="s1">&#39;new_output_tensor_of&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
+
+        <span class="c1"># Save tensor in output list if it is output in the initial model</span>
+        <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">output_names</span><span class="p">:</span>
+            <span class="n">model_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span> <span class="c1"># clear session to not have tensor name conflicts</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">model_outputs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_delete_bn_from_sequential</span><span class="p">(</span><span class="n">layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span>
+                               <span class="n">bn</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is the function for removing batch normalization layers that are layers of sequential model</span>
+
+<span class="sd">    :param layer: model to obtain bn_layer that we want to remove</span>
+<span class="sd">    :param bn: batch normalization layer that needs to be removed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">layers_after_bn</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># pylint: disable=protected-access</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">inner_layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">_layers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="n">layers_after_bn</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inner_layer</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">inner_layer</span> <span class="o">==</span> <span class="n">bn</span><span class="p">:</span>
+            <span class="n">visited</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">index</span>
+
+        <span class="k">elif</span> <span class="n">inner_layer</span><span class="o">.</span><span class="n">submodules</span><span class="p">:</span>
+            <span class="n">_delete_bn_for_non_subclassed_model</span><span class="p">(</span><span class="n">inner_layer</span><span class="p">,</span> <span class="n">bn</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">visited</span> <span class="ow">and</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=protected-access</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">_layers</span><span class="p">)</span> <span class="o">-</span> <span class="n">idx</span><span class="p">):</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">layer_to_add</span> <span class="ow">in</span> <span class="n">layers_after_bn</span><span class="p">:</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">layer_to_add</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_delete_bn_for_non_subclassed_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">),</span>
+                                        <span class="n">bn_layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove bn layer for those model which are not part of model subclassing</span>
+
+<span class="sd">    :param model: model to delete bn layers from</span>
+<span class="sd">    :param bn_layer: bn layer that should be removed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
+        <span class="n">_delete_bn_from_sequential</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layer</span><span class="p">)</span>
+
+    <span class="c1"># We are expecting to find sequential model in functional model</span>
+    <span class="c1"># or model subclassing in the elif statement</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">)):</span>
+        <span class="c1"># pylint: disable=protected-access</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">submodules</span><span class="p">:</span>
+                <span class="n">_delete_bn_for_non_subclassed_model</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">bn_layer</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_delete_bn_from_model_subclassing</span><span class="p">(</span><span class="n">module_to_name_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">,</span>
+                                                               <span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+                                      <span class="n">bn_layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove bn layer which is part of model subclassing api</span>
+<span class="sd">    or model inheriting from tf.keras.layers.Layer</span>
+
+<span class="sd">    :param module_to_name_map: model to remove bn from</span>
+<span class="sd">    :param bn_layer: bn layer that should be removed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">parent_ref</span><span class="p">,</span> <span class="n">module_name</span> <span class="o">=</span> <span class="n">module_to_name_map</span><span class="p">[</span><span class="n">bn_layer</span><span class="p">]</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">PassThroughOp</span><span class="p">()</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">parent_ref</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+<span class="c1"># pylint: disable=inconsistent-return-statements</span>
+<span class="k">def</span> <span class="nf">_delete_all_bns_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">),</span>
+                               <span class="n">bn_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove all bn layers</span>
+
+<span class="sd">    :param model</span>
+<span class="sd">    :param bn_layers: bn layers that should be removed</span>
+<span class="sd">    :return: new model with bn layers removed, if model is functional else None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">Functional</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">)</span> <span class="ow">and</span> <span class="n">bn_layers</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_delete_bn_from_functional</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layers</span><span class="p">)</span>
+
+    <span class="n">module_to_name_map</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">module_to_name_map</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">bn_layer</span> <span class="ow">in</span> <span class="n">bn_layers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">bn_layer</span> <span class="ow">in</span> <span class="n">module_to_name_map</span><span class="p">:</span>
+            <span class="n">_delete_bn_from_model_subclassing</span><span class="p">(</span><span class="n">module_to_name_map</span><span class="p">,</span> <span class="n">bn_layer</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_delete_bn_for_non_subclassed_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layer</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_find_all_batch_norms_to_fold</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PAIR_TYPE</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    uses searcher to choose layers for bias correction</span>
+
+<span class="sd">    :param model: model to obtain conv_linear pairs for</span>
+<span class="sd">    :return: List of conv/linear layers with associated bn op / activation info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">node_layer_map</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">create_node_to_layer_map</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">layer_out_node_map</span> <span class="o">=</span> <span class="n">common</span><span class="o">.</span><span class="n">create_layer_to_out_node_map</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">possible_convs_linears_bn</span> <span class="o">=</span> <span class="n">_find_possible_convs_linears_bn</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">,</span> <span class="n">layer_out_node_map</span><span class="p">)</span>
+
+    <span class="c1"># get all ordered convs/ linears layers</span>
+    <span class="n">ordered_conv_linears</span> <span class="o">=</span> <span class="n">_get_ordered_conv_linears</span><span class="p">(</span><span class="n">node_layer_map</span><span class="p">,</span> <span class="n">layer_out_node_map</span><span class="p">)</span>
+
+    <span class="n">valid_bn_conv_linear_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># track BNs added for fold</span>
+    <span class="n">marked_bn_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">conv_linear_layer</span> <span class="ow">in</span> <span class="n">ordered_conv_linears</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">conv_linear_layer</span> <span class="ow">in</span> <span class="n">possible_convs_linears_bn</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">bn_info</span> <span class="o">=</span> <span class="n">possible_convs_linears_bn</span><span class="p">[</span><span class="n">conv_linear_layer</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">bn_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">bn_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marked_bn_set</span><span class="p">:</span>
+                    <span class="n">valid_bn_conv_linear_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">conv_linear_layer</span><span class="p">,</span> <span class="n">bn_info</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">True</span><span class="p">))</span>
+                    <span class="n">marked_bn_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bn_info</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">bn_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">bn_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">marked_bn_set</span><span class="p">:</span>
+                    <span class="n">valid_bn_conv_linear_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">conv_linear_layer</span><span class="p">,</span> <span class="n">bn_info</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">False</span><span class="p">))</span>
+                    <span class="n">marked_bn_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bn_info</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">valid_bn_conv_linear_pairs</span>
+
+
+<div class="viewcode-block" id="fold_all_batch_norms"><a class="viewcode-back" href="../../../api_docs/keras_primitive_apis_cle.html#aimet_tensorflow.keras.batch_norm_fold.fold_all_batch_norms">[docs]</a><span class="k">def</span> <span class="nf">fold_all_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">,</span> <span class="n">LAYER_TYPE</span><span class="p">]],</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold all batch_norm layers in a model into corresponding conv/linear layers</span>
+
+<span class="sd">    :param model: model to find all batch norms for</span>
+<span class="sd">    :return: A tuple of List of conv/linear layers with associated bn op / activation info and a new model with the</span>
+<span class="sd">    Batch Normalization layers folded</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bn_conv_linear_pairs</span> <span class="o">=</span> <span class="n">_find_all_batch_norms_to_fold</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="c1"># Potential new model is returned in case the model is a functional model</span>
+    <span class="n">potential_new_model</span> <span class="o">=</span> <span class="n">fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_conv_linear_pairs</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">potential_new_model</span> <span class="k">if</span> <span class="n">potential_new_model</span> <span class="k">else</span> <span class="n">model</span>
+
+    <span class="c1"># When returning the pairs, we want the second element of the pair to be the BN</span>
+    <span class="n">pairs_to_return</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">bn</span><span class="p">,</span> <span class="n">conv</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">bn_conv_linear_pairs</span><span class="p">:</span>
+        <span class="n">pairs_to_return</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bn</span><span class="p">,</span> <span class="n">conv</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;A new model is returned with the Batch Normalization layers removed for Keras models. &quot;</span>
+                   <span class="s2">&quot;Please use this new model for the rest of the AIMET flow.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pairs_to_return</span><span class="p">,</span> <span class="n">model</span></div>
+
+<span class="c1">#pylint: disable=protected-access</span>
+<div class="viewcode-block" id="fold_all_batch_norms_to_scale"><a class="viewcode-back" href="../../../api_docs/keras_batchnorm_re_estimation.html#aimet_tensorflow.keras.batch_norm_fold.fold_all_batch_norms_to_scale">[docs]</a><span class="k">def</span> <span class="nf">fold_all_batch_norms_to_scale</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold all batch_norm layers in a model into corresponding conv/linear layers</span>
+
+<span class="sd">    :param sim: quantized keras model to fold all batch norms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">QuantizationSimModel</span><span class="p">)</span>
+
+    <span class="n">bn_conv_linear_pairs</span> <span class="o">=</span> <span class="n">_find_all_batch_norms_to_fold</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">_model_without_wrappers</span><span class="p">)</span>
+
+    <span class="n">fold_given_batch_norms</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">bn_conv_linear_pairs</span><span class="p">,</span> <span class="n">is_fold_to_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># When returning the pairs, we want the second element of the pair to be the BN</span>
+    <span class="n">pairs_to_return</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">bn</span><span class="p">,</span> <span class="n">conv</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">bn_conv_linear_pairs</span><span class="p">:</span>
+        <span class="n">pairs_to_return</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bn</span><span class="p">,</span> <span class="n">conv</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">pairs_to_return</span></div>
+
+<span class="c1"># pylint: disable=too-many-locals</span>
+<span class="c1"># pylint: disable=inconsistent-return-statements</span>
+<div class="viewcode-block" id="fold_given_batch_norms"><a class="viewcode-back" href="../../../api_docs/keras_primitive_apis_cle.html#aimet_tensorflow.keras.batch_norm_fold.fold_given_batch_norms">[docs]</a><span class="k">def</span> <span class="nf">fold_given_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">QuantizationSimModel</span><span class="p">],</span> <span class="n">layer_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PAIR_TYPE</span><span class="p">],</span> <span class="n">is_fold_to_scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fold a given set of batch_norm layers into conv_linear layers</span>
+
+<span class="sd">    :param model: keras fp32 model/quantized model to fold selected batchnorms</span>
+<span class="sd">    :param layer_pairs: Tuple of conv, bn layers and is_batch_norm_second flag</span>
+<span class="sd">    :param is_fold_to_scale: default is False,  when it is True, fold BN scaling factor into the per-channel quantization scaling factor of the preceding convolution</span>
+<span class="sd">    :return: new model with batch norm layers folded if model is a functional model, else None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">is_fold_to_scale</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">QuantizationSimModel</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span>
+
+    <span class="n">list_of_bn_layers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">layer_pairs</span><span class="p">:</span>
+
+        <span class="n">conv_linear</span><span class="p">,</span> <span class="n">batchnorm</span><span class="p">,</span> <span class="n">is_batch_norm_second</span> <span class="o">=</span> <span class="n">pair</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">conv_linear</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DepthwiseConv2D</span><span class="p">))</span>
+
+        <span class="n">list_of_bn_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batchnorm</span><span class="p">)</span>
+
+        <span class="c1">#  check flag</span>
+        <span class="n">is_bias_valid</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">is_bias_valid</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">bn_params</span> <span class="o">=</span> <span class="n">_get_bn_params</span><span class="p">(</span><span class="n">batchnorm</span><span class="p">)</span>
+        <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">_get_weight_tensor_transpose_reshape</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">)</span>
+        <span class="n">bias_tensor</span> <span class="o">=</span> <span class="n">_get_bias_tensor</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">)</span>
+
+        <span class="c1"># Updated weight and bias</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">fold</span><span class="p">(</span><span class="n">bn_params</span><span class="p">,</span> <span class="n">weight_tensor</span><span class="p">,</span> <span class="n">bias_tensor</span><span class="p">,</span> <span class="n">is_bias_valid</span><span class="p">,</span>
+                            <span class="n">is_batch_norm_second</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DepthwiseConv2D</span><span class="p">):</span>
+            <span class="c1"># Depthwise conv layers in TF have outputs(Noc) set to 1.</span>
+            <span class="c1"># we send in format [Nic, Noc, kh, kw]</span>
+            <span class="n">numpy_weight_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>\
+                <span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">):</span>
+            <span class="c1"># o, i - convert to i , o</span>
+            <span class="n">numpy_weight_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="n">weight_tensor</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="p">[</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2DTranspose</span><span class="p">):</span>
+            <span class="c1"># we sent in format [Noc, Nic, kh, kw]</span>
+            <span class="n">numpy_weight_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># conv2D case</span>
+            <span class="c1"># we sent in format [Noc, Nic, kh, kw]</span>
+            <span class="n">numpy_weight_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>\
+                <span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="c1"># update bias tensor, even in case there was no existing bias add op in given conv2D op.</span>
+        <span class="n">bias_tensor_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">numpy_bias_reshaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">bias</span><span class="p">,</span> <span class="n">bias_tensor_shape</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_bias_valid</span><span class="p">:</span>
+            <span class="n">conv_linear</span><span class="o">.</span><span class="n">use_bias</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">conv_linear</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">conv_linear</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;bias&quot;</span><span class="p">,</span>
+                                                      <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span>
+                                                      <span class="n">dtype</span><span class="o">=</span><span class="n">conv_linear</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+                                                      <span class="n">trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">conv_linear</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="n">numpy_weight_reshaped</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">numpy_bias_reshaped</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">is_fold_to_scale</span><span class="p">:</span>
+            <span class="n">sim</span> <span class="o">=</span> <span class="n">model</span>
+            <span class="n">conv_wrapper</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_quant_wrapper_for_layer_name</span><span class="p">(</span><span class="n">conv_linear</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="c1"># check no bias</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">conv_wrapper</span><span class="p">,</span> <span class="s1">&#39;param_quantizers[1]&#39;</span><span class="p">):</span>
+                <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">conv_wrapper</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+
+            <span class="c1"># Disable quantizers of batchnorms</span>
+            <span class="n">bn_wrapper</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_quant_wrapper_for_layer_name</span><span class="p">(</span><span class="n">batchnorm</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+
+            <span class="n">_fold_pair_scale</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">conv_linear</span><span class="p">,</span> <span class="n">bn_params</span><span class="p">)</span>
+
+        <span class="n">BNUtils</span><span class="o">.</span><span class="n">modify_bn_params_to_make_as_passthrough</span><span class="p">(</span><span class="n">batchnorm</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_fold_to_scale</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">return</span> <span class="n">_delete_all_bns_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">list_of_bn_layers</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">_fold_pair_scale</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">conv_linear</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="p">,</span> <span class="n">bn_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BNParams</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Fold a batch_norm layer into conv_linear&#39;s scale</span>
+<span class="sd">    :param sim: keras quantized model</span>
+<span class="sd">    :param conv_linear: conv or Linear layer</span>
+<span class="sd">    :param bn_params: bn_params</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">QuantizationSimModel</span><span class="p">)</span>
+    <span class="n">conv_linear_quantizer_w</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">_get_quantizers_by_layer</span><span class="p">(</span><span class="n">conv_linear</span><span class="p">)[</span><span class="n">PerChannelQuantizerType</span><span class="o">.</span><span class="n">PARAMS</span><span class="p">][</span><span class="n">ConvLinearParamType</span><span class="o">.</span><span class="n">WEIGHTS</span><span class="p">]</span>
+    <span class="n">encodings</span> <span class="o">=</span> <span class="n">conv_linear_quantizer_w</span><span class="o">.</span><span class="n">encoding</span>
+    <span class="n">new_encodings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">old_encoding</span><span class="p">,</span> <span class="n">bn_gamma_to_runningvar_ratio</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">encodings</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bn_params</span><span class="o">.</span><span class="n">gamma</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bn_params</span><span class="o">.</span><span class="n">runningVar</span><span class="p">))):</span>
+        <span class="n">new_encoding</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TfEncoding</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">bn_gamma_to_runningvar_ratio</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">new_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">*</span> <span class="n">bn_gamma_to_runningvar_ratio</span>
+            <span class="n">new_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">*</span> <span class="n">bn_gamma_to_runningvar_ratio</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">*</span> <span class="n">bn_gamma_to_runningvar_ratio</span>
+            <span class="n">new_encoding</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">max</span> <span class="o">*</span> <span class="n">bn_gamma_to_runningvar_ratio</span>
+        <span class="n">new_encoding</span><span class="o">.</span><span class="n">delta</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">delta</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bn_gamma_to_runningvar_ratio</span><span class="p">)</span>
+        <span class="n">new_encoding</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">new_encoding</span><span class="o">.</span><span class="n">min</span><span class="o">/</span><span class="n">new_encoding</span><span class="o">.</span><span class="n">delta</span>
+        <span class="n">new_encoding</span><span class="o">.</span><span class="n">bw</span> <span class="o">=</span> <span class="n">old_encoding</span><span class="o">.</span><span class="n">bw</span>
+
+        <span class="n">new_encodings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_encoding</span><span class="p">)</span>
+
+    <span class="n">conv_linear_quantizer_w</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">new_encodings</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

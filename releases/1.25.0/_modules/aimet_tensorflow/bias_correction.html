@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_tensorflow.bias_correction &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.25.0</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.25.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_tensorflow.bias_correction</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_tensorflow.bias_correction</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.5</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2019-2021, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; Code to perform bias correction for layers &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">import</span> <span class="nn">aimet_common.libpymo</span> <span class="k">as</span> <span class="nn">libpymo</span>
+<span class="kn">from</span> <span class="nn">aimet_common.bias_correction</span> <span class="kn">import</span> <span class="n">ConvBnInfoType</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">ActivationType</span><span class="p">,</span> <span class="n">QuantScheme</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_common.graph_searcher</span> <span class="kn">import</span> <span class="n">GraphSearcher</span>
+<span class="kn">from</span> <span class="nn">aimet_common.bias_correction</span> <span class="kn">import</span> <span class="n">ConvBnPatternHandler</span>
+<span class="kn">from</span> <span class="nn">aimet_common.graph_pattern_matcher</span> <span class="kn">import</span> <span class="n">PatternType</span>
+
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.graph_saver</span> <span class="kn">import</span> <span class="n">save_model_to_meta</span><span class="p">,</span> <span class="n">save_and_load_graph</span><span class="p">,</span> <span class="n">load_model_from_meta</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.common</span> <span class="kn">import</span> <span class="n">create_input_feed_dict</span><span class="p">,</span> <span class="n">iter_first_x</span><span class="p">,</span> <span class="n">get_ordered_conv_linears</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.op.fusedbatchnorm</span> <span class="kn">import</span> <span class="n">BNUtils</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.op.conv</span> <span class="kn">import</span> <span class="n">get_weight_tensor_with_shape</span><span class="p">,</span> <span class="n">BiasUtils</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.common.connectedgraph</span> <span class="kn">import</span> <span class="n">ConnectedGraph</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">Quant</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="QuantParams"><a class="viewcode-back" href="../../api_docs/tensorflow_bias_correction.html#aimet_tensorflow.bias_correction.QuantParams">[docs]</a><span class="k">class</span> <span class="nc">QuantParams</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quant Params to be passed in by user</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">quant_mode</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">,</span>
+                 <span class="n">round_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                 <span class="n">use_cuda</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">ops_to_ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        :param quant_mode: Indicates which quantization algorithm should be used, either</span>
+<span class="sd">                           &#39;tf&#39; or &#39;tf_enhanced&#39;. Defaults to &#39;tf_enhanced&#39;</span>
+<span class="sd">        :param round_mode:  The round scheme to used. One of: &#39;nearest&#39; or &#39;stochastic&#39;. Default is &#39;nearest&#39;.</span>
+<span class="sd">        :param use_cuda: flag to indicate if GPU is to be used</span>
+<span class="sd">        :param ops_to_ignore: ops to be ignored</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quant_mode</span> <span class="o">=</span> <span class="n">quant_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">round_mode</span> <span class="o">=</span> <span class="n">round_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ops_to_ignore</span> <span class="o">=</span> <span class="n">ops_to_ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_cuda</span> <span class="o">=</span> <span class="n">use_cuda</span></div>
+
+
+<div class="viewcode-block" id="BiasCorrectionParams"><a class="viewcode-back" href="../../api_docs/tensorflow_bias_correction.html#aimet_tensorflow.bias_correction.BiasCorrectionParams">[docs]</a><span class="k">class</span> <span class="nc">BiasCorrectionParams</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Input for bias correction to be passed by the user</span>
+
+<span class="sd">    :param batch_size: input batch size to be used</span>
+<span class="sd">    :param num_quant_samples: samples to be used for quantization</span>
+<span class="sd">    :param num_bias_correct_samples: samples to be used for bias correction</span>
+<span class="sd">    :param input_op_names: list of input op names of the given model</span>
+<span class="sd">    :param output_op_names: list of output op names of the given model</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">num_quant_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">num_bias_correct_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">input_op_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">output_op_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_quant_samples</span> <span class="o">=</span> <span class="n">num_quant_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_bias_correct_samples</span> <span class="o">=</span> <span class="n">num_bias_correct_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_op_names</span> <span class="o">=</span> <span class="n">input_op_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_op_names</span> <span class="o">=</span> <span class="n">output_op_names</span></div>
+
+
+<span class="k">class</span> <span class="nc">BiasCorrection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    class for bias correction in tensorflow</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_output_data</span><span class="p">(</span><span class="n">sess</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">input_op_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output_op_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">batch_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to get output values of a layer</span>
+<span class="sd">        :param sess: tf.compat.v1.Session containing the layer to evaluate</span>
+<span class="sd">        :param input_op_names: List of names of input ops to the session graph</span>
+<span class="sd">        :param output_op_name: Name of the output layer to evaluate</span>
+<span class="sd">        :param batch_data: Batch of data to feed into model input</span>
+<span class="sd">        :return: Output of layer for all batches of images</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">feed_dict</span> <span class="o">=</span> <span class="n">create_input_feed_dict</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">input_op_names</span><span class="p">,</span> <span class="n">batch_data</span><span class="p">)</span>
+        <span class="n">tf_op</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">output_op_name</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">tf_op</span><span class="o">.</span><span class="n">outputs</span>
+        <span class="k">assert</span> <span class="n">tf_op</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">consumers</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">tf_op</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">consumers</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">outputs</span>
+        <span class="n">biasadd_tensor</span> <span class="o">=</span> <span class="n">tf_op</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">consumers</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="c1"># Replace with a get BiasAdd utils later</span>
+        <span class="n">output_data</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">biasadd_tensor</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output_data</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_call_mo_correct_bias</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                              <span class="n">bias_correction</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BiasCorrection</span><span class="p">,</span>
+                              <span class="n">bias_shape</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_bias_none</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         helper to perform bias correction using cpp backend</span>
+<span class="sd">        :param corrected_model: active tensorflow session with corrected model as tf.compat.v1.Session</span>
+<span class="sd">        :param layer_name: name of the layer to be bias corrected</span>
+<span class="sd">        :param bias_correction: bias correction inputs</span>
+<span class="sd">        :param bias_shape: shape of bias associated with the layer</span>
+<span class="sd">        :param is_bias_none: True if bias for a layer is None</span>
+<span class="sd">        :return: None, updates bias for the given layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bias_tensor</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParamBiasCorrection</span><span class="p">()</span>
+
+        <span class="n">layer_to_be_corrected</span> <span class="o">=</span> <span class="n">corrected_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">corrected_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+            <span class="k">assert</span><span class="p">(</span><span class="n">layer_to_be_corrected</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Conv2D&#39;</span><span class="p">,</span> <span class="s1">&#39;DepthwiseConv2dNative&#39;</span><span class="p">,</span> <span class="s1">&#39;MatMul&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">is_bias_none</span><span class="p">:</span>
+                <span class="n">bias_tensor</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># read bias from given op</span>
+                <span class="n">bias_tensor</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">BiasUtils</span><span class="o">.</span><span class="n">get_bias_as_numpy_data</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">layer_to_be_corrected</span><span class="p">)</span>
+
+            <span class="c1"># perform bias correction</span>
+            <span class="n">bias_correction</span><span class="o">.</span><span class="n">correctBias</span><span class="p">(</span><span class="n">bias_tensor</span><span class="p">)</span>
+
+            <span class="c1"># this api updates bias or adds bias add to layer if not present</span>
+            <span class="n">BiasUtils</span><span class="o">.</span><span class="n">update_bias_for_quantized_op</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">layer_to_be_corrected</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bias_tensor</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+                                                   <span class="n">is_bias_none</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_quantized_model</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">:</span> <span class="n">QuantParams</span><span class="p">,</span> <span class="n">input_op_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                             <span class="n">output_op_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">num_quant_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                             <span class="n">data_set</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantizationSimModel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         api to get quantized session</span>
+<span class="sd">        :param corrected_model: active tensorflow session with corrected model as tf.compat.v1.Session</span>
+<span class="sd">        :param quant_params: quantization params from user</span>
+<span class="sd">        :param input_op_names: names of the input nodes of the given model</span>
+<span class="sd">        :param output_op_names: names of the output nodes of the given model</span>
+<span class="sd">        :param num_quant_samples: number of dataset samples to use during quantization</span>
+<span class="sd">        :param batch_size: batch size to use for dataset samples</span>
+<span class="sd">        :return: quantized sim model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">bias_correction_callback</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">dataset_samples_quant_itr</span> <span class="o">=</span> <span class="n">iter_first_x</span><span class="p">(</span><span class="n">data_set</span><span class="p">,</span> <span class="n">iterations</span><span class="p">)</span>
+            <span class="n">output_ops</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">output_op_name</span> <span class="ow">in</span> <span class="n">output_op_names</span><span class="p">:</span>
+                <span class="n">output_ops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">output_op_name</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataset_samples_quant_itr</span><span class="p">:</span>
+                <span class="n">feed_dict</span> <span class="o">=</span> <span class="n">create_input_feed_dict</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">input_op_names</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">output_op</span> <span class="ow">in</span> <span class="n">output_ops</span><span class="p">:</span>
+                    <span class="n">output_op</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+
+        <span class="n">save_model_to_meta</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="s1">&#39;./bias_correction/temp&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Allocate the quantizer and quantize the network using the default 8 bit params/activations</span>
+        <span class="n">quantsim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">input_op_names</span><span class="p">,</span> <span class="n">output_op_names</span><span class="p">,</span>
+                                        <span class="n">quant_params</span><span class="o">.</span><span class="n">quant_mode</span><span class="p">,</span> <span class="n">quant_params</span><span class="o">.</span><span class="n">round_mode</span><span class="p">)</span>
+
+        <span class="c1"># Disable all output quantizers</span>
+        <span class="c1"># pylint:disable = protected-access</span>
+        <span class="k">for</span> <span class="n">quantize_op</span> <span class="ow">in</span> <span class="n">quantsim</span><span class="o">.</span><span class="n">_activation_quantizers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">quantsim</span><span class="o">.</span><span class="n">_activation_quantizers</span><span class="p">[</span><span class="n">quantize_op</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+                <span class="n">quantsim</span><span class="o">.</span><span class="n">_activation_quantizers</span><span class="p">[</span><span class="n">quantize_op</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">n_batches_quantization</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_quant_samples</span> <span class="o">/</span> <span class="n">batch_size</span><span class="p">))</span>
+        <span class="n">quantsim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">bias_correction_callback</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="o">=</span><span class="n">n_batches_quantization</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">quantsim</span>
+
+
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">bias_correction_per_layer</span><span class="p">(</span><span class="n">reference_model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span>
+                                  <span class="n">corrected_model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span>
+                                  <span class="n">bias_correct_params</span><span class="p">:</span> <span class="n">BiasCorrectionParams</span><span class="p">,</span>
+                                  <span class="n">layer_name_to_be_corrected</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                  <span class="n">data_set</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Helper function to perform empirical bias correction per layer.</span>
+
+<span class="sd">        :param reference_model: active tensorflow session for reference model</span>
+<span class="sd">        :param corrected_model: active tensorflow session for corrected model</span>
+<span class="sd">        :param bias_correct_params: bias correction params</span>
+<span class="sd">        :param layer_name_to_be_corrected: name of layer on which bias correction is to be performed</span>
+<span class="sd">        :param quant_params: Quantization specific params from user</span>
+<span class="sd">        :return: None, updates corrected model in-place.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ref_layer</span> <span class="o">=</span> <span class="n">reference_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">layer_name_to_be_corrected</span><span class="p">)</span>
+
+        <span class="n">bias_correction</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BiasCorrection</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Correcting layer </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ref_layer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">n_batches_bias_correction</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">bias_correct_params</span><span class="o">.</span><span class="n">num_bias_correct_samples</span> <span class="o">/</span>
+                                                <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">))</span>
+
+        <span class="n">reduced_dataset_iter</span> <span class="o">=</span> <span class="n">iter_first_x</span><span class="p">(</span><span class="n">data_set</span><span class="p">,</span> <span class="n">n_batches_bias_correction</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">batch_input</span> <span class="ow">in</span> <span class="n">reduced_dataset_iter</span><span class="p">:</span>
+            <span class="c1"># reference model without corrected nodes</span>
+            <span class="n">reference_output_batch</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_get_output_data</span><span class="p">(</span><span class="n">reference_model</span><span class="p">,</span>
+                                                                     <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">input_op_names</span><span class="p">,</span>
+                                                                     <span class="n">ref_layer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                                     <span class="n">batch_input</span><span class="p">)</span>
+
+            <span class="n">quantized_model_output_batch</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_get_output_data</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span>
+                                                                           <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">input_op_names</span><span class="p">,</span>
+                                                                           <span class="n">ref_layer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                                           <span class="n">batch_input</span><span class="p">)</span>
+
+
+
+            <span class="k">if</span> <span class="n">ref_layer</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MatMul&#39;</span><span class="p">:</span>
+                <span class="n">extended_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">reference_output_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])))</span>
+                <span class="n">reference_output_batch</span> <span class="o">=</span> <span class="n">reference_output_batch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">extended_shape</span><span class="p">)</span>
+                <span class="n">quantized_model_output_batch</span> <span class="o">=</span> <span class="n">quantized_model_output_batch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">extended_shape</span><span class="p">)</span>
+
+            <span class="c1"># we need to reshape from tensorflow shape NxHxWxC to NxCxHxW</span>
+            <span class="n">bias_correction</span><span class="o">.</span><span class="n">storePreActivationOutput</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">reference_output_batch</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="n">bias_correction</span><span class="o">.</span><span class="n">storeQuantizedPreActivationOutput</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span>
+                <span class="n">quantized_model_output_batch</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+
+        <span class="n">bias_shape</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">is_bias_none</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># get shape for bias if the layer does not have bias</span>
+        <span class="k">if</span> <span class="n">BiasUtils</span><span class="o">.</span><span class="n">is_bias_none</span><span class="p">(</span><span class="n">ref_layer</span><span class="p">):</span>
+            <span class="n">is_bias_none</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">ref_layer</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MatMul&#39;</span><span class="p">:</span>
+                <span class="n">bias_shape</span> <span class="o">=</span> <span class="n">reference_output_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">ref_layer</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Conv2D&#39;</span><span class="p">,</span> <span class="s1">&#39;DepthwiseConv2dNative&#39;</span><span class="p">]:</span>
+                <span class="c1"># for conv2d or depthwise conv2d</span>
+                <span class="n">bias_shape</span> <span class="o">=</span> <span class="n">reference_output_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="c1"># bias is to be corrected in the corrected model graph</span>
+        <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_call_mo_correct_bias</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">ref_layer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bias_correction</span><span class="p">,</span> <span class="n">bias_shape</span><span class="p">,</span>
+                                             <span class="n">is_bias_none</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Completed empirical bias correction for layer  </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ref_layer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_quantized_weights</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        helper function to get quantized dequantized weights</span>
+<span class="sd">        :param weight_tensor: weight tensor</span>
+<span class="sd">        :param quant_params: quantization params such as mode, rounding  etc</span>
+<span class="sd">        :return: quantized de-quantized weight tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">q_wt_tensor</span> <span class="o">=</span> <span class="n">weight_tensor</span>
+
+        <span class="n">quant_mode</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">QuantizationMode</span><span class="o">.</span><span class="n">QUANTIZATION_TF_ENHANCED</span>
+        <span class="k">if</span> <span class="n">quant_params</span><span class="o">.</span><span class="n">quant_mode</span> <span class="o">==</span> <span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf</span> <span class="ow">or</span> <span class="n">quant_params</span><span class="o">.</span><span class="n">quant_mode</span> <span class="o">==</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span>
+            <span class="n">quant_mode</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">QuantizationMode</span><span class="o">.</span><span class="n">QUANTIZATION_TF</span>
+
+        <span class="n">round_mode</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">RoundingMode</span><span class="o">.</span><span class="n">ROUND_NEAREST</span>
+        <span class="k">if</span> <span class="n">quant_params</span><span class="o">.</span><span class="n">round_mode</span> <span class="o">==</span> <span class="s1">&#39;stochastic&#39;</span><span class="p">:</span>
+            <span class="n">round_mode</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">RoundingMode</span><span class="o">.</span><span class="n">ROUND_STOCHASTIC</span>
+
+        <span class="n">bitwidth</span> <span class="o">=</span> <span class="mi">8</span>
+
+        <span class="c1"># use tensorQuantizerForPython to get quantizeDequantize weights</span>
+        <span class="n">encoding_analyzer</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EncodingAnalyzerForPython</span><span class="p">(</span><span class="n">quant_mode</span><span class="p">)</span>
+        <span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">updateStats</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">,</span> <span class="n">quant_params</span><span class="o">.</span><span class="n">use_cuda</span><span class="p">)</span>
+        <span class="n">encoding</span><span class="p">,</span> <span class="n">is_encoding_valid</span> <span class="o">=</span> <span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">computeEncoding</span><span class="p">(</span><span class="n">bitwidth</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_encoding_valid</span><span class="p">:</span>
+            <span class="n">tensor_quantizer</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorQuantizationSimForPython</span><span class="p">()</span>
+            <span class="n">q_wt_tensor</span> <span class="o">=</span> <span class="n">tensor_quantizer</span><span class="o">.</span><span class="n">quantizeDequantize</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">round_mode</span><span class="p">,</span> <span class="n">quant_params</span><span class="o">.</span><span class="n">use_cuda</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">q_wt_tensor</span>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_conv_linear_params</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_to_be_corrected</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract weights and bias of given conv/linear layer</span>
+<span class="sd">        :param model: tf.compat.v1.Session type</span>
+<span class="sd">        :param layer_to_be_corrected: conv/linear layer as tf.Operation</span>
+<span class="sd">        :return: bias, weight and quantized weights as TensorParamBiasCorrection types</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bias_tensor</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">TensorParamBiasCorrection</span><span class="p">()</span>
+
+        <span class="c1"># get weight tensor</span>
+        <span class="n">weight_tensor</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_weight_tensor_with_shape</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_to_be_corrected</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">weight_tensor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Weight tensor extraction failed for layer {</span><span class="si">%s</span><span class="s1">}&#39;</span><span class="p">,</span> <span class="n">layer_to_be_corrected</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">bias_tensor</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">BiasUtils</span><span class="o">.</span><span class="n">get_bias_as_numpy_data</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_to_be_corrected</span><span class="p">)</span>
+        <span class="n">bias_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">BiasUtils</span><span class="o">.</span><span class="n">get_shape</span><span class="p">(</span><span class="n">layer_to_be_corrected</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bias_tensor</span><span class="p">,</span> <span class="n">weight_tensor</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_bn_params</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BnParamsBiasCorr</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get bn params for bn based bias correction</span>
+<span class="sd">        :param model: tf.compat.v1.Session type</span>
+<span class="sd">        :param bn_layer: tf.Operation type</span>
+<span class="sd">        :return: bn params as libpymo.BnParamsBiasCorr() type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bn_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BnParamsBiasCorr</span><span class="p">()</span>
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">BNUtils</span><span class="o">.</span><span class="n">get_beta_as_numpy_data</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layer</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">BNUtils</span><span class="o">.</span><span class="n">get_gamma_as_numpy_data</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layer</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bn_params</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">analytical_bias_correction_per_layer</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Operation</span><span class="p">,</span>
+                                             <span class="n">preceeding_bn_layer_info</span><span class="p">:</span> <span class="n">ConvBnInfoType</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">:</span> <span class="n">QuantParams</span><span class="p">,</span>
+                                             <span class="n">is_first_conv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform bn based bias correction (analytical bc).</span>
+
+<span class="sd">        :param corrected_model: active tensorflow session for corrected model</span>
+<span class="sd">        :param layer: conv/linear layer to be corrected</span>
+<span class="sd">        :param preceeding_bn_layer_info: corresponding preceeding bn/ activation info</span>
+<span class="sd">        :param quant_params: Quantization specific params from user</span>
+<span class="sd">        :param is_first_conv: flag to indicate if it&#39;s the first conv layer</span>
+<span class="sd">        :return: None, updates corrected_model in place</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">layer</span> <span class="o">=</span> <span class="n">corrected_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># get bn param and quantized weights from conv for this layer</span>
+        <span class="n">bias_tensor</span><span class="p">,</span> <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_get_conv_linear_params</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+        <span class="n">quantized_weight</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_get_quantized_weights</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">)</span>
+
+        <span class="n">bn_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BnParamsBiasCorr</span><span class="p">()</span>
+        <span class="n">activation_type</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">ActivationType</span><span class="o">.</span><span class="n">noActivation</span>
+
+        <span class="k">if</span> <span class="n">preceeding_bn_layer_info</span><span class="p">:</span>
+            <span class="n">input_tf_bn_op_name</span> <span class="o">=</span> <span class="n">preceeding_bn_layer_info</span><span class="o">.</span><span class="n">input_bn</span><span class="o">.</span><span class="n">get_module</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">bn_op</span> <span class="o">=</span> <span class="n">corrected_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">input_tf_bn_op_name</span><span class="p">)</span>
+            <span class="n">bn_params</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_get_bn_params</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">bn_op</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">preceeding_bn_layer_info</span><span class="o">.</span><span class="n">in_activation_type</span> <span class="o">==</span> <span class="n">ActivationType</span><span class="o">.</span><span class="n">relu</span><span class="p">:</span>
+                <span class="n">activation_type</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">ActivationType</span><span class="o">.</span><span class="n">relu</span>
+            <span class="k">elif</span> <span class="n">preceeding_bn_layer_info</span><span class="o">.</span><span class="n">in_activation_type</span> <span class="o">==</span> <span class="n">ActivationType</span><span class="o">.</span><span class="n">relu6</span><span class="p">:</span>
+                <span class="n">activation_type</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">ActivationType</span><span class="o">.</span><span class="n">relu6</span>
+            <span class="k">elif</span> <span class="n">preceeding_bn_layer_info</span><span class="o">.</span><span class="n">in_activation_type</span> <span class="o">==</span> <span class="n">ActivationType</span><span class="o">.</span><span class="n">no_activation</span><span class="p">:</span>
+                <span class="n">activation_type</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">ActivationType</span><span class="o">.</span><span class="n">noActivation</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Unknown activation type&#39;</span><span class="p">,</span> <span class="n">preceeding_bn_layer_info</span><span class="o">.</span><span class="n">in_activation_type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_first_conv</span><span class="p">:</span>
+                <span class="c1"># for the first conv layer case, we use gamma = 1 and beta = 0</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">bn_params</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+                <span class="n">bn_params</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;layer info is None and is not first conv layer&quot;</span>
+
+        <span class="c1"># need to invoke cpp api for bn based bias correction</span>
+        <span class="n">biasCorrection</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BnBasedBiasCorrection</span><span class="p">()</span>
+
+        <span class="n">biasCorrection</span><span class="o">.</span><span class="n">correctBias</span><span class="p">(</span><span class="n">bias_tensor</span><span class="p">,</span> <span class="n">quantized_weight</span><span class="p">,</span> <span class="n">weight_tensor</span><span class="p">,</span> <span class="n">bn_params</span><span class="p">,</span> <span class="n">activation_type</span><span class="p">)</span>
+
+        <span class="c1"># this api updates bias or adds bias add to layer if not present</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="n">corrected_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">BiasUtils</span><span class="o">.</span><span class="n">update_bias_for_quantized_op</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bias_tensor</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Completed analytical bias correction for layer </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_conv_bn_select_custom_pattern_init</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialize the patterns we want to use to pick layers for bn based bias correction.</span>
+<span class="sd">        :return: patterns and associated actions to be performed upon match</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">patterns_with_callbacks</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># the types we want to handle</span>
+        <span class="n">conv_layer_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Conv2D&#39;</span><span class="p">,</span> <span class="s1">&#39;DepthwiseConv2dNative&#39;</span><span class="p">]</span>
+        <span class="n">activation_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Relu&#39;</span><span class="p">,</span> <span class="s1">&#39;Relu6&#39;</span><span class="p">]</span>
+
+        <span class="c1"># add the patterns we are interested in along with a handler</span>
+        <span class="n">layer_select_handler</span> <span class="o">=</span> <span class="n">ConvBnPatternHandler</span><span class="p">()</span>
+
+        <span class="c1"># conv layer combinations</span>
+        <span class="k">for</span> <span class="n">conv</span> <span class="ow">in</span> <span class="n">conv_layer_types</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">activation</span> <span class="ow">in</span> <span class="n">activation_types</span><span class="p">:</span>
+                <span class="n">patterns_with_callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PatternType</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FusedBatchNormV3&#39;</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">conv</span><span class="p">],</span>
+                                                           <span class="n">action</span><span class="o">=</span><span class="n">layer_select_handler</span><span class="p">))</span>
+
+            <span class="n">patterns_with_callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PatternType</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;FusedBatchNormV3&#39;</span><span class="p">,</span> <span class="n">conv</span><span class="p">],</span>
+                                                       <span class="n">action</span><span class="o">=</span><span class="n">layer_select_handler</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">patterns_with_callbacks</span><span class="p">,</span> <span class="n">layer_select_handler</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">find_all_convs_bn_with_activation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">start_op_names</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+                                          <span class="n">output_op_names</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        uses searcher to choose convs/ linears with bn and activation info.</span>
+<span class="sd">        :param model: tf.compat.v1.Session type</span>
+<span class="sd">        :param start_op_names: list of strings with names of starting ops in the model</span>
+<span class="sd">        :param output_op_names: List of output op names of the model, used to help ConnectedGraph determine valid ops</span>
+<span class="sd">        (to ignore training ops for example).</span>
+<span class="sd">        :return: dictionary of conv/linear layers with associated bn op / activation info</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_op_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">start_op_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">start_op_names</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_op_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">output_op_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">output_op_names</span><span class="p">]</span>
+
+        <span class="n">conn_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">start_op_names</span><span class="p">,</span> <span class="n">output_op_names</span><span class="p">)</span>
+
+        <span class="c1"># create a list of patterns and corresponding handlers or actions to be applied for selecting</span>
+        <span class="c1"># layers for bias correction.</span>
+        <span class="c1"># layer_select_handler is an instance of custom handler created for bias correction.</span>
+        <span class="n">patterns_with_callback</span><span class="p">,</span> <span class="n">layer_select_handler</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_conv_bn_select_custom_pattern_init</span><span class="p">()</span>
+
+        <span class="c1"># graph searcher looks for patterns and applies actions when matching patterns are found</span>
+        <span class="n">graph_searcher</span> <span class="o">=</span> <span class="n">GraphSearcher</span><span class="p">(</span><span class="n">conn_graph</span><span class="p">,</span> <span class="n">patterns_with_callback</span><span class="p">)</span>
+        <span class="n">graph_searcher</span><span class="o">.</span><span class="n">find_all_patterns_in_graph_apply_actions</span><span class="p">()</span>
+
+        <span class="c1"># use custom handler instance and fetch the selected layer info for bias correction</span>
+        <span class="n">convs_bn_activation_info_dict</span> <span class="o">=</span> <span class="n">layer_select_handler</span><span class="o">.</span><span class="n">get_conv_linear_bn_info_dict</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">convs_bn_activation_info_dict</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">refresh_op_ref</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">conv_bn_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the conv op references saved in user passed in conv bn dictionary.</span>
+
+<span class="sd">        :param reference_model: active tf.compat.v1.Session for the model.</span>
+<span class="sd">        :param conv_bn_dict: Dict of conv and bn with activation info</span>
+<span class="sd">        :return: dict of conv and bn with updated conv references</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">conv_linears_with_bn_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">conv</span> <span class="ow">in</span> <span class="n">conv_bn_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">refreshed_conv</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="n">conv</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">bn_activation_info</span> <span class="o">=</span> <span class="n">conv_bn_dict</span><span class="p">[</span><span class="n">conv</span><span class="p">]</span>
+            <span class="n">conv_linears_with_bn_dict</span><span class="p">[</span><span class="n">refreshed_conv</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn_activation_info</span>
+
+        <span class="k">return</span> <span class="n">conv_linears_with_bn_dict</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">correct_bias</span><span class="p">(</span><span class="n">reference_model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">bias_correct_params</span><span class="p">:</span> <span class="n">BiasCorrectionParams</span><span class="p">,</span>
+                     <span class="n">quant_params</span><span class="p">:</span> <span class="n">QuantParams</span><span class="p">,</span> <span class="n">data_set</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
+                     <span class="n">conv_bn_dict</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">Operation</span><span class="p">,</span> <span class="n">ConvBnInfoType</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">perform_only_empirical_bias_corr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Top level function for bias correction</span>
+
+<span class="sd">        :param reference_model: active tf.compat.v1.Session for the model to be corrected.</span>
+<span class="sd">        :param bias_correct_params: input params for bias correction</span>
+<span class="sd">        :param quant_params: QuantParams type with params for quantization simulation for bias correction.</span>
+<span class="sd">        :param data_set: input data set</span>
+<span class="sd">        :param conv_bn_dict: Dict of conv and bn with activation info. If None, the function looks for it.</span>
+<span class="sd">                             This can be obtained on the model with bns and convs using</span>
+<span class="sd">                             BiasCorrection.find_all_convs_bn_with_activation() api.</span>
+<span class="sd">        :param perform_only_empirical_bias_corr: a flag to indicate only empirical bias correction is to be performed.</span>
+<span class="sd">        :return: updated session with corrected bias for given ops</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># one time initialization of all layers with bias param</span>
+        <span class="n">reference_model</span> <span class="o">=</span> <span class="n">BiasUtils</span><span class="o">.</span><span class="n">initialize_model_with_bias</span><span class="p">(</span><span class="n">reference_model</span><span class="p">,</span> <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">input_op_names</span><span class="p">,</span>
+                                                               <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">output_op_names</span><span class="p">)</span>
+
+        <span class="c1"># Create a copy of the model as reference model</span>
+        <span class="n">corrected_model</span> <span class="o">=</span> <span class="n">save_and_load_graph</span><span class="p">(</span><span class="s1">&#39;./temp_meta_path&#39;</span><span class="p">,</span> <span class="n">reference_model</span><span class="p">)</span>
+
+        <span class="c1"># get all ordered convs/ linears and skip gradient ops</span>
+        <span class="n">ordered_conv_linears</span> <span class="o">=</span> <span class="n">get_ordered_conv_linears</span><span class="p">(</span><span class="n">reference_model</span><span class="p">,</span> <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">input_op_names</span><span class="p">,</span>
+                                                        <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">output_op_names</span><span class="p">)</span>
+
+        <span class="c1"># Get conv2D, depthwise with preceding BN ops info for analytical bias correction</span>
+        <span class="c1"># if user has not passed any dictionary</span>
+        <span class="k">if</span> <span class="n">conv_bn_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">convs_bn_activation_info_dict</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">find_all_convs_bn_with_activation</span><span class="p">(</span><span class="n">reference_model</span><span class="p">,</span>
+                                                                                             <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">input_op_names</span><span class="p">,</span>
+                                                                                             <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">output_op_names</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">convs_bn_activation_info_dict</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">refresh_op_ref</span><span class="p">(</span><span class="n">reference_model</span><span class="p">,</span> <span class="n">conv_bn_dict</span><span class="p">)</span>
+
+        <span class="c1"># Quantize model</span>
+        <span class="n">quantsim</span> <span class="o">=</span> <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">_get_quantized_model</span><span class="p">(</span><span class="n">corrected_model</span><span class="p">,</span> <span class="n">quant_params</span><span class="p">,</span>
+                                                       <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">input_op_names</span><span class="p">,</span>
+                                                       <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">output_op_names</span><span class="p">,</span>
+                                                       <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">num_quant_samples</span><span class="p">,</span>
+                                                       <span class="n">bias_correct_params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+                                                       <span class="n">data_set</span><span class="p">)</span>
+
+        <span class="c1"># Perform analytical bias correction for first conv layer</span>
+        <span class="c1"># we always perform empirical bias correction for linear layers</span>
+        <span class="k">if</span> <span class="n">ordered_conv_linears</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">perform_only_empirical_bias_corr</span> <span class="ow">and</span> <span class="n">ordered_conv_linears</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;MatMul&#39;</span><span class="p">]:</span>
+                <span class="n">first_conv</span> <span class="o">=</span> <span class="n">ordered_conv_linears</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">analytical_bias_correction_per_layer</span><span class="p">(</span><span class="n">quantsim</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+                                                                    <span class="n">first_conv</span><span class="p">,</span>
+                                                                    <span class="kc">None</span><span class="p">,</span>
+                                                                    <span class="n">quant_params</span><span class="p">,</span>
+                                                                    <span class="n">is_first_conv</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># for each candidate layer in an ordered list of conv/lieanr ops</span>
+        <span class="c1"># find the corresponding bn and activation info</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">ordered_conv_linears</span><span class="p">:</span>
+
+            <span class="c1"># if this layer is in selected patterns of convs with preceding BN op and</span>
+            <span class="c1"># if empirical flag is false</span>
+            <span class="c1"># perform analytical Bias correction</span>
+            <span class="k">if</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">convs_bn_activation_info_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">perform_only_empirical_bias_corr</span><span class="p">:</span>
+
+                <span class="n">preceding_bn_layer_info</span> <span class="o">=</span> <span class="n">convs_bn_activation_info_dict</span><span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+
+                <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">analytical_bias_correction_per_layer</span><span class="p">(</span><span class="n">quantsim</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+                                                                    <span class="n">layer</span><span class="p">,</span>
+                                                                    <span class="n">preceding_bn_layer_info</span><span class="p">,</span>
+                                                                    <span class="n">quant_params</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># stand-alone convs/ linears or when perform_only_empirical_bias_corr is set to True</span>
+                <span class="c1"># perform empirical bias correction</span>
+                <span class="n">BiasCorrection</span><span class="o">.</span><span class="n">bias_correction_per_layer</span><span class="p">(</span><span class="n">reference_model</span><span class="p">,</span>
+                                                         <span class="n">quantsim</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
+                                                         <span class="n">bias_correct_params</span><span class="p">,</span>
+                                                         <span class="n">layer</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                         <span class="n">data_set</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Completed bias correction&#39;</span><span class="p">)</span>
+        <span class="c1"># Remove quantization nodes and save bias correction model</span>
+        <span class="c1"># pylint:disable = protected-access</span>
+        <span class="n">quantsim</span><span class="o">.</span><span class="n">_remove_quantization_nodes_and_save_graph</span><span class="p">(</span><span class="s1">&#39;./temp_meta_path&#39;</span><span class="p">,</span> <span class="s1">&#39;bias_corrected_model&#39;</span><span class="p">)</span>
+        <span class="n">corrected_model</span> <span class="o">=</span> <span class="n">load_model_from_meta</span><span class="p">(</span><span class="n">meta_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;./temp_meta_path&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="s1">&#39;bias_corrected_model&#39;</span> <span class="o">+</span>
+                                                             <span class="s1">&#39;.meta&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">corrected_model</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
