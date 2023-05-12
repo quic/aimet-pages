@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMET PyTorch Bias Correction API &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.26.0</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.26.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="onnx_quantization.html">ONNX Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AIMET PyTorch Bias Correction API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api_docs/torch_bias_correction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="aimet-pytorch-bias-correction-api">
+<span id="api-torch-bias-correction"></span><h1>AIMET PyTorch Bias Correction API<a class="headerlink" href="#aimet-pytorch-bias-correction-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="user-guide-link">
+<h2>User Guide Link<a class="headerlink" href="#user-guide-link" title="Permalink to this headline">¶</a></h2>
+<p>To learn more about this technique, please see <a class="reference internal" href="../user_guide/post_training_quant_techniques.html#ug-post-training-quantization"><span class="std std-ref">Cross-Layer Equalization</span></a></p>
+</div>
+<div class="section" id="bias-correction-api">
+<h2>Bias Correction API<a class="headerlink" href="#bias-correction-api" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="aimet_torch.bias_correction.correct_bias">
+<code class="sig-prename descclassname">aimet_torch.bias_correction.</code><code class="sig-name descname">correct_bias</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">quant_params</em>, <em class="sig-param">num_quant_samples</em>, <em class="sig-param">data_loader</em>, <em class="sig-param">num_bias_correct_samples</em>, <em class="sig-param">conv_bn_dict=None</em>, <em class="sig-param">perform_only_empirical_bias_corr=True</em>, <em class="sig-param">layers_to_ignore=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/bias_correction.html#correct_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_torch.bias_correction.correct_bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corrects bias for each Conv layer of model (unless ignored). A combination of Analytical and Empirical Bias
+Correction is used i.e. all the layers which can be corrected using Analytical Bias Correction are corrected
+using Analytical Bias Correction and remaining layers are corrected using Empirical method.</p>
+<p>Returns an in-place corrected floating point model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to be corrected</p></li>
+<li><p><strong>quant_params</strong> (<a class="reference internal" href="#aimet_torch.quantsim.QuantParams" title="aimet_torch.quantsim.QuantParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantParams</span></code></a>) – Named tuple for quantization simulation for bias correction</p></li>
+<li><p><strong>num_quant_samples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of samples of images to pass through quantization sim for bias correction.</p></li>
+<li><p><strong>data_loader</strong> – data loader for the model</p></li>
+<li><p><strong>num_bias_correct_samples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of samples for Bias correction</p></li>
+<li><p><strong>conv_bn_dict</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, <a class="reference internal" href="#aimet_common.bias_correction.ConvBnInfoType" title="aimet_common.bias_correction.ConvBnInfoType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConvBnInfoType</span></code></a>]]) – Dict of conv and bn with information related to activation. If None, the function calc it</p></li>
+<li><p><strong>perform_only_empirical_bias_corr</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Default True. If true will perform only empirical Bias Corr for all layers
+irrespective of the fact that layer is eligible for Analytical Bias Corr.</p></li>
+<li><p><strong>layers_to_ignore</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]]) – list of layer names for which we need to skip bias correction.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="convbninfotype">
+<h2>ConvBnInfoType<a class="headerlink" href="#convbninfotype" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_common.bias_correction.ConvBnInfoType">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.bias_correction.</code><code class="sig-name descname">ConvBnInfoType</code><span class="sig-paren">(</span><em class="sig-param">input_bn=None</em>, <em class="sig-param">output_bn=None</em>, <em class="sig-param">in_activation_type=&lt;ActivationType.no_activation: 0&gt;</em>, <em class="sig-param">out_activation_type=&lt;ActivationType.no_activation: 0&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_common/bias_correction.html#ConvBnInfoType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_common.bias_correction.ConvBnInfoType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type for hoding convs with bn info and activation types
+Activation types supported are Relu and Relu6</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_bn</strong> – Reference to Input BatchNorm to layer</p></li>
+<li><p><strong>output_bn</strong> – Reference to Output BatchNorm to layer</p></li>
+<li><p><strong>in_activation_type</strong> (<a class="reference internal" href="#aimet_common.defs.ActivationType" title="aimet_common.defs.ActivationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ActivationType</span></code></a>) – Type of Activation</p></li>
+<li><p><strong>out_activation_type</strong> (<a class="reference internal" href="#aimet_common.defs.ActivationType" title="aimet_common.defs.ActivationType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ActivationType</span></code></a>) – Type of Activation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="activationtype">
+<h2>ActivationType<a class="headerlink" href="#activationtype" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_common.defs.ActivationType">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">ActivationType</code><a class="reference internal" href="../_modules/aimet_common/defs.html#ActivationType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_common.defs.ActivationType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enums to identify activation type</p>
+<dl class="attribute">
+<dt id="aimet_common.defs.ActivationType.no_activation">
+<code class="sig-name descname">no_activation</code><em class="property"> = 0</em><a class="headerlink" href="#aimet_common.defs.ActivationType.no_activation" title="Permalink to this definition">¶</a></dt>
+<dd><p>No activation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.ActivationType.relu">
+<code class="sig-name descname">relu</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_common.defs.ActivationType.relu" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReLU activation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.ActivationType.relu6">
+<code class="sig-name descname">relu6</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_common.defs.ActivationType.relu6" title="Permalink to this definition">¶</a></dt>
+<dd><p>ReLU6 activation</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="quantization-params">
+<h2>Quantization Params<a class="headerlink" href="#quantization-params" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.quantsim.QuantParams">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.quantsim.</code><code class="sig-name descname">QuantParams</code><span class="sig-paren">(</span><em class="sig-param">weight_bw=8</em>, <em class="sig-param">act_bw=8</em>, <em class="sig-param">round_mode='nearest'</em>, <em class="sig-param">quant_scheme=&lt;QuantScheme.post_training_tf_enhanced: 2&gt;</em>, <em class="sig-param">config_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/quantsim.html#QuantParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_torch.quantsim.QuantParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data type to hold quantization related params.</p>
+<p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weight_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Weight bitwidth (4-31) to use for quantizing layer weights. Default = 8</p></li>
+<li><p><strong>act_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Activation bitwidth(4-31) to use for quantizing layer activations. Default = 8</p></li>
+<li><p><strong>round_mode</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Rounding mode. Supported options are ‘nearest’ or ‘stochastic’</p></li>
+<li><p><strong>quant_scheme</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="torch_quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Quantization scheme. Supported options are ‘tf_enhanced’ or ‘tf’ or using Quant Scheme Enum
+QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced</p></li>
+<li><p><strong>config_file</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path to Configuration file for model quantizers</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-example-1-empirical-bias-correction">
+<h2>Code Example #1 Empirical Bias Correction<a class="headerlink" href="#code-example-1-empirical-bias-correction" title="Permalink to this headline">¶</a></h2>
+<p><strong>Load the model</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">model</span> <span class="o">=</span> <span class="n">MobileNetV2</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+</pre></div>
+</div>
+<p><strong>Apply Empirical Bias Correction</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">bias_correction</span>
+    <span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantParams</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">QuantParams</span><span class="p">(</span><span class="n">weight_bw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">act_bw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">round_mode</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">quant_scheme</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">)</span>
+
+    <span class="c1"># User action required</span>
+    <span class="c1"># The following line of code is an example of how to use the ImageNet data&#39;s validation data loader.</span>
+    <span class="c1"># Replace the following line with your own dataset&#39;s validation data loader.</span>
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">get_val_dataloader</span><span class="p">()</span>
+
+    <span class="c1"># Perform Empirical Bias Correction</span>
+    <span class="n">bias_correction</span><span class="o">.</span><span class="n">correct_bias</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">num_quant_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                 <span class="n">data_loader</span><span class="o">=</span><span class="n">data_loader</span><span class="p">,</span> <span class="n">num_bias_correct_samples</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-example-2-analytical-empirical-bias-correction">
+<h2>Code Example #2 Analytical + Empirical Bias correction<a class="headerlink" href="#code-example-2-analytical-empirical-bias-correction" title="Permalink to this headline">¶</a></h2>
+<p><strong>Load the model</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">model</span> <span class="o">=</span> <span class="n">MobileNetV2</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+</pre></div>
+</div>
+<p><strong>Find BN and Conv Modules</strong></p>
+<p>Find BN + Conv module pairs for analytical Bias Correction and remaining Conv modules for Empirical Bias Correction.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">module_prop_dict</span> <span class="o">=</span> <span class="n">bias_correction</span><span class="o">.</span><span class="n">find_all_conv_bn_with_activation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+
+</pre></div>
+</div>
+<p><strong>Apply Analytical + Empirical Bias Correction</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">bias_correction</span>
+    <span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantParams</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">QuantParams</span><span class="p">(</span><span class="n">weight_bw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">act_bw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">round_mode</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">quant_scheme</span><span class="o">=</span><span class="s1">&#39;tf_enhanced&#39;</span><span class="p">)</span>
+
+    <span class="c1"># User action required</span>
+    <span class="c1"># The following line of code is an example of how to use the ImageNet data&#39;s validation data loader.</span>
+    <span class="c1"># Replace the following line with your own dataset&#39;s validation data loader.</span>
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">get_val_dataloader</span><span class="p">()</span>
+
+    <span class="c1"># Perform Bias Correction</span>
+    <span class="n">bias_correction</span><span class="o">.</span><span class="n">correct_bias</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">num_quant_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                 <span class="n">data_loader</span><span class="o">=</span><span class="n">data_loader</span><span class="p">,</span> <span class="n">num_bias_correct_samples</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                                 <span class="n">conv_bn_dict</span><span class="o">=</span><span class="n">module_prop_dict</span><span class="p">,</span> <span class="n">perform_only_empirical_bias_corr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

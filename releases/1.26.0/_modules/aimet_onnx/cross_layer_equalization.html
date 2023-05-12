@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_onnx.cross_layer_equalization &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.26.0</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.26.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/onnx_quantization.html">ONNX Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_onnx.cross_layer_equalization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_onnx.cross_layer_equalization</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.5</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; Cross Layer Equalization</span>
+
+<span class="sd">Some terminology for this code.</span>
+<span class="sd">CLS set: Set of layers (2 or 3) that can be used for cross-layer scaling</span>
+<span class="sd">Layer groups: Groups of layers that are immediately connected and can be decomposed further into CLS sets</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">onnx</span> <span class="kn">import</span> <span class="n">onnx_pb</span><span class="p">,</span> <span class="n">numpy_helper</span>
+<span class="kn">from</span> <span class="nn">onnxruntime.quantization.onnx_quantizer</span> <span class="kn">import</span> <span class="n">ONNXModel</span>
+
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_common.connected_graph.connectedgraph</span> <span class="kn">import</span> <span class="n">get_ordered_ops</span>
+<span class="kn">from</span> <span class="nn">aimet_common.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">GraphSearchUtils</span><span class="p">,</span> <span class="n">CrossLayerScaling</span> <span class="k">as</span> <span class="n">CLS</span><span class="p">,</span> <span class="n">ClsSetInfo</span><span class="p">,</span> \
+    <span class="n">HighBiasFold</span> <span class="k">as</span> <span class="n">HBF</span>
+<span class="kn">import</span> <span class="nn">aimet_common.libpymo</span> <span class="k">as</span> <span class="nn">libpymo</span>      <span class="c1"># pylint: disable=import-error</span>
+
+<span class="kn">from</span> <span class="nn">aimet_onnx.meta.connectedgraph</span> <span class="kn">import</span> <span class="n">ConnectedGraph</span><span class="p">,</span> <span class="n">WEIGHT_INDEX</span><span class="p">,</span> <span class="n">BIAS_INDEX</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx.meta.operations</span> <span class="kn">import</span> <span class="n">Op</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx.utils</span> <span class="kn">import</span> <span class="n">transpose_tensor</span><span class="p">,</span> <span class="n">ParamUtils</span><span class="p">,</span> <span class="n">get_node_attribute</span><span class="p">,</span> <span class="n">replace_relu6_with_relu</span>
+<span class="kn">from</span> <span class="nn">aimet_onnx.batch_norm_fold</span> <span class="kn">import</span> <span class="n">BNLayer</span><span class="p">,</span> <span class="n">fold_all_batch_norms_to_weight</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">Quant</span><span class="p">)</span>
+
+<span class="n">ClsSet</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;Conv&#39;</span><span class="p">],</span>
+               <span class="n">Tuple</span><span class="p">[</span><span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;Conv&#39;</span><span class="p">]]</span>
+<span class="n">ScaleFactor</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
+<span class="n">cls_supported_layer_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;ConvTranspose&#39;</span><span class="p">]</span>
+<span class="n">cls_supported_activation_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Relu&#39;</span><span class="p">,</span> <span class="s1">&#39;PRelu&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">get_ordered_list_of_conv_modules</span><span class="p">(</span><span class="n">list_of_starting_ops</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds order of nodes in graph</span>
+<span class="sd">    :param list_of_starting_ops: list of starting ops for the model</span>
+<span class="sd">    :return: List of names in graph in order</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_list</span> <span class="o">=</span> <span class="n">get_ordered_ops</span><span class="p">(</span><span class="n">list_of_starting_ops</span><span class="p">)</span>
+    <span class="n">module_list</span> <span class="o">=</span> <span class="p">[[</span><span class="n">module</span><span class="o">.</span><span class="n">dotted_name</span><span class="p">,</span> <span class="n">module</span><span class="p">]</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">module_list</span> <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="n">cls_supported_layer_types</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">module_list</span>
+
+
+<span class="k">class</span> <span class="nc">CrossLayerScaling</span><span class="p">(</span><span class="n">CLS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scales a model&#39;s layers to equalize the weights between consecutive layers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">onnx_pb</span><span class="o">.</span><span class="n">ModelProto</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param model: ONNX model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+
+    <span class="k">def</span> <span class="nf">scale_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ClsSetInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses cross-layer scaling to scale all applicable layers in the given model</span>
+
+<span class="sd">        :param model: Model to scale</span>
+<span class="sd">        :return: CLS information for each CLS set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Find layer groups</span>
+        <span class="n">connected_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">)</span>
+        <span class="n">ordered_module_list</span> <span class="o">=</span> <span class="n">get_ordered_list_of_conv_modules</span><span class="p">(</span><span class="n">connected_graph</span><span class="o">.</span><span class="n">starting_ops</span><span class="p">)</span>
+        <span class="n">graph_search</span> <span class="o">=</span> <span class="n">GraphSearchUtils</span><span class="p">(</span><span class="n">connected_graph</span><span class="p">,</span> <span class="n">ordered_module_list</span><span class="p">,</span> <span class="n">cls_supported_layer_types</span><span class="p">,</span>
+                                        <span class="n">cls_supported_activation_types</span><span class="p">)</span>
+        <span class="n">layer_groups</span> <span class="o">=</span> <span class="n">graph_search</span><span class="o">.</span><span class="n">find_layer_groups_to_scale</span><span class="p">()</span>
+
+        <span class="c1"># Find cls sets from the layer groups</span>
+        <span class="n">cls_sets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">layer_group</span> <span class="ow">in</span> <span class="n">layer_groups</span><span class="p">:</span>
+            <span class="n">cls_set</span> <span class="o">=</span> <span class="n">GraphSearchUtils</span><span class="o">.</span><span class="n">convert_layer_group_to_cls_sets</span><span class="p">(</span><span class="n">layer_group</span><span class="p">)</span>
+            <span class="n">cls_sets</span> <span class="o">+=</span> <span class="n">cls_set</span>
+
+        <span class="c1"># Scale the CLS sets</span>
+        <span class="n">scale_factors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_cls_sets</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">)</span>
+
+        <span class="c1"># Find if there were relu activations between layers of each cls set</span>
+        <span class="n">is_relu_activation_in_cls_sets</span> <span class="o">=</span> <span class="n">graph_search</span><span class="o">.</span><span class="n">is_relu_activation_present_in_cls_sets</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">)</span>
+
+        <span class="c1"># Convert to a list of cls-set-info elements</span>
+        <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">create_cls_set_info_list</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">,</span> <span class="n">scale_factors</span><span class="p">,</span>
+                                                                       <span class="n">is_relu_activation_in_cls_sets</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cls_set_info_list</span>
+
+    <span class="k">def</span> <span class="nf">_populate_libpymo_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">onnx_pb</span><span class="o">.</span><span class="n">NodeProto</span><span class="p">,</span>
+                                 <span class="n">layer_param</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Populates libpymo weight parameter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">WEIGHT_INDEX</span><span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">get_node_attribute</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Transpose weights to C, N, H, W from N, C, H, W since axis are flipped for transposed conv</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s2">&quot;ConvTranspose&quot;</span> <span class="ow">and</span> <span class="n">groups</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="n">transpose_tensor</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="n">layer_param</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">weight_shape</span> <span class="o">=</span> <span class="n">get_weight_dimensions</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">dims</span><span class="p">))</span>
+        <span class="n">layer_param</span><span class="o">.</span><span class="n">weightShape</span> <span class="o">=</span> <span class="n">weight_shape</span>
+
+    <span class="k">def</span> <span class="nf">_pack_params_for_conv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">cls_set</span><span class="p">,</span>
+                              <span class="n">prev_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                              <span class="n">curr_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare and pack data structure for previous and current layer in given cls set.</span>
+
+<span class="sd">        :param cls_set: Consecutive Conv layers Tuple whose weights and biases need to be equalized.</span>
+<span class="sd">        :param prev_layer_params: Data structure holding weight and bias for previous layer in cls set.</span>
+<span class="sd">        :param curr_layer_params: Data structure holding weight and bias for current layer in cls set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_libpymo_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">prev_layer_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_libpymo_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">curr_layer_params</span><span class="p">)</span>
+
+        <span class="n">cls_set_0_bias</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">BIAS_INDEX</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cls_set_0_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">cls_set_0_bias</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">isBiasNone</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_update_weight_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_param</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                                  <span class="n">module</span><span class="p">:</span> <span class="n">onnx_pb</span><span class="o">.</span><span class="n">NodeProto</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update weight parameter from libpymo object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">WEIGHT_INDEX</span><span class="p">)</span>
+        <span class="n">weight</span><span class="o">.</span><span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">layer_param</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">get_node_attribute</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
+        <span class="c1"># Transpose weight back to original configuration</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s2">&quot;ConvTranspose&quot;</span> <span class="ow">and</span> <span class="n">groups</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="n">transpose_tensor</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="n">weight_param</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">WEIGHT_INDEX</span><span class="p">)</span>
+        <span class="n">weight_param</span><span class="o">.</span><span class="n">raw_data</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">raw_data</span>
+
+    <span class="k">def</span> <span class="nf">_update_params_for_conv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                <span class="n">cls_set</span><span class="p">,</span>
+                                <span class="n">prev_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                <span class="n">curr_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update weight and biases for cls set using updated data structures.</span>
+
+<span class="sd">        :param cls_set: Consecutive Conv layers Tuple whose weights and biases need to be equalized.</span>
+<span class="sd">        :param prev_layer_params: Data structure holding weight and bias for previous layer in cls set.</span>
+<span class="sd">        :param curr_layer_params: Data structure holding weight and bias for current layer in cls set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_weight_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_weight_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="n">curr_layer_params</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">isBiasNone</span><span class="p">:</span>
+            <span class="n">bias_param</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span>
+                                              <span class="n">BIAS_INDEX</span><span class="p">)</span>
+            <span class="n">bias_param</span><span class="o">.</span><span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_pack_params_for_depthwise_conv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">,</span>
+                                        <span class="n">prev_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                        <span class="n">curr_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                        <span class="n">next_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare and pack data structure for previous, current and next layer in given cls set.</span>
+
+<span class="sd">        :param cls_set: Consecutive Conv layers Tuple whose weights and biases need to be equalized.</span>
+<span class="sd">        :param prev_layer_params: Data structure holding weight and bias for previous layer in cls set.</span>
+<span class="sd">        :param curr_layer_params: Data structure holding weight and bias for current layer in cls set.</span>
+<span class="sd">        :param next_layer_params: Data structure holding weight and bias for next layer in cls set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_libpymo_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">prev_layer_params</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span> <span class="o">&gt;</span> <span class="mi">1</span>
+
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">WEIGHT_INDEX</span><span class="p">)</span>
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">weightShape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_libpymo_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">next_layer_params</span><span class="p">)</span>
+
+        <span class="n">cls_set_0_bias</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">BIAS_INDEX</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cls_set_0_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">cls_set_0_bias</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">isBiasNone</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">cls_set_1_bias</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">BIAS_INDEX</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cls_set_1_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">cls_set_1_bias</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">isBiasNone</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_update_params_for_depthwise_conv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">,</span>
+                                          <span class="n">prev_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                          <span class="n">curr_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                          <span class="n">next_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update weight and biases for cls set using updated data structures.</span>
+
+<span class="sd">        :param cls_set: Consecutive Conv layers Tuple whose weights and biases need to be equalized.</span>
+<span class="sd">        :param prev_layer_params: Data structure holding weight and bias for previous layer in cls set.</span>
+<span class="sd">        :param curr_layer_params: Data structure holding weight and bias for current layer in cls set.</span>
+<span class="sd">        :param next_layer_params: Data structure holding weight and bias for next layer in cls set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_weight_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_weight_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="n">curr_layer_params</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_weight_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="n">next_layer_params</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">isBiasNone</span><span class="p">:</span>
+            <span class="n">bias_param</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span>
+                                              <span class="n">BIAS_INDEX</span><span class="p">)</span>
+            <span class="n">bias_param</span><span class="o">.</span><span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">isBiasNone</span><span class="p">:</span>
+            <span class="n">bias_param</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span>
+                                              <span class="n">BIAS_INDEX</span><span class="p">)</span>
+            <span class="n">bias_param</span><span class="o">.</span><span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">curr_layer_params</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">HighBiasFold</span><span class="p">(</span><span class="n">HBF</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code to apply the high-bias-fold technique to a model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">onnx_pb</span><span class="o">.</span><span class="n">ModelProto</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
+
+    <span class="k">def</span> <span class="nf">_check_if_bias_is_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="n">Op</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns if bias is a None for a layer. True if bias is None&quot;&quot;&quot;</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span> <span class="n">BIAS_INDEX</span><span class="p">)</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">bias</span>
+
+    <span class="k">def</span> <span class="nf">_populate_bn_params_in_libpymo_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prev_layer_bn_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BNParamsHighBiasFold</span><span class="p">,</span>
+                                           <span class="n">bn_layer</span><span class="p">:</span> <span class="n">BNLayer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Populates BatchNorm params in the libpymo object</span>
+<span class="sd">        :param prev_layer_bn_params: Data structure to pack batch norm parameter</span>
+<span class="sd">        :param bn_layer: BatchNorm layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prev_layer_bn_params</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">bn_layer</span><span class="o">.</span><span class="n">gamma</span>
+        <span class="n">prev_layer_bn_params</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">bn_layer</span><span class="o">.</span><span class="n">beta</span>
+
+    <span class="k">def</span> <span class="nf">_pack_previous_and_current_layer_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_pair_info</span><span class="p">:</span> <span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span><span class="p">,</span>
+                                                <span class="n">prev_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">,</span>
+                                                <span class="n">curr_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper method to pack information of previous and current layer.</span>
+
+<span class="sd">        :param cls_pair_info: Layer pairs that were scaled using CLS and related information.</span>
+<span class="sd">        :param prev_layer_params: Data structure to pack previous layer parameters.</span>
+<span class="sd">        :param curr_layer_params: Data structure to pack current layer parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">activationIsRelu</span> <span class="o">=</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">relu_activation_between_layers</span>
+
+        <span class="n">bias</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer1</span><span class="o">.</span><span class="n">get_module</span><span class="p">(),</span>
+                                    <span class="n">BIAS_INDEX</span><span class="p">)</span>
+
+        <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">module</span> <span class="o">=</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer2</span><span class="o">.</span><span class="n">get_module</span><span class="p">()</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">WEIGHT_INDEX</span><span class="p">)</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">BIAS_INDEX</span><span class="p">)</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">get_node_attribute</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Transpose weights to C, N, H, W from N, C, H, W since axis are flipped for transposed conv</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s2">&quot;ConvTranspose&quot;</span> <span class="ow">and</span> <span class="n">groups</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="n">transpose_tensor</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">bias</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">weightShape</span> <span class="o">=</span> <span class="n">get_weight_dimensions</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">dims</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_update_bias_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_param</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">,</span>
+                                                <span class="n">module</span><span class="p">:</span> <span class="n">onnx_pb</span><span class="o">.</span><span class="n">NodeProto</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update bias parameter from libpymo object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="n">ParamUtils</span><span class="o">.</span><span class="n">get_param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">BIAS_INDEX</span><span class="p">)</span>
+
+        <span class="n">bias</span><span class="o">.</span><span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">layer_param</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_update_previous_and_current_layer_bias</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_pair_info</span><span class="p">:</span> <span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span><span class="p">,</span>
+                                                <span class="n">prev_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">,</span>
+                                                <span class="n">curr_layer_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update biases for previous and current layer.</span>
+
+<span class="sd">        :param cls_pair_info: Layer pairs that were scaled using CLS and related information.</span>
+<span class="sd">        :param prev_layer_params: Data structure holding weight and bias for previous layer in cls set.</span>
+<span class="sd">        :param curr_layer_params: Data structure holding weight and bias for current layer in cls set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_bias_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer1</span><span class="o">.</span><span class="n">get_module</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_bias_for_layer_from_libpymo_obj</span><span class="p">(</span><span class="n">curr_layer_params</span><span class="p">,</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer2</span><span class="o">.</span><span class="n">get_module</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">get_weight_dimensions</span><span class="p">(</span><span class="n">weight_shape</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a length 4 weight shape</span>
+<span class="sd">    :param weight_shape: shape of the weight tensor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight_shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dims</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">weight_shape</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weight_shape</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="n">dims</span><span class="p">)])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="equalize_model"><a class="viewcode-back" href="../../api_docs/onnx_cross_layer_equalization.html#aimet_onnx.cross_layer_equalization.equalize_model">[docs]</a><span class="k">def</span> <span class="nf">equalize_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">onnx_pb</span><span class="o">.</span><span class="n">ModelProto</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    High-level API to perform Cross-Layer Equalization (CLE) on the given model. The model is equalized in place.</span>
+
+<span class="sd">    :param model: Model to equalize</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ONNXModel</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ONNXModel</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">conv_bn_pairs</span><span class="p">,</span> <span class="n">bn_conv_pairs</span> <span class="o">=</span> <span class="n">fold_all_batch_norms_to_weight</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">replace_relu6_with_relu</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">bn_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">conv_bn</span> <span class="ow">in</span> <span class="n">conv_bn_pairs</span><span class="p">:</span>
+        <span class="n">bn_dict</span><span class="p">[</span><span class="n">conv_bn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">conv_bn</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">bn_conv</span> <span class="ow">in</span> <span class="n">bn_conv_pairs</span><span class="p">:</span>
+        <span class="n">bn_dict</span><span class="p">[</span><span class="n">bn_conv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn_conv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># perform cross-layer scaling on applicable layer sets</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">cls_set_info</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">scale_model</span><span class="p">()</span>
+
+    <span class="c1"># high-bias fold</span>
+    <span class="n">hbf</span> <span class="o">=</span> <span class="n">HighBiasFold</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">hbf</span><span class="o">.</span><span class="n">bias_fold</span><span class="p">(</span><span class="n">cls_set_info</span><span class="p">,</span> <span class="n">bn_dict</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

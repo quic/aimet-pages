@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMET TensorFlow Cross Layer Equalization Primitive API &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.26.0</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.26.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="onnx_quantization.html">ONNX Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AIMET TensorFlow Cross Layer Equalization Primitive API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api_docs/tensorflow_primitive_apis_cle.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="aimet-tensorflow-cross-layer-equalization-primitive-api">
+<h1>AIMET TensorFlow Cross Layer Equalization Primitive API<a class="headerlink" href="#aimet-tensorflow-cross-layer-equalization-primitive-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>If a user wants to modify the order of Cross Layer equalization, not use some features or manually tweak the list of
+layers that need to be equalized, the following APIs can be used.</p>
+<p>Higher level API can be used for using one or more features one after the other. It automatically finds the layers to
+be folded or scaled.</p>
+<p>Lower level APIs can be used to manually tweak the list of layers to be folded. The user has to pass the list of
+layers in the correct order that they appear in the model.</p>
+<p>Note: Before using High Bias fold, Cross Layer Scaling (CLS) needs to be applied and scaling factors obtained from
+CLS need to be plugged in to High Bias Fold. And, if there are batchnorm layers, they need to be folded and the info
+saved to be plugged into high bias fold API.</p>
+</div>
+<div class="section" id="higher-level-apis-for-cross-layer-equalization">
+<h2>Higher Level APIs for Cross Layer Equalization<a class="headerlink" href="#higher-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
+<p><strong>API for Batch Norm Folding</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.batch_norm_fold.fold_all_batch_norms">
+<code class="sig-prename descclassname">aimet_tensorflow.batch_norm_fold.</code><code class="sig-name descname">fold_all_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/batch_norm_fold.html#fold_all_batch_norms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.batch_norm_fold.fold_all_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold all batch_norm layers in a model into corresponding conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tf.compat.v1.Session</p></li>
+<li><p><strong>input_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Name of the starting op in the given graph or a list of names in case of multi-input model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of output op names of the model, used to help ConnectedGraph determine valid ops
+(to ignore training ops for example).  If None, all ops in the model are considered valid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A new session with edited graph and a list of pairs of layers [(Conv/Linear, BN layer that got folded)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p><strong>API for Cross Layer Scaling</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_model">
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_model</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses cross-layer scaling to scale all applicable layers in the given model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Session containing graph to scale</p></li>
+<li><p><strong>input_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Names of starting ops in the model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of output op names of the model, used to help ConnectedGraph determine valid ops
+(to ignore training ops for example).  If None, all ops in the model are considered valid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(&lt;class ‘tensorflow.python.client.session.Session’&gt;, typing.List[<a class="reference internal" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="aimet_tensorflow.cross_layer_equalization.ClsSetInfo">aimet_tensorflow.cross_layer_equalization.ClsSetInfo</a>])</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated session, CLS information for each CLS set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p><strong>API for High Bias Folding</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.cross_layer_equalization.HighBiasFold.bias_fold">
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">folded_pairs</em>, <em class="sig-param">cls_set_info_list</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.HighBiasFold.bias_fold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Current session</p></li>
+<li><p><strong>folded_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="aimet_tensorflow.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated session after graph updates from hbf</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="code-examples-for-higher-level-apis">
+<h2>Code Examples for Higher Level APIs<a class="headerlink" href="#code-examples-for-higher-level-apis" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># tensorflow</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications.resnet50</span> <span class="kn">import</span> <span class="n">ResNet50</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">GraphSearchUtils</span><span class="p">,</span> <span class="n">CrossLayerScaling</span><span class="p">,</span> <span class="n">HighBiasFold</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.batch_norm_fold</span> <span class="kn">import</span> <span class="n">fold_all_batch_norms</span>
+</pre></div>
+</div>
+<p><strong>Perform Cross Layer Equalization in auto mode step by step</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cross_layer_equalization_auto_stepwise</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Individual api calls to perform cross layer equalization one step at a time&quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="c1"># get starting op name to invoke api for cle</span>
+    <span class="n">start_op_name</span> <span class="o">=</span> <span class="s1">&#39;input_1&#39;</span>
+    <span class="n">output_op_name</span> <span class="o">=</span> <span class="s1">&#39;fc1000/Softmax&#39;</span>
+
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="c1"># replace any ReLU6 layers with ReLU</span>
+        <span class="n">graph_util</span> <span class="o">=</span> <span class="n">GraphSearchUtils</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">start_op_name</span><span class="p">,</span> <span class="n">output_op_name</span><span class="p">)</span>
+        <span class="n">after_relu_replace_sess</span> <span class="o">=</span> <span class="n">graph_util</span><span class="o">.</span><span class="n">find_and_replace_relu6_with_relu</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+
+        <span class="c1"># fold batchnorm layers</span>
+        <span class="n">after_bn_fold_sess</span><span class="p">,</span> <span class="n">folded_pairs</span> <span class="o">=</span> <span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">after_relu_replace_sess</span><span class="p">,</span> <span class="n">start_op_name</span><span class="p">,</span> <span class="n">output_op_name</span><span class="p">)</span>
+
+        <span class="c1"># perform cross-layer scaling on applicable layer groups</span>
+        <span class="n">after_cls_sess</span><span class="p">,</span> <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_model</span><span class="p">(</span><span class="n">after_bn_fold_sess</span><span class="p">,</span> <span class="n">start_op_name</span><span class="p">,</span> <span class="n">output_op_name</span><span class="p">)</span>
+
+        <span class="c1"># perform high bias fold</span>
+        <span class="c1"># use the session after high bias fold returned for further evaluations on TF graph</span>
+        <span class="n">after_hbf_sess</span> <span class="o">=</span> <span class="n">HighBiasFold</span><span class="o">.</span><span class="n">bias_fold</span><span class="p">(</span><span class="n">after_cls_sess</span><span class="p">,</span> <span class="n">folded_pairs</span><span class="p">,</span> <span class="n">cls_set_info_list</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lower-level-apis-for-cross-layer-equalization">
+<h2>Lower Level APIs for Cross Layer Equalization<a class="headerlink" href="#lower-level-apis-for-cross-layer-equalization" title="Permalink to this headline">¶</a></h2>
+<p><strong>API for Batch Norm Folding on subsets of convolution-batchnorm layer pairs</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.batch_norm_fold.fold_given_batch_norms">
+<code class="sig-prename descclassname">aimet_tensorflow.batch_norm_fold.</code><code class="sig-name descname">fold_given_batch_norms</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em>, <em class="sig-param">layer_pairs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/batch_norm_fold.html#fold_given_batch_norms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.batch_norm_fold.fold_given_batch_norms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Api to fold custom set of bn layers in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – active tensorflow session</p></li>
+<li><p><strong>input_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – starting op in model or a list of starting ops in the model</p></li>
+<li><p><strong>layer_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]) – List of tuple with conv and bn op layers as tf.Operation and
+a flag to indicate fold upstream or downstream</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – List of output op names of the model, used to help ConnectedGraph determine valid ops
+(to ignore training ops for example).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated_session after fold</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>API for Cross Layer Scaling on subset of conv layer groups</strong></p>
+<dl class="function">
+<dt id="aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_cls_sets">
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.</code><code class="sig-name descname">scale_cls_sets</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">cls_sets</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.CrossLayerScaling.scale_cls_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale multiple CLS sets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Current session</p></li>
+<li><p><strong>cls_sets</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]]) – List of CLS sets</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Scaling factors calculated and applied for each CLS set in order</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>API for High bias folding</strong></p>
+<dl class="function">
+<dt>
+<code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.HighBiasFold.</code><code class="sig-name descname">bias_fold</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">folded_pairs</em>, <em class="sig-param">cls_set_info_list</em><span class="sig-paren">)</span></dt>
+<dd><p>Folds bias values greater than 3 * sigma to next layer’s bias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Current session</p></li>
+<li><p><strong>folded_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]) – Key: Conv/Linear layer Value: Corresponding folded BN layer</p></li>
+<li><p><strong>cls_set_info_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="aimet_tensorflow.cross_layer_equalization.ClsSetInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClsSetInfo</span></code></a>]) – List of info elements for each cls set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated session after graph updates from hbf</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="custom-datatype-used">
+<h2>Custom Datatype used<a class="headerlink" href="#custom-datatype-used" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.cross_layer_equalization.ClsSetInfo">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.cross_layer_equalization.</code><code class="sig-name descname">ClsSetInfo</code><span class="sig-paren">(</span><em class="sig-param">cls_pair_1</em>, <em class="sig-param">cls_pair_2=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/cross_layer_equalization.html#ClsSetInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class hold information about the layers in a CLS set, along with corresponding scaling factors
+for CLS set layers</p>
+<dl class="class">
+<dt id="aimet_tensorflow.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo">
+<em class="property">class </em><code class="sig-name descname">ClsSetLayerPairInfo</code><span class="sig-paren">(</span><em class="sig-param">layer1</em>, <em class="sig-param">layer2</em>, <em class="sig-param">scale_factor</em>, <em class="sig-param">relu_activation_between_layers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/cross_layer_equalization.html#ClsSetInfo.ClsSetLayerPairInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Models a pair of layers that were scaled using CLS. And related information.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer1</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>) – layer as tf.Operation</p></li>
+<li><p><strong>layer2</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>) – layer as tf.Operation</p></li>
+<li><p><strong>scale_factor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – scale factors as np.ndarray</p></li>
+<li><p><strong>relu_activation_between_layers</strong> – list of flags per layer set indicating        if they have Relu activations in-between.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="aimet_tensorflow.cross_layer_equalization.ClsSetInfo.map_cls_sets_to_new_session">
+<em class="property">static </em><code class="sig-name descname">map_cls_sets_to_new_session</code><span class="sig-paren">(</span><em class="sig-param">tf_names_op_dict</em>, <em class="sig-param">cls_set_info_list</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/cross_layer_equalization.html#ClsSetInfo.map_cls_sets_to_new_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.cross_layer_equalization.ClsSetInfo.map_cls_sets_to_new_session" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Helper function to updates ops stored during cls to be used by high bias fold with updated session.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tf_names_op_dict</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]) – map of tf op names to ops</p></li>
+<li><p><strong>cls_set_info_list</strong> – list of ClsSetInfo type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None /cls_set_info_list updated in-place</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-example-for-lower-level-apis">
+<h2>Code Example for Lower level APIs<a class="headerlink" href="#code-example-for-lower-level-apis" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># tensorflow</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications.resnet50</span> <span class="kn">import</span> <span class="n">ResNet50</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">GraphSearchUtils</span><span class="p">,</span> <span class="n">CrossLayerScaling</span><span class="p">,</span> <span class="n">HighBiasFold</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.batch_norm_fold</span> <span class="kn">import</span> <span class="n">fold_given_batch_norms</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.utils.graph_saver</span> <span class="kn">import</span> <span class="n">save_and_load_graph</span>
+</pre></div>
+</div>
+<p><strong>Perform Cross Layer Equalization in manual mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cross_layer_equalization_manual</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; perform cross layer equalization using manual api&quot;&quot;&quot;</span>
+
+    <span class="c1"># load a model</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">ResNet50</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_session</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="c1"># Batch Norm Fold</span>
+        <span class="c1"># pick potential pairs of conv and bn ops for fold</span>
+        <span class="n">layer_pairs</span> <span class="o">=</span> <span class="n">get_layer_pairs_Resnet50_for_folding</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+
+        <span class="c1"># fold given layer</span>
+        <span class="n">after_fold_sess</span> <span class="o">=</span> <span class="n">fold_given_batch_norms</span><span class="p">(</span><span class="n">sess</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span> <span class="n">input_op_names</span><span class="o">=</span><span class="s2">&quot;input_1&quot;</span><span class="p">,</span> <span class="n">output_op_names</span><span class="o">=</span><span class="s2">&quot;fc1000/Softmax&quot;</span><span class="p">,</span>
+                                                 <span class="n">layer_pairs</span><span class="o">=</span><span class="n">layer_pairs</span><span class="p">)</span>
+
+        <span class="c1"># replace any ReLU6 layers with ReLU</span>
+        <span class="n">graph_search</span> <span class="o">=</span> <span class="n">GraphSearchUtils</span><span class="p">(</span><span class="n">after_fold_sess</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="s2">&quot;input_1&quot;</span><span class="p">,</span> <span class="s2">&quot;fc1000/Softmax&quot;</span><span class="p">)</span>
+        <span class="n">after_relu_replace_sess</span> <span class="o">=</span> <span class="n">graph_search</span><span class="o">.</span><span class="n">find_and_replace_relu6_with_relu</span><span class="p">(</span><span class="n">after_fold_sess</span><span class="p">)</span>
+
+        <span class="c1"># Cross Layer Scaling</span>
+        <span class="c1"># Create a list of consecutive conv layers to be equalized</span>
+        <span class="n">consecutive_layer_list</span> <span class="o">=</span> <span class="n">get_consecutive_layer_list_from_resnet50_for_scaling</span><span class="p">(</span><span class="n">after_relu_replace_sess</span><span class="p">)</span>
+
+        <span class="c1"># invoke api to perform scaling on given list of cls pairs</span>
+        <span class="n">scaling_factor_list</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_cls_sets</span><span class="p">(</span><span class="n">after_relu_replace_sess</span><span class="p">,</span> <span class="n">consecutive_layer_list</span><span class="p">)</span>
+
+        <span class="c1"># get info from bn fold and cross layer scaling in format required for high bias fold</span>
+        <span class="n">after_cls_sess</span><span class="p">,</span> <span class="n">folded_pairs</span><span class="p">,</span> <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="n">format_info_for_high_bias_fold</span><span class="p">(</span><span class="n">after_relu_replace_sess</span><span class="p">,</span>
+                                                                                         <span class="n">layer_pairs</span><span class="p">,</span>
+                                                                                         <span class="n">consecutive_layer_list</span><span class="p">,</span>
+                                                                                         <span class="n">scaling_factor_list</span><span class="p">)</span>
+
+        <span class="c1"># perform high-bias fold</span>
+        <span class="n">after_hbf_sess</span> <span class="o">=</span> <span class="n">HighBiasFold</span><span class="o">.</span><span class="n">bias_fold</span><span class="p">(</span><span class="n">after_cls_sess</span><span class="p">,</span> <span class="n">folded_pairs</span><span class="p">,</span> <span class="n">cls_set_info_list</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-helper-methods-to-perform-cle-in-manual-mode">
+<h2>Example helper methods to perform CLE in manual mode<a class="headerlink" href="#example-helper-methods-to-perform-cle-in-manual-mode" title="Permalink to this headline">¶</a></h2>
+<p><strong>Helper to pick layers for batchnorm fold</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_layer_pairs_Resnet50_for_folding</span><span class="p">(</span><span class="n">sess</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to pick example conv-batchnorm layer pairs for folding.</span>
+<span class="sd">    :param sess: tensorflow session as tf.compat.v1.Session</span>
+<span class="sd">    :return: pairs of conv and batchnorm layers for batch norm folding in Resnet50 model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pick conv and bn op pairs</span>
+    <span class="n">conv_op_1</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2a/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">bn_op_1</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;bn2a_branch2a/cond/FusedBatchNorm_1&#39;</span><span class="p">)</span>
+
+    <span class="n">conv_op_2</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2b/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">bn_op_2</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;bn2a_branch2b/cond/FusedBatchNorm_1&#39;</span><span class="p">)</span>
+
+    <span class="n">conv_op_3</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2c/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">bn_op_3</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;bn2a_branch2c/cond/FusedBatchNorm_1&#39;</span><span class="p">)</span>
+
+    <span class="c1"># make a layer pair list with potential the conv op and bn_op pair along with a flag</span>
+    <span class="c1"># to indicate if given bn op can be folded upstream or downstream.</span>
+    <span class="c1"># example of two pairs of conv and bn op  shown below</span>
+    <span class="n">layer_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">conv_op_1</span><span class="p">,</span> <span class="n">bn_op_1</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                   <span class="p">(</span><span class="n">conv_op_2</span><span class="p">,</span> <span class="n">bn_op_2</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                   <span class="p">(</span><span class="n">conv_op_3</span><span class="p">,</span> <span class="n">bn_op_3</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">layer_pairs</span>
+</pre></div>
+</div>
+<p><strong>Helper to pick layers for cross layer scaling</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_consecutive_layer_list_from_resnet50_for_scaling</span><span class="p">(</span><span class="n">sess</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    helper function to pick example consecutive layer list for scaling.</span>
+<span class="sd">    :param sess: tf.compat.v1.Session</span>
+<span class="sd">    :return: sample layers for scaling as consecutive_layer_list from Resnet50 model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conv1_op</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2a/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">conv1_depthwise_op</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2b/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">conv1_pointwise_op</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;res2a_branch2c/Conv2D&#39;</span><span class="p">)</span>
+
+    <span class="c1"># conv layers for scaling (after bn fold)</span>
+    <span class="n">consecutive_layer_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">conv1_op</span><span class="p">,</span> <span class="n">conv1_depthwise_op</span><span class="p">,</span> <span class="n">conv1_pointwise_op</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">consecutive_layer_list</span>
+</pre></div>
+</div>
+<p><strong>Helper to format data from batchnorm fold and cross layer scaling for usage by high bias fold</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">format_info_for_high_bias_fold</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">layer_pairs</span><span class="p">,</span> <span class="n">consecutive_layer_list</span><span class="p">,</span> <span class="n">scaling_factor_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Helper function that formats data from cross layer scaling and bn fold for usage by high bias fold.</span>
+<span class="sd">    :param sess: tf.compat.v1.Session type</span>
+<span class="sd">    :param layer_pairs: info obtained after batchnorm fold.</span>
+<span class="sd">    :param consecutive_layer_list: info obtained after cross layer scaling</span>
+<span class="sd">    :param scaling_factor_list: scaling params corresponding to consecutive_layer_list</span>
+<span class="sd">    :return: data formatted for high bias fold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># convert info after batch norm fold and cross layer scaling for usage by high bias fold api</span>
+    <span class="n">folded_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">conv_op</span><span class="p">,</span> <span class="n">bn_op_with_meta</span><span class="p">,</span> <span class="n">_fold_upstream_flag</span><span class="p">)</span> <span class="ow">in</span> <span class="n">layer_pairs</span><span class="p">:</span>
+        <span class="n">folded_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">conv_op</span><span class="p">,</span> <span class="n">bn_op_with_meta</span><span class="o">.</span><span class="n">op</span><span class="p">))</span>
+
+    <span class="c1"># List that hold a boolean for if there were relu activations between layers of each cross layer scaling set</span>
+    <span class="n">is_relu_activation_in_cls_sets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Note the user is expected to fill in this list manually</span>
+
+    <span class="c1"># Convert to a list of cls-set-info elements</span>
+    <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">create_cls_set_info_list</span><span class="p">(</span><span class="n">consecutive_layer_list</span><span class="p">,</span>
+                                                                   <span class="n">scaling_factor_list</span><span class="p">,</span>
+                                                                   <span class="n">is_relu_activation_in_cls_sets</span><span class="p">)</span>
+
+    <span class="c1"># load and save the updated graph after scaling</span>
+    <span class="n">after_cls_sess</span> <span class="o">=</span> <span class="n">save_and_load_graph</span><span class="p">(</span><span class="s1">&#39;./temp_cls&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">after_cls_sess</span><span class="p">,</span> <span class="n">folded_pairs</span><span class="p">,</span> <span class="n">cls_set_info_list</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
