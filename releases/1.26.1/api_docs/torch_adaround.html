@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMET PyTorch AdaRound API &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.26.1</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.26.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="onnx_quantization.html">ONNX Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/index.html#release-packages">Release packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/index.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/index.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-gpu-packages-for-pytorch-or-onnx">Install GPU packages for PyTorch or ONNX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#post-installation-steps">Post installation steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#set-variant">Set variant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#start-docker-container">Start docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AIMET PyTorch AdaRound API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api_docs/torch_adaround.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="aimet-pytorch-adaround-api">
+<span id="api-torch-adaround"></span><h1>AIMET PyTorch AdaRound API<a class="headerlink" href="#aimet-pytorch-adaround-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="user-guide-link">
+<h2>User Guide Link<a class="headerlink" href="#user-guide-link" title="Permalink to this headline">¶</a></h2>
+<p>To learn more about this technique, please see <a class="reference internal" href="../user_guide/adaround.html#ug-adaround"><span class="std std-ref">AdaRound</span></a></p>
+</div>
+<div class="section" id="examples-notebook-link">
+<h2>Examples Notebook Link<a class="headerlink" href="#examples-notebook-link" title="Permalink to this headline">¶</a></h2>
+<p>For an end-to-end notebook showing how to use PyTorch AdaRound, please see <a class="reference internal" href="../Examples/torch/quantization/adaround.html"><span class="doc">here</span></a>.</p>
+</div>
+<div class="section" id="top-level-api">
+<h2>Top-level API<a class="headerlink" href="#top-level-api" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="aimet_torch.adaround.adaround_weight.Adaround.apply_adaround">
+<code class="sig-prename descclassname">aimet_torch.adaround.adaround_weight.Adaround.</code><code class="sig-name descname">apply_adaround</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">dummy_input</em>, <em class="sig-param">params</em>, <em class="sig-param">path</em>, <em class="sig-param">filename_prefix</em>, <em class="sig-param">default_param_bw=4</em>, <em class="sig-param">param_bw_override_list=None</em>, <em class="sig-param">ignore_quant_ops_list=None</em>, <em class="sig-param">default_quant_scheme=&lt;QuantScheme.post_training_tf_enhanced: 2&gt;</em>, <em class="sig-param">default_config_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.adaround.adaround_weight.Adaround.apply_adaround" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns model with optimized weight rounding of every module (Conv and Linear) and also saves the
+corresponding quantization encodings to a separate JSON-formatted file that can then be imported by
+QuantSim for inference or QAT</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>) – Model to Adaround</p></li>
+<li><p><strong>dummy_input</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]) – Dummy input to the model. Used to parse model graph. If the model has more than one input,
+pass a tuple. User is expected to place the tensors on the appropriate device.</p></li>
+<li><p><strong>params</strong> (<a class="reference internal" href="#aimet_torch.adaround.adaround_weight.AdaroundParameters" title="aimet_torch.adaround.adaround_weight.AdaroundParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdaroundParameters</span></code></a>) – Parameters for Adaround</p></li>
+<li><p><strong>path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – path where to store parameter encodings</p></li>
+<li><p><strong>filename_prefix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Prefix to use for filename of the encodings file</p></li>
+<li><p><strong>default_param_bw</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Default bitwidth (4-31) to use for quantizing layer parameters</p></li>
+<li><p><strong>param_bw_override_list</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]) – List of Tuples. Each Tuple is a module and the corresponding parameter bitwidth
+to be used for that module.</p></li>
+<li><p><strong>ignore_quant_ops_list</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]]) – Ops listed here are skipped during quantization needed for AdaRounding. Do not
+specify Conv and Linear modules in this list. Doing so, will affect accuracy.</p></li>
+<li><p><strong>default_quant_scheme</strong> (<a class="reference internal" href="torch_quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a>) – Quantization scheme. Supported options are using Quant Scheme Enum
+QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced</p></li>
+<li><p><strong>default_config_file</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Default configuration file for model quantizers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Model with Adarounded weights and saves corresponding parameter encodings JSON file at provided path</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="adaround-parameters">
+<h2>Adaround Parameters<a class="headerlink" href="#adaround-parameters" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_torch.adaround.adaround_weight.AdaroundParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_torch.adaround.adaround_weight.</code><code class="sig-name descname">AdaroundParameters</code><span class="sig-paren">(</span><em class="sig-param">data_loader</em>, <em class="sig-param">num_batches</em>, <em class="sig-param">default_num_iterations=None</em>, <em class="sig-param">default_reg_param=0.01</em>, <em class="sig-param">default_beta_range=(20</em>, <em class="sig-param">2)</em>, <em class="sig-param">default_warm_start=0.2</em>, <em class="sig-param">forward_fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/adaround/adaround_weight.html#AdaroundParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_torch.adaround.adaround_weight.AdaroundParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for Adaround</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_loader</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code>[+T_co]) – Data loader</p></li>
+<li><p><strong>num_batches</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of batches to be used for Adaround.
+A commonly recommended value for this parameter is the smaller value among (1) len(data_loader) and (2) ceil(2000/batch_size)</p></li>
+<li><p><strong>default_num_iterations</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Number of iterations to adaround each layer.
+The default value is 10K for models with 8- or higher bit weights, and 15K for models with lower than 8 bit weights.</p></li>
+<li><p><strong>default_reg_param</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Regularization parameter, trading off between rounding loss vs reconstruction loss.
+Default 0.01</p></li>
+<li><p><strong>default_beta_range</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>) – Start and stop beta parameter for annealing of rounding loss (start_beta, end_beta).
+Default (20, 2)</p></li>
+<li><p><strong>default_warm_start</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – warm up period, during which rounding loss has zero effect. Default 20% (0.2)</p></li>
+<li><p><strong>forward_fn</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – Optional adapter function that performs forward pass given a model and inputs
+yielded from the data loader. The function expects model as first argument and inputs to model
+as second argument.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="enum-definition">
+<h2>Enum Definition<a class="headerlink" href="#enum-definition" title="Permalink to this headline">¶</a></h2>
+<p><strong>Quant Scheme Enum</strong></p>
+<dl class="class">
+<dt id="aimet_common.defs.QuantScheme">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">QuantScheme</code><a class="reference internal" href="../_modules/aimet_common/defs.html#QuantScheme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_common.defs.QuantScheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumeration of Quant schemes</p>
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.post_training_percentile">
+<code class="sig-name descname">post_training_percentile</code><em class="property"> = 6</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.post_training_percentile" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, adjusted minimum and maximum values are selected based on the percentile value passed.
+The Quantization encodings are calculated using the adjusted minimum and maximum value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.post_training_tf">
+<code class="sig-name descname">post_training_tf</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.post_training_tf" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, the absolute minimum and maximum value of the Tensor are used to compute the Quantization
+encodings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.post_training_tf_enhanced">
+<code class="sig-name descname">post_training_tf_enhanced</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.post_training_tf_enhanced" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, searches and selects the optimal minimum and maximum value that minimizes the Quantization Noise.
+The Quantization encodings are calculated using the selected minimum and maximum value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.training_range_learning_with_tf_enhanced_init">
+<code class="sig-name descname">training_range_learning_with_tf_enhanced_init</code><em class="property"> = 4</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.training_range_learning_with_tf_enhanced_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, the encoding values are initialized with the post_training_tf_enhanced scheme. Then, the encodings
+are learned during training.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.QuantScheme.training_range_learning_with_tf_init">
+<code class="sig-name descname">training_range_learning_with_tf_init</code><em class="property"> = 3</em><a class="headerlink" href="#aimet_common.defs.QuantScheme.training_range_learning_with_tf_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a Tensor, the encoding values are initialized with the post_training_tf scheme. Then, the encodings are
+learned during training.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-example-adaptive-rounding-adaround">
+<h2>Code Example - Adaptive Rounding (AdaRound)<a class="headerlink" href="#code-example-adaptive-rounding-adaround" title="Permalink to this headline">¶</a></h2>
+<p>This example shows how to use AIMET to perform Adaptive Rounding (AdaRound).</p>
+<p><strong>Load the model</strong></p>
+<p>For this example, we are going to load a pretrained ResNet18 model from torchvision. Similarly, you can load any
+pretrained PyTorch model instead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">import</span> <span class="nn">torch</span>
+    <span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">models</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+</pre></div>
+</div>
+<p><strong>Prepare the model for Quantization simulation</strong></p>
+<p>AIMET quantization simulation requires the user’s model definition to follow certain guidelines. For example,
+functionals defined in forward pass should be changed to equivalent torch.nn.Module. AIMET user guide lists all these
+guidelines. The following ModelPreparer API uses new graph transformation feature available in PyTorch 1.9+ version and
+automates model definition changes required to comply with the above guidelines.</p>
+<p>For more details, please refer:  <a class="reference internal" href="torch_model_preparer.html#api-torch-model-preparer"><span class="std std-ref">Model Preparer API</span></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">aimet_torch.model_preparer</span> <span class="kn">import</span> <span class="n">prepare_model</span>
+    <span class="n">prepared_model</span> <span class="o">=</span> <span class="n">prepare_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<p><strong>Apply AdaRound</strong></p>
+<p>We can now apply AdaRound to this model.</p>
+<p>Some of the parameters for AdaRound are described below</p>
+<ul class="simple">
+<li><p><strong>dataloader</strong>: AdaRound needs a dataloader to use data samples for the layer-by-layer optimization to learn the rounding vectors. Either a training or validation dataloader could be passed in.</p></li>
+<li><p><strong>num_batches</strong>: The number of batches used to evaluate the model while calculating the quantization encodings. Typically we want AdaRound to use around 2000 samples. So with a batch size of 32, this may translate to 64 batches. To speed up the execution here we are using a batch size of 1.</p></li>
+<li><p><strong>default_num_iterations</strong>: The number of iterations to adaround each layer. Default value is set to 10000 and we strongly recommend to not reduce this number. But in this example we are using 32 to speed up the execution runtime.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">QuantScheme</span>
+    <span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+    <span class="kn">from</span> <span class="nn">aimet_torch.adaround.adaround_weight</span> <span class="kn">import</span> <span class="n">Adaround</span><span class="p">,</span> <span class="n">AdaroundParameters</span>
+
+    <span class="c1"># User action required</span>
+    <span class="c1"># The following line of code is an example of how to use the ImageNet data&#39;s training data loader.</span>
+    <span class="c1"># Replace the following line with your own dataset&#39;s training data loader.</span>
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">get_train_dataloader</span><span class="p">()</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">AdaroundParameters</span><span class="p">(</span><span class="n">data_loader</span><span class="o">=</span><span class="n">data_loader</span><span class="p">,</span> <span class="n">num_batches</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">default_num_iterations</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+                                <span class="n">default_reg_param</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">default_beta_range</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+    <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+
+    <span class="c1"># Returns model with adarounded weights and their corresponding encodings</span>
+    <span class="n">adarounded_model</span> <span class="o">=</span> <span class="n">Adaround</span><span class="o">.</span><span class="n">apply_adaround</span><span class="p">(</span><span class="n">prepared_model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span>
+                                               <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;resnet18&#39;</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                               <span class="n">default_quant_scheme</span><span class="o">=</span><span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span><span class="p">,</span>
+                                               <span class="n">default_config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<p><strong>Create the Quantization Simulation Model</strong></p>
+<p>Now we use AdaRounded model and create a QuantizationSimModel. This basically means that AIMET will insert fake
+quantization ops in the model graph and will configure them. A few of the parameters are explained here</p>
+<ul class="simple">
+<li><p><strong>default_param_bw</strong>: The QuantizationSimModel must be created with the same parameter bitwidth precision that was used in the apply_adaround() created.</p></li>
+<li><p><strong>Freezing the parameter encodings</strong>: After creating the QuantizationSimModel, the set_and_freeze_param_encodings() API must be called before calling the compute_encodings() API. While applying AdaRound, the parameter values have been rounded up or down based on these initial encodings internally created. Fo r Quantization Simulation accuracy, it is important to freeze these encodings. If the parameters encodings are NOT frozen, the call to compute_encodings() will alter the value of the parameters encoding and Quantization Simulation accuracy will not be correct.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">adarounded_model</span><span class="p">,</span> <span class="n">quant_scheme</span><span class="o">=</span><span class="n">quant_scheme</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="o">=</span><span class="n">param_bw</span><span class="p">,</span>
+                               <span class="n">default_output_bw</span><span class="o">=</span><span class="n">output_bw</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">)</span>
+
+    <span class="c1"># Set and freeze encodings to use same quantization grid and then invoke compute encodings</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">set_and_freeze_param_encodings</span><span class="p">(</span><span class="n">encoding_path</span><span class="o">=</span><span class="s1">&#39;./resnet18.encodings&#39;</span><span class="p">)</span>
+
+
+</pre></div>
+</div>
+<p><strong>An example User created function that is called back from compute_encodings()</strong></p>
+<p>Even though AIMET has added ‘quantizer’ nodes to the model graph, the model is not ready to be used yet. Before we can
+use the sim model for inference or training, we need to find appropriate scale/offset quantization parameters for each
+‘quantizer’ node. For activation quantization nodes, we need to pass unlabeled data samples through the model to collect
+range statistics which will then let AIMET calculate appropriate scale/offset quantization parameters. This process is
+sometimes referred to as calibration. AIMET simply refers to it as ‘computing encodings’.</p>
+<p>So we create a routine to pass unlabeled data samples through the model. This should be fairly simple - use the existing
+train or validation data loader to extract some samples and pass them to the model. We don’t need to compute any
+loss metric etc. So we can just ignore the model output for this purpose. A few pointers regarding the data samples</p>
+<p>In practice, we need a very small percentage of the overall data samples for computing encodings. For example,
+the training dataset for ImageNet has 1M samples. For computing encodings we only need 500 or 1000 samples.</p>
+<p>It may be beneficial if the samples used for computing encoding are well distributed. It’s not necessary that all
+classes need to be covered etc. since we are only looking at the range of values at every layer activation. However,
+we definitely want to avoid an extreme scenario like all ‘dark’ or ‘light’ samples are used - e.g. only using pictures
+captured at night might not give ideal results.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pass_calibration_data</span><span class="p">(</span><span class="n">sim_model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The User of the QuantizationSimModel API is expected to write this function based on their data set.</span>
+<span class="sd">    This is not a working function and is provided only as a guideline.</span>
+
+<span class="sd">    :param sim_model:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># User action required</span>
+    <span class="c1"># The following line is an example of how to use the ImageNet data&#39;s validation data loader.</span>
+    <span class="c1"># Replace the following line with your own dataset&#39;s validation data loader.</span>
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">get_val_dataloader</span><span class="p">()</span>
+
+    <span class="c1"># User action required</span>
+    <span class="c1"># For computing the activation encodings, around 1000 unlabelled data samples are required.</span>
+    <span class="c1"># Edit the following 2 lines based on your batch size.</span>
+    <span class="c1"># batch_size * max_batch_counter should be 1024</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">max_batch_counter</span> <span class="o">=</span> <span class="mi">16</span>
+
+    <span class="n">sim_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+    <span class="n">current_batch_counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">target_data</span> <span class="ow">in</span> <span class="n">data_loader</span><span class="p">:</span>
+
+            <span class="n">inputs_batch</span> <span class="o">=</span> <span class="n">input_data</span>  <span class="c1"># labels are ignored</span>
+            <span class="n">sim_model</span><span class="p">(</span><span class="n">inputs_batch</span><span class="p">)</span>
+
+            <span class="n">current_batch_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">current_batch_counter</span> <span class="o">==</span> <span class="n">max_batch_counter</span><span class="p">:</span>
+                <span class="k">break</span>
+</pre></div>
+</div>
+<p><strong>Compute the Quantization Encodings</strong></p>
+<p>Now we call AIMET to use the above routine to pass data through the model and then subsequently compute the quantization
+encodings. Encodings here refer to scale/offset quantization parameters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">pass_calibration_data</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<p><strong>Determine Simulated Accuracy</strong></p>
+<p>Now the QuantizationSim model is ready to be used for inference. First we can pass this model to an evaluation routine.
+The evaluation routine will now give us a simulated quantized accuracy score for INT8 quantization.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<p><strong>Export the model</strong></p>
+<p>So we have an improved model after AdaRound. Now the next step would be to actually take this model to target. For this
+purpose, we need to export the model with the updated weights without the fake quant ops. We also to export the
+encodings (scale/offset quantization parameters) that were updated during training since we employed QAT.
+AIMET QuantizationSimModel provides an export API for this purpose.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Export the model which saves pytorch model without any simulation nodes and saves encodings file for both</span>
+    <span class="c1"># activations and parameters in JSON format</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;quantized_resnet18&#39;</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
