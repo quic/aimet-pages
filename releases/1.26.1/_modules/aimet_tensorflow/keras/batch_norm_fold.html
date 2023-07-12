@@ -165,38 +165,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#release-packages">Release packages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#system-requirements">System Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#installation-instructions">Installation Instructions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../install/install_host.html">Install in Host Machine</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-pytorch-or-onnx">Install GPU packages for PyTorch or ONNX</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#post-installation-steps">Post installation steps</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#environment-setup">Environment setup</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../../../install/install_docker.html">Install in Docker Container</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#set-variant">Set variant</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#start-docker-container">Start docker container</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#environment-setup">Environment setup</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
         </div>
@@ -284,7 +252,6 @@
 
 <span class="kn">import</span> <span class="nn">aimet_common.libpymo</span> <span class="k">as</span> <span class="nn">libpymo</span>
 <span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
-<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.model_preparer</span> <span class="kn">import</span> <span class="n">_handle_normal_keras_layer</span>
 <span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.quant_sim.qc_quantize_wrapper</span> <span class="kn">import</span> <span class="n">QcQuantizeWrapper</span>
 <span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.quant_sim.tensor_quantizer</span> <span class="kn">import</span> <span class="n">ParamPerTensorQuantizer</span>
 <span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
@@ -757,8 +724,8 @@
             <span class="c1"># the non batch normalization layers inbound/outbound nodes.</span>
             <span class="n">current_layer</span><span class="o">.</span><span class="n">_inbound_nodes</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># pylint: disable=protected-access</span>
             <span class="c1"># Special case for when there is a Lambda opertaion with multiple inputs. For example, z = x + y.</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_layer</span><span class="p">,</span> <span class="n">TFOpLambda</span><span class="p">):</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">_handle_normal_keras_layer</span><span class="p">(</span><span class="n">current_layer</span><span class="p">,</span> <span class="n">model_layer_connections</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_layer</span><span class="p">,</span> <span class="n">TFOpLambda</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_input</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">current_layer</span><span class="p">(</span><span class="o">*</span><span class="n">layer_input</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">current_layer</span><span class="p">(</span><span class="n">layer_input</span><span class="p">)</span>
             <span class="n">current_layer</span><span class="o">.</span><span class="n">_outbound_nodes</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># pylint: disable=protected-access</span>
@@ -1154,6 +1121,11 @@
     <span class="c1"># Copy batchnorm&#39;s output quantizers to conv output quantizers</span>
     <span class="k">for</span> <span class="n">conv_output_quantizer</span><span class="p">,</span> <span class="n">bn_output_quantizer</span> <span class="ow">in</span> \
             <span class="nb">zip</span><span class="p">(</span><span class="n">conv_wrapper</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">,</span> <span class="n">bn_wrapper</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+            <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">_encoding_min</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">_encoding_min</span><span class="p">)</span>
             <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">_encoding_max</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">_encoding_max</span><span class="p">)</span>
@@ -1162,13 +1134,6 @@
             <span class="n">tensor_quantizers</span> <span class="o">=</span> <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">_tensor_quantizer</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">_tensor_quantizer</span><span class="p">,</span> <span class="n">List</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">_tensor_quantizer</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">tensor_quantizer</span> <span class="ow">in</span> <span class="n">tensor_quantizers</span><span class="p">:</span>
                 <span class="n">tensor_quantizer</span><span class="o">.</span><span class="n">isEncodingValid</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">if</span> <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
-            <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">conv_output_quantizer</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
-
-
 
         <span class="n">bn_output_quantizer</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
 

@@ -165,38 +165,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#release-packages">Release packages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#system-requirements">System Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#installation-instructions">Installation Instructions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install/install_host.html">Install in Host Machine</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-pytorch-or-onnx">Install GPU packages for PyTorch or ONNX</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#post-installation-steps">Post installation steps</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#environment-setup">Environment setup</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../../install/install_docker.html">Install in Docker Container</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#set-variant">Set variant</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#start-docker-container">Start docker container</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#environment-setup">Environment setup</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
         </div>
@@ -519,7 +487,6 @@
             <span class="n">strict_validation</span><span class="o">=</span><span class="n">strict_validation</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_quant_scheme_candidates</span> <span class="o">=</span> <span class="n">_QUANT_SCHEME_CANDIDATES</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fp32_acc</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_evaluate_model_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -815,10 +782,10 @@
             <span class="k">with</span> <span class="n">in_eval_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp32_model</span><span class="p">),</span> <span class="n">cache</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span><span class="p">):</span>
                 <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting AutoQuant&quot;</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">_fp32_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_model_performance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp32_model</span><span class="p">)</span>
-                <span class="n">target_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp32_acc</span> <span class="o">-</span> <span class="n">allowed_accuracy_drop</span>
+                <span class="n">fp32_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_model_performance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp32_model</span><span class="p">)</span>
+                <span class="n">target_acc</span> <span class="o">=</span> <span class="n">fp32_acc</span> <span class="o">-</span> <span class="n">allowed_accuracy_drop</span>
                 <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Target eval score: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">target_acc</span><span class="p">)</span>
-                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;FP32 eval score (W32A32): </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp32_acc</span><span class="p">)</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;FP32 eval score (W32A32): </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fp32_acc</span><span class="p">)</span>
 
                 <span class="n">ret</span> <span class="o">=</span> <span class="n">optimize_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">target_acc</span><span class="p">)</span>
 
