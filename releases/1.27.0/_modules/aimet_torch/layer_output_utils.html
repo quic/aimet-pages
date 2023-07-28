@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.layer_output_utils &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.27.0</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.27.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_quantization.html">Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_compression.html">Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#winnowing">Winnowing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/index.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html">PyTorch Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html">Tensorflow Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/onnx_quantization.html">ONNX Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/examples.html">Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#release-packages">Release packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../install/install_host.html">Install in Host Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-pytorch-or-onnx">Install GPU packages for PyTorch or ONNX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#post-installation-steps">Post installation steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../install/install_docker.html">Install in Docker Container</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#set-variant">Set variant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#start-docker-container">Start docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.layer_output_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.layer_output_utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.8</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2023, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; This module contains utilities to capture and save intermediate layer-outputs of a model. &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">onnx</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_common.layer_output_utils</span> <span class="kn">import</span> <span class="n">SaveInputOutput</span><span class="p">,</span> <span class="n">save_layer_output_names</span>
+
+<span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">torchscript_utils</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.onnx_utils</span> <span class="kn">import</span> <span class="n">OnnxSaver</span><span class="p">,</span> <span class="n">OnnxExportApiArgs</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.qc_quantize_op</span> <span class="kn">import</span> <span class="n">QcQuantizeWrapper</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.qc_quantize_recurrent</span> <span class="kn">import</span> <span class="n">QcQuantizeRecurrent</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">LayerOutputs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="NamingScheme"><a class="viewcode-back" href="../../api_docs/torch_layer_output_generation.html#aimet_torch.layer_output_utils.NamingScheme">[docs]</a><span class="k">class</span> <span class="nc">NamingScheme</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Enumeration of layer-output naming schemes. &quot;&quot;&quot;</span>
+
+    <span class="n">PYTORCH</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Names outputs according to exported pytorch model. Layer names are used. &quot;&quot;&quot;</span>
+    <span class="n">ONNX</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Names outputs according to exported onnx model. Layer output names are generally numeric. &quot;&quot;&quot;</span>
+    <span class="n">TORCHSCRIPT</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Names outputs according to exported torchscript model. Layer output names are generally numeric. &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="LayerOutputUtil"><a class="viewcode-back" href="../../api_docs/torch_layer_output_generation.html#aimet_torch.layer_output_utils.LayerOutputUtil">[docs]</a><span class="k">class</span> <span class="nc">LayerOutputUtil</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Implementation to capture and save outputs of intermediate layers of a model (fp32/quantsim). &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">naming_scheme</span><span class="p">:</span> <span class="n">NamingScheme</span> <span class="o">=</span> <span class="n">NamingScheme</span><span class="o">.</span><span class="n">PYTORCH</span><span class="p">,</span>
+                 <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">onnx_export_args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OnnxExportApiArgs</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for LayerOutputUtil.</span>
+
+<span class="sd">        :param model: Model whose layer-outputs are needed.</span>
+<span class="sd">        :param dir_path: Directory wherein layer-outputs will be saved.</span>
+<span class="sd">        :param naming_scheme: Naming scheme to be followed to name layer-outputs. There are multiple schemes as per</span>
+<span class="sd">            the exported model (pytorch, onnx or torchscript). Refer the NamingScheme enum definition.</span>
+<span class="sd">        :param dummy_input: Dummy input to model. Required if naming_scheme is &#39;NamingScheme.ONNX&#39; or &#39;NamingScheme.TORCHSCRIPT&#39;.</span>
+<span class="sd">        :param onnx_export_args: Should be same as that passed to quantsim export API to have consistency between</span>
+<span class="sd">            layer-output names present in exported onnx model and generated layer-outputs. Required if naming_scheme is</span>
+<span class="sd">            &#39;NamingScheme.ONNX&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Utility to capture layer-outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_output</span> <span class="o">=</span> <span class="n">LayerOutput</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">naming_scheme</span><span class="o">=</span><span class="n">naming_scheme</span><span class="p">,</span> <span class="n">dir_path</span><span class="o">=</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">,</span>
+                                        <span class="n">onnx_export_args</span><span class="o">=</span><span class="n">onnx_export_args</span><span class="p">)</span>
+
+        <span class="c1"># Utility to save model inputs and their corresponding layer-outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_input_output</span> <span class="o">=</span> <span class="n">SaveInputOutput</span><span class="p">(</span><span class="n">dir_path</span><span class="o">=</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">axis_layout</span><span class="o">=</span><span class="s1">&#39;NCHW&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LayerOutputUtil.generate_layer_outputs"><a class="viewcode-back" href="../../api_docs/torch_layer_output_generation.html#aimet_torch.layer_output_utils.LayerOutputUtil.generate_layer_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">generate_layer_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method captures output of every layer of a model &amp; saves the inputs and corresponding layer-outputs to disk.</span>
+
+<span class="sd">        :param input_batch: Batch of inputs for which we want to obtain layer-outputs.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating layer-outputs for </span><span class="si">%d</span><span class="s2"> input instances&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_batch</span><span class="p">))</span>
+
+        <span class="c1"># Obtain layer-output name to output dictionary</span>
+        <span class="n">layer_output_batch_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_output</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">(</span><span class="n">input_batch</span><span class="p">)</span>
+
+        <span class="c1"># Place inputs and layer-outputs on CPU</span>
+        <span class="n">input_batch</span> <span class="o">=</span> <span class="n">LayerOutputUtil</span><span class="o">.</span><span class="n">_get_input_batch_in_numpy</span><span class="p">(</span><span class="n">input_batch</span><span class="p">)</span>
+        <span class="n">layer_output_batch_dict</span> <span class="o">=</span> <span class="n">LayerOutputUtil</span><span class="o">.</span><span class="n">_get_layer_output_batch_in_numpy</span><span class="p">(</span><span class="n">layer_output_batch_dict</span><span class="p">)</span>
+
+        <span class="c1"># Save inputs and layer-outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_input_output</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">input_batch</span><span class="p">,</span> <span class="n">layer_output_batch_dict</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully generated layer-outputs for </span><span class="si">%d</span><span class="s1"> input instances&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_batch</span><span class="p">))</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_input_batch_in_numpy</span><span class="p">(</span><span class="n">input_batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> \
+            <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Coverts the torch tensors into numpy arrays</span>
+<span class="sd">        :param input_batch: input batch with torch tensors</span>
+<span class="sd">        :return: input batch with numpy arrays</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_batch</span><span class="p">,</span> <span class="p">(</span><span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">)):</span>
+            <span class="n">numpy_input_batch</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ith_input</span> <span class="ow">in</span> <span class="n">input_batch</span><span class="p">:</span>
+                <span class="n">numpy_input_batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ith_input</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">numpy_input_batch</span>
+        <span class="k">return</span> <span class="n">input_batch</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_layer_output_batch_in_numpy</span><span class="p">(</span><span class="n">layer_output_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the torch tensors into numpy arrays</span>
+<span class="sd">        :param layer_output_dict: layer output dictionary with torch tensors</span>
+<span class="sd">        :return: layer output dictionary with numpy arrays</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">layer_output_numpy_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">output_tensor</span> <span class="ow">in</span> <span class="n">layer_output_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">layer_output_numpy_dict</span><span class="p">[</span><span class="n">output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_tensor</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">layer_output_numpy_dict</span></div>
+
+
+<span class="k">class</span> <span class="nc">LayerOutput</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class creates a layer-output name to layer-output dictionary. The layer-output names are as per the AIMET exported</span>
+<span class="sd">    pytorch/onnx/torchscript model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">naming_scheme</span><span class="p">:</span> <span class="n">NamingScheme</span> <span class="o">=</span> <span class="n">NamingScheme</span><span class="o">.</span><span class="n">PYTORCH</span><span class="p">,</span>
+                 <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">onnx_export_args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OnnxExportApiArgs</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor - It initializes few dictionaries that are required for capturing and naming layer-outputs.</span>
+
+<span class="sd">        :param model: Model whose layer-outputs are needed.</span>
+<span class="sd">        :param dir_path: Directory wherein layer-output names arranged in topological order will be saved. It will also</span>
+<span class="sd">            be used to temporarily save onnx/torchscript equivalent of the given model.</span>
+<span class="sd">        :param naming_scheme: Naming scheme to be followed to name layer-outputs. There are multiple schemes as per</span>
+<span class="sd">            the exported model (pytorch, onnx or torchscript). Refer the NamingScheme enum definition.</span>
+<span class="sd">        :param dummy_input: Dummy input to model (required if naming_scheme is &#39;onnx&#39;).</span>
+<span class="sd">        :param onnx_export_args: Should be same as that passed to quantsim export API to have consistency between</span>
+<span class="sd">            layer-output names present in exported onnx model and generated layer-outputs (required if naming_scheme is</span>
+<span class="sd">            &#39;onnx&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_to_name_dict</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_module_to_name_dict</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check whether the given model is quantsim model</span>
+        <span class="n">quant_modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">modules</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="p">(</span><span class="n">QcQuantizeWrapper</span><span class="p">,</span> <span class="n">QcQuantizeRecurrent</span><span class="p">))]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_quantsim_model</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">quant_modules</span><span class="p">)</span>
+
+        <span class="c1"># Obtain layer-name to layer-output name mapping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">naming_scheme</span> <span class="o">==</span> <span class="n">NamingScheme</span><span class="o">.</span><span class="n">PYTORCH</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_name_dict</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">layer_output_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;._module_to_wrap&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()</span> <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_leaf_module</span><span class="p">(</span><span class="n">module</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_name_dict</span> <span class="o">=</span> <span class="n">LayerOutput</span><span class="o">.</span><span class="n">get_layer_name_to_layer_output_name_map</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">naming_scheme</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span> <span class="n">onnx_export_args</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">)</span>
+            <span class="n">layer_output_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_name_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Save layer-output names which are in topological order of model graph. This order can be used while comparing layer-outputs.</span>
+        <span class="n">save_layer_output_names</span><span class="p">(</span><span class="n">layer_output_names</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function captures layer-outputs and renames them as per the AIMET exported pytorch/onnx/torchscript model.</span>
+
+<span class="sd">        :param input_batch: Batch of inputs for which we want to obtain layer-outputs.</span>
+<span class="sd">        :return: layer-name to layer-output batch dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Fetch outputs of all the layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_quantsim_model</span><span class="p">:</span>
+            <span class="c1"># Apply record-output hook to QuantizeWrapper modules (one node above leaf node in model graph)</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">run_hook_for_layers_with_given_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">input_batch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_outputs</span><span class="p">,</span>
+                                                       <span class="n">module_type_for_attaching_hook</span><span class="o">=</span><span class="p">(</span><span class="n">QcQuantizeWrapper</span><span class="p">,</span> <span class="n">QcQuantizeRecurrent</span><span class="p">),</span>
+                                                       <span class="n">leaf_node_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Apply record-output hook to Original modules (leaf node in model graph)</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">run_hook_for_layers_with_given_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">input_batch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_outputs</span><span class="p">,</span> <span class="n">leaf_node_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Rename outputs according to pytorch/onnx/torchscript model</span>
+        <span class="n">layer_output_name_to_layer_output_dict</span> <span class="o">=</span> <span class="n">LayerOutput</span><span class="o">.</span><span class="n">rename_layer_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_dict</span><span class="p">,</span>
+                                                                                  <span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_name_dict</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">layer_output_name_to_layer_output_dict</span>
+
+    <span class="k">def</span> <span class="nf">record_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hook function to capture output of a layer.</span>
+
+<span class="sd">        :param module: Layer-module in consideration.</span>
+<span class="sd">        :param _: Placeholder for the input of the layer-module.</span>
+<span class="sd">        :param output: Output of the layer-module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">layer_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_to_name_dict</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_name_to_layer_output_dict</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">rename_layer_outputs</span><span class="p">(</span><span class="n">layer_name_to_layer_output_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+                             <span class="n">layer_name_to_layer_output_name_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Rename layer-outputs based on the layer-name to layer-output name map &quot;&quot;&quot;</span>
+
+        <span class="n">layer_output_name_to_layer_output_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">layer_name_to_layer_output_name_dict</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">layer_name_to_layer_output_name_dict</span><span class="p">:</span>
+                <span class="n">output_name</span> <span class="o">=</span> <span class="n">layer_name_to_layer_output_name_dict</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span>
+                <span class="n">layer_output_name_to_layer_output_dict</span><span class="p">[</span><span class="n">output_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_name_to_layer_output_dict</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">layer_output_name_to_layer_output_dict</span> <span class="o">=</span> <span class="n">layer_name_to_layer_output_dict</span>
+
+        <span class="k">return</span> <span class="n">layer_output_name_to_layer_output_dict</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_layer_name_to_layer_output_name_map</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">naming_scheme</span><span class="p">:</span> <span class="n">NamingScheme</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span>
+                                                <span class="n">onnx_export_args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OnnxExportApiArgs</span><span class="p">,</span> <span class="n">Dict</span><span class="p">],</span> <span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function produces layer-name to layer-output name map w.r.t the AIMET exported onnx/torchscript model. If a</span>
+<span class="sd">        layer gets expanded into multiple layers in the exported model then the intermediate layers are ignored and</span>
+<span class="sd">        output-name of last layer is used.</span>
+
+<span class="sd">        :param model: model</span>
+<span class="sd">        :param naming_scheme: onnx/torchscript</span>
+<span class="sd">        :param dummy_input: dummy input that is used to construct onnx/torchscript model</span>
+<span class="sd">        :param onnx_export_args: OnnxExportApiArgs instance same as that passed to quantsim export API</span>
+<span class="sd">        :param dir_path: directory to temporarily save the constructed onnx/torchscrip model</span>
+<span class="sd">        :return: dictionary of layer-name to layer-output name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Restore original model by removing quantization wrappers if present.</span>
+        <span class="n">original_model</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="o">.</span><span class="n">get_original_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="c1"># Set path to store exported onnx/torchscript model.</span>
+        <span class="n">LayerOutput</span><span class="o">.</span><span class="n">_validate_dir_path</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+        <span class="n">exported_model_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="s1">&#39;exported_models&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">exported_model_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Get node to i/o tensor name map from the onnx/torchscript model</span>
+        <span class="k">if</span> <span class="n">naming_scheme</span> <span class="o">==</span> <span class="n">NamingScheme</span><span class="o">.</span><span class="n">ONNX</span><span class="p">:</span>
+            <span class="n">exported_model_node_to_io_tensor_map</span> <span class="o">=</span> <span class="n">LayerOutput</span><span class="o">.</span><span class="n">get_onnx_node_to_io_tensor_map</span><span class="p">(</span>
+                <span class="n">original_model</span><span class="p">,</span> <span class="n">exported_model_dir</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span> <span class="n">onnx_export_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exported_model_node_to_io_tensor_map</span> <span class="o">=</span> <span class="n">LayerOutput</span><span class="o">.</span><span class="n">get_torchscript_node_to_io_tensor_map</span><span class="p">(</span>
+                <span class="n">original_model</span><span class="p">,</span> <span class="n">exported_model_dir</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+
+        <span class="n">layer_names_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">original_model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()</span> <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_leaf_module</span><span class="p">(</span><span class="n">module</span><span class="p">)]</span>
+        <span class="n">layers_missing_in_exported_model</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">layer_name_to_layer_output_name_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Get mapping between layer names and layer-output names.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Layer Name to Layer Output-name Mapping&quot;</span><span class="p">)</span>
+        <span class="c1"># pylint: disable=protected-access</span>
+        <span class="k">for</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">layer_names_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">exported_model_node_to_io_tensor_map</span><span class="p">:</span>
+                <span class="c1"># pylint: disable=protected-access, unused-variable</span>
+                <span class="n">layer_output_names</span><span class="p">,</span> <span class="n">intermediate_layer_output_names</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="o">.</span><span class="n">_get_layer_activation_tensors</span><span class="p">(</span>
+                    <span class="n">layer_name</span><span class="p">,</span> <span class="n">exported_model_node_to_io_tensor_map</span><span class="p">)</span>
+                <span class="n">layer_name_to_layer_output_name_map</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer_output_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> -&gt; </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">layer_output_names</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">layers_missing_in_exported_model</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">layers_missing_in_exported_model</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;The following layers were not found in the exported model:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;This can be due to below reason:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                           <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- The layer was not seen while exporting using the dummy input provided in sim.export(). &quot;</span>
+                           <span class="s2">&quot;Ensure that the dummy input covers all layers.&quot;</span><span class="p">,</span>
+                           <span class="n">layers_missing_in_exported_model</span><span class="p">)</span>
+
+        <span class="c1"># Delete onnx/torchscript models</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">exported_model_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">onerror</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">layer_name_to_layer_output_name_map</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_onnx_node_to_io_tensor_map</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">exported_model_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">],</span>
+                                       <span class="n">onnx_export_args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OnnxExportApiArgs</span><span class="p">,</span> <span class="n">Dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function constructs an onnx model equivalent to the give pytorch model and then generates node-name to i/o</span>
+<span class="sd">        tensor-name map.</span>
+<span class="sd">        :param model: pytorch model without quantization wrappers</span>
+<span class="sd">        :param exported_model_dir: directory to save onnx model</span>
+<span class="sd">        :param dummy_input: dummy input to be used for constructing onnx model</span>
+<span class="sd">        :param onnx_export_args: configurations to generate onnx model</span>
+<span class="sd">        :return: onnx_node_to_io_tensor_map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">LayerOutput</span><span class="o">.</span><span class="n">_validate_dummy_input</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">)</span>
+        <span class="n">LayerOutput</span><span class="o">.</span><span class="n">_validate_onnx_export_args</span><span class="p">(</span><span class="n">onnx_export_args</span><span class="p">)</span>
+
+        <span class="n">onnx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exported_model_dir</span><span class="p">,</span> <span class="s1">&#39;model.onnx&#39;</span><span class="p">)</span>
+
+        <span class="n">OnnxSaver</span><span class="o">.</span><span class="n">create_onnx_model_with_pytorch_layer_names</span><span class="p">(</span><span class="n">onnx_model_path</span><span class="o">=</span><span class="n">onnx_path</span><span class="p">,</span> <span class="n">pytorch_model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                                             <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">,</span> <span class="n">onnx_export_args</span><span class="o">=</span><span class="n">onnx_export_args</span><span class="p">)</span>
+        <span class="n">onnx_model</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">onnx_path</span><span class="p">)</span>
+        <span class="n">onnx_node_to_io_tensor_map</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">OnnxSaver</span><span class="o">.</span><span class="n">get_onnx_node_to_io_tensor_names_map</span><span class="p">(</span><span class="n">onnx_model</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">onnx_node_to_io_tensor_map</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_torchscript_node_to_io_tensor_map</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">exported_model_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                              <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function constructs a torchscript model equivalent to the give pytorch model and then generates node-name to i/o</span>
+<span class="sd">        tensor-name map.</span>
+<span class="sd">        :param model: pytorch model without quantization wrappers</span>
+<span class="sd">        :param exported_model_dir: directory to save onnx model</span>
+<span class="sd">        :param dummy_input: dummy input to be used for constructing onnx model</span>
+<span class="sd">        :return: torchscript_node_to_io_tensor_map</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">LayerOutput</span><span class="o">.</span><span class="n">_validate_dummy_input</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">)</span>
+
+        <span class="n">ts_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exported_model_dir</span><span class="p">,</span> <span class="s1">&#39;model.torchscript.pth&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">utils</span><span class="o">.</span><span class="n">in_eval_mode</span><span class="p">(</span><span class="n">model</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">torchscript_utils</span><span class="o">.</span><span class="n">create_torch_script_model</span><span class="p">(</span><span class="n">ts_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+            <span class="n">trace</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">ts_path</span><span class="p">)</span>
+            <span class="n">torch_script_node_to_io_tensor_map</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+                <span class="n">torchscript_utils</span><span class="o">.</span><span class="n">get_node_to_io_tensor_names_map</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">torch_script_node_to_io_tensor_map</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_validate_dir_path</span><span class="p">(</span><span class="n">dir_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate directory path in which onnx/torchscript models will be temporarily saved</span>
+<span class="sd">        :param dir_path: directory path</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dir_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Missing directory path to save onnx/torchscript models&quot;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_validate_dummy_input</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates dummy input which is used to generate onnx/torchscript model</span>
+<span class="sd">        :param dummy_input: single input instance</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid dummy_input data-type&quot;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_validate_onnx_export_args</span><span class="p">(</span><span class="n">onnx_export_args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OnnxExportApiArgs</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates export arguments which are used to generate an onnx model</span>
+<span class="sd">        :param onnx_export_args: export arguments</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">onnx_export_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">onnx_export_args</span> <span class="o">=</span> <span class="n">OnnxExportApiArgs</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">onnx_export_args</span><span class="p">,</span> <span class="p">(</span><span class="n">OnnxExportApiArgs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid onnx_export_args data-type&quot;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
