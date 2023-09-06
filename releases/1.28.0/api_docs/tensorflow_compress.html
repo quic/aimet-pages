@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMET TensorFlow Compression API &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.28.0</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AIMET Visualization for Quantization for TensorFlow API" href="tensorflow_visualization_quantization.html" />
+    <link rel="prev" title="AIMET TensorFlow Quantization APIs" href="tensorflow_quantization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.28.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_quantization.html"> Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/quantization_sim.html"> Quantization Simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_sim.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_sim.html#quantsim-workflow">QuantSim Workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_sim.html#simulating-quantization-noise">Simulating Quantization Noise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_sim.html#determining-quantization-parameters-encodings">Determining Quantization Parameters (Encodings)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_sim.html#quantization-schemes">Quantization Schemes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_sim.html#configuring-quantization-simulation-ops">Configuring Quantization Simulation Ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_sim.html#frequently-asked-questions">Frequently Asked Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/quantization_aware_training.html"> Quantization-Aware Training (QAT)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_aware_training.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_aware_training.html#qat-workflow">QAT workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_aware_training.html#qat-modes">QAT modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quantization_aware_training.html#recommendations-for-quantization-aware-training">Recommendations for Quantization-Aware Training</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_quantization.html#post-training-quantization"><span class="hideitem">Post-Training Quantization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/auto_quant.html">AutoQuant</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/auto_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/auto_quant.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/adaround.html">Adaptive Rounding (AdaRound)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/adaround.html#adaround-use-cases">AdaRound Use Cases</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/adaround.html#common-terminology">Common terminology</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/adaround.html#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html">Cross-Layer Equalization</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/bn_reestimation.html">BN Re-estimation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/bn_reestimation.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/bn_reestimation.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html">Bias Correction [Depricated]</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_quantization.html#debugging-analysis-tools"><span class="hideitem">Debugging/Analysis Tools</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/quant_analyzer.html">QuantAnalyzer</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/quant_analyzer.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/quant_analyzer.html#requirements">Requirements</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/quant_analyzer.html#detailed-analysis-descriptions">Detailed Analysis Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_quant.html">Visualizations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/visualization_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/visualization_quant.html#quantization">Quantization</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../user_guide/visualization_quant.html#pytorch">PyTorch</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../user_guide/visualization_quant.html#tensorflow">TensorFlow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_quantization.html#pytorch"><span class="hideitem">PyTorch</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_model_guidelines.html"> PyTorch Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_quantization.html"> AIMET PyTorch Quantization APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l8"><a class="reference internal" href="torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l8"><a class="reference internal" href="torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l8"><a class="reference internal" href="torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l6"><a class="reference internal" href="torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_quantization.html#tensorflow"><span class="hideitem">Tensorflow</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_model_guidelines.html"> TensorFlow Model Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/quantization_feature_guidebook.html">Quantization Guidebook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/model_compression.html"> Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/compression_feature_guidebook.html">Compression Guidebook</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/greedy_compression_ratio_selection.html">Greedy Compression Ratio Selection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/greedy_compression_ratio_selection.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/greedy_compression_ratio_selection.html#how-it-works">How it works</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/greedy_compression_ratio_selection.html#per-layer-exploration">Per-layer Exploration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/greedy_compression_ratio_selection.html#compression-ratio-selection">Compression Ratio Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#winnowing">Winnowing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../user_guide/winnowing.html">Winnowing</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../user_guide/winnowing.html#overview">Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../user_guide/winnowing.html#winnowing-overview">Winnowing Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../user_guide/winnowing.html#how-winnowing-works">How Winnowing Works</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html"> API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="torch_quantization.html">PyTorch Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l7"><a class="reference internal" href="torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l7"><a class="reference internal" href="torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="torch_layer_output_generation.html">PyTorch Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="torch_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_layer_output_generation.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="torch_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="tensorflow.html">AIMET APIs for TensorFlow</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tensorflow_layer_output_generation.html">Tensorflow Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tensorflow_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="onnx_quantization.html">ONNX Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/examples.html"> Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/index.html#release-packages">Release packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/index.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/index.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-gpu-packages">Install GPU packages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../install/install_host.html#install-gpu-packages-for-pytorch-1-9-or-onnx">Install GPU packages for PyTorch 1.9 or ONNX</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../install/install_host.html#install-gpu-packages-for-pytorch-1-13">Install GPU packages for PyTorch 1.13</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#post-installation-steps">Post installation steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_host.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#set-variant">Set variant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#start-docker-container">Start docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../install/install_docker.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Welcome to AI Model Efficiency Toolkit API Docs!</a></li>
+          <li class="breadcrumb-item"><a href="tensorflow.html">AIMET TensorFlow APIs</a></li>
+      <li class="breadcrumb-item active">AIMET TensorFlow Compression API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api_docs/tensorflow_compress.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="tensorflow_quantization.html" class="btn btn-neutral float-left" title="AIMET TensorFlow Quantization APIs" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tensorflow_visualization_quantization.html" class="btn btn-neutral float-right" title="AIMET Visualization for Quantization for TensorFlow API" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="aimet-tensorflow-compression-api">
+<h1>AIMET TensorFlow Compression API<a class="headerlink" href="#aimet-tensorflow-compression-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>AIMET supports the following model compression techniques for tensorflow models</dt><dd><ul class="simple">
+<li><p>Spatial SVD</p></li>
+<li><p>Channel Pruning</p></li>
+<li><p>Weight SVD</p></li>
+</ul>
+</dd>
+</dl>
+<p>To learn more about these model compression techniques, please see <a class="reference internal" href="../user_guide/model_compression.html#ug-model-compression"><span class="std std-ref">Model Compression User Guide</span></a></p>
+<dl class="simple">
+<dt>For the Spatial SVD and Channel Pruning compression techniques, there are two modes in which you can invoke the AIMET API</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Auto Mode: In <strong>Auto</strong> mode, AIMET will determine the optimal way to compress each layer of</dt><dd><p>the model given an overall target compression ratio. Greedy Compression Ratio Selection Algorithm is used to pick appropriate compression ratios for each layer.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Manual Mode: In <strong>Manual</strong> mode, the user can pass in the desired compression-ratio per layer</dt><dd><p>to AIMET. AIMET will apply the specified compression technique for each of the
+layers to achieve the desired compression-ratio per layer. It is recommended that
+the user start with Auto mode, and then tweak per-layer compression-ratios using
+Manual mode if desired.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>For Weight SVD, we use Tar-Based Rank selection. Auto and Manual modes are supported for Weight SVD as well.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="top-level-api-for-compression">
+<h2>Top-level API for Compression<a class="headerlink" href="#top-level-api-for-compression" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.compress.ModelCompressor">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.compress.</code><code class="sig-name descname">ModelCompressor</code><a class="reference internal" href="../_modules/aimet_tensorflow/compress.html#ModelCompressor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.compress.ModelCompressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>aimet model compressor: Enables model compression using various schemes</p>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="method">
+<dt id="aimet_tensorflow.compress.ModelCompressor.compress_model">
+<em class="property">static </em><code class="sig-prename descclassname">ModelCompressor.</code><code class="sig-name descname">compress_model</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">working_dir</em>, <em class="sig-param">eval_callback</em>, <em class="sig-param">eval_iterations</em>, <em class="sig-param">input_shape</em>, <em class="sig-param">compress_scheme</em>, <em class="sig-param">cost_metric</em>, <em class="sig-param">parameters</em>, <em class="sig-param">trainer=None</em>, <em class="sig-param">visualization_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/compress.html#ModelCompressor.compress_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.compress.ModelCompressor.compress_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compress a given model using the specified parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>) – Model, represented by a tf.compat.v1.Session, to compress</p></li>
+<li><p><strong>working_dir</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – File path to save compressed TensorFlow meta file</p></li>
+<li><p><strong>eval_callback</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Evaluation callback. Expected signature is evaluate(model, iterations, use_cuda).
+Expected to return an accuracy metric.</p></li>
+<li><p><strong>eval_iterations</strong> – Iterations to run evaluation for</p></li>
+<li><p><strong>trainer</strong> – Training Class: Contains a callable, train_model, which takes model, layer which is being fine
+tuned and an optional parameter train_flag as a parameter
+None: If per layer fine tuning is not required while creating the final compressed model</p></li>
+<li><p><strong>input_shape</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>]]) – tuple or list of tuples of input shapes to the model (channels_last format)</p></li>
+<li><p><strong>compress_scheme</strong> (<a class="reference internal" href="#aimet_common.defs.CompressionScheme" title="aimet_common.defs.CompressionScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionScheme</span></code></a>) – Compression scheme. See the enum for allowed values</p></li>
+<li><p><strong>cost_metric</strong> (<a class="reference internal" href="#aimet_common.defs.CostMetric" title="aimet_common.defs.CostMetric"><code class="xref py py-class docutils literal notranslate"><span class="pre">CostMetric</span></code></a>) – Cost metric to use for the compression-ratio (either mac or memory)</p></li>
+<li><p><strong>parameters</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_tensorflow.defs.SpatialSvdParameters" title="aimet_tensorflow.defs.SpatialSvdParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialSvdParameters</span></code></a>, <a class="reference internal" href="#aimet_tensorflow.defs.ChannelPruningParameters" title="aimet_tensorflow.defs.ChannelPruningParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChannelPruningParameters</span></code></a>]) – Compression parameters specific to given compression scheme</p></li>
+<li><p><strong>trainer</strong> – Training function
+None: If per layer fine tuning is not required while creating the final compressed model</p></li>
+<li><p><strong>visualization_url</strong> – url the user will need to input where visualizations will appear</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionStats</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A tuple of the compressed model session, and compression statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="greedy-selection-parameters">
+<h2>Greedy Selection Parameters<a class="headerlink" href="#greedy-selection-parameters" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">GreedySelectionParameters</code><span class="sig-paren">(</span><em class="sig-param">target_comp_ratio</em>, <em class="sig-param">num_comp_ratio_candidates=10</em>, <em class="sig-param">use_monotonic_fit=False</em>, <em class="sig-param">saved_eval_scores_dict=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_common/defs.html#GreedySelectionParameters"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Configuration parameters for the Greedy compression-ratio selection algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_comp_ratio</strong> – Target compression ratio. Expressed as value between 0 and 1.
+Compression ratio is the ratio of cost of compressed model to cost of the original model.</p></li>
+<li><p><strong>num_comp_ratio_candidates</strong> – Number of comp-ratio candidates to analyze per-layer
+More candidates allows more granular distribution of compression at the cost
+of increased run-time during analysis. Default value=10. Value should be greater than 1.</p></li>
+<li><p><strong>use_monotonic_fit</strong> – If True, eval scores in the eval dictionary are fitted to a monotonically increasing
+function. This is useful if you see the eval dict scores for some layers are not monotonically increasing.
+By default, this option is set to False.</p></li>
+<li><p><strong>saved_eval_scores_dict</strong> – Path to the eval_scores dictionary pickle file that was
+saved in a previous run. This is useful to speed-up experiments when trying
+different target compression-ratios for example. aimet will save eval_scores
+dictionary pickle file automatically in a ./data directory relative to the
+current path. num_comp_ratio_candidates parameter will be ignored when this option is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="spatial-svd-configuration">
+<h2>Spatial SVD Configuration<a class="headerlink" href="#spatial-svd-configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.defs.SpatialSvdParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.defs.</code><code class="sig-name descname">SpatialSvdParameters</code><span class="sig-paren">(</span><em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em>, <em class="sig-param">mode</em>, <em class="sig-param">params</em>, <em class="sig-param">multiplicity=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#SpatialSvdParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.SpatialSvdParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for spatial svd compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – list of input op names to the model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of output op names of the model</p></li>
+<li><p><strong>mode</strong> (<a class="reference internal" href="#aimet_tensorflow.defs.SpatialSvdParameters.Mode" title="aimet_tensorflow.defs.SpatialSvdParameters.Mode"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mode</span></code></a>) – Either auto mode or manual mode</p></li>
+<li><p><strong>params</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_tensorflow.defs.SpatialSvdParameters.ManualModeParams" title="aimet_tensorflow.defs.SpatialSvdParameters.ManualModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManualModeParams</span></code></a>, <a class="reference internal" href="#aimet_tensorflow.defs.SpatialSvdParameters.AutoModeParams" title="aimet_tensorflow.defs.SpatialSvdParameters.AutoModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoModeParams</span></code></a>]) – Parameters for the mode selected</p></li>
+<li><p><strong>multiplicity</strong> – The multiplicity to which ranks/input channels will get rounded. Default: 1</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="aimet_tensorflow.defs.SpatialSvdParameters.AutoModeParams">
+<em class="property">class </em><code class="sig-name descname">AutoModeParams</code><span class="sig-paren">(</span><em class="sig-param">greedy_select_params</em>, <em class="sig-param">modules_to_ignore=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#SpatialSvdParameters.AutoModeParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.SpatialSvdParameters.AutoModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for auto-mode compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greedy_select_params</strong> (<a class="reference internal" href="torch_compress.html#aimet_common.defs.GreedySelectionParameters" title="aimet_common.defs.GreedySelectionParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">GreedySelectionParameters</span></code></a>) – Params for greedy comp-ratio selection algorithm</p></li>
+<li><p><strong>modules_to_ignore</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]) – List of modules to ignore (None indicates nothing to ignore)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_tensorflow.defs.SpatialSvdParameters.ManualModeParams">
+<em class="property">class </em><code class="sig-name descname">ManualModeParams</code><span class="sig-paren">(</span><em class="sig-param">list_of_module_comp_ratio_pairs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#SpatialSvdParameters.ManualModeParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.SpatialSvdParameters.ManualModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for manual-mode spatial svd compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_module_comp_ratio_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_tensorflow.defs.ModuleCompRatioPair" title="aimet_tensorflow.defs.ModuleCompRatioPair"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleCompRatioPair</span></code></a>]) – List of (module, comp-ratio) pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_tensorflow.defs.SpatialSvdParameters.Mode">
+<em class="property">class </em><code class="sig-name descname">Mode</code><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#SpatialSvdParameters.Mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.SpatialSvdParameters.Mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mode enumeration</p>
+<dl class="attribute">
+<dt id="aimet_tensorflow.defs.SpatialSvdParameters.Mode.auto">
+<code class="sig-name descname">auto</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_tensorflow.defs.SpatialSvdParameters.Mode.auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto mode</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_tensorflow.defs.SpatialSvdParameters.Mode.manual">
+<code class="sig-name descname">manual</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_tensorflow.defs.SpatialSvdParameters.Mode.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manual mode</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="channel-pruning-configuration">
+<h2>Channel Pruning Configuration<a class="headerlink" href="#channel-pruning-configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.defs.ChannelPruningParameters">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.defs.</code><code class="sig-name descname">ChannelPruningParameters</code><span class="sig-paren">(</span><em class="sig-param">input_op_names</em>, <em class="sig-param">output_op_names</em>, <em class="sig-param">data_set</em>, <em class="sig-param">batch_size</em>, <em class="sig-param">num_reconstruction_samples</em>, <em class="sig-param">allow_custom_downsample_ops</em>, <em class="sig-param">mode</em>, <em class="sig-param">params</em>, <em class="sig-param">multiplicity=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#ChannelPruningParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.ChannelPruningParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for channel pruning compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – list of input op names to the model</p></li>
+<li><p><strong>output_op_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of output op names of the model</p></li>
+<li><p><strong>data_set</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetV2</span></code>) – data set</p></li>
+<li><p><strong>batch_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – batch size</p></li>
+<li><p><strong>num_reconstruction_samples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of samples to be used for reconstruction</p></li>
+<li><p><strong>allow_custom_downsample_ops</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If set to True, DownSampleLayer and UpSampleLayer will be added as required</p></li>
+<li><p><strong>mode</strong> (<a class="reference internal" href="#aimet_tensorflow.defs.ChannelPruningParameters.Mode" title="aimet_tensorflow.defs.ChannelPruningParameters.Mode"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mode</span></code></a>) – indicates whether the mode is manual or auto</p></li>
+<li><p><strong>params</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#aimet_tensorflow.defs.ChannelPruningParameters.ManualModeParams" title="aimet_tensorflow.defs.ChannelPruningParameters.ManualModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManualModeParams</span></code></a>, <a class="reference internal" href="#aimet_tensorflow.defs.ChannelPruningParameters.AutoModeParams" title="aimet_tensorflow.defs.ChannelPruningParameters.AutoModeParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoModeParams</span></code></a>]) – ManualModeParams or AutoModeParams, depending on teh value of mode</p></li>
+<li><p><strong>multiplicity</strong> – The multiplicity to which ranks/input channels will get rounded. Default: 1</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="aimet_tensorflow.defs.ChannelPruningParameters.AutoModeParams">
+<em class="property">class </em><code class="sig-name descname">AutoModeParams</code><span class="sig-paren">(</span><em class="sig-param">greedy_select_params</em>, <em class="sig-param">modules_to_ignore=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#ChannelPruningParameters.AutoModeParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.ChannelPruningParameters.AutoModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for auto-mode compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greedy_select_params</strong> (<a class="reference internal" href="torch_compress.html#aimet_common.defs.GreedySelectionParameters" title="aimet_common.defs.GreedySelectionParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">GreedySelectionParameters</span></code></a>) – Params for greedy comp-ratio selection algorithm</p></li>
+<li><p><strong>modules_to_ignore</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code>]]) – List of modules to ignore (None indicates nothing to ignore)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_tensorflow.defs.ChannelPruningParameters.ManualModeParams">
+<em class="property">class </em><code class="sig-name descname">ManualModeParams</code><span class="sig-paren">(</span><em class="sig-param">list_of_module_comp_ratio_pairs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#ChannelPruningParameters.ManualModeParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.ChannelPruningParameters.ManualModeParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration parameters for manual-mode channel pruning compression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_module_comp_ratio_pairs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<a class="reference internal" href="#aimet_tensorflow.defs.ModuleCompRatioPair" title="aimet_tensorflow.defs.ModuleCompRatioPair"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleCompRatioPair</span></code></a>]) – List of (module, comp-ratio) pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="aimet_tensorflow.defs.ChannelPruningParameters.Mode">
+<em class="property">class </em><code class="sig-name descname">Mode</code><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#ChannelPruningParameters.Mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.ChannelPruningParameters.Mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mode enumeration</p>
+<dl class="attribute">
+<dt id="aimet_tensorflow.defs.ChannelPruningParameters.Mode.auto">
+<code class="sig-name descname">auto</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_tensorflow.defs.ChannelPruningParameters.Mode.auto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto mode: aimet computes optimal comp-ratio per layer</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_tensorflow.defs.ChannelPruningParameters.Mode.manual">
+<code class="sig-name descname">manual</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_tensorflow.defs.ChannelPruningParameters.Mode.manual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manual mode: User specifies comp-ratio per layer</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="configuration-definitions">
+<h2>Configuration Definitions<a class="headerlink" href="#configuration-definitions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_common.defs.CostMetric">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">CostMetric</code><a class="reference internal" href="../_modules/aimet_common/defs.html#CostMetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_common.defs.CostMetric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumeration of metrics to measure cost of a model/layer</p>
+<dl class="attribute">
+<dt id="aimet_common.defs.CostMetric.mac">
+<code class="sig-name descname">mac</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_common.defs.CostMetric.mac" title="Permalink to this definition">¶</a></dt>
+<dd><p>MAC: Cost modeled for compute requirements</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.CostMetric.memory">
+<code class="sig-name descname">memory</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_common.defs.CostMetric.memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Memory: Cost modeled for space requirements</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="class">
+<dt id="aimet_common.defs.CompressionScheme">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_common.defs.</code><code class="sig-name descname">CompressionScheme</code><a class="reference internal" href="../_modules/aimet_common/defs.html#CompressionScheme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_common.defs.CompressionScheme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumeration of compression schemes supported in aimet</p>
+<dl class="attribute">
+<dt id="aimet_common.defs.CompressionScheme.channel_pruning">
+<code class="sig-name descname">channel_pruning</code><em class="property"> = 3</em><a class="headerlink" href="#aimet_common.defs.CompressionScheme.channel_pruning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel Pruning</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.CompressionScheme.spatial_svd">
+<code class="sig-name descname">spatial_svd</code><em class="property"> = 2</em><a class="headerlink" href="#aimet_common.defs.CompressionScheme.spatial_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spatial SVD</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="aimet_common.defs.CompressionScheme.weight_svd">
+<code class="sig-name descname">weight_svd</code><em class="property"> = 1</em><a class="headerlink" href="#aimet_common.defs.CompressionScheme.weight_svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weight SVD</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="class">
+<dt id="aimet_tensorflow.defs.ModuleCompRatioPair">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.defs.</code><code class="sig-name descname">ModuleCompRatioPair</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">comp_ratio</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/defs.html#ModuleCompRatioPair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.defs.ModuleCompRatioPair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pair of tf.Operation and a compression-ratio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> – Module of type tf.Operation</p></li>
+<li><p><strong>comp_ratio</strong> – Compression ratio. Compression ratio is the ratio of cost of compressed model
+to cost of the original model.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples">
+<h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.python.keras.applications.vgg16</span> <span class="kn">import</span> <span class="n">VGG16</span>
+
+<span class="c1"># Compression-related imports</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">GreedySelectionParameters</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">CostMetric</span><span class="p">,</span> <span class="n">CompressionScheme</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.defs</span> <span class="kn">import</span> <span class="n">SpatialSvdParameters</span><span class="p">,</span> <span class="n">ChannelPruningParameters</span><span class="p">,</span> <span class="n">ModuleCompRatioPair</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.compress</span> <span class="kn">import</span> <span class="n">ModelCompressor</span>
+</pre></div>
+</div>
+<p><strong>Evaluation function</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">sess</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">,</span> <span class="n">eval_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is intended to be the user-defined model evaluation function.</span>
+<span class="sd">    AIMET requires the above signature. So if the user&#39;s eval function does not</span>
+<span class="sd">    match this signature, please create a simple wrapper.</span>
+
+<span class="sd">    Note: Honoring the number of iterations is not absolutely necessary.</span>
+<span class="sd">    However if all evaluations run over an entire epoch of validation data,</span>
+<span class="sd">    the runtime for AIMET compression will obviously be higher.</span>
+
+<span class="sd">    :param sess: Tensorflow session</span>
+<span class="sd">    :param eval_iterations: Number of iterations to use for evaluation.</span>
+<span class="sd">            None for entire epoch.</span>
+<span class="sd">    :param use_cuda: If true, evaluate using gpu acceleration</span>
+<span class="sd">    :return: single float number (accuracy) representing model&#39;s performance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Evaluate model should run data through the model and return an accuracy score.</span>
+    <span class="c1"># If the model does not have nodes to measure accuracy, they will need to be added to the graph.</span>
+    <span class="k">return</span> <span class="mf">.5</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Spatial SVD in auto mode with multiplicity = 8 for rank rounding</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_auto_mode</span><span class="p">():</span>
+
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="c1"># Construct graph</span>
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">VGG16</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="c1"># ignore first Conv2D op</span>
+    <span class="n">conv2d</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;block1_conv1/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">modules_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="n">conv2d</span><span class="p">]</span>
+
+    <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+                                              <span class="n">num_comp_ratio_candidates</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                              <span class="n">use_monotonic_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                              <span class="n">saved_eval_scores_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">auto_params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">AutoModeParams</span><span class="p">(</span><span class="n">greedy_select_params</span><span class="o">=</span><span class="n">greedy_params</span><span class="p">,</span>
+                                                      <span class="n">modules_to_ignore</span><span class="o">=</span><span class="n">modules_to_ignore</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="p">(</span><span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span> <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;predictions/Softmax&#39;</span><span class="p">],</span>
+                                  <span class="n">mode</span><span class="o">=</span><span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">auto_params</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">compr_model_sess</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">sess</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span>
+                                                             <span class="n">working_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">),</span>
+                                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                             <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">,</span>
+                                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">spatial_svd</span><span class="p">,</span>
+                                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                                                             <span class="n">trainer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>    <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Spatial SVD in manual mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spatial_svd_manual_mode</span><span class="p">():</span>
+
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="c1"># Construct graph</span>
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">VGG16</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="c1"># Pick two convs to compress as examples</span>
+    <span class="n">conv2d</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;block1_conv1/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">conv2d_1</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;block1_conv2/Conv2D&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Specify the necessary parameters</span>
+    <span class="n">manual_params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">([</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">conv2d</span><span class="p">,</span> <span class="n">comp_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+                                                           <span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">conv2d_1</span><span class="p">,</span> <span class="n">comp_ratio</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)])</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">SpatialSvdParameters</span><span class="p">(</span><span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span> <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;predictions/Softmax&#39;</span><span class="p">],</span>
+                                  <span class="n">mode</span><span class="o">=</span><span class="n">SpatialSvdParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">manual</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">manual_params</span><span class="p">)</span>
+
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">compr_model_sess</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">sess</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span>
+                                                             <span class="n">working_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">),</span>
+                                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                                             <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">,</span>
+                                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">spatial_svd</span><span class="p">,</span>
+                                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                                                             <span class="n">trainer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>    <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Channel Pruning in auto mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">channel_pruning_auto_mode</span><span class="p">():</span>
+
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="c1"># Construct graph</span>
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">VGG16</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="c1"># ignore first Conv2D op</span>
+    <span class="n">conv2d</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;block1_conv1/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">modules_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="n">conv2d</span><span class="p">]</span>
+
+    <span class="n">greedy_params</span> <span class="o">=</span> <span class="n">GreedySelectionParameters</span><span class="p">(</span><span class="n">target_comp_ratio</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span>
+                                              <span class="n">num_comp_ratio_candidates</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                              <span class="n">use_monotonic_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                              <span class="n">saved_eval_scores_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">auto_params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">AutoModeParams</span><span class="p">(</span><span class="n">greedy_select_params</span><span class="o">=</span><span class="n">greedy_params</span><span class="p">,</span>
+                                                          <span class="n">modules_to_ignore</span><span class="o">=</span><span class="n">modules_to_ignore</span><span class="p">)</span>
+
+    <span class="c1"># Create random dataset</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="p">(</span><span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                      <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;predictions/Softmax&#39;</span><span class="p">],</span>
+                                      <span class="n">data_set</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span>
+                                      <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+                                      <span class="n">num_reconstruction_samples</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                      <span class="n">allow_custom_downsample_ops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">mode</span><span class="o">=</span><span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span><span class="n">auto</span><span class="p">,</span>
+                                      <span class="n">params</span><span class="o">=</span><span class="n">auto_params</span><span class="p">,</span>
+                                      <span class="n">multiplicity</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span>
+                                             <span class="n">working_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">channel_pruning</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>     <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Channel Pruning in manual mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">channel_pruning_manual_mode</span><span class="p">():</span>
+
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+    <span class="c1"># Construct graph</span>
+    <span class="k">with</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">VGG16</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="c1"># Create random dataset</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+
+    <span class="c1">#  Pick two convs to compress as examples</span>
+    <span class="n">block1_conv2_op</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;block1_conv2/Conv2D&#39;</span><span class="p">)</span>
+    <span class="n">block2_conv2_op</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get_operation_by_name</span><span class="p">(</span><span class="s1">&#39;block2_conv2/Conv2D&#39;</span><span class="p">)</span>
+
+    <span class="n">list_of_module_comp_ratio_pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">block1_conv2_op</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                                       <span class="n">ModuleCompRatioPair</span><span class="p">(</span><span class="n">block2_conv2_op</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)]</span>
+
+    <span class="n">manual_params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">ManualModeParams</span><span class="p">(</span><span class="n">list_of_module_comp_ratio_pairs</span><span class="o">=</span>
+                                                              <span class="n">list_of_module_comp_ratio_pairs</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ChannelPruningParameters</span><span class="p">(</span><span class="n">input_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input_1&#39;</span><span class="p">],</span>
+                                      <span class="n">output_op_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;predictions/Softmax&#39;</span><span class="p">],</span>
+                                      <span class="n">data_set</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span>
+                                      <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+                                      <span class="n">num_reconstruction_samples</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                      <span class="n">allow_custom_downsample_ops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">mode</span><span class="o">=</span><span class="n">ChannelPruningParameters</span><span class="o">.</span><span class="n">Mode</span><span class="o">.</span>
+                                      <span class="n">manual</span><span class="p">,</span>
+                                      <span class="n">params</span><span class="o">=</span><span class="n">manual_params</span><span class="p">,</span>
+                                      <span class="n">multiplicity</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="c1"># Single call to compress the model</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ModelCompressor</span><span class="o">.</span><span class="n">compress_model</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span>
+                                             <span class="n">working_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">eval_callback</span><span class="o">=</span><span class="n">evaluate_model</span><span class="p">,</span>
+                                             <span class="n">eval_iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                                             <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                                             <span class="n">compress_scheme</span><span class="o">=</span><span class="n">CompressionScheme</span><span class="o">.</span><span class="n">channel_pruning</span><span class="p">,</span>
+                                             <span class="n">cost_metric</span><span class="o">=</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">mac</span><span class="p">,</span>
+                                             <span class="n">parameters</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">compressed_model</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>     <span class="c1"># Stats object can be pretty-printed easily</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="weight-svd-top-level-api">
+<h2>Weight SVD Top-level API<a class="headerlink" href="#weight-svd-top-level-api" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="aimet_tensorflow.svd.Svd">
+<em class="property">class </em><code class="sig-prename descclassname">aimet_tensorflow.svd.</code><code class="sig-name descname">Svd</code><span class="sig-paren">(</span><em class="sig-param">graph</em>, <em class="sig-param">checkpoint</em>, <em class="sig-param">metric</em>, <em class="sig-param">output_file='./svd_graph'</em>, <em class="sig-param">svd_type='svd'</em>, <em class="sig-param">num_layers=0</em>, <em class="sig-param">layers=None</em>, <em class="sig-param">layer_ranks=None</em>, <em class="sig-param">num_ranks=20</em>, <em class="sig-param">gpu=True</em>, <em class="sig-param">debug=False</em>, <em class="sig-param">no_evaluation=False</em>, <em class="sig-param">layer_selection_threshold=0.6</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/svd.html#Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.svd.Svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for performing singular value decomposition on a tensorflow model.</p>
+<p>The Svd class enables model compression through singular value decomposition (SVD).
+It can analyze convolution and fully connected layers and perform
+some analysis to find the optimal ranks for balancing compression and the
+accuracy of the network.</p>
+<p>Constructor for the Svd class</p>
+<p>Constructs the Svd class from a set of options passed in at construction. The class takes
+a number of named arguments which are detailed below.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> – The file path to the meta graph.</p></li>
+<li><p><strong>checkpoint</strong> – The file path to the tensorflow checkpoint file.</p></li>
+<li><p><strong>metric</strong> – The metric to use for determining the optimal compression. Either
+‘mac’ for optimizing compression to minimize multiplies and accumulates or ‘memory’ which
+optimizes for overall memory footprint. Defaults to ‘memory’</p></li>
+<li><p><strong>output_file</strong> – The file path for saving the compressed tensorflow graph.
+aimet will save to the directory specified, using output_file as a filename prefix</p></li>
+<li><p><strong>svd_type</strong> – Indicates which algorithm should be used, either
+‘svd’ or ‘ssvd’. Defaults to ‘svd’.</p></li>
+<li><p><strong>num_layers</strong> – The number of layers to compress. Defaults to ‘0’ which uses a
+heuristic to determine the optimal number of layers to compress.</p></li>
+<li><p><strong>layers</strong> – A list of op names to compress. All other layers will be ignored.
+Overrides num_layers and sets it to the length of this list.</p></li>
+<li><p><strong>layer_ranks</strong> – required only if no_evaluation is set to True. A list of tuples to compress
+layers specified in layers argument.</p></li>
+<li><p><strong>num_ranks</strong> – The number of ranks (compression_points) to evaluate for compression.
+Defaults to 20. Value should be greater than 2.</p></li>
+<li><p><strong>gpu</strong> – Indicates if the algorithm should run on GPU or CPU. Defaults to GPU. To
+use CPU set to false</p></li>
+<li><p><strong>debug</strong> – If true debug messages will be printed. Defaults to False.</p></li>
+<li><p><strong>no_evaluation</strong> – If true, ranks will be set manually from user. Defaults to False.</p></li>
+<li><p><strong>layer_selection_threshold</strong> – Threshold (0-1) to use to select the top layers in the network</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>ValueError: An error occurred processing one of the input parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="method">
+<dt id="aimet_tensorflow.svd.Svd.compress_net">
+<code class="sig-prename descclassname">Svd.</code><code class="sig-name descname">compress_net</code><span class="sig-paren">(</span><em class="sig-param">generator</em>, <em class="sig-param">eval_names=None</em>, <em class="sig-param">run_graph=&lt;function evaluate_graph&gt;</em>, <em class="sig-param">eval_func=&lt;function default_eval_func&gt;</em>, <em class="sig-param">error_margin=2</em>, <em class="sig-param">iterations=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/svd.html#Svd.compress_net"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#aimet_tensorflow.svd.Svd.compress_net" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresses the network using SVD</p>
+<p>Runs rank selection on the network, and compresses it using the method and parameters
+passed during construction of the Svd object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>generator</strong> – The generator which should be used for generating data for quantization</p></li>
+<li><p><strong>eval_names</strong> – The list of names to use for calculating model performance</p></li>
+<li><p><strong>run_graph</strong> – The function to use for running data through the graph and evaluating
+the network’s performance. This function must return only a single number representing the
+avg performance of the model over the dataset batches.
+See the ‘graph_eval’ module’s ‘evaluate_graph’ function for the prototype</p></li>
+<li><p><strong>eval_func</strong> – The function to use for evaluating the network performance. This function should always
+return a single number that can be used for comparing different graph’s performance.
+(The default is accuracy)</p></li>
+<li><p><strong>error_margin</strong> – The acceptable degradation in network accuracy from the original.
+1 for 1% drop, etc. Defaults to 2%.</p></li>
+<li><p><strong>iterations</strong> – The number of iterations (data batches) to run through the network for analysis</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An object containing compression statistics</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>ValueError: An invalid parameter was passed</p></li>
+<li><p>RuntimeError: An error occurred analyzing or compressing the network. The associated error
+and other information will be returned with the error.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="code-examples-for-weight-svd">
+<h2>Code Examples for Weight SVD<a class="headerlink" href="#code-examples-for-weight-svd" title="Permalink to this headline">¶</a></h2>
+<p><strong>Required imports</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow</span> <span class="kn">import</span> <span class="n">svd</span> <span class="k">as</span> <span class="n">s</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.common</span> <span class="kn">import</span> <span class="n">tfrecord_generator</span> <span class="k">as</span> <span class="n">tf_gen</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.common.tfrecord_generator</span> <span class="kn">import</span> <span class="n">MnistParser</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Weight SVD in auto mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weight_svd_auto_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="c1"># Allocate the generator you wish to use to provide the network with data</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">tf_gen</span><span class="o">.</span><span class="n">TfRecordGenerator</span><span class="p">(</span><span class="n">tfrecords</span><span class="o">=</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist&#39;</span><span class="p">,</span> <span class="s1">&#39;validation.tfrecords&#39;</span><span class="p">)],</span>
+                                         <span class="n">parser</span><span class="o">=</span><span class="n">MnistParser</span><span class="p">())</span>
+
+    <span class="c1"># Allocate the SVD instance and compress the network</span>
+    <span class="n">svd</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;models&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_save.meta&#39;</span><span class="p">),</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;models&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_save&#39;</span><span class="p">),</span>
+                <span class="n">output_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span> <span class="s1">&#39;svd_graph&#39;</span><span class="p">),</span> <span class="n">layers</span><span class="o">=</span><span class="p">[],</span> <span class="n">num_ranks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                <span class="n">layer_selection_threshold</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
+
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">compress_net</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">stats</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span> <span class="c1"># Print the stats for Weight SVD compression</span>
+</pre></div>
+</div>
+<p><strong>Compressing using Weight SVD in manual mode</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weight_svd_manual_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="c1"># Allocate the generator you wish to use to provide the network with data</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">tf_gen</span><span class="o">.</span><span class="n">TfRecordGenerator</span><span class="p">(</span><span class="n">tfrecords</span><span class="o">=</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist&#39;</span><span class="p">,</span> <span class="s1">&#39;validation.tfrecords&#39;</span><span class="p">)],</span>
+                                         <span class="n">parser</span><span class="o">=</span><span class="n">MnistParser</span><span class="p">())</span>
+
+    <span class="c1"># Only Compress Conv2d_1 and MatMul_1 with ranks 31 and 9 respectively</span>
+    <span class="c1"># no_evaluation should be True in Manual mode</span>
+
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Conv2D_1&#39;</span><span class="p">,</span> <span class="s1">&#39;MatMul_1&#39;</span><span class="p">]</span>
+    <span class="n">layer_ranks</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Conv2D_1&#39;</span><span class="p">,</span> <span class="mi">31</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;MatMul_1&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">)]</span>
+
+    <span class="n">svd</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;models&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_save.meta&#39;</span><span class="p">),</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;models&#39;</span><span class="p">,</span> <span class="s1">&#39;mnist_save&#39;</span><span class="p">),</span>
+                <span class="n">output_file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;svd&#39;</span><span class="p">,</span> <span class="s1">&#39;svd_graph&#39;</span><span class="p">),</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span> <span class="n">layer_ranks</span><span class="o">=</span><span class="n">layer_ranks</span><span class="p">,</span> <span class="n">num_ranks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                <span class="n">no_evaluation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">CostMetric</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
+
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">svd</span><span class="o">.</span><span class="n">compress_net</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">stats</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span> <span class="c1"># Print the stats for Weight SVD compression</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tensorflow_quantization.html" class="btn btn-neutral float-left" title="AIMET TensorFlow Quantization APIs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tensorflow_visualization_quantization.html" class="btn btn-neutral float-right" title="AIMET Visualization for Quantization for TensorFlow API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

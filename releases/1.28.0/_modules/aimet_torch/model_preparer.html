@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.model_preparer &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.28.0</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.28.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_quantization.html"> Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/quantization_sim.html"> Quantization Simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#quantsim-workflow">QuantSim Workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#simulating-quantization-noise">Simulating Quantization Noise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#determining-quantization-parameters-encodings">Determining Quantization Parameters (Encodings)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#quantization-schemes">Quantization Schemes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#configuring-quantization-simulation-ops">Configuring Quantization Simulation Ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#frequently-asked-questions">Frequently Asked Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/quantization_aware_training.html"> Quantization-Aware Training (QAT)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#qat-workflow">QAT workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#qat-modes">QAT modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#recommendations-for-quantization-aware-training">Recommendations for Quantization-Aware Training</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#post-training-quantization"><span class="hideitem">Post-Training Quantization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/auto_quant.html">AutoQuant</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/auto_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/auto_quant.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/adaround.html">Adaptive Rounding (AdaRound)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/adaround.html#adaround-use-cases">AdaRound Use Cases</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/adaround.html#common-terminology">Common terminology</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/adaround.html#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html">Cross-Layer Equalization</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/bn_reestimation.html">BN Re-estimation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/bn_reestimation.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/bn_reestimation.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html">Bias Correction [Depricated]</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-analysis-tools"><span class="hideitem">Debugging/Analysis Tools</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quant_analyzer.html">QuantAnalyzer</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/quant_analyzer.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/quant_analyzer.html#requirements">Requirements</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/quant_analyzer.html#detailed-analysis-descriptions">Detailed Analysis Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_quant.html">Visualizations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/visualization_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/visualization_quant.html#quantization">Quantization</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/visualization_quant.html#pytorch">PyTorch</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/visualization_quant.html#tensorflow">TensorFlow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#pytorch"><span class="hideitem">PyTorch</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_guidelines.html"> PyTorch Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_quantization.html"> AIMET PyTorch Quantization APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#tensorflow"><span class="hideitem">Tensorflow</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html"> TensorFlow Model Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/quantization_feature_guidebook.html">Quantization Guidebook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_compression.html"> Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/compression_feature_guidebook.html">Compression Guidebook</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html">Greedy Compression Ratio Selection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#how-it-works">How it works</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#per-layer-exploration">Per-layer Exploration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#compression-ratio-selection">Compression Ratio Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#winnowing">Winnowing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/winnowing.html">Winnowing</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/winnowing.html#overview">Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/winnowing.html#winnowing-overview">Winnowing Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/winnowing.html#how-winnowing-works">How Winnowing Works</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/index.html"> API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html">PyTorch Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html">Tensorflow Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/onnx_quantization.html">ONNX Model Quantization API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/examples.html"> Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#release-packages">Release packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../install/install_host.html">Install in Host Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages">Install GPU packages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-pytorch-1-9-or-onnx">Install GPU packages for PyTorch 1.9 or ONNX</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-pytorch-1-13">Install GPU packages for PyTorch 1.13</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#post-installation-steps">Post installation steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../install/install_docker.html">Install in Docker Container</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#set-variant">Set variant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#start-docker-container">Start docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.model_preparer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.model_preparer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.5</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2021-2023, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  From PyTorch:</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2016-     Facebook, Inc            (Adam Paszke)</span>
+<span class="c1">#  Copyright (c) 2014-     Facebook, Inc            (Soumith Chintala)</span>
+<span class="c1">#  Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)</span>
+<span class="c1">#  Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)</span>
+<span class="c1">#  Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)</span>
+<span class="c1">#  Copyright (c) 2011-2013 NYU                      (Clement Farabet)</span>
+<span class="c1">#  Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston)</span>
+<span class="c1">#  Copyright (c) 2006      Idiap Research Institute (Samy Bengio)</span>
+<span class="c1">#  Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)</span>
+<span class="c1">#</span>
+<span class="c1">#  From Caffe2:</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2016-present, Facebook Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  All contributions by Facebook:</span>
+<span class="c1">#  Copyright (c) 2016 Facebook Inc.</span>
+<span class="c1">#</span>
+<span class="c1">#  All contributions by Google:</span>
+<span class="c1">#  Copyright (c) 2015 Google Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  All contributions by Yangqing Jia:</span>
+<span class="c1">#  Copyright (c) 2015 Yangqing Jia</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  All contributions by Kakao Brain:</span>
+<span class="c1">#  Copyright 2019-2020 Kakao Brain</span>
+<span class="c1">#</span>
+<span class="c1">#  All contributions by Cruise LLC:</span>
+<span class="c1">#  Copyright (c) 2022 Cruise LLC.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  All contributions from Caffe:</span>
+<span class="c1">#  Copyright(c) 2013, 2014, 2015, the respective contributors</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  All other contributions:</span>
+<span class="c1">#  Copyright(c) 2015, 2016 the respective contributors</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Caffe2 uses a copyright model similar to Caffe: each contributor holds</span>
+<span class="c1">#  copyright over their contributions to Caffe2. The project versioning records</span>
+<span class="c1">#  all such contribution and copyright details. If a contributor wants to further</span>
+<span class="c1">#  mark their specific copyright on a particular contribution, they should</span>
+<span class="c1">#  indicate their copyright solely in the commit message of the change when it is</span>
+<span class="c1">#  committed.</span>
+<span class="c1">#</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright</span>
+<span class="c1">#     notice, this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright</span>
+<span class="c1">#     notice, this list of conditions and the following disclaimer in the</span>
+<span class="c1">#     documentation and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the names of Facebook, Deepmind Technologies, NYU, NEC Laboratories America</span>
+<span class="c1">#     and IDIAP Research Institute nor the names of its contributors may be</span>
+<span class="c1">#     used to endorse or promote products derived from this software without</span>
+<span class="c1">#     specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; Implementation to automatically prepare pytorch models for AIMET features &quot;&quot;&quot;</span>
+
+<span class="c1"># --------------------------------------------------------------------------------------------------------</span>
+<span class="c1"># Reference : https://github.com/pytorch/pytorch/blob/main/torch/fx/proxy.py#L26</span>
+<span class="c1">#             https://github.com/pytorch/pytorch/blob/main/torch/fx/proxy.py#L57</span>
+
+<span class="c1"># Above PyTorch code is used to get node_name_to_scope information by overriding call_module and create_node methods</span>
+<span class="c1"># of torch.fx.Tracer base class:</span>
+<span class="c1"># TODO: node_name_to_scope should be removed and instead use node.meta[] after upgrading to torch 2.0</span>
+<span class="c1"># ----------------------------------------------------------------------------------------------------------</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.fx</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.utils</span> <span class="kn">import</span> <span class="n">in_eval_mode</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.utils</span> <span class="kn">import</span> <span class="n">replace_modules_of_type1_with_type2</span>
+<span class="kn">import</span> <span class="nn">aimet_torch.elementwise_ops</span> <span class="k">as</span> <span class="nn">elementwise_ops</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">ModelPreparer</span><span class="p">)</span>
+
+<span class="c1"># this is a map of torch.nn.functional type to corresponding module type</span>
+<span class="n">functional_op_to_module_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">relu</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">gelu</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span>
+<span class="p">}</span>
+
+<span class="c1"># In this functional --&gt; module map, corresponding model is of type torch.nn and stateful.</span>
+<span class="n">functional_with_stateful_api</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;relu&#39;</span>          <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span>
+    <span class="s1">&#39;relu6&#39;</span>         <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">,</span>
+    <span class="s1">&#39;hardtanh&#39;</span>      <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardtanh</span><span class="p">,</span>
+    <span class="s1">&#39;hardwish&#39;</span>      <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardswish</span><span class="p">,</span>
+    <span class="s1">&#39;elu&#39;</span>           <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">,</span>
+    <span class="s1">&#39;selu&#39;</span>          <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">SELU</span><span class="p">,</span>
+    <span class="s1">&#39;celu&#39;</span>          <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
+    <span class="s1">&#39;leaky_relu&#39;</span>    <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">,</span>
+    <span class="s1">&#39;prelu&#39;</span>         <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">PReLU</span><span class="p">,</span>
+    <span class="s1">&#39;rrelu&#39;</span>         <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">RReLU</span><span class="p">,</span>
+    <span class="s1">&#39;glu&#39;</span>           <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GLU</span><span class="p">,</span>
+    <span class="s1">&#39;gelu&#39;</span>          <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">,</span>
+    <span class="s1">&#39;logsigmoid&#39;</span>    <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSigmoid</span><span class="p">,</span>
+    <span class="s1">&#39;hardshrink&#39;</span>    <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardshrink</span><span class="p">,</span>
+    <span class="s1">&#39;tanhshrink&#39;</span>    <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanhshrink</span><span class="p">,</span>
+    <span class="s1">&#39;softsign&#39;</span>      <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softsign</span><span class="p">,</span>
+    <span class="s1">&#39;softplus&#39;</span>      <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span><span class="p">,</span>
+    <span class="s1">&#39;softmin&#39;</span>       <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softmin</span><span class="p">,</span>
+    <span class="s1">&#39;softmax&#39;</span>       <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">,</span>
+    <span class="s1">&#39;softshrink&#39;</span>    <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softshrink</span><span class="p">,</span>
+    <span class="s1">&#39;log_softmax&#39;</span>   <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">,</span>
+    <span class="s1">&#39;tanh&#39;</span>          <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">,</span>
+    <span class="s1">&#39;sigmoid&#39;</span>       <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">,</span>
+    <span class="s1">&#39;hardsigmoid&#39;</span>   <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Hardsigmoid</span><span class="p">,</span>
+    <span class="s1">&#39;silu&#39;</span>          <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1"># Function that requires special transformation.</span>
+<span class="n">functional_with_special_handling</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;cat&#39;</span>           <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Concat</span><span class="p">,</span>
+    <span class="s1">&#39;conv2d&#39;</span>        <span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span>
+<span class="p">}</span>
+
+<span class="c1"># In this functional --&gt; module map, corresponding custom module is of type torch.nn and uses stateless API.</span>
+<span class="n">functional_with_stateless_api</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;_pad&#39;</span>                      <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Pad</span><span class="p">,</span>
+    <span class="s1">&#39;pad&#39;</span>                      <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Pad</span><span class="p">,</span>
+    <span class="s1">&#39;sum&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Sum</span><span class="p">,</span>
+    <span class="s1">&#39;add&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Add</span><span class="p">,</span>
+    <span class="s1">&#39;subtract&#39;</span>                  <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Subtract</span><span class="p">,</span>
+    <span class="s1">&#39;sub&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Subtract</span><span class="p">,</span>
+    <span class="s1">&#39;mul&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Multiply</span><span class="p">,</span>
+    <span class="s1">&#39;div&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Divide</span><span class="p">,</span>
+    <span class="s1">&#39;truediv&#39;</span>                   <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Divide</span><span class="p">,</span>
+    <span class="s1">&#39;floordiv&#39;</span>                  <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">FloorDivide</span><span class="p">,</span>
+    <span class="s1">&#39;matmul&#39;</span>                    <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">MatMul</span><span class="p">,</span>
+    <span class="s1">&#39;exp&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Exponential</span><span class="p">,</span>
+    <span class="s1">&#39;interpolate&#39;</span>               <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">,</span>
+    <span class="s1">&#39;max_pool2d&#39;</span>                <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">,</span>
+    <span class="s1">&#39;max_pool2d_with_indices&#39;</span>   <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">,</span>
+    <span class="s1">&#39;adaptive_avg_pool2d&#39;</span>       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">,</span>
+    <span class="s1">&#39;avg_pool2d&#39;</span>                <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">AvgPool2d</span><span class="p">,</span>
+    <span class="s1">&#39;norm&#39;</span>                      <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Norm</span><span class="p">,</span>
+    <span class="s1">&#39;batch_norm&#39;</span>                <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">,</span>
+    <span class="s1">&#39;group_norm&#39;</span>                <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span>
+    <span class="s1">&#39;mean&#39;</span>                      <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Mean</span><span class="p">,</span>
+    <span class="s1">&#39;pow&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Pow</span><span class="p">,</span>
+    <span class="s1">&#39;where&#39;</span>                     <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Where</span><span class="p">,</span>
+    <span class="s1">&#39;addmm&#39;</span>                     <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Addmm</span><span class="p">,</span>
+    <span class="s1">&#39;bmm&#39;</span>                       <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Bmm</span><span class="p">,</span>
+    <span class="s1">&#39;baddbmm&#39;</span>                   <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Baddbmm</span><span class="p">,</span>
+    <span class="s1">&#39;cumsum&#39;</span>                    <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">CumSum</span><span class="p">,</span>
+    <span class="s1">&#39;masked_fill&#39;</span>               <span class="p">:</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">MaskedFill</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Scope</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code adapted from: https://github.com/pytorch/pytorch/blob/main/torch/fx/proxy.py#L26</span>
+
+<span class="sd">    Scope object that records the module path and the module type of module.</span>
+<span class="sd">    Scope is used to track the information of the module that contains a Node</span>
+<span class="sd">    in a Graph of GraphModule.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_path</span> <span class="o">=</span> <span class="n">module_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_type</span> <span class="o">=</span> <span class="n">module_type</span>
+
+
+<span class="k">class</span> <span class="nc">ScopeContextManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code adapted from: https://github.com/pytorch/pytorch/blob/main/torch/fx/proxy.py#L57</span>
+
+<span class="sd">    A context manager to track the Scope of Node during symbolic tracing.</span>
+<span class="sd">    When entering a forward function of a Module, we&#39;ll update the scope information of</span>
+<span class="sd">    the current module, and when we exit, we&#39;ll restore the previous scope information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">Scope</span><span class="p">,</span> <span class="n">current_scope</span><span class="p">:</span> <span class="n">Scope</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Keep a copy of prev scope.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prev_scope</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        <span class="c1"># Update scope to current scope</span>
+        <span class="n">scope</span><span class="o">.</span><span class="n">module_path</span> <span class="o">=</span> <span class="n">current_scope</span><span class="o">.</span><span class="n">module_path</span>
+        <span class="n">scope</span><span class="o">.</span><span class="n">module_type</span> <span class="o">=</span> <span class="n">current_scope</span><span class="o">.</span><span class="n">module_type</span>
+        <span class="c1"># Save a reference so, we can restore tracer.scope with prev scope on exit.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span> <span class="o">=</span> <span class="n">scope</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="o">.</span><span class="n">module_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prev_scope</span><span class="o">.</span><span class="n">module_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span><span class="o">.</span><span class="n">module_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prev_scope</span><span class="o">.</span><span class="n">module_type</span>
+
+
+<span class="k">def</span> <span class="nf">conv2d_create_node</span><span class="p">(</span><span class="n">traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span> <span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the node to be inserted in the graph model.</span>
+
+<span class="sd">    :param traced_model: Symbolically traced model</span>
+<span class="sd">    :param module_name: Qualified module name in symbolic_traced_model hierarchy corresponding to new node</span>
+<span class="sd">    :param node: Current node in the graph after which new node will be inserted</span>
+<span class="sd">    :return: torch.fx.node to be inserted in the graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n_args</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+    <span class="c1"># input tensors must be passed as args, not kwargs for QcQuantizeWrapper</span>
+    <span class="n">input_tensor</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># input and weight is guaranteed to exist, but bias can be None</span>
+    <span class="c1"># Since None cannot be passed as args in QcQuantizeWrapper, do not add it to input_tensor</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39; bias&#39;</span><span class="p">]]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">n_args</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">input_tensor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">with</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">inserting_after</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">module_name</span><span class="p">),</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">DynamicConv2d</span><span class="p">):</span>
+            <span class="n">new_node</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">call_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_node</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">call_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="nb">tuple</span><span class="p">([</span><span class="n">input_tensor</span><span class="p">[</span><span class="mi">0</span><span class="p">]]))</span>
+        <span class="k">return</span> <span class="n">new_node</span>
+
+
+<span class="k">def</span> <span class="nf">conv2d_create_module</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the replacement module.</span>
+
+<span class="sd">    :param node: Current node in the graph after which new node will be inserted</span>
+<span class="sd">    :return: New module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get weight and bias from argument</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">merge_args_and_kwargs</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;bias&#39;</span><span class="p">})</span>
+
+    <span class="c1"># Convert F.Conv2D arguments to nn.Conv2D arguments</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">merge_args_and_kwargs</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">{</span><span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;stride&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;padding&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;dilation&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;groups&#39;</span><span class="p">})</span>
+
+    <span class="c1"># If weight or bias is from activation of another layer, use dynamic_conv2d</span>
+    <span class="n">use_dynamic_conv2d</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">op</span> <span class="o">!=</span> <span class="s1">&#39;get_attr&#39;</span><span class="p">:</span>
+            <span class="n">use_dynamic_conv2d</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">use_dynamic_conv2d</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">DynamicConv2d</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">param_node</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_node_attr</span><span class="p">(</span><span class="n">param_node</span><span class="p">)</span>
+
+        <span class="c1"># Fetch additional info using parameters</span>
+        <span class="n">out_channels</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">bias</span> <span class="o">=</span> <span class="s1">&#39;bias&#39;</span> <span class="ow">in</span> <span class="n">params</span>
+
+        <span class="c1"># For Depthwise Conv, multiply in_channels by number of groups</span>
+        <span class="c1"># if groups is not passed as arg, use its default value 1</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;in_channels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">in_channels</span> <span class="o">*</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;out_channels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_channels</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;kernel_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel_size</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bias</span>
+
+        <span class="n">module</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># Replace nn.Conv2D params using F.Conv2D arguments</span>
+        <span class="n">module</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">bias</span><span class="p">:</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">module</span>
+
+
+<span class="k">def</span> <span class="nf">merge_args_and_kwargs</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="n">arguments_to_fetch</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge args and kwargs into a single kwargs and return it</span>
+<span class="sd">    :param node: node to fetch args and kwargs from</span>
+<span class="sd">    :param arguments_to_fetch: dictionary containing arguments&#39; indices in args and keys in kwargs</span>
+<span class="sd">    :return: single merged kwargs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_args</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">arguments_to_fetch</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">n_args</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">kwargs</span>
+
+
+<span class="k">def</span> <span class="nf">get_node_attr</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Codes modified from https://pytorch.org/docs/stable/fx.html#the-interpreter-pattern</span>
+
+<span class="sd">    :param node: node to fetch data from</span>
+<span class="sd">    :return: value returned from node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">fetch_attr</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">target_atoms</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">attr_itr</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">owning_module</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">target_atoms</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">attr_itr</span><span class="p">,</span> <span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Node referenced nonexistant target </span><span class="si">{</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_atoms</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">attr_itr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attr_itr</span><span class="p">,</span> <span class="n">atom</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">attr_itr</span>
+
+    <span class="k">assert</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;get_attr&#39;</span>
+
+    <span class="k">return</span> <span class="n">fetch_attr</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">concat_create_node</span><span class="p">(</span><span class="n">traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span> <span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the node to be inserted in the graph model.</span>
+
+<span class="sd">    :param traced_model: Symbolically traced model</span>
+<span class="sd">    :param module_name: Qualified module name in symbolic_traced_model hierarchy corresponding to new node</span>
+<span class="sd">    :param node: Current node in the graph after which new node will be inserted</span>
+<span class="sd">    :return: torch.fx.node to be inserted in the graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">inserting_after</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="c1"># call_module only accepts tuple as args but node.args[0] can be a list. Convert it into a tuple</span>
+        <span class="c1"># If node.args[0] is already a tuple, tuple() will do nothing</span>
+        <span class="n">new_node</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">call_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">new_node</span>
+
+
+<span class="k">def</span> <span class="nf">concat_create_module</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create the replacement module.</span>
+
+<span class="sd">    :param node: Current node in the graph after which new node will be inserted</span>
+<span class="sd">    :return: New module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">num_args</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_args</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="s1">&#39;dim&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="p">:</span>
+        <span class="c1"># Handle torch.cat being called with default parameter dim</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Concat</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">num_args</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dim&#39;</span><span class="p">]</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;axis&#39;</span><span class="p">:</span> <span class="n">axis</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">module</span>
+
+<span class="n">special_handler_functions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Special handling functions for creating node and module</span>
+    <span class="s1">&#39;cat&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;node_fn&#39;</span><span class="p">:</span> <span class="n">concat_create_node</span><span class="p">,</span> <span class="s1">&#39;module_fn&#39;</span><span class="p">:</span> <span class="n">concat_create_module</span><span class="p">},</span>
+    <span class="s1">&#39;conv2d&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;node_fn&#39;</span><span class="p">:</span> <span class="n">conv2d_create_node</span><span class="p">,</span> <span class="s1">&#39;module_fn&#39;</span><span class="p">:</span> <span class="n">conv2d_create_module</span><span class="p">}</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="prepare_model"><a class="viewcode-back" href="../../api_docs/torch_model_preparer.html#aimet_torch.model_preparer.prepare_model">[docs]</a><span class="k">def</span> <span class="nf">prepare_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+                  <span class="n">modules_to_exclude</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">module_classes_to_exclude</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">concrete_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepare and modify the pytorch model for AIMET features using torch.FX symbolic tracing API.</span>
+
+<span class="sd">    1. Replace torch.nn.functional by module of type torch.nn.Module</span>
+<span class="sd">    2. Create new independent torch.nn.Module instances for reused/duplicate module</span>
+
+<span class="sd">    :param model: pytorch Model to be modified.</span>
+<span class="sd">    :param modules_to_exclude: List of modules to exclude when tracing.</span>
+<span class="sd">    :param module_classes_to_exclude: List of module classes to exclude when tracing.</span>
+<span class="sd">    :param concrete_args: Allows you to partially specialize your function, whether it&#39;s to remove control flow or</span>
+<span class="sd">     data structures. If the model has control flow, torch.fx won&#39;t be able to trace the model. Check</span>
+<span class="sd">     torch.fx.symbolic_trace API in detail.</span>
+<span class="sd">    :return: Modified pytorch Model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">in_eval_mode</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="n">traced_model</span><span class="p">,</span> <span class="n">node_name_to_scope</span> <span class="o">=</span> \
+            <span class="n">_trace_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">modules_to_exclude</span><span class="p">,</span> <span class="n">module_classes_to_exclude</span><span class="p">,</span> <span class="n">concrete_args</span><span class="p">)</span>
+
+    <span class="c1"># Prepare model and perform checks to make sure the graph is well-formed.</span>
+    <span class="n">_prepare_traced_model</span><span class="p">(</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">node_name_to_scope</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">traced_model</span></div>
+
+
+<span class="k">def</span> <span class="nf">_trace_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+                 <span class="n">modules_to_exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]],</span>
+                 <span class="n">module_classes_to_exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]],</span>
+                 <span class="n">concrete_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns traced model and dictionary of node name to the scope of module which contains the node.</span>
+
+<span class="sd">    :param model: pytorch Model to be modified.</span>
+<span class="sd">    :param modules_to_exclude: List of modules to exclude when tracing.</span>
+<span class="sd">    :param module_classes_to_exclude: List of module classes to exclude when tracing.</span>
+<span class="sd">    :param concrete_args: Concrete arguments that should not be treated as Proxies.</span>
+<span class="sd">    :return: (Traced model, node_name_to_scope)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">Tracer</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">Tracer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override is_leaf_module(), call_module() and create_node() methods of parent class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">Scope</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node_name_to_scope</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">def</span> <span class="nf">is_leaf_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">module_qualified_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">modules_to_exclude</span> <span class="ow">and</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules_to_exclude</span>
+                <span class="ow">or</span> <span class="n">module_classes_to_exclude</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="n">module_classes_to_exclude</span> <span class="c1"># pylint: disable=unidiomatic-typecheck</span>
+                <span class="ow">or</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">is_leaf_module</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">module_qualified_name</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">call_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">forward</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+                        <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+            <span class="n">module_qualified_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_of_module</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">ScopeContextManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">,</span> <span class="n">Scope</span><span class="p">(</span><span class="n">module_qualified_name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">))):</span>
+                <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">call_module</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">create_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="n">type_expr</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">Node</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_node</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">type_expr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node_name_to_scope</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">module_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">module_type</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">node</span>
+
+    <span class="c1"># Symbolic tracing frontend - captures the semantics of the module</span>
+    <span class="n">tracer</span> <span class="o">=</span> <span class="n">Tracer</span><span class="p">()</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">tracer</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">concrete_args</span><span class="o">=</span><span class="n">concrete_args</span><span class="p">)</span>
+    <span class="n">traced_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">(</span><span class="n">tracer</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">traced_model</span><span class="p">,</span> <span class="n">tracer</span><span class="o">.</span><span class="n">node_name_to_scope</span>
+
+
+<span class="k">def</span> <span class="nf">_prepare_traced_model</span><span class="p">(</span><span class="n">traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span>
+                          <span class="n">node_name_to_scope</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper for prepare_model(). This prepares the given traced_model in-place.</span>
+
+<span class="sd">    :param traced_model: Symbolically traced model.</span>
+<span class="sd">    :param node_name_to_scope: Mapping from node name to the scope of module which contains the node.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">unique_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="c1"># Modify the symbolically traced model by iterating over all the nodes</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+
+        <span class="c1"># Create new module for functional nodes</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;call_function&#39;</span><span class="p">,</span> <span class="s1">&#39;call_method&#39;</span><span class="p">]:</span>
+            <span class="n">functional_name</span> <span class="o">=</span> <span class="n">_find_functional_name_for_node</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">functional_name</span><span class="p">:</span>
+                <span class="c1"># Instantiate new module for functional node</span>
+                <span class="n">new_module</span> <span class="o">=</span> <span class="n">_create_module_for_functional_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">functional_name</span><span class="p">)</span>
+                <span class="n">parent_module</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">,</span> <span class="n">new_module_qualified_name</span> <span class="o">=</span> \
+                    <span class="n">_get_info_for_functional_node</span><span class="p">(</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">node_name_to_scope</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">parent_module</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">,</span> <span class="n">new_module</span><span class="p">)</span>
+                <span class="c1"># Insert the node for new module in the graph</span>
+                <span class="n">_insert_node_for_new_module</span><span class="p">(</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">new_module_qualified_name</span><span class="p">,</span> <span class="n">functional_name</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Functional         : Adding new module for node: {</span><span class="si">%s</span><span class="s2">} &quot;</span><span class="p">,</span> <span class="n">new_module_qualified_name</span><span class="p">)</span>
+
+        <span class="c1"># Create new module for reused/duplicate nodes</span>
+        <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span> <span class="ow">in</span> <span class="n">unique_nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;call_module&#39;</span><span class="p">:</span>
+                <span class="c1"># Instantiate new module for reused node</span>
+                <span class="n">new_module</span> <span class="o">=</span> <span class="n">_create_module_for_reused_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">traced_model</span><span class="p">)</span>
+                <span class="n">parent_module</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">,</span> <span class="n">new_module_qualified_name</span> <span class="o">=</span> \
+                    <span class="n">_get_info_for_reused_node</span><span class="p">(</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">node_name_to_scope</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">parent_module</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">,</span> <span class="n">new_module</span><span class="p">)</span>
+                <span class="c1"># Insert the node for new module in the graph</span>
+                <span class="n">_insert_node_for_new_module</span><span class="p">(</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">new_module_qualified_name</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reused/Duplicate   : Adding new module for node: {</span><span class="si">%s</span><span class="s2">} &quot;</span><span class="p">,</span> <span class="n">new_module_qualified_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">unique_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+
+    <span class="n">_verify_traced_model</span><span class="p">(</span><span class="n">traced_model</span><span class="p">)</span>
+
+    <span class="c1"># Replace SiLU with CustomSiLU</span>
+    <span class="n">replace_modules_of_type1_with_type2</span><span class="p">(</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">,</span> <span class="n">elementwise_ops</span><span class="o">.</span><span class="n">CustomSiLU</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_verify_traced_model</span><span class="p">(</span><span class="n">traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Does some checks to make sure the graph is well-formed and recompile the forward() method of symbolic_traced</span>
+<span class="sd">    model from its graph</span>
+
+<span class="sd">    :param traced_model: Symbolically traced model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">lint</span><span class="p">()</span>
+    <span class="n">traced_model</span><span class="o">.</span><span class="n">recompile</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_insert_node_for_new_module</span><span class="p">(</span><span class="n">traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span>
+                                <span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">,</span>
+                                <span class="n">module_qualified_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                <span class="n">functional_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Insert &#39;call module&#39; node into graph and replace all the uses of &#39;node&#39; with newly added node and erase the</span>
+<span class="sd">    old node from graph</span>
+<span class="sd">    :param traced_model: Symbolically traced model</span>
+<span class="sd">    :param node: Current node in the graph after which new node will be inserted</span>
+<span class="sd">    :param module_qualified_name: Qualified module name in symbolic_traced_model hierarchy corresponding to new node</span>
+<span class="sd">    :param functional_name: Original functional name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">inserting_after</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">functional_name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">functional_name</span> <span class="ow">in</span> <span class="n">functional_with_special_handling</span><span class="p">:</span>
+                <span class="n">new_node</span> <span class="o">=</span> <span class="n">special_handler_functions</span><span class="p">[</span><span class="n">functional_name</span><span class="p">][</span><span class="s1">&#39;node_fn&#39;</span><span class="p">](</span><span class="n">traced_model</span><span class="p">,</span> <span class="n">module_qualified_name</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">functional_name</span> <span class="ow">in</span> <span class="n">functional_with_stateless_api</span><span class="p">:</span>
+                <span class="n">new_node</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">call_module</span><span class="p">(</span><span class="n">module_qualified_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">functional_name</span> <span class="ow">in</span> <span class="n">functional_with_stateful_api</span><span class="p">:</span>
+                <span class="n">new_node</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">call_module</span><span class="p">(</span><span class="n">module_qualified_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported module: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">functional_name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_node</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">call_module</span><span class="p">(</span><span class="n">module_qualified_name</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="n">node</span><span class="o">.</span><span class="n">replace_all_uses_with</span><span class="p">(</span><span class="n">new_node</span><span class="p">)</span>
+    <span class="n">traced_model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">erase_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_find_functional_name_for_node</span><span class="p">(</span><span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For given node name, find corresponding functional name from combined lookup</span>
+
+<span class="sd">    :param node_name: torch.fx Node name</span>
+<span class="sd">    :return: corresponding functional name if found, else None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">combined_lookup</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">functional_with_stateful_api</span><span class="p">,</span> <span class="o">**</span><span class="n">functional_with_special_handling</span><span class="p">,</span> <span class="o">**</span><span class="n">functional_with_stateless_api</span><span class="p">}</span>
+
+    <span class="c1"># Functional operations with similar names are differentiated using &quot;_count&quot; suffix</span>
+    <span class="c1"># when symbolically traced. For example, two add operations will have name &#39;add&#39; and &#39;add_1&#39;.</span>
+    <span class="c1"># Split given node name by occurrence of pattern. \d is used to match [0-9] followed by &#39;_&#39;.</span>
+    <span class="n">strings</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;_\d&#39;</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">node_name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">strings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">combined_lookup</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">string</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t find functional: </span><span class="si">%s</span><span class="s2"> in the lookup. If functional op isn&#39;t math invariant,&quot;</span>
+                 <span class="s2">&quot; add an entry in the lookup.&quot;</span><span class="p">,</span> <span class="n">node_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_create_module_for_functional_node</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="n">functional_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For given node and functional name, create torch.nn.Module with same parameters as functional node parameters</span>
+<span class="sd">    :param node: torch.fx Node</span>
+<span class="sd">    :param functional_name: Functional name for given node</span>
+<span class="sd">    :return: New module</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Instantiate new module from lookup</span>
+    <span class="k">if</span> <span class="n">functional_name</span> <span class="ow">in</span> <span class="n">functional_with_stateful_api</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">functional_with_stateful_api</span><span class="p">[</span><span class="n">functional_name</span><span class="p">]()</span>
+        <span class="c1"># Set the parameters for module from node.kwargs</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">functional_name</span> <span class="ow">in</span> <span class="n">functional_with_special_handling</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">special_handler_functions</span><span class="p">[</span><span class="n">functional_name</span><span class="p">][</span><span class="s1">&#39;module_fn&#39;</span><span class="p">](</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">functional_name</span> <span class="ow">in</span> <span class="n">functional_with_stateless_api</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">functional_with_stateless_api</span><span class="p">[</span><span class="n">functional_name</span><span class="p">]()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported module: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">functional_name</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">module</span>
+
+
+<span class="k">def</span> <span class="nf">_create_module_for_reused_node</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="n">symbolic_traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">)</span> <span class="o">-&gt;</span>\
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For given reused/Duplicate node in symbolically traced model, create new module with same parameters as</span>
+<span class="sd">    original module</span>
+<span class="sd">    :param node: Reused/Duplicate torch.fx Node</span>
+<span class="sd">    :param symbolic_traced_model: Symbolically traced model</span>
+<span class="sd">    :return: New module</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the original module and return newly deep copied module</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">_get_module_for_dotted_name</span><span class="p">(</span><span class="n">symbolic_traced_model</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+    <span class="n">new_module</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_module</span>
+
+
+<span class="k">def</span> <span class="nf">_get_module_for_dotted_name</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span> <span class="n">dotted_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For given dotted name, find the module</span>
+<span class="sd">    :param module: module to be found</span>
+<span class="sd">    :param dotted_name: dotted name of module</span>
+<span class="sd">    :return: module</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">dotted_name</span><span class="p">:</span>
+        <span class="n">module_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">dotted_name</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_get_module_for_dotted_name</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">_modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">],</span> <span class="n">remainder</span><span class="p">)</span> <span class="c1"># pylint: disable=protected-access</span>
+
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">dotted_name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_module_for_activation_fn</span><span class="p">(</span><span class="n">act_fn</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    returns module instance for functional tyoe handled within PT transformers for activation functions</span>
+<span class="sd">    :param act_fn: activation function implemented as a functional.</span>
+<span class="sd">    :return: module equivalent for the activation function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">act_fn</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">functional_op_to_module_map</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unsupported activation function {</span><span class="si">%s</span><span class="s2">}&quot;</span><span class="p">,</span> <span class="n">act_fn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">functional_op_to_module_map</span><span class="p">[</span><span class="n">act_fn</span><span class="p">]()</span>
+    <span class="k">return</span> <span class="n">module</span>
+
+
+<span class="k">def</span> <span class="nf">prepare_pt_transformer_for_quantsim</span><span class="p">(</span><span class="n">transformer_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replaces functionals with modules for activation function, updates model in-place</span>
+<span class="sd">    :param transformer_model: model with PyTorch nn.Transformer layer</span>
+<span class="sd">    :return: updated model with modules for activation function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">transformer_model</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+
+        <span class="c1"># encoder layer or decoder layer type is the leaf level node to be updated within nn.transformer layer</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">TransformerEncoderLayer</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">get_module_for_activation_fn</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">activation</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">TransformerDecoderLayer</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">get_module_for_activation_fn</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">activation</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_info_for_functional_node</span><span class="p">(</span><span class="n">traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span>
+                                  <span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">Node</span><span class="p">,</span>
+                                  <span class="n">node_name_to_scope</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">]])</span>\
+        <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For functional node, get module which contains the node, corresponding new module&#39;s name and fully qualified name.</span>
+<span class="sd">    This information will be used to add new module at either module-level scope or model-level scope.</span>
+
+<span class="sd">    NOTE: If node_name_to_scope is not provided, then the corresponding new module will be added at model-level scope.</span>
+<span class="sd">    Also, if exception is raised, new module will be added at model-level scope.</span>
+
+<span class="sd">    :param traced_model: Traced model</span>
+<span class="sd">    :param node: torch.fx Node</span>
+<span class="sd">    :param node_name_to_scope: Mapping from node name to the scope of module which contains the node.</span>
+<span class="sd">    :return: (parent_module, new_module_name, new_module_qualified_name)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent_module</span> <span class="o">=</span> <span class="n">traced_model</span>
+    <span class="n">new_module_name</span> <span class="o">=</span> <span class="s2">&quot;module_&quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">new_module_qualified_name</span> <span class="o">=</span> <span class="n">new_module_name</span>
+
+    <span class="k">if</span> <span class="n">node_name_to_scope</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">node_name_to_scope</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">parent_module</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">get_submodule</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">module_path</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">new_module_qualified_name</span> <span class="o">=</span> <span class="n">new_module_name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_module_qualified_name</span> <span class="o">=</span> <span class="n">module_path</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">new_module_name</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">parent_module</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">,</span> <span class="n">new_module_qualified_name</span>
+
+
+<span class="k">def</span> <span class="nf">_get_info_for_reused_node</span><span class="p">(</span><span class="n">traced_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span>
+                              <span class="n">node</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">Node</span><span class="p">,</span>
+                              <span class="n">node_name_to_scope</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">]])</span>\
+        <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">fx</span><span class="o">.</span><span class="n">GraphModule</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For reused node, get module which contains the node, corresponding new module&#39;s name and fully qualified name.</span>
+<span class="sd">    This information will be used to add new module at either module-level scope or model-level scope.</span>
+
+<span class="sd">    NOTE: If node_name_to_scope is not provided, then the corresponding new module will be added at model-level scope.</span>
+<span class="sd">    Also, if exception is raised, new module will be added at model-level scope.</span>
+
+<span class="sd">    :param traced_model: Traced model</span>
+<span class="sd">    :param node: torch.fx Node</span>
+<span class="sd">    :param node_name_to_scope: Mapping from node name to the scope of module which contains the node.</span>
+<span class="sd">    :return: (parent_module, new_module_name, new_module_qualified_name)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent_module</span> <span class="o">=</span> <span class="n">traced_model</span>
+    <span class="n">new_module_name</span> <span class="o">=</span> <span class="s2">&quot;module_&quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">new_module_qualified_name</span> <span class="o">=</span> <span class="n">new_module_name</span>
+
+    <span class="k">if</span> <span class="n">node_name_to_scope</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">node_name_to_scope</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">module_path</span><span class="p">:</span>
+                <span class="n">parent_name</span><span class="p">,</span> <span class="n">child_name</span> <span class="o">=</span> <span class="n">module_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parent_name</span><span class="p">,</span> <span class="n">child_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">module_path</span>
+            <span class="n">parent_module</span> <span class="o">=</span> <span class="n">traced_model</span><span class="o">.</span><span class="n">get_submodule</span><span class="p">(</span><span class="n">parent_name</span><span class="p">)</span>
+            <span class="n">new_module_name</span> <span class="o">=</span> <span class="s2">&quot;module_&quot;</span> <span class="o">+</span> <span class="n">child_name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">parent_name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">new_module_qualified_name</span> <span class="o">=</span> <span class="n">new_module_name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_module_qualified_name</span> <span class="o">=</span> <span class="n">parent_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">new_module_name</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">parent_module</span><span class="p">,</span> <span class="n">new_module_name</span><span class="p">,</span> <span class="n">new_module_qualified_name</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
