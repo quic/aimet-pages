@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_tensorflow.keras.cross_layer_equalization &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.29.0</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.29.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/model_quantization.html"> Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/quantization_sim.html"> Quantization Simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#quantsim-workflow">QuantSim Workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#simulating-quantization-noise">Simulating Quantization Noise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#determining-quantization-parameters-encodings">Determining Quantization Parameters (Encodings)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#quantization-schemes">Quantization Schemes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#configuring-quantization-simulation-ops">Configuring Quantization Simulation Ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#frequently-asked-questions">Frequently Asked Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html"> Quantization-Aware Training (QAT)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#qat-workflow">QAT workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#qat-modes">QAT modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#recommendations-for-quantization-aware-training">Recommendations for Quantization-Aware Training</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#post-training-quantization"><span class="hideitem">Post-Training Quantization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/auto_quant.html">AutoQuant</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/auto_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/auto_quant.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/adaround.html">Adaptive Rounding (AdaRound)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/adaround.html#adaround-use-cases">AdaRound Use Cases</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/adaround.html#common-terminology">Common terminology</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/adaround.html#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html">Cross-Layer Equalization</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/bn_reestimation.html">BN Re-estimation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/bn_reestimation.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/bn_reestimation.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html">Bias Correction [Depricated]</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#debugging-analysis-tools"><span class="hideitem">Debugging/Analysis Tools</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quant_analyzer.html">QuantAnalyzer</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/quant_analyzer.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/quant_analyzer.html#requirements">Requirements</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/quant_analyzer.html#detailed-analysis-descriptions">Detailed Analysis Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_quant.html">Visualizations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/visualization_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/visualization_quant.html#quantization">Quantization</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/visualization_quant.html#pytorch">PyTorch</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/visualization_quant.html#tensorflow">TensorFlow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#pytorch"><span class="hideitem">PyTorch</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_guidelines.html"> PyTorch Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_quantization.html"> AIMET PyTorch Quantization APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#tensorflow"><span class="hideitem">Tensorflow</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_model_guidelines.html"> TensorFlow Model Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/quantization_feature_guidebook.html">Quantization Guidebook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/model_compression.html"> Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/compression_feature_guidebook.html">Compression Guidebook</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html">Greedy Compression Ratio Selection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#how-it-works">How it works</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#per-layer-exploration">Per-layer Exploration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#compression-ratio-selection">Compression Ratio Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#winnowing">Winnowing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/winnowing.html">Winnowing</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/winnowing.html#overview">Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/winnowing.html#winnowing-overview">Winnowing Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/winnowing.html#how-winnowing-works">How Winnowing Works</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_docs/index.html"> API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html">PyTorch Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_layer_output_generation.html">Tensorflow Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/keras_quantization.html">Keras Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/keras_layer_output_generation.html">Keras Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/keras_compression.html">Keras Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/onnx_quantization.html">ONNX Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/onnx_layer_output_generation.html">ONNX Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/examples.html"> Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#release-packages">Release packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install/install_host.html">Install in Host Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages">Install GPU packages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-pytorch-1-9-or-onnx">Install GPU packages for PyTorch 1.9 or ONNX</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-pytorch-1-13">Install GPU packages for PyTorch 1.13</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#post-installation-steps">Post installation steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install/install_docker.html">Install in Docker Container</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#set-variant">Set variant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#start-docker-container">Start docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_tensorflow.keras.cross_layer_equalization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_tensorflow.keras.cross_layer_equalization</h1><div class="highlight"><pre>
+<span></span><span class="c1"># /usr/bin/env python3.5</span>
+<span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2021, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+<span class="sd">&quot;&quot;&quot;Cross Layer Equalization&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">import</span> <span class="nn">aimet_common.libpymo</span> <span class="k">as</span> <span class="nn">libpymo</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.batch_norm_fold</span> <span class="kn">import</span> <span class="n">fold_all_batch_norms</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.graphsearchtuils</span> <span class="kn">import</span> <span class="n">GraphSearchUtils</span><span class="p">,</span> <span class="n">ClsSet</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.utils</span> <span class="kn">import</span> <span class="n">model_transform_utils</span>
+<span class="kn">from</span> <span class="nn">aimet_tensorflow.keras.utils.weight_tensor_utils</span> <span class="kn">import</span> <span class="n">WeightTensorUtils</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">CrosslayerEqualization</span><span class="p">)</span>
+
+<span class="n">BatchNormFoldedPair</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span>
+                                                <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">],</span>
+                                   <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">,</span>
+                                                <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">]]</span>
+
+<span class="n">ScaleFactor</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
+<span class="n">ReluFlag</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span>
+
+<span class="n">Convs</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span>
+                     <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DepthwiseConv2D</span><span class="p">,</span>
+                     <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2DTranspose</span><span class="p">]</span>
+
+<span class="n">_supported_convs</span> <span class="o">=</span> <span class="n">Convs</span><span class="o">.</span><span class="n">__args__</span>
+
+<div class="viewcode-block" id="ClsSetInfo"><a class="viewcode-back" href="../../../api_docs/keras_primitive_apis_cle.html#aimet_tensorflow.keras.cross_layer_equalization.ClsSetInfo">[docs]</a><span class="k">class</span> <span class="nc">ClsSetInfo</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class hold information about the layers in a CLS set, along with corresponding scaling factors</span>
+<span class="sd">    and other information like if there is a ReLU activation function between the CLS set layers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ClsSetInfo.ClsSetLayerPairInfo"><a class="viewcode-back" href="../../../api_docs/keras_primitive_apis_cle.html#aimet_tensorflow.keras.cross_layer_equalization.ClsSetInfo.ClsSetLayerPairInfo">[docs]</a>    <span class="k">class</span> <span class="nc">ClsSetLayerPairInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Models a pair of layers that were scaled using CLS. And related information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer1</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">layer2</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                     <span class="n">relu_activation_between_layers</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param layer1: Layer whose bias is folded</span>
+<span class="sd">            :param layer2: Layer to which bias of previous layer&#39;s bias is folded</span>
+<span class="sd">            :param scale_factor: Scale Factor found from Cross Layer Scaling to scale BN parameters</span>
+<span class="sd">            :param relu_activation_between_layers: If the activation between layer1 and layer2 is Relu</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">=</span> <span class="n">layer1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span> <span class="o">=</span> <span class="n">layer2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">=</span> <span class="n">scale_factor</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">relu_activation_between_layers</span> <span class="o">=</span> <span class="n">relu_activation_between_layers</span>
+
+        <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">layer1</span> <span class="ow">and</span> \
+                       <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">layer2</span> <span class="ow">and</span> \
+                       <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">)</span> <span class="ow">and</span> \
+                       <span class="bp">self</span><span class="o">.</span><span class="n">relu_activation_between_layers</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">relu_activation_between_layers</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cls_pair_1</span><span class="p">:</span> <span class="n">ClsSetLayerPairInfo</span><span class="p">,</span> <span class="n">cls_pair_2</span><span class="p">:</span> <span class="n">ClsSetLayerPairInfo</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor takes 2 pairs if Depth-wise separable layer is being folded</span>
+<span class="sd">        :param cls_pair_1: Pair between two conv or conv and depth-wise conv</span>
+<span class="sd">        :param cls_pair_2: Pair between depth-wise conv and point-wise conv</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cls_pair_2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cls_pair_info_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">cls_pair_1</span><span class="p">,</span> <span class="n">cls_pair_2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cls_pair_info_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">cls_pair_1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cls_pair_info_list</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">cls_pair_info_list</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<span class="k">class</span> <span class="nc">CrossLayerScaling</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code to apply the cross-layer-scaling technique to a model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scale_cls_set_with_conv_layers</span><span class="p">(</span>
+            <span class="n">cls_set</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        API to invoke equalize layer params (update for weights and bias is in place)</span>
+<span class="sd">        :param cls_set: Consecutive Conv layers Tuple whose weights and biases need to be equalized</span>
+<span class="sd">        :return: Scaling factor S_12 for each conv layer pair: numpy array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">cls_set</span><span class="p">:</span>
+            <span class="c1"># NOTE: DepthwiseConv2D and Conv2DTranspose is subclass of Conv2D</span>
+            <span class="c1">#   The check below covers all of Conv2D, DepthwiseConv2D and Conv2DTranspose class</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only Conv or Transposed Conv layers are supported for CLE&quot;</span><span class="p">)</span>
+
+        <span class="n">scaling_factor</span><span class="p">,</span> <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">call_mo_scale</span><span class="p">(</span><span class="n">cls_set</span><span class="p">)</span>
+
+        <span class="n">prev_layer</span><span class="p">,</span> <span class="n">curr_layer</span> <span class="o">=</span> <span class="n">cls_set</span>
+        <span class="n">weight_and_bias_0</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_unpack_equalization_params</span><span class="p">(</span><span class="n">prev_layer</span><span class="p">,</span> <span class="n">prev_layer_params</span><span class="p">,</span>
+                                                                          <span class="n">unpack_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">prev_layer</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weight_and_bias_0</span><span class="p">)</span>
+
+        <span class="n">weight_and_bias_1</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_unpack_equalization_params</span><span class="p">(</span><span class="n">curr_layer</span><span class="p">,</span> <span class="n">curr_layer_params</span><span class="p">,</span>
+                                                                          <span class="n">unpack_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">curr_layer</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weight_and_bias_1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">scaling_factor</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">call_mo_scale</span><span class="p">(</span><span class="n">cls_set</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Invokes scale API in model optimization library</span>
+<span class="sd">        :param cls_set: Consecutive Conv layers Tuple whose weights and biases need to be equalized</span>
+<span class="sd">        :return: Scaling factor, prev and current layer updated parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prev_layer_params</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_pack_equalization_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pack_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">curr_layer_params</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_pack_equalization_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pack_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">scaling_factor</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">scaleLayerParams</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">scaling_factor</span><span class="p">,</span> <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scale_cls_set_with_depthwise_conv_layers</span><span class="p">(</span>
+            <span class="n">cls_set</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span>
+                                  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DepthwiseConv2D</span><span class="p">,</span>
+                                  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        API to invoke equalize layer params (update for weights and bias is in place)</span>
+<span class="sd">        :param cls_set: Consecutive Conv layers whose weights and biases need to be equalized.</span>
+<span class="sd">                        Second Conv layer is a depth-wise conv and third conv layer is point-wise conv</span>
+<span class="sd">        :return: Scaling factors S_12 and S_23 : numpy arrays</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">cls_set</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">_supported_convs</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only Conv or Transposed Conv layers are supported for CLE&quot;</span><span class="p">)</span>
+
+        <span class="n">scaling_params</span><span class="p">,</span> <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span><span class="p">,</span> <span class="n">next_layer_params</span> <span class="o">=</span> \
+            <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">call_mo_scale_depthwise_separable_layer</span><span class="p">(</span><span class="n">cls_set</span><span class="p">)</span>
+
+        <span class="n">prev_layer</span><span class="p">,</span> <span class="n">curr_layer</span><span class="p">,</span> <span class="n">next_layer</span> <span class="o">=</span> <span class="n">cls_set</span>
+        <span class="n">weight_and_bias_0</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_unpack_equalization_params</span><span class="p">(</span><span class="n">prev_layer</span><span class="p">,</span>
+                                                                          <span class="n">prev_layer_params</span><span class="p">,</span>
+                                                                          <span class="n">unpack_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">prev_layer</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weight_and_bias_0</span><span class="p">)</span>
+
+        <span class="n">weight_and_bias_1</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_unpack_equalization_params</span><span class="p">(</span><span class="n">curr_layer</span><span class="p">,</span>
+                                                                          <span class="n">curr_layer_params</span><span class="p">,</span>
+                                                                          <span class="n">unpack_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">curr_layer</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weight_and_bias_1</span><span class="p">)</span>
+
+        <span class="n">weight_and_bias_2</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_unpack_equalization_params</span><span class="p">(</span><span class="n">next_layer</span><span class="p">,</span>
+                                                                          <span class="n">next_layer_params</span><span class="p">,</span>
+                                                                          <span class="n">unpack_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">next_layer</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weight_and_bias_2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">scaling_params</span><span class="o">.</span><span class="n">scalingMatrix12</span><span class="p">,</span> <span class="n">scaling_params</span><span class="o">.</span><span class="n">scalingMatrix23</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">call_mo_scale_depthwise_separable_layer</span><span class="p">(</span>
+            <span class="n">cls_set</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span>
+                                  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DepthwiseConv2D</span><span class="p">,</span>
+                                  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">libpymo</span><span class="o">.</span><span class="n">RescalingParamsVectors</span><span class="p">,</span>
+                                                                           <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                                                           <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                                                           <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Invokes scale API in model optimization library</span>
+<span class="sd">        :param cls_set: Consecutive Conv layers whose weights and biases need to be equalized</span>
+<span class="sd">        :return: Scaling factors, prev, current and next layer updated parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">prev_layer_params</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_pack_equalization_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pack_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">curr_layer_params</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_pack_equalization_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pack_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">next_layer_params</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">_pack_equalization_params</span><span class="p">(</span><span class="n">cls_set</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pack_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">scaling_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">scaleDepthWiseSeparableLayer</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span><span class="p">,</span> <span class="n">next_layer_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">scaling_params</span><span class="p">,</span> <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span><span class="p">,</span> <span class="n">next_layer_params</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_pack_equalization_params</span><span class="p">(</span><span class="n">layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">pack_bias</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">:</span>
+        <span class="n">equalization_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">()</span>
+
+        <span class="n">param_tensors</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+        <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">param_tensors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">WeightTensorUtils</span><span class="o">.</span><span class="n">transpose_from_tf_to_libpymo_format</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+
+        <span class="n">equalization_params</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight_tensor</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">equalization_params</span><span class="o">.</span><span class="n">weightShape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pack_bias</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">use_bias</span><span class="p">:</span>
+                <span class="n">equalization_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">param_tensors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">equalization_params</span><span class="o">.</span><span class="n">isBiasNone</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">equalization_params</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_unpack_equalization_params</span><span class="p">(</span><span class="n">layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span>
+                                    <span class="n">equalization_params</span><span class="p">:</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">EqualizationParams</span><span class="p">,</span>
+                                    <span class="n">unpack_bias</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">:</span>
+
+        <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">equalization_params</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">equalization_params</span><span class="o">.</span><span class="n">weightShape</span><span class="p">)</span>
+        <span class="n">weight_tensor</span> <span class="o">=</span> <span class="n">WeightTensorUtils</span><span class="o">.</span><span class="n">transpose_from_libpymo_to_tf_format</span><span class="p">(</span><span class="n">weight_tensor</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">use_bias</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">unpack_bias</span><span class="p">:</span>
+                <span class="n">bias_tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">equalization_params</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">equalization_params</span><span class="o">.</span><span class="n">weightShape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">bias_tensor</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+            <span class="n">param_tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight_tensor</span><span class="p">,</span> <span class="n">bias_tensor</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">param_tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight_tensor</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">param_tensors</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scale_cls_sets</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ClsSet</span><span class="p">])</span> <span class="o">-&gt;</span> \
+            <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scale each cls set</span>
+<span class="sd">        :param cls_sets: Cls sets to scale</span>
+<span class="sd">        :return: List of scale factors corresponding to each scaled cls set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">scale_factor_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cls_set</span> <span class="ow">in</span> <span class="n">cls_sets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cls_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_cls_set_with_depthwise_conv_layers</span><span class="p">(</span><span class="n">cls_set</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_cls_set_with_conv_layers</span><span class="p">(</span><span class="n">cls_set</span><span class="p">)</span>
+            <span class="n">scale_factor_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scale_factor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">scale_factor_list</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_cls_set_info_list</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ClsSet</span><span class="p">],</span>
+                                 <span class="n">scale_factors</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ScaleFactor</span><span class="p">],</span>
+                                 <span class="n">is_relu_activation_in_cls_sets</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ReluFlag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ClsSetInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Binds information from there separate lists into one [ClsInfoSet] data structure</span>
+<span class="sd">        :param cls_sets: List of CLS sets</span>
+<span class="sd">        :param scale_factors: List of scale factors for each cls set</span>
+<span class="sd">        :param is_relu_activation_in_cls_sets: List of ReLU flag whether there is ReLU activation in each cls set</span>
+<span class="sd">        :return: List of ClsSetInfo</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">scale_factors</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_relu_activation_in_cls_sets</span><span class="p">)</span>
+
+        <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cls_set</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">,</span> <span class="n">has_relu_activation</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">,</span>
+                                                              <span class="n">scale_factors</span><span class="p">,</span>
+                                                              <span class="n">is_relu_activation_in_cls_sets</span><span class="p">):</span>
+            <span class="c1"># Depthwise separable convolution layer case (triplet of layers)</span>
+            <span class="c1"># Should have two scale factors and ReLU flags</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scale_factor</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cls_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">scale_factor</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">has_relu_activation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+                <span class="n">prev_layer</span><span class="p">,</span> <span class="n">curr_layer</span><span class="p">,</span> <span class="n">next_layer</span> <span class="o">=</span> <span class="n">cls_set</span>
+                <span class="n">cls_pair_1</span> <span class="o">=</span> <span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span><span class="p">(</span><span class="n">prev_layer</span><span class="p">,</span> <span class="n">curr_layer</span><span class="p">,</span>
+                                                            <span class="n">scale_factor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">has_relu_activation</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">cls_pair_2</span> <span class="o">=</span> <span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span><span class="p">(</span><span class="n">curr_layer</span><span class="p">,</span> <span class="n">next_layer</span><span class="p">,</span>
+                                                            <span class="n">scale_factor</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">has_relu_activation</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">cls_set_info</span> <span class="o">=</span> <span class="n">ClsSetInfo</span><span class="p">(</span><span class="n">cls_pair_1</span><span class="p">,</span> <span class="n">cls_pair_2</span><span class="p">)</span>
+
+            <span class="c1"># Standard convolution layer case (tuple of layers)</span>
+            <span class="c1"># Should have one scale factor and ReLU flag</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prev_layer</span><span class="p">,</span> <span class="n">curr_layer</span> <span class="o">=</span> <span class="n">cls_set</span>
+                <span class="n">cls_pair</span> <span class="o">=</span> <span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span><span class="p">(</span><span class="n">prev_layer</span><span class="p">,</span> <span class="n">curr_layer</span><span class="p">,</span>
+                                                          <span class="n">scale_factor</span><span class="p">,</span> <span class="n">has_relu_activation</span><span class="p">)</span>
+                <span class="n">cls_set_info</span> <span class="o">=</span> <span class="n">ClsSetInfo</span><span class="p">(</span><span class="n">cls_pair</span><span class="p">)</span>
+
+            <span class="n">cls_set_info_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cls_set_info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cls_set_info_list</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">scale_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ClsSetInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses cross-layer scaling to scale all applicable layers in the given model</span>
+<span class="sd">        :param model: tf.keras.Model</span>
+<span class="sd">        :return: CLS information for each CLS set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Find layer groups</span>
+        <span class="n">graph_search_util</span> <span class="o">=</span> <span class="n">GraphSearchUtils</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">layer_groups</span> <span class="o">=</span> <span class="n">graph_search_util</span><span class="o">.</span><span class="n">find_layer_groups_to_scale</span><span class="p">()</span>
+
+        <span class="c1"># Find cls sets from the layer groups</span>
+        <span class="n">cls_sets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">layer_group</span> <span class="ow">in</span> <span class="n">layer_groups</span><span class="p">:</span>
+            <span class="n">cls_set</span> <span class="o">=</span> <span class="n">GraphSearchUtils</span><span class="o">.</span><span class="n">convert_layer_group_to_cls_sets</span><span class="p">(</span><span class="n">layer_group</span><span class="p">)</span>
+            <span class="n">cls_sets</span> <span class="o">+=</span> <span class="n">cls_set</span>
+
+        <span class="c1"># Scale the CLS sets</span>
+        <span class="n">scale_factors</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_cls_sets</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">)</span>
+
+        <span class="c1"># Find if there were ReLU activations between layers of each cls set</span>
+        <span class="n">is_relu_activation_in_cls_sets</span> <span class="o">=</span> <span class="n">graph_search_util</span><span class="o">.</span><span class="n">is_relu_activation_present_in_cls_sets</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">)</span>
+
+        <span class="c1"># Convert to a list of cls set info elements</span>
+        <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">create_cls_set_info_list</span><span class="p">(</span><span class="n">cls_sets</span><span class="p">,</span>
+                                                                       <span class="n">scale_factors</span><span class="p">,</span>
+                                                                       <span class="n">is_relu_activation_in_cls_sets</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cls_set_info_list</span>
+
+
+<span class="k">class</span> <span class="nc">HighBiasFold</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Code to apply the high-bias-fold technique to a model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">bias_fold</span><span class="p">(</span><span class="n">cls_set_info_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">ClsSetInfo</span><span class="p">],</span>
+                  <span class="n">bn_layers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Folds bias values greater than 3 * sigma to next layer&#39;s bias</span>
+<span class="sd">        :param cls_set_info_list: List of info elements for each cls set</span>
+<span class="sd">        :param bn_layers: Key: Conv/Linear layer Value: Corresponding folded BN layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bn_layers</span><span class="p">:</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;High Bias folding is not supported for models without BatchNorm Layers&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">cls_set_info</span> <span class="ow">in</span> <span class="n">cls_set_info_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">cls_pair_info</span> <span class="ow">in</span> <span class="n">cls_set_info</span><span class="o">.</span><span class="n">cls_pair_info_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer1</span><span class="o">.</span><span class="n">use_bias</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer2</span><span class="o">.</span><span class="n">use_bias</span><span class="p">)</span> <span class="ow">or</span> \
+                        <span class="p">(</span><span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer1</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bn_layers</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span> <span class="o">=</span> <span class="n">HighBiasFold</span><span class="o">.</span><span class="n">call_mo_high_bias_fold</span><span class="p">(</span><span class="n">cls_pair_info</span><span class="p">,</span> <span class="n">bn_layers</span><span class="p">)</span>
+
+                <span class="n">layer1</span> <span class="o">=</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer1</span>
+                <span class="n">layer1_weight_tensor</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+                <span class="n">layer1_bias_tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+                <span class="n">layer1</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="n">layer1_weight_tensor</span><span class="p">,</span> <span class="n">layer1_bias_tensor</span><span class="p">])</span>
+
+                <span class="n">layer2</span> <span class="o">=</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer2</span>
+                <span class="n">layer2_weight_tensor</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">layer2</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+                <span class="n">layer2_bias_tensor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">curr_layer_params</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+                <span class="n">layer2</span><span class="o">.</span><span class="n">set_weights</span><span class="p">([</span><span class="n">layer2_weight_tensor</span><span class="p">,</span> <span class="n">layer2_bias_tensor</span><span class="p">])</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">call_mo_high_bias_fold</span><span class="p">(</span><span class="n">cls_pair_info</span><span class="p">:</span> <span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span><span class="p">,</span>
+                               <span class="n">bn_layers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">,</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Invokes high bias fold MO API</span>
+<span class="sd">        :param cls_pair_info: Pair of layers that were scaled using CLS and related information</span>
+<span class="sd">        :param bn_layers: Key: Conv/Linear layer Value: Corresponding folded BN layer</span>
+<span class="sd">        :return: Updated layer params</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bn_layer</span> <span class="o">=</span> <span class="n">bn_layers</span><span class="p">[</span><span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer1</span><span class="p">]</span>
+        <span class="n">prev_layer_bn_params</span> <span class="o">=</span> <span class="n">HighBiasFold</span><span class="o">.</span><span class="n">_pack_bn_params_high_bias_fold</span><span class="p">(</span><span class="n">bn_layer</span><span class="p">,</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">)</span>
+
+        <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span> <span class="o">=</span> <span class="n">HighBiasFold</span><span class="o">.</span><span class="n">_pack_layer_params</span><span class="p">(</span><span class="n">cls_pair_info</span><span class="p">)</span>
+
+        <span class="n">libpymo</span><span class="o">.</span><span class="n">updateBias</span><span class="p">(</span><span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span><span class="p">,</span> <span class="n">prev_layer_bn_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_pack_bn_params_high_bias_fold</span><span class="p">(</span><span class="n">bn_layer</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">,</span>
+                                       <span class="n">scaling_parameter</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BNParamsHighBiasFold</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper method to pack BatchNormalization parameter for high bias fold</span>
+<span class="sd">        :param bn_layer: Target batch normalization layer</span>
+<span class="sd">        :param scaling_parameter: Scaling parameters for each channel obtained from cross layer scaling</span>
+<span class="sd">        :return: Packed BNParamsHighBiasFold</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bn_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">BNParamsHighBiasFold</span><span class="p">()</span>
+
+        <span class="c1"># Note: In BatchNormFold, we initialize gamma and beta to 1 and 0 respectively to work as Identity</span>
+        <span class="c1"># So if the original value was set, use it for High Bias Fold</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">bn_layer</span><span class="p">,</span> <span class="s2">&quot;original_gamma&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">bn_layer</span><span class="p">,</span> <span class="s2">&quot;original_beta&quot;</span><span class="p">):</span>
+            <span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="n">bn_layer</span><span class="o">.</span><span class="n">original_gamma</span><span class="p">,</span> <span class="n">bn_layer</span><span class="o">.</span><span class="n">original_beta</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">bn_layer</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scaling_parameter</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gamma</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">scaling_parameter</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">beta</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;High Bias absorption is not supported for networks with fold-forward BatchNorms&quot;</span><span class="p">)</span>
+
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">scaling_parameter</span><span class="p">)</span>
+        <span class="n">bn_params</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">scaling_parameter</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bn_params</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_pack_layer_params</span><span class="p">(</span><span class="n">cls_pair_info</span><span class="p">:</span> <span class="n">ClsSetInfo</span><span class="o">.</span><span class="n">ClsSetLayerPairInfo</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">,</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper method to pack information of previous and current layer</span>
+<span class="sd">        :param cls_pair_info: Pair of layers that were scaled using CLS and related information</span>
+<span class="sd">        :return: Packed layer parameter tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Pack parameters for previous layer</span>
+        <span class="n">prev_layer_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">()</span>
+
+        <span class="n">prev_layer</span> <span class="o">=</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer1</span>
+        <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">activationIsRelu</span> <span class="o">=</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">relu_activation_between_layers</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">prev_layer_bias_tensor</span> <span class="o">=</span> <span class="n">prev_layer</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+        <span class="n">prev_layer_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">prev_layer_bias_tensor</span>
+
+        <span class="c1"># Pack parameters for current layer</span>
+        <span class="n">curr_layer_params</span> <span class="o">=</span> <span class="n">libpymo</span><span class="o">.</span><span class="n">LayerParams</span><span class="p">()</span>
+
+        <span class="n">curr_layer</span> <span class="o">=</span> <span class="n">cls_pair_info</span><span class="o">.</span><span class="n">layer2</span>
+        <span class="n">curr_layer_weight_tensor</span><span class="p">,</span> <span class="n">curr_layer_bias_tensor</span> <span class="o">=</span> <span class="n">curr_layer</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+        <span class="n">curr_layer_weight_tensor</span> <span class="o">=</span> <span class="n">WeightTensorUtils</span><span class="o">.</span><span class="n">transpose_from_tf_to_libpymo_format</span><span class="p">(</span><span class="n">curr_layer_weight_tensor</span><span class="p">,</span>
+                                                                                         <span class="n">curr_layer</span><span class="p">)</span>
+
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">curr_layer_bias_tensor</span>
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">curr_layer_weight_tensor</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">curr_layer_params</span><span class="o">.</span><span class="n">weightShape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">curr_layer_weight_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prev_layer_params</span><span class="p">,</span> <span class="n">curr_layer_params</span>
+
+
+<div class="viewcode-block" id="equalize_model"><a class="viewcode-back" href="../../../api_docs/keras_cross_layer_equalization.html#aimet_tensorflow.keras.cross_layer_equalization.equalize_model">[docs]</a><span class="k">def</span> <span class="nf">equalize_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    High-level API to perform Cross-Layer Equalization (CLE) on the given model</span>
+<span class="sd">    :param model: tf.keras.Model</span>
+<span class="sd">    :return: CLE applied tf.keras.Model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># replace any ReLU6 layers with ReLU</span>
+    <span class="n">model_for_cle</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model_transform_utils</span><span class="o">.</span><span class="n">replace_relu6_with_relu</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">folded_pairs</span><span class="p">,</span> <span class="n">model_for_cle</span> <span class="o">=</span> <span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model_for_cle</span><span class="p">)</span>
+
+    <span class="n">equalize_bn_folded_model</span><span class="p">(</span><span class="n">model_for_cle</span><span class="p">,</span> <span class="n">folded_pairs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model_for_cle</span></div>
+
+
+<span class="k">def</span> <span class="nf">equalize_bn_folded_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+                             <span class="n">folded_pairs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">BatchNormFoldedPair</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform Cross-Layer Scaling (CLS) and High Bias Folding (HBF) on a batchnorm-folded model in-place</span>
+<span class="sd">    :param model: BatchNorm-folded model to equalize</span>
+<span class="sd">    :param folded_pairs: List of pairs of folded layers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bn_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">conv_or_linear</span><span class="p">,</span> <span class="n">bn</span> <span class="ow">in</span> <span class="n">folded_pairs</span><span class="p">:</span>
+        <span class="n">bn_dict</span><span class="p">[</span><span class="n">conv_or_linear</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn</span>
+
+    <span class="c1"># perform cross-layer scaling on applicable layer sets</span>
+    <span class="n">cls_set_info_list</span> <span class="o">=</span> <span class="n">CrossLayerScaling</span><span class="o">.</span><span class="n">scale_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="c1"># high-bias fold</span>
+    <span class="n">HighBiasFold</span><span class="o">.</span><span class="n">bias_fold</span><span class="p">(</span><span class="n">cls_set_info_list</span><span class="p">,</span> <span class="n">bn_dict</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
