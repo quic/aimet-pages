@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantization-Aware Training &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.30.0</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.30.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/model_quantization.html"> Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/quantization_sim.html"> Quantization Simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#quantsim-workflow">QuantSim Workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#simulating-quantization-noise">Simulating Quantization Noise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#determining-quantization-parameters-encodings">Determining Quantization Parameters (Encodings)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#quantization-schemes">Quantization Schemes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#configuring-quantization-simulation-ops">Configuring Quantization Simulation Ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_sim.html#frequently-asked-questions">Frequently Asked Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html"> Quantization-Aware Training (QAT)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#qat-workflow">QAT workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#qat-modes">QAT modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quantization_aware_training.html#recommendations-for-quantization-aware-training">Recommendations for Quantization-Aware Training</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#post-training-quantization"><span class="hideitem">Post-Training Quantization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/auto_quant.html">AutoQuant</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/auto_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/auto_quant.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/adaround.html">Adaptive Rounding (AdaRound)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/adaround.html#adaround-use-cases">AdaRound Use Cases</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/adaround.html#common-terminology">Common terminology</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/adaround.html#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html">Cross-Layer Equalization</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/bn_reestimation.html">BN Re-estimation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/bn_reestimation.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/bn_reestimation.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html">Bias Correction [Depricated]</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#debugging-analysis-tools"><span class="hideitem">Debugging/Analysis Tools</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/quant_analyzer.html">QuantAnalyzer</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/quant_analyzer.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/quant_analyzer.html#requirements">Requirements</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/quant_analyzer.html#detailed-analysis-descriptions">Detailed Analysis Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_quant.html">Visualizations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/visualization_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/visualization_quant.html#quantization">Quantization</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/visualization_quant.html#pytorch">PyTorch</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/visualization_quant.html#tensorflow">TensorFlow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#pytorch"><span class="hideitem">PyTorch</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_guidelines.html"> PyTorch Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_quantization.html"> AIMET PyTorch Quantization APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_quantization.html#tensorflow"><span class="hideitem">Tensorflow</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_model_guidelines.html"> TensorFlow Model Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/quantization_feature_guidebook.html">Quantization Guidebook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/model_compression.html"> Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/compression_feature_guidebook.html">Compression Guidebook</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html">Greedy Compression Ratio Selection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#how-it-works">How it works</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#per-layer-exploration">Per-layer Exploration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/greedy_compression_ratio_selection.html#compression-ratio-selection">Compression Ratio Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#winnowing">Winnowing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../user_guide/winnowing.html">Winnowing</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/winnowing.html#overview">Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/winnowing.html#winnowing-overview">Winnowing Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../user_guide/winnowing.html#how-winnowing-works">How Winnowing Works</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_docs/index.html"> API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html">PyTorch Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/torch_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/tensorflow_layer_output_generation.html">Tensorflow Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/tensorflow_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/keras_quantization.html">Keras Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_model_preparer.html#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_quantsim.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_adaround.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html#custom-datatype-used">Custom Datatype used</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html#code-example-for-lower-level-apis">Code Example for Lower level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../../api_docs/keras_primitive_apis_cle.html#example-helper-methods-to-perform-cle-in-manual-mode">Example helper methods to perform CLE in manual mode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_batchnorm_re_estimation.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/keras_batchnorm_re_estimation.html#limitations">Limitations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/keras_layer_output_generation.html">Keras Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/keras_compression.html">Keras Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/keras_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/onnx_quantization.html">ONNX Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_quantsim.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_cross_layer_equalization.html#code-example">Code Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api_docs/onnx_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_docs/onnx_layer_output_generation.html">ONNX Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_docs/onnx_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/examples.html"> Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#release-packages">Release packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../install/index.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../install/install_host.html">Install in Host Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages">Install GPU packages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-pytorch-1-9-or-onnx">Install GPU packages for PyTorch 1.9 or ONNX</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-pytorch-1-13">Install GPU packages for PyTorch 1.13</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#post-installation-steps">Post installation steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_host.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../install/install_docker.html">Install in Docker Container</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#set-variant">Set variant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#start-docker-container">Start docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../install/install_docker.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quantization-Aware Training</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/Examples/torch/quantization/qat.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars and line breaks on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Quantization-Aware-Training">
+<h1>Quantization-Aware Training<a class="headerlink" href="#Quantization-Aware-Training" title="Permalink to this headline">¶</a></h1>
+<p>This notebook shows a working code example of how to use AIMET to perform QAT (Quantization-aware training). QAT is an AIMET feature adding quantization simulation ops (also called fake quantization ops sometimes) to a trained ML model and using a standard training pipeline to fine-tune or train the model for a few epochs. The resulting model should show improved accuracy on quantized ML accelerators.</p>
+<p>AIMET supports two different types of QAT 1. Simply referred to as QAT - quantization parameters like per-tensor scale/offsets for activations are computed once. During fine-tuning, the model weights are updated to minimize the effects of quantization in the forward pass, keeping the quantization parameters constant. 2. Referred to as QAT with range-learning - quantization parameters like per-tensor scale/offsets for activations are computed initially. Then both the quantization parameters and
+the model weights are jointly updated during fine-tuning to minimize the effects of quantization in the forward pass.</p>
+<p>This notebook specifically shows working code example for #1 above. You can find a separate notebook for #2 in the same folder.</p>
+<div class="section" id="Overall-flow">
+<h2>Overall flow<a class="headerlink" href="#Overall-flow" title="Permalink to this headline">¶</a></h2>
+<p>This notebook covers the following 1. Instantiate the example evaluation and training pipeline 2. Load the FP32 model and evaluate the model to find the baseline FP32 accuracy 3. Create a quantization simulation model (with fake quantization ops inserted) and evaluate this simuation model to get a quantized accuracy score 4. Fine-tune the quantization simulation model and evaluate the simulation model to get a post-finetuned quantized accuracy score</p>
+</div>
+<div class="section" id="What-this-notebook-is-not">
+<h2>What this notebook is not<a class="headerlink" href="#What-this-notebook-is-not" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>This notebook is not designed to show state-of-the-art QAT results. For example, it uses a relatively quantization-friendly model like Resnet18. Also, some optimization parameters like number of epochs to fine-tune are deliberately chosen to have the notebook execute more quickly.</p></li>
+</ul>
+<hr class="docutils" />
+<div class="section" id="Dataset">
+<h3>Dataset<a class="headerlink" href="#Dataset" title="Permalink to this headline">¶</a></h3>
+<p>This notebook relies on the ImageNet dataset for the task of image classification. If you already have a version of the dataset readily available, please use that. Else, please download the dataset from appropriate location (e.g. <a class="reference external" href="https://image-net.org/challenges/LSVRC/2012/index">https://image-net.org/challenges/LSVRC/2012/index</a>.php#).</p>
+<p><strong>Note1</strong>: The ImageNet dataset typically has the following characteristics and the dataloader provided in this example notebook rely on these - Subfolders ‘train’ for the training samples and ‘val’ for the validation samples. Please see the <a class="reference external" href="https://pytorch.org/vision/0.8/_modules/torchvision/datasets/imagenet.html">pytorch dataset description</a> for more details. - A subdirectory per class, and a file per each image sample</p>
+<p><strong>Note2</strong>: To speed up the execution of this notebook, you may use a reduced subset of the ImageNet dataset. E.g. the entire ILSVRC2012 dataset has 1000 classes, 1000 training samples per class and 50 validation samples per class. But for the purpose of running this notebook, you could perhaps reduce the dataset to say 2 samples per class. This exercise is left upto the reader and is not necessary.</p>
+<p>Edit the cell below and specify the directory where the downloaded ImageNet dataset is saved.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATASET_DIR</span> <span class="o">=</span> <span class="s1">&#39;/path/to/dataset/&#39;</span>         <span class="c1"># Please replace this with a real directory</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="1.-Example-evaluation-and-training-pipeline">
+<h3>1. Example evaluation and training pipeline<a class="headerlink" href="#1.-Example-evaluation-and-training-pipeline" title="Permalink to this headline">¶</a></h3>
+<p>The following is an example training and validation loop for this image classification task.</p>
+<ul class="simple">
+<li><p><strong>Does AIMET have any limitations on how the training, validation pipeline is written?</strong> Not really. We will see later that AIMET will modify the user’s model to create a QuantizationSim model which is still a PyTorch model. This QuantizationSim model can be used in place of the original model when doing inference or training.</p></li>
+<li><p><strong>Does AIMET put any limitation on the interface of the evaluate() or train() methods?</strong> Not really. You should be able to use your existing evaluate and train routines as-is.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">Examples.common</span> <span class="kn">import</span> <span class="n">image_net_config</span>
+<span class="kn">from</span> <span class="nn">Examples.torch.utils.image_net_evaluator</span> <span class="kn">import</span> <span class="n">ImageNetEvaluator</span>
+<span class="kn">from</span> <span class="nn">Examples.torch.utils.image_net_trainer</span> <span class="kn">import</span> <span class="n">ImageNetTrainer</span>
+<span class="kn">from</span> <span class="nn">Examples.torch.utils.image_net_data_loader</span> <span class="kn">import</span> <span class="n">ImageNetDataLoader</span>
+
+<span class="k">class</span> <span class="nc">ImageNetDataPipeline</span><span class="p">:</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_val_dataloader</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instantiates a validation dataloader for ImageNet dataset and returns it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_loader</span> <span class="o">=</span> <span class="n">ImageNetDataLoader</span><span class="p">(</span><span class="n">DATASET_DIR</span><span class="p">,</span>
+                                         <span class="n">image_size</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;image_size&#39;</span><span class="p">],</span>
+                                         <span class="n">batch_size</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">evaluation</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+                                         <span class="n">is_training</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                         <span class="n">num_workers</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">evaluation</span><span class="p">[</span><span class="s1">&#39;num_workers&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">data_loader</span>
+        <span class="k">return</span> <span class="n">data_loader</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a torch model, evaluates its Top-1 accuracy on the dataset</span>
+<span class="sd">        :param model: the model to evaluate</span>
+<span class="sd">        :param use_cuda: whether or not the GPU should be used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">evaluator</span> <span class="o">=</span> <span class="n">ImageNetEvaluator</span><span class="p">(</span><span class="n">DATASET_DIR</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;image_size&#39;</span><span class="p">],</span>
+                                      <span class="n">batch_size</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">evaluation</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+                                      <span class="n">num_workers</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">evaluation</span><span class="p">[</span><span class="s1">&#39;num_workers&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="n">use_cuda</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">finetune</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">learning_rate_schedule</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a torch model, finetunes the model to improve its accuracy</span>
+<span class="sd">        :param model: the model to finetune</span>
+<span class="sd">        :param epochs: The number of epochs used during the finetuning step.</span>
+<span class="sd">        :param learning_rate: The learning rate used during the finetuning step.</span>
+<span class="sd">        :param learning_rate_schedule: The learning rate schedule used during the finetuning step.</span>
+<span class="sd">        :param use_cuda: whether or not the GPU should be used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">trainer</span> <span class="o">=</span> <span class="n">ImageNetTrainer</span><span class="p">(</span><span class="n">DATASET_DIR</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;image_size&#39;</span><span class="p">],</span>
+                                  <span class="n">batch_size</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+                                  <span class="n">num_workers</span><span class="o">=</span><span class="n">image_net_config</span><span class="o">.</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;num_workers&#39;</span><span class="p">])</span>
+
+        <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">max_epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
+                      <span class="n">learning_rate_schedule</span><span class="o">=</span><span class="n">learning_rate_schedule</span><span class="p">,</span> <span class="n">use_cuda</span><span class="o">=</span><span class="n">use_cuda</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score">
+<h3>2. Load the model and evaluate to get a baseline FP32 accuracy score<a class="headerlink" href="#2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score" title="Permalink to this headline">¶</a></h3>
+<p>For this example notebook, we are going to load a pretrained resnet18 model from torchvision. Similarly, you can load any pretrained PyTorch model instead.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchvision.models</span> <span class="kn">import</span> <span class="n">resnet18</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">resnet18</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>AIMET quantization simulation requires the user’s model definition to follow certain guidelines. For example, functionals defined in forward pass should be changed to equivalent torch.nn.Module. AIMET user guide lists all these guidelines. The following <strong>ModelPreparer</strong> API uses new graph transformation feature available in PyTorch 1.9+ version and automates model definition changes required to comply with the above guidelines.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aimet_torch.model_preparer</span> <span class="kn">import</span> <span class="n">prepare_model</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">prepare_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>We should decide whether to place the model on a CPU or CUDA device. This example code will use CUDA if available in your current execution environment. You can change this logic and force a device placement if needed.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">use_cuda</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+    <span class="n">use_cuda</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Let’s determine the FP32 (floating point 32-bit) accuracy of this model using the evaluate() routine</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="3.-Create-a-quantization-simulation-model-and-determine-quantized-accuracy">
+<h3>3. Create a quantization simulation model and determine quantized accuracy<a class="headerlink" href="#3.-Create-a-quantization-simulation-model-and-determine-quantized-accuracy" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="Fold-Batch-Normalization-layers">
+<h3>Fold Batch Normalization layers<a class="headerlink" href="#Fold-Batch-Normalization-layers" title="Permalink to this headline">¶</a></h3>
+<p>Before we determine the simulated quantized accuracy using QuantizationSimModel, we will fold the BatchNormalization (BN) layers in the model. These layers get folded into adjacent Convolutional layers. The BN layers that cannot be folded are left as they are.</p>
+<p><strong>Why do we need to this?</strong> On quantized runtimes (like TFLite, SnapDragon Neural Processing SDK, etc.), it is a common practice to fold the BN layers. Doing so, results in an inferences/sec speedup since unnecessary computation is avoided. Now from a floating point compute perspective, a BN-folded model is mathematically equivalent to a model with BN layers from an inference perspective, and produces the same accuracy. However, folding the BN layers can increase the range of the tensor values
+for the weight parameters of the adjacent layers. And this can have a negative impact on the quantized accuracy of the model (especially when using INT8 or lower precision). So, we want to simulate that on-target behavior by doing BN folding here.</p>
+<p>The following code calls AIMET to fold the BN layers in-place on the given model</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aimet_torch.batch_norm_fold</span> <span class="kn">import</span> <span class="n">fold_all_batch_norms</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shapes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-Quantization-Sim-Model">
+<h3>Create Quantization Sim Model<a class="headerlink" href="#Create-Quantization-Sim-Model" title="Permalink to this headline">¶</a></h3>
+<p>Now we use AIMET to create a QuantizationSimModel. This basically means that AIMET will insert fake quantization ops in the model graph and will configure them. A few of the parameters are explained here - <strong>quant_scheme</strong>: We set this to “QuantScheme.post_training_tf_enhanced” - Supported options are ‘tf_enhanced’ or ‘tf’ or using Quant Scheme Enum QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced - <strong>default_output_bw</strong>: Setting this to 8, essentially means that we are
+asking AIMET to perform all activation quantizations in the model using integer 8-bit precision - <strong>default_param_bw</strong>: Setting this to 8, essentially means that we are asking AIMET to perform all parameter quantizations in the model using integer 8-bit precision</p>
+<p>There are other parameters that are set to default values in this example. Please check the AIMET API documentation of QuantizationSimModel to see reference documentation for all the parameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">QuantScheme</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>    <span class="c1"># Shape for each ImageNet sample is (3 channels) x (224 height) x (224 width)</span>
+<span class="k">if</span> <span class="n">use_cuda</span><span class="p">:</span>
+    <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">dummy_input</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                           <span class="n">quant_scheme</span><span class="o">=</span><span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span><span class="p">,</span>
+                           <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">,</span>
+                           <span class="n">default_output_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                           <span class="n">default_param_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>We can check the modifications AIMET has made to the model graph. One way is to print the model, and we can see that AIMET has added quantization wrapper layers. Note: use sim.model to access the modified PyTorch model. By default, AIMET creates a copy of the original model prior to modifying it. There is a parameter to override this behavior.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>We can also check how AIMET has configured the added fake quantization nodes, which AIMET refers to as ‘quantizers’. You can see this by printing the sim object.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Even though AIMET has added ‘quantizer’ nodes to the model graph but the model is not ready to be used yet. Before we can use the sim model for inference or training, we need to find appropriate scale/offset quantization parameters for each ‘quantizer’ node. For activation quantization nodes, we need to pass unlabeled data samples through the model to collect range statistics which will then let AIMET calculate appropriate scale/offset quantization parameters. This process is sometimes referred
+to as calibration. AIMET simply refers to it as ‘computing encodings’.</p>
+<p>So we create a routine to pass unlabeled data samples through the model. This should be fairly simple - use the existing train or validation data loader to extract some samples and pass them to the model. We don’t need to compute any loss metric etc. So we can just ignore the model output for this purpose. A few pointers regarding the data samples - In practice, we need a very small percentage of the overall data samples for computing encodings. For example, the training dataset for ImageNet has
+1M samples. For computing encodings we only need 500 or 1000 samples. - It may be beneficial if the samples used for computing encoding are well distributed. It’s not necessary that all classes need to be covered etc. since we are only looking at the range of values at every layer activation. However, we definitely want to avoid an extreme scenario like all ‘dark’ or ‘light’ samples are used - e.g. only using pictures captured at night might not give ideal results.</p>
+<p>The following shows an example of a routine that passes unlabeled samples through the model for computing encodings. This routine can be written in many different ways, this is just an example.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pass_calibration_data</span><span class="p">(</span><span class="n">sim_model</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">):</span>
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">get_val_dataloader</span><span class="p">()</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">batch_size</span>
+
+    <span class="k">if</span> <span class="n">use_cuda</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+
+    <span class="n">sim_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="mi">1000</span>
+
+    <span class="n">batch_cntr</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">target_data</span> <span class="ow">in</span> <span class="n">data_loader</span><span class="p">:</span>
+
+            <span class="n">inputs_batch</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">sim_model</span><span class="p">(</span><span class="n">inputs_batch</span><span class="p">)</span>
+
+            <span class="n">batch_cntr</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">batch_cntr</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">samples</span><span class="p">:</span>
+                <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Now we call AIMET to use the above routine to pass data through the model and then subsequently compute the quantization encodings. Encodings here refer to scale/offset quantization parameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">forward_pass_callback</span><span class="o">=</span><span class="n">pass_calibration_data</span><span class="p">,</span>
+                      <span class="n">forward_pass_callback_args</span><span class="o">=</span><span class="n">use_cuda</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Now the QuantizationSim model is ready to be used for inference or training. First we can pass this model to the same evaluation routine we used before. The evaluation routine will now give us a simulated quantized accuracy score for INT8 quantization instead of the FP32 accuracy score we saw before.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">accuracy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="4.-Perform-QAT">
+<h3>4. Perform QAT<a class="headerlink" href="#4.-Perform-QAT" title="Permalink to this headline">¶</a></h3>
+<p>To perform quantization aware training (QAT), we simply train the model for a few more epochs (typically 15-20). As with any training job, hyper-parameters need to be searched for optimal results. Good starting points are to use a learning rate on the same order as the ending learning rate when training the original model, and to drop the learning rate by a factor of 10 every 5 epochs or so.</p>
+<p>For the purpose of this example notebook, we are going to train only for 1 epoch. But feel free to change these parameters as you see fit.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">finetune</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">5e-7</span><span class="p">,</span> <span class="n">learning_rate_schedule</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">use_cuda</span><span class="o">=</span><span class="n">use_cuda</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>After we are done with QAT, we can run quantization simulation inference against the validation dataset at the end to observe any improvements in accuracy.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finetuned_accuracy</span> <span class="o">=</span> <span class="n">ImageNetDataPipeline</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">use_cuda</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">finetuned_accuracy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Depending on your settings you may have observed a slight gain in accuracy after one epoch of training. Ofcourse, this was just an example. Please try this against the model of your choice and play with the hyper-parameters to get the best results.</p>
+<p>So we have an improved model after QAT. Now the next step would be to actually take this model to target. For this purpose, we need to export the model with the updated weights without the fake quant ops. And also to export the encodings (scale/offset quantization parameters) that were updated during training since we employed QAT with range-learning. AIMET QuantizationSimModel provides an export API for this purpose.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;./output/&#39;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">dummy_input</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./output/&#39;</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;resnet18_after_qat&#39;</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Summary">
+<h3>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h3>
+<p>Hope this notebook was useful for you to understand how to use AIMET for performing QAT.</p>
+<p>Few additional resources - Refer to the <a class="reference external" href="https://quic.github.io/aimet-pages/AimetDocs/api_docs/index.html">AIMET API docs</a> to know more details of the APIs and optional parameters. - Refer to the <a class="reference external" href="https://github.com/quic/aimet/tree/develop/Examples/torch/quantization">other example notebooks</a> to understand how to use AIMET post-training quantization techniques and QAT with range-learning.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

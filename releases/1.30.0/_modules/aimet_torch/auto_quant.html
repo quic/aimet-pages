@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.auto_quant &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.30.0</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../user_guide/index.html" class="icon icon-home">
+            AI Model Efficiency Toolkit
+              <img src="../../_static/brain_logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                tf-torch-cpu_1.30.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_quantization.html"> Quantization User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-features">AIMET Quantization Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/quantization_sim.html"> Quantization Simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#quantsim-workflow">QuantSim Workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#simulating-quantization-noise">Simulating Quantization Noise</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#determining-quantization-parameters-encodings">Determining Quantization Parameters (Encodings)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#quantization-schemes">Quantization Schemes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#configuring-quantization-simulation-ops">Configuring Quantization Simulation Ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_sim.html#frequently-asked-questions">Frequently Asked Questions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/quantization_aware_training.html"> Quantization-Aware Training (QAT)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#qat-workflow">QAT workflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#qat-modes">QAT modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quantization_aware_training.html#recommendations-for-quantization-aware-training">Recommendations for Quantization-Aware Training</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#post-training-quantization"><span class="hideitem">Post-Training Quantization</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/auto_quant.html">AutoQuant</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/auto_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/auto_quant.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/adaround.html">Adaptive Rounding (AdaRound)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/adaround.html#adaround-use-cases">AdaRound Use Cases</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/adaround.html#common-terminology">Common terminology</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/adaround.html#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html">Cross-Layer Equalization</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/bn_reestimation.html">BN Re-estimation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/bn_reestimation.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/bn_reestimation.html#workflow">Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html">Bias Correction [Depricated]</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#user-flow">User Flow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#faqs">FAQs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/post_training_quant_techniques.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-analysis-tools"><span class="hideitem">Debugging/Analysis Tools</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/quant_analyzer.html">QuantAnalyzer</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/quant_analyzer.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/quant_analyzer.html#requirements">Requirements</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/quant_analyzer.html#detailed-analysis-descriptions">Detailed Analysis Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_quant.html">Visualizations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/visualization_quant.html#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/visualization_quant.html#quantization">Quantization</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/visualization_quant.html#pytorch">PyTorch</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/visualization_quant.html#tensorflow">TensorFlow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#aimet-quantization-workflow">AIMET Quantization Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#pytorch"><span class="hideitem">PyTorch</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_guidelines.html"> PyTorch Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_quantization.html"> AIMET PyTorch Quantization APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l8"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_quantization.html#tensorflow"><span class="hideitem">Tensorflow</span></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html"> TensorFlow Model Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_quantization.html#debugging-guidelines">Debugging Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/quantization_feature_guidebook.html">Quantization Guidebook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/model_compression.html"> Compression User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/compression_feature_guidebook.html">Compression Guidebook</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#use-case">Use Case</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#compression-ratio-selection">Compression ratio selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html">Greedy Compression Ratio Selection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#how-it-works">How it works</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#per-layer-exploration">Per-layer Exploration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/greedy_compression_ratio_selection.html#compression-ratio-selection">Compression Ratio Selection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/visualization_compression.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#design">Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#starting-a-bokeh-server-session">Starting a Bokeh Server Session:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/visualization_compression.html#how-to-use-the-tool">How to use the tool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#model-compression">Model Compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/channel_pruning.html">Channel Pruning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#overall-procedure">Overall Procedure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#channel-selection">Channel Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#winnowing">Winnowing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../user_guide/winnowing.html">Winnowing</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/winnowing.html#overview">Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/winnowing.html#winnowing-overview">Winnowing Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../user_guide/winnowing.html#how-winnowing-works">How Winnowing Works</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../user_guide/channel_pruning.html#weight-reconstruction">Weight Reconstruction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#optional-techniques-to-get-better-compression-results">Optional techniques to get better compression results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#rank-rounding">Rank Rounding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/model_compression.html#per-layer-fine-tuning">Per-layer Fine-tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#faqs">FAQs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/model_compression.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/index.html"> API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/torch.html">AIMET APIs for PyTorch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_quantization.html">PyTorch Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_architecture_checker.html"> Architecture Checker API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_model_preparer.html#limitations-of-torch-fx-symbolic-trace-api">Limitations of torch.fx symbolic trace API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_model_validator.html"> Model Validator API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#guidelines">Guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_quantsim.html#code-example-quantization-aware-training-qat">Code Example - Quantization Aware Training (QAT)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#clssetinfo-definition">ClsSetInfo Definition</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/torch_primitive_apis_cle.html#code-examples-for-lower-level-apis">Code Examples for Lower Level APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_bias_correction.html"> Bias Correction API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#bias-correction-api">Bias Correction API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#convbninfotype">ConvBnInfoType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#activationtype">ActivationType</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#quantization-params">Quantization Params</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-1-empirical-bias-correction">Code Example #1 Empirical Bias Correction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_bias_correction.html#code-example-2-analytical-empirical-bias-correction">Code Example #2 Analytical + Empirical Bias correction</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/torch_batchnorm_re_estimation.html#code-example-bn-reestimation">Code Example - BN-Reestimation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_multi_gpu.html"> Multi-GPU guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_compress.html">PyTorch Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#tar-selection-parameters">TAR Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#weight-svd-configuration">Weight SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_compress.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html">PyTorch Model Visualization API for Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#top-level-api-compression">Top-level API Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html">PyTorch Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#top-level-api-quantization">Top-level API Quantization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_visualization_quantization.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html">PyTorch Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/torch_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/tensorflow.html">AIMET APIs for TensorFlow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_model_guidelines.html">TensorFlow Model Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_quantization.html">TensorFlow Model Quantization API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_compress.html">TensorFlow Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#channel-pruning-configuration">Channel Pruning Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples">Code Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#weight-svd-top-level-api">Weight SVD Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_compress.html#code-examples-for-weight-svd">Code Examples for Weight SVD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html">TensorFlow Model Visualization API for Quantization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#top-level-api-for-visualization-of-weight-tensors">Top-level API for Visualization of Weight tensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_visualization_quantization.html#code-examples-for-visualization-of-weight-tensors">Code Examples for Visualization of Weight tensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html">Using AIMET Tensorflow APIs with Keras Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#apis">APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#code-example">Code Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/convert_tf_sess_to_keras.html#utility-functions">Utility Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html">Tensorflow Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/tensorflow_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/keras.html">AIMET APIs for Keras</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_quantization.html">Keras Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_model_guidelines.html"> Model Guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_model_preparer.html"> Model Preparer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_model_preparer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_model_preparer.html#code-examples">Code Examples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_model_preparer.html#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_quant_analyzer.html"> Quant Analyzer API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_quant_analyzer.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_quant_analyzer.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_quantsim.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_quantsim.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_adaround.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_adaround.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_adaround.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_cross_layer_equalization.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_cross_layer_equalization.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_cross_layer_equalization.html#primitive-apis">Primitive APIs</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html">Primitive APIs for Cross Layer Equalization</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html#introduction">Introduction</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html#higher-level-apis-for-cross-layer-equalization">Higher Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html#code-examples-for-higher-level-apis">Code Examples for Higher Level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html#lower-level-apis-for-cross-layer-equalization">Lower Level APIs for Cross Layer Equalization</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html#custom-datatype-used">Custom Datatype used</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html#code-example-for-lower-level-apis">Code Example for Lower level APIs</a></li>
+<li class="toctree-l7"><a class="reference internal" href="../../api_docs/keras_primitive_apis_cle.html#example-helper-methods-to-perform-cle-in-manual-mode">Example helper methods to perform CLE in manual mode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_batchnorm_re_estimation.html"> BN Re-estimation APIs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_batchnorm_re_estimation.html#examples-notebook-link">Examples Notebook Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_batchnorm_re_estimation.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_batchnorm_re_estimation.html#top-level-apis">Top-level APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_batchnorm_re_estimation.html#code-example">Code Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/keras_batchnorm_re_estimation.html#limitations">Limitations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_layer_output_generation.html">Keras Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/keras_compression.html">Keras Model Compression API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_compression.html#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_compression.html#top-level-api-for-compression">Top-level API for Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_compression.html#greedy-selection-parameters">Greedy Selection Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_compression.html#spatial-svd-configuration">Spatial SVD Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_compression.html#configuration-definitions">Configuration Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/keras_compression.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/onnx.html">AIMET APIs for ONNX</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/onnx_quantization.html">ONNX Model Quantization API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/onnx_quantsim.html"> Quantization Simulation API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_quantsim.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_quantsim.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/onnx_cross_layer_equalization.html"> Cross-Layer Equalization API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_cross_layer_equalization.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_cross_layer_equalization.html#introduction">Introduction</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_cross_layer_equalization.html#cross-layer-equalization-api">Cross Layer Equalization API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_cross_layer_equalization.html#code-example">Code Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/onnx_adaround.html"> Adaptive Rounding API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_adaround.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_adaround.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_adaround.html#adaround-parameters">Adaround Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_adaround.html#code-example-adaptive-rounding-adaround">Code Example - Adaptive Rounding (AdaRound)</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/onnx_auto_quant.html"> AutoQuant API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_auto_quant.html#user-guide-link">User Guide Link</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_auto_quant.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../api_docs/onnx_auto_quant.html#code-examples">Code Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../api_docs/onnx_layer_output_generation.html">ONNX Debug API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/onnx_layer_output_generation.html#top-level-api">Top-level API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api_docs/onnx_layer_output_generation.html#code-example">Code Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api_docs/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/examples.html"> Examples Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#browse-the-notebooks">Browse the notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/examples.html#running-the-notebooks">Running the notebooks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#install-jupyter">Install Jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#download-the-example-notebooks-and-related-code">Download the Example notebooks and related code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../user_guide/examples.html#run-the-notebooks">Run the notebooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html"> Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#release-packages">Release packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../install/index.html#installation-instructions">Installation Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../install/install_host.html">Install in Host Machine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-prerequisite-packages">Install prerequisite packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages">Install GPU packages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-pytorch-1-9-or-onnx">Install GPU packages for PyTorch 1.9 or ONNX</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-pytorch-1-13">Install GPU packages for PyTorch 1.13</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../install/install_host.html#install-gpu-packages-for-tensorflow">Install GPU packages for TensorFlow</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-common-debian-packages">Install common debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-tensorflow-gpu-debian-packages">Install tensorflow GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-torch-gpu-debian-packages">Install torch GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#install-onnx-gpu-debian-packages">Install ONNX GPU debian packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-pillow-with-pillow-simd">Replace Pillow with Pillow-SIMD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#replace-onnxruntime-with-onnxruntime-gpu">Replace onnxruntime with onnxruntime-gpu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#post-installation-steps">Post installation steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_host.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../install/install_docker.html">Install in Docker Container</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#set-variant">Set variant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#use-prebuilt-docker-image">Use prebuilt docker image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#build-docker-image-locally">Build docker image locally</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#start-docker-container">Start docker container</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#install-aimet-packages">Install AIMET packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../install/install_docker.html#environment-setup">Environment setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../user_guide/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../user_guide/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.auto_quant</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.auto_quant</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="c1"># pylint: disable=too-many-lines</span>
+
+<span class="sd">&quot;&quot;&quot;Automatic Post-Training Quantization&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">import</span> <span class="nn">jinja2</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">aimet_torch</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.adaround.adaround_weight</span> <span class="kn">import</span> <span class="n">Adaround</span><span class="p">,</span> <span class="n">AdaroundParameters</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">equalize_model</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.batch_norm_fold</span> <span class="kn">import</span> <span class="n">fold_all_batch_norms</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.utils</span> <span class="kn">import</span> <span class="n">in_eval_mode</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.onnx_utils</span> <span class="kn">import</span> <span class="n">OnnxExportApiArgs</span>
+
+<span class="kn">from</span> <span class="nn">aimet_common.auto_quant</span> <span class="kn">import</span> <span class="n">Diagnostics</span>
+<span class="kn">from</span> <span class="nn">aimet_common.cache</span> <span class="kn">import</span> <span class="n">Cache</span>
+<span class="kn">from</span> <span class="nn">aimet_common.defs</span> <span class="kn">import</span> <span class="n">QuantScheme</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span><span class="p">,</span> <span class="n">Spinner</span>
+<span class="kn">from</span> <span class="nn">aimet_common.quantsim</span> <span class="kn">import</span> <span class="n">validate_quantsim_inputs</span>
+
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">AutoQuant</span><span class="p">)</span>
+
+<span class="n">cache</span> <span class="o">=</span> <span class="n">Cache</span><span class="p">()</span>
+
+
+<span class="c1"># The number of samples to be used for performance evaluation.</span>
+<span class="c1"># NOTE: None means &quot;all&quot;.</span>
+<span class="n">NUM_SAMPLES_FOR_PERFORMANCE_EVALUATION</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="AutoQuant"><a class="viewcode-back" href="../../api_docs/torch_auto_quant.html#aimet_torch.auto_quant.AutoQuant">[docs]</a><span class="k">class</span> <span class="nc">AutoQuant</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. warning::</span>
+<span class="sd">        :class:`auto_quant.AutoQuant &lt;aimet_torch.auto_quant.AutoQuant&gt;` is deprecated and</span>
+<span class="sd">        will be replaced with :class:`auto_quant_v2.AutoQuant &lt;aimet_torch.auto_quant_v2.AutoQuant&gt;`</span>
+<span class="sd">        in the later versions.</span>
+
+<span class="sd">    Integrate and apply post-training quantization techniques.</span>
+
+<span class="sd">    AutoQuant includes 1) batchnorm folding, 2) cross-layer equalization,</span>
+<span class="sd">    and 3) Adaround.</span>
+<span class="sd">    These techniques will be applied in a best-effort manner until the model</span>
+<span class="sd">    meets the evaluation goal given as allowed_accuracy_drop.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="c1"># pylint: disable=too-many-arguments</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">allowed_accuracy_drop</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">unlabeled_dataset_iterable</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataLoader</span><span class="p">,</span> <span class="n">Collection</span><span class="p">],</span>
+            <span class="n">eval_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="nb">float</span><span class="p">],</span>
+            <span class="n">default_param_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="n">default_output_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="n">default_quant_scheme</span><span class="p">:</span> <span class="n">QuantScheme</span> <span class="o">=</span> <span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span><span class="p">,</span>
+            <span class="n">default_rounding_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+            <span class="n">default_config_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param allowed_accuracy_drop: Maximum allowed accuracy drop.</span>
+<span class="sd">        :param unlabeled_dataset_iterable: A collection (i.e. iterable with `__len__`)</span>
+<span class="sd">                that iterates over an unlabeled dataset used for encoding computation.</span>
+<span class="sd">                The values yielded by this iterable are expected to be able to be</span>
+<span class="sd">                passed directly to the model. By default, this iterable will</span>
+<span class="sd">                be also used for Adaround unless otherwise specified by</span>
+<span class="sd">                `self.set_adaround_params`.</span>
+<span class="sd">        :param eval_callback: A function that maps model and the number samples</span>
+<span class="sd">                to the evaluation score. This callback is expected to return a</span>
+<span class="sd">                scalar value representing the model performance evaluated</span>
+<span class="sd">                against exactly `N` samples, where `N` is the number of samples</span>
+<span class="sd">                passed as the second argument of this callback.</span>
+<span class="sd">                NOTE: If `N` is None, the model is expected to be evaluated against</span>
+<span class="sd">                the whole evaluation dataset.</span>
+<span class="sd">        :param default_param_bw: Default bitwidth (4-31) to use for quantizing layer parameters.</span>
+<span class="sd">        :param default_output_bw: Default bitwidth (4-31) to use for quantizing layer inputs andoutputs.</span>
+<span class="sd">        :param default_quant_scheme: Quantization scheme. Supported values are</span>
+<span class="sd">                QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced.</span>
+<span class="sd">        :param default_rounding_mode: Rounding mode. Supported options are &#39;nearest&#39; or &#39;stochastic&#39;</span>
+<span class="sd">        :param default_config_file: Path to configuration file for model quantizers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Please note that auto_quant.AutoQuant is deprecated and will be removed &#39;</span>
+             <span class="s1">&#39;in the next AIMET release. Please use auto_quant_v2.AutoQuant instead. &#39;</span>
+             <span class="s1">&#39;The API is slightly changed - please refer to the API docs.&#39;</span><span class="p">,</span>
+             <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">allowed_accuracy_drop</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`allowed_accuracy_drop` must be a positive value. Got </span><span class="si">{:.2f}</span><span class="s2">&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">allowed_accuracy_drop</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">validate_quantsim_inputs</span><span class="p">(</span><span class="n">default_quant_scheme</span><span class="p">,</span>
+                                 <span class="n">default_rounding_mode</span><span class="p">,</span>
+                                 <span class="n">default_output_bw</span><span class="p">,</span>
+                                 <span class="n">default_param_bw</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">eval_callback</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">eval_callback_wrapper</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+                                  <span class="n">num_samples</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Wrapper to ensure that model is in eval mode before entering eval_callback.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">with</span> <span class="n">in_eval_mode</span><span class="p">(</span><span class="n">model</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">eval_callback</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_accuracy_drop</span> <span class="o">=</span> <span class="n">allowed_accuracy_drop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_callback</span> <span class="o">=</span> <span class="n">eval_callback_wrapper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_param_bw</span> <span class="o">=</span> <span class="n">default_param_bw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_output_bw</span> <span class="o">=</span> <span class="n">default_output_bw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_quant_scheme</span> <span class="o">=</span> <span class="n">default_quant_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_rounding_mode</span> <span class="o">=</span> <span class="n">default_rounding_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_config_file</span> <span class="o">=</span> <span class="n">default_config_file</span>
+
+        <span class="k">def</span> <span class="nf">forward_pass_callback</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">in_eval_mode</span><span class="p">(</span><span class="n">model</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">input_data</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">unlabeled_dataset_iterable</span><span class="p">):</span>
+                    <span class="n">input_data</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">change_tensor_device_placement</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                        <span class="n">model</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span>
+                        <span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">input_data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_pass_callback</span> <span class="o">=</span> <span class="n">forward_pass_callback</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaround_params</span> <span class="o">=</span> <span class="n">AdaroundParameters</span><span class="p">(</span><span class="n">unlabeled_dataset_iterable</span><span class="p">,</span>
+                                                  <span class="nb">len</span><span class="p">(</span><span class="n">unlabeled_dataset_iterable</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_export_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">onnx_export_args</span><span class="o">=</span><span class="n">OnnxExportApiArgs</span><span class="p">(),</span>
+            <span class="n">propagate_encodings</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_evaluate_model_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the model performance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_callback</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">NUM_SAMPLES_FOR_PERFORMANCE_EVALUATION</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AutoQuant.set_adaround_params"><a class="viewcode-back" href="../../api_docs/torch_auto_quant.html#aimet_torch.auto_quant.AutoQuant.set_adaround_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_adaround_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaround_params</span><span class="p">:</span> <span class="n">AdaroundParameters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set Adaround parameters.</span>
+<span class="sd">        If this method is not called explicitly by the user, AutoQuant will use</span>
+<span class="sd">        `unlabeled_dataset_iterable` (passed to `__init__`) for Adaround.</span>
+
+<span class="sd">        :param adaround_params: Adaround parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaround_params</span> <span class="o">=</span> <span class="n">adaround_params</span></div>
+
+<div class="viewcode-block" id="AutoQuant.set_export_params"><a class="viewcode-back" href="../../api_docs/torch_auto_quant.html#aimet_torch.auto_quant.AutoQuant.set_export_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_export_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">onnx_export_args</span><span class="p">:</span> <span class="n">OnnxExportApiArgs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">propagate_encodings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set parameters for QuantizationSimModel.export.</span>
+
+<span class="sd">        :param onnx_export_args: optional export argument with onnx specific overrides</span>
+<span class="sd">                if not provide export via torchscript graph</span>
+<span class="sd">        :param propagate_encodings: If True, encoding entries for intermediate ops</span>
+<span class="sd">                (when one PyTorch ops results in multiple ONNX nodes) are filled with</span>
+<span class="sd">                the same BW and data_type as the output tensor for that series of ops.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Here, we use -1 to indicate `onnx_export_args` wasn&#39;t specified</span>
+        <span class="c1"># since onnx_export_args being None has its own meaning.</span>
+        <span class="k">if</span> <span class="n">onnx_export_args</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_export_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">onnx_export_args</span><span class="o">=</span><span class="n">onnx_export_args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">propagate_encodings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_export_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">propagate_encodings</span><span class="o">=</span><span class="n">propagate_encodings</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_quantsim_and_encodings</span><span class="p">(</span> <span class="c1"># pylint: disable=too-many-arguments</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+            <span class="n">quant_scheme</span><span class="p">:</span> <span class="n">QuantScheme</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">rounding_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">default_output_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">default_param_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">encoding_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantizationSimModel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a QuantizationSimModel and compute encoding. If `encoding_path` is not None,</span>
+<span class="sd">        it is prioritized over other arguments (`default_output_bw`, `defalt_param_bw`, ...).</span>
+
+<span class="sd">        :param model: Model to quantize.</span>
+<span class="sd">        :param dummy_input: Dummy input to the model.</span>
+<span class="sd">        :param quant_scheme: Quantization scheme. Defaults to self.default_quant_scheme.</span>
+<span class="sd">        :param rounding_mode: Rounding mode. Defaults to self.default_rounding_mode.</span>
+<span class="sd">        :param default_output_bw: Default bitwidth (4-31) to use for quantizing layer inputs andoutputs.</span>
+<span class="sd">                                  Defaults to self.default_output_bw.</span>
+<span class="sd">        :param default_param_bw: Default bitwidth (4-31) to use for quantizing layer parameters.</span>
+<span class="sd">                                 Defaults to self.default_param_bw.</span>
+<span class="sd">        :param config_file: Path to configuration file for model quantizers.</span>
+<span class="sd">                            Defaults to self.default_config_file.</span>
+<span class="sd">        :param encoding_path: Path to parameter encodings file.</span>
+<span class="sd">        :return: Quantsim model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">quant_scheme</span><span class="o">=</span><span class="p">(</span><span class="n">quant_scheme</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_quant_scheme</span><span class="p">),</span>
+            <span class="n">rounding_mode</span><span class="o">=</span><span class="p">(</span><span class="n">rounding_mode</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_rounding_mode</span><span class="p">),</span>
+            <span class="n">default_output_bw</span><span class="o">=</span><span class="p">(</span><span class="n">default_output_bw</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_output_bw</span><span class="p">),</span>
+            <span class="n">default_param_bw</span><span class="o">=</span><span class="p">(</span><span class="n">default_param_bw</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_param_bw</span><span class="p">),</span>
+            <span class="n">config_file</span><span class="o">=</span><span class="p">(</span><span class="n">config_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_config_file</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">encoding_path</span><span class="p">:</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">set_and_freeze_param_encodings</span><span class="p">(</span><span class="n">encoding_path</span><span class="p">)</span>
+
+        <span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_pass_callback</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sim</span>
+
+    <span class="nd">@cache</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s2">&quot;batchnorm_folding&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_apply_batchnorm_folding</span><span class="p">(</span> <span class="c1"># pylint: disable=no-self-use</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply batchnorm folding.</span>
+
+<span class="sd">        NOTE: Input model is not mutated.</span>
+
+<span class="sd">        :param model: Model to apply batchnorm folding.</span>
+<span class="sd">        :param dummy_input: Dummy input to the model.</span>
+<span class="sd">        :return: Output model and folded pairs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">folded_pairs</span> <span class="o">=</span> <span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">folded_pairs</span>
+
+    <span class="nd">@cache</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s2">&quot;cle&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_apply_cross_layer_equalization</span><span class="p">(</span> <span class="c1"># pylint: disable=no-self-use</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply cross-layer equalization.</span>
+
+<span class="sd">        NOTE: Input model is not mutated.</span>
+
+<span class="sd">        :param model: Model to apply cross-layer-equalization.</span>
+<span class="sd">        :param dummy_input: Dummy input to the model.</span>
+<span class="sd">        :return: Output model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="n">input_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dummy_input</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">input_shape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dummy_input</span><span class="p">]</span>
+        <span class="n">equalize_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span>
+
+    <span class="nd">@cache</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s2">&quot;adaround&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_apply_adaround</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+            <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply adaround.</span>
+
+<span class="sd">        NOTE1: Input model is not mutated.</span>
+<span class="sd">        NOTE2: Parameters `param_bw_override_list` and `ignore_quant_ops_list` are always set to None.</span>
+
+<span class="sd">        :param model: Model to apply adaround.</span>
+<span class="sd">        :param dummy_input: Dummy input to the model.</span>
+<span class="sd">        :param results_dir: Directory to save the results of AdaRound.</span>
+<span class="sd">        :return: Output model and the path to the parameter encoding file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># NOTE: We dont need to make a deepcopy of model here, since Adaround.apply_adaround</span>
+        <span class="c1"># internally creates and returns a deepcopy of model.</span>
+
+        <span class="n">filename_prefix</span> <span class="o">=</span> <span class="s2">&quot;adaround&quot;</span>
+        <span class="n">adaround_encoding_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span>
+                                              <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.encodings&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename_prefix</span><span class="p">))</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Adaround</span><span class="o">.</span><span class="n">apply_adaround</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                        <span class="n">dummy_input</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">adaround_params</span><span class="p">,</span>
+                                        <span class="n">path</span><span class="o">=</span><span class="n">results_dir</span><span class="p">,</span>
+                                        <span class="n">filename_prefix</span><span class="o">=</span><span class="n">filename_prefix</span><span class="p">,</span>
+                                        <span class="n">default_param_bw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_param_bw</span><span class="p">,</span>
+                                        <span class="n">param_bw_override_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                        <span class="n">ignore_quant_ops_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                        <span class="n">default_quant_scheme</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_quant_scheme</span><span class="p">,</span>
+                                        <span class="n">default_config_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_config_file</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">adaround_encoding_path</span>
+
+<div class="viewcode-block" id="AutoQuant.apply"><a class="viewcode-back" href="../../api_docs/torch_auto_quant.html#aimet_torch.auto_quant.AutoQuant.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">fp32_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">dummy_input_on_cpu</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+            <span class="n">dummy_input_on_gpu</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
+            <span class="n">cache_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply post-training quantization techniques.</span>
+
+<span class="sd">        :param fp32_model: Model to apply PTQ techniques.</span>
+<span class="sd">        :param dummy_input_on_cpu: Dummy input to the model in CPU memory.</span>
+<span class="sd">        :param dummy_input_on_gpu: Dummy input to the model in GPU memory.</span>
+<span class="sd">            This parameter is required if and only if the fp32_model is on GPU.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :param cache_id: A string that composes a cache id in combination with results_dir.</span>
+<span class="sd">            If specified, AutoQuant will load/save the PTQ results from/to the file system</span>
+<span class="sd">            if previous PTQ results produced under the same results_dir and cache_id exist,</span>
+<span class="sd">        :return: Tuple of  (best model, eval score, encoding path front).</span>
+<span class="sd">        :raises:</span>
+<span class="sd">            - ValueError if the model is on GPU and dummy_input_on_gpu is not specified.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_helper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_auto_quant_main</span><span class="p">,</span>
+                                    <span class="n">fp32_model</span><span class="p">,</span>
+                                    <span class="n">dummy_input_on_cpu</span><span class="p">,</span>
+                                    <span class="n">dummy_input_on_gpu</span><span class="p">,</span>
+                                    <span class="n">results_dir</span><span class="p">,</span>
+                                    <span class="n">cache_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">],</span>\
+               <span class="n">result</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">],</span>\
+               <span class="n">result</span><span class="p">[</span><span class="s2">&quot;encoding_path&quot;</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_apply_helper</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">auto_quant_main_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+            <span class="n">fp32_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">dummy_input_on_cpu</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+            <span class="n">dummy_input_on_gpu</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
+            <span class="n">cache_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper for self.apply().</span>
+
+<span class="sd">        :param auto_quant_main_fn: Function that implements the main logic of AutoQuant.</span>
+<span class="sd">        :param fp32_model: Model to apply PTQ techniques.</span>
+<span class="sd">        :param dummy_input_on_cpu: Dummy input to the model in CPU memory.</span>
+<span class="sd">        :param dummy_input_on_gpu: Dummy input to the model in GPU memory.</span>
+<span class="sd">            This parameter is required if and only if the fp32_model is on GPU.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :param cache_id: A string that composes a cache id in combination with results_dir.</span>
+<span class="sd">            If specified, AutoQuant will load/save the PTQ results from/to the file system</span>
+<span class="sd">            if previous PTQ results produced under the same results_dir and cache_id exist,</span>
+<span class="sd">        :return: The best ptq result as a dictionary.</span>
+<span class="sd">        :raises:</span>
+<span class="sd">            - ValueError if the model is on GPU and dummy_input_on_gpu is not specified.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">)</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">dummy_input_on_cpu</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dummy_input_on_gpu</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;If model is placed on GPU, dummy_input_on_gpu must be also provided.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">dummy_input_on_gpu</span>
+
+        <span class="k">if</span> <span class="n">cache_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cache_dir</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;.auto_quant_cache&quot;</span><span class="p">,</span> <span class="n">cache_id</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">in_eval_mode</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">cache</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">):</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting AutoQuant&quot;</span><span class="p">)</span>
+
+                <span class="n">fp32_acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_model_performance</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">)</span>
+                <span class="n">target_acc</span> <span class="o">=</span> <span class="n">fp32_acc</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_accuracy_drop</span>
+
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Target eval score: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">target_acc</span><span class="p">)</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;FP32 eval score (W32A32): </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fp32_acc</span><span class="p">)</span>
+
+                <span class="n">eval_manager</span> <span class="o">=</span> <span class="n">_EvalManager</span><span class="p">(</span>
+                    <span class="n">quantsim_factory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_quantsim_and_encodings</span><span class="p">,</span>
+                    <span class="n">eval_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_model_performance</span><span class="p">,</span>
+                    <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">,</span>
+                    <span class="n">dummy_input_on_cpu</span><span class="o">=</span><span class="n">dummy_input_on_cpu</span><span class="p">,</span>
+                    <span class="n">results_dir</span><span class="o">=</span><span class="n">results_dir</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">auto_quant_main_fn</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">target_acc</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span>
+                                         <span class="n">eval_manager</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
+
+                <span class="n">acc</span> <span class="o">=</span> <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Best eval score: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">acc</span> <span class="o">&lt;</span> <span class="n">target_acc</span><span class="p">:</span>
+                    <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;AutoQuant is unable to match the target accuracy. &quot;</span>
+                        <span class="s2">&quot;Consider Quantization Aware Training.&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="n">eval_manager</span><span class="o">.</span><span class="n">export_diagnostics</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">def</span> <span class="nf">_auto_quant_main</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">fp32_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+            <span class="n">target_acc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+            <span class="n">eval_manager</span><span class="p">:</span> <span class="s2">&quot;_EvalManager&quot;</span><span class="p">,</span>
+            <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function of apply().</span>
+
+<span class="sd">        :param fp32_model: Model to apply PTQ techniques.</span>
+<span class="sd">        :param target_acc: Target eval score.</span>
+<span class="sd">        :param dummy_input: Dummy input to the model.</span>
+<span class="sd">            The device of dumyy_input should be same as that of model.</span>
+<span class="sd">        :param eval_manager: _Evalmanager object.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :return: The best ptq result as a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">analysis_session</span><span class="p">(</span><span class="s2">&quot;Weight Quantization Sensitivity&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">default_output_bw</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Weight-quantized eval score (W</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">default_param_bw</span><span class="si">}</span><span class="s2">A32): </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">analysis_session</span><span class="p">(</span><span class="s2">&quot;Activation Quantization Sensitivity&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Activation-quantized eval score (W32A</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">default_output_bw</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Batchnorm Folding</span>
+        <span class="k">with</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">ptq_session</span><span class="p">(</span><span class="s2">&quot;Batchnorm Folding&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">folded_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_batchnorm_folding</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">conv</span><span class="p">,</span> <span class="n">bn</span> <span class="ow">in</span> <span class="n">folded_pairs</span><span class="p">:</span>
+                <span class="n">sess</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">conv</span><span class="si">}</span><span class="s2"> was merged with </span><span class="si">{</span><span class="n">bn</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">set_ptq_result</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                <span class="n">applied_techniques</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;batchnorm_folding&quot;</span><span class="p">],</span>
+                                <span class="n">export_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_export_kwargs</span><span class="p">)</span>
+
+        <span class="n">best_result</span> <span class="o">=</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">get_best_ptq_result</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">best_result</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">&gt;=</span> <span class="n">target_acc</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">best_result</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+
+        <span class="c1"># Cross-Layer Equalization</span>
+        <span class="k">with</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">ptq_session</span><span class="p">(</span><span class="s2">&quot;Cross-Layer Equalization&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_cross_layer_equalization</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">set_ptq_result</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                <span class="n">applied_techniques</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cross_layer_equalization&quot;</span><span class="p">],</span>
+                                <span class="n">export_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_export_kwargs</span><span class="p">)</span>
+
+        <span class="n">best_result</span> <span class="o">=</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">get_best_ptq_result</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">best_result</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">&gt;=</span> <span class="n">target_acc</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">best_result</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+
+        <span class="c1"># AdaRound</span>
+        <span class="k">with</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">ptq_session</span><span class="p">(</span><span class="s2">&quot;AdaRound&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">encoding_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_adaround</span><span class="p">(</span><span class="n">best_result</span><span class="o">.</span><span class="n">load_model</span><span class="p">(),</span>
+                                                        <span class="n">dummy_input</span><span class="p">,</span>
+                                                        <span class="n">results_dir</span><span class="p">)</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">set_ptq_result</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                <span class="n">encoding_path</span><span class="o">=</span><span class="n">encoding_path</span><span class="p">,</span>
+                                <span class="n">applied_techniques</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">best_result</span><span class="o">.</span><span class="n">applied_techniques</span><span class="p">,</span> <span class="s2">&quot;adaround&quot;</span><span class="p">],</span>
+                                <span class="n">export_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_export_kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">eval_manager</span><span class="o">.</span><span class="n">get_best_ptq_result</span><span class="p">()</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span></div>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">PtqResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluation results.</span>
+<span class="sd">    :param tag: Identifier string of the evaluation result.</span>
+<span class="sd">    :param model_path: Path to the serialized model.</span>
+<span class="sd">    :param encoding_path: Path to the encoding file.</span>
+<span class="sd">    :param accuracy: Accuracy of the model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span>
+    <span class="n">encoding_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">applied_techniques</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load model.</span>
+<span class="sd">        :return: Loaded model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_path</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to dictionary&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">load_model</span><span class="p">(),</span>
+                    <span class="n">accuracy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">,</span>
+                    <span class="n">encoding_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding_path</span><span class="p">,</span>
+                    <span class="n">applied_techniques</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">applied_techniques</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_EvalManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluation manager for AutoQuant.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">quantsim_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+                 <span class="n">eval_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+                 <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+                 <span class="n">dummy_input_on_cpu</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+                 <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param quantsim_factory: A factory function that returns QuantizationSimModel.</span>
+<span class="sd">        :param eval_func: Evaluation function.</span>
+<span class="sd">        :param dummy_input: Dummy input to the model. Assumed to be located on the same device as the model.</span>
+<span class="sd">        :param dummy_input_on_cpu: Dummy input to the model in CPU memory.</span>
+<span class="sd">        :param results_dir: Base directory to save the temporary serialized model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_quantsim_factory</span> <span class="o">=</span> <span class="n">quantsim_factory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eval_func</span> <span class="o">=</span> <span class="n">eval_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input</span> <span class="o">=</span> <span class="n">dummy_input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input_on_cpu</span> <span class="o">=</span> <span class="n">dummy_input_on_cpu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span> <span class="o">=</span> <span class="n">results_dir</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_all_sessions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_EvalSession</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_sessions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_PtqSession</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">get_best_ptq_result</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PtqResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the results with the highest evaluation score among the ptq results evaluated so far.</span>
+<span class="sd">        :return: The best evaluation result so far.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_sessions</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span>
+
+        <span class="n">ptq_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">sess</span><span class="o">.</span><span class="n">ptq_result</span> <span class="k">for</span> <span class="n">sess</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_sessions</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">ptq_results</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ptq_result</span><span class="p">:</span> <span class="n">ptq_result</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">analysis_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;_EvalSession&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a session for analysis only.</span>
+<span class="sd">        :param title: Title of the session.</span>
+<span class="sd">        :return: Analysis session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_session</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">_EvalSession</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ptq_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;_PtqSession&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a session for analysis only.</span>
+<span class="sd">        :param title: Title of the session.</span>
+<span class="sd">        :return: PTQ session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_session</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">_PtqSession</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sess</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sess</span>
+
+    <span class="k">def</span> <span class="nf">_get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Session factory.</span>
+<span class="sd">        :param title: Title of the session.</span>
+<span class="sd">        :session_cls: Class of the session.</span>
+<span class="sd">        :return: Session object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">session_cls</span><span class="p">(</span><span class="n">title</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_quantsim_factory</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_eval_func</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input_on_cpu</span><span class="p">,</span>
+                              <span class="n">results_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span> <span class="s2">&quot;.trace&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_all_sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">session</span>
+
+    <span class="k">def</span> <span class="nf">export_diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export diagnostics in html format.</span>
+<span class="sd">        :return: Diagnostics string in html format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">loader</span><span class="p">)</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;auto_quant_diagnostics_template.html&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">contains_bokeh</span><span class="p">()</span> <span class="k">for</span> <span class="n">sess</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_all_sessions</span><span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">bokeh.resources</span> <span class="kn">import</span> <span class="n">CDN</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">CDN</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="n">sess</span><span class="o">.</span><span class="n">diagnostics</span>
+            <span class="k">for</span> <span class="n">sess</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_all_sessions</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">sess</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">is_empty</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="n">html</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">head</span><span class="o">=</span><span class="n">head</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span> <span class="s2">&quot;diagnostics.html&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">html</span>
+
+
+<span class="k">class</span> <span class="nc">_EvalSession</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluation session for AutoQuant.</span>
+
+<span class="sd">    Each session object contains a title and diagnostics produced during the session.</span>
+<span class="sd">    The collected diagnostics will be exported into a html file by _EvalManager.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">quantsim_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+            <span class="n">eval_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+            <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+            <span class="n">dummy_input_on_cpu</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">],</span>
+            <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param title: Title of the session.</span>
+<span class="sd">        :param quantsim_factory: A factory function that returns QuantizationSimModel.</span>
+<span class="sd">        :param eval_func: Evaluation function.</span>
+<span class="sd">        :param dummy_input: Dummy input to the model. Assumed to be located on the same device as the model.</span>
+<span class="sd">        :param dummy_input_on_cpu: Dummy input to the model in CPU memory.</span>
+<span class="sd">        :param results_dir: Base directory to save the temporary serialized model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_quantsim_factory</span> <span class="o">=</span> <span class="n">quantsim_factory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eval_func</span> <span class="o">=</span> <span class="n">eval_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input</span> <span class="o">=</span> <span class="n">dummy_input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input_on_cpu</span> <span class="o">=</span> <span class="n">dummy_input_on_cpu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span> <span class="o">=</span> <span class="n">results_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spinner</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diagnostics</span> <span class="o">=</span> <span class="n">Diagnostics</span><span class="p">()</span>
+
+        <span class="c1"># Map session title to file name.</span>
+        <span class="c1"># e.g. title: &quot;Cross-Layer Equalization&quot; -&gt; filename: &quot;cross_layer_equalization&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filename</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter of self._title.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_title</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter of self._diagnostics.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diagnostics</span>
+
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the model.</span>
+<span class="sd">        :param model: Model to evaluate.</span>
+<span class="sd">        :param **kwargs: Additional arguments to the quantsim factory.</span>
+<span class="sd">        :return: Eval score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quantsim_factory</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_func</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">acc</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spinner</span> <span class="o">=</span> <span class="n">Spinner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_title</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spinner</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spinner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spinner</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_PtqSession</span><span class="p">(</span><span class="n">_EvalSession</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PTQ session.</span>
+
+<span class="sd">    Each PTQ session object should call `set_ptq_result` exactly once</span>
+<span class="sd">    inside a with-as block.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_PtqSession</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ptq_result</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PtqResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter of self._ptq_result.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span>
+
+    <span class="k">def</span> <span class="nf">set_ptq_result</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">applied_techniques</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+            <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">acc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">export_kwargs</span><span class="p">:</span> <span class="n">Mapping</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the result of PTQ. Should be called exactly once inside a with-as block.</span>
+
+<span class="sd">        Exactly one among model and (sim, acc) pair should be specified.</span>
+<span class="sd">        1) If sim and acc is specified, save them as the result of this session.</span>
+<span class="sd">        2) If model is specified, evaluate the quantized accuracy of the model and save the result.</span>
+
+<span class="sd">        :param model: Result of PTQ.</span>
+<span class="sd">        :param sim: Result of PTQ. The quamtization encoding (compute_encodings()) is</span>
+<span class="sd">                    assumed to have been computed in advance.</span>
+<span class="sd">        :param acc: Eval score.</span>
+<span class="sd">        :param **kwargs: Additional arguments to the quantsim factory.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">export_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">export_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">sim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">acc</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quantsim_factory</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">acc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_func</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">acc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_ptq_result</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">applied_techniques</span><span class="p">,</span> <span class="n">export_kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_ptq_result</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+            <span class="n">acc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+            <span class="n">applied_techniques</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+            <span class="n">export_kwargs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PtqResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the result of PTQ. Should be called exactly once inside a with-as block.</span>
+
+<span class="sd">        :param sim: Result of PTQ. The quamtization encoding (compute_encodings()) is</span>
+<span class="sd">                    assumed to have been computed in advance.</span>
+<span class="sd">        :param acc: Eval score.</span>
+<span class="sd">        :param export_kwargs: Additional kwargs for sim.export</span>
+<span class="sd">        :return: PtqResult object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;sess.eval() can be called only once per each _EvalSession instance.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">device</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_device</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">model_path</span><span class="p">,</span> <span class="n">encoding_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">export_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span> <span class="o">=</span> <span class="n">PtqResult</span><span class="p">(</span>
+            <span class="n">model_path</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">encoding_path</span><span class="o">=</span><span class="n">encoding_path</span><span class="p">,</span>
+            <span class="n">accuracy</span><span class="o">=</span><span class="n">acc</span><span class="p">,</span>
+            <span class="n">applied_techniques</span><span class="o">=</span><span class="n">applied_techniques</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span>
+
+    <span class="k">def</span> <span class="nf">_export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">export_kwargs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export quantsim.</span>
+<span class="sd">        :param sim: QuantizationSimModel object to export.</span>
+<span class="sd">        :param export_kwargs: Additional kwargs for sim.export</span>
+<span class="sd">        :return: The paths where model and encoding are saved</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span>
+                   <span class="n">filename_prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_filename</span><span class="p">,</span>
+                   <span class="n">dummy_input</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input_on_cpu</span><span class="p">,</span>
+                   <span class="o">**</span><span class="n">export_kwargs</span><span class="p">)</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_filename</span><span class="si">}</span><span class="s2">.pth&quot;</span><span class="p">)</span>
+        <span class="n">encoding_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_filename</span><span class="si">}</span><span class="s2">.encodings&quot;</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The results of </span><span class="si">%s</span><span class="s2"> is saved in </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">_title</span><span class="p">,</span> <span class="n">model_path</span><span class="p">,</span> <span class="n">encoding_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model_path</span><span class="p">,</span> <span class="n">encoding_path</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raises error if set_ptq_result is not called.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_PtqSession</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">exc_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span>
+
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Session finished: </span><span class="si">%s</span><span class="s2">. (eval score: </span><span class="si">%f</span><span class="s2">)&quot;</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">_title</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptq_result</span><span class="o">.</span><span class="n">accuracy</span><span class="p">)</span>
+
+
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">spy_auto_quant</span><span class="p">(</span><span class="n">auto_quant</span><span class="p">:</span> <span class="s2">&quot;AutoQuant&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Install a spy that collects the handles to the ptq result of</span>
+<span class="sd">    each stage of AutoQuant.</span>
+
+<span class="sd">    Typical usage::</span>
+<span class="sd">        &gt;&gt;&gt; auto_quant = AutoQuant(...)</span>
+<span class="sd">        ... with auto_quant_spy(auto_quant) as spy:</span>
+<span class="sd">        ...     _ = auto_quant.apply(...)</span>
+<span class="sd">        ...</span>
+<span class="sd">        ... for result in spy.get_all_ptq_results():</span>
+<span class="sd">        ...     print(result.applied_techniques)</span>
+<span class="sd">        ...     print(result.accuracy)</span>
+<span class="sd">        ...     print(result.encoding_path)</span>
+<span class="sd">        ...     model = result.load_model()</span>
+<span class="sd">        ...     ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># pylint: disable=protected-access</span>
+    <span class="k">class</span> <span class="nc">Spy</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Spy that collects the handles to the ptq result of</span>
+<span class="sd">        each stage of AutoQuant.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eval_manager</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">def</span> <span class="nf">get_all_ptq_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PtqResult</span><span class="p">]:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Return handles to the results of AutoQuant&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_manager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">sess</span><span class="o">.</span><span class="n">ptq_result</span> <span class="k">for</span> <span class="n">sess</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_manager</span><span class="o">.</span><span class="n">_ptq_sessions</span><span class="p">]</span>
+
+    <span class="n">spy</span> <span class="o">=</span> <span class="n">Spy</span><span class="p">()</span>
+
+    <span class="n">_auto_quant_main</span> <span class="o">=</span> <span class="n">auto_quant</span><span class="o">.</span><span class="n">_auto_quant_main</span>
+
+    <span class="k">def</span> <span class="nf">_auto_quant_main_wrapper</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">target_acc</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span>
+                                 <span class="n">eval_manager</span><span class="p">,</span> <span class="n">results_dir</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">):</span>
+        <span class="n">spy</span><span class="o">.</span><span class="n">_eval_manager</span> <span class="o">=</span> <span class="n">eval_manager</span>
+        <span class="k">return</span> <span class="n">_auto_quant_main</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">target_acc</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span>
+                                <span class="n">eval_manager</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">auto_quant</span><span class="p">,</span> <span class="s2">&quot;_auto_quant_main&quot;</span><span class="p">,</span> <span class="n">_auto_quant_main_wrapper</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">spy</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">auto_quant</span><span class="p">,</span> <span class="s2">&quot;_auto_quant_main&quot;</span><span class="p">,</span> <span class="n">_auto_quant_main</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
