@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantized Modules &mdash; AI Model Efficiency Toolkit Documentation: ver tf-torch-cpu_1.32.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quantizers" href="quantizer.html" />
+    <link rel="prev" title="AIMET AdaRound" href="../user_guide/adaround.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        tf-torch-cpu_1.32.1
+      </div>
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="Versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      AIMET Variant: <span class="rst-current-version-name"> PyTorch </span>
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Documentation Versions</dt>
+        
+          <dd><a href="https://quic.github.io/aimet-pages/releases/latest/user_guide/index.html">Universal</a></dd>
+        
+          <dd><a href="https://quic.github.io/aimet-pages/releases/latest/torch_v2/torch_docs/index.html">PyTorch</a></dd>
+        
+      </dl>
+    </div>
+  </div>
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="encoding_analyzer.html">Encoding Analyzers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer.html">MinMaxEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer.html">SqnrEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer.html">PercentileEncodingAnalyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/nn.fake_quantization_mixin.html">FakeQuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/nn.quantization_mixin.html">nn.QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/quantization/affine/index.html">quantization.affine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/quantization/affine/generated/aimet_torch.v2.quantization.affine.Quantize.html">Quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/quantization/affine/generated/aimet_torch.v2.quantization.affine.QuantizeDequantize.html">QuantizeDequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_.html">quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_dequantize.html">quantize_dequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/quantization/affine/generated/aimet_torch.v2.quantization.affine.dequantize.html">dequantize</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/quantization/float/index.html">quantization.float</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quantized Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/torch_docs/quantized_modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="../user_guide/adaround.html" class="btn btn-neutral float-left" title="AIMET AdaRound" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quantizer.html" class="btn btn-neutral float-right" title="Quantizers" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="admonition warning" id="api-torch-quantized-modules">
+<p class="admonition-title">Warning</p>
+<p>This feature is under heavy development and API changes may occur without notice in future verions.</p>
+</div>
+<div class="section" id="quantized-modules">
+<h1>Quantized Modules<a class="headerlink" href="#quantized-modules" title="Permalink to this heading"></a></h1>
+<p>To simulate the effects of running networks at a reduced bitwidth, AIMET provides quantized versions of
+standard torch.nn.Modules. These quantized modules serve as drop-in replacements for their PyTorch counterparts, but can
+hold input, output, and parameter <a class="reference internal" href="quantizer.html#api-torch-quantizers"><span class="std std-ref">quantizers</span></a> to perform quantization operations during the
+module’s forward pass and compute quantization encodings.</p>
+<p>A quantized module inherits both from an AIMET-defined quantization mixin type as well as a native pytorch <cite>nn.Module</cite> type. The
+exact behavior and capabilities of the quantized module are determined by which type of quantization mixin it inherits from.</p>
+<p>AIMET defines two types of quantization mixin:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="api/nn.fake_quantization_mixin.html#api-torch-fake-quantization-mixin"><span class="std std-ref">FakeQuantizationMixin</span></a>: Simulates quantization by performing quantize-dequantize
+operations on tensors and calling into native pytorch floating-point operations</p></li>
+<li><p><a class="reference internal" href="api/nn.quantization_mixin.html#api-torch-quantization-mixin"><span class="std std-ref">QuantizationMixin</span></a>: Allows the user to register a custom kernel to perform
+a quantized forward pass and dequantizes the output. If no kernel is registered, the module will perform fake-quantization.</p></li>
+</ul>
+</div></blockquote>
+<p>The functionality and state of a <a class="reference internal" href="api/nn.quantization_mixin.html#api-torch-quantization-mixin"><span class="std std-ref">QuantizationMixin</span></a> is a superset of that of a <a class="reference internal" href="api/nn.fake_quantization_mixin.html#api-torch-fake-quantization-mixin"><span class="std std-ref">FakeQuantizationMixin</span></a>, meaning that
+if one does not register a custom kernel, a <a class="reference internal" href="api/nn.quantization_mixin.html#api-torch-quantization-mixin"><span class="std std-ref">QuantizationMixin</span></a>-derived module behaves
+exactly the same as a <a class="reference internal" href="api/nn.fake_quantization_mixin.html#api-torch-fake-quantization-mixin"><span class="std std-ref">FakeQuantizationMixin</span></a>-derived module. AIMET provides
+extensive coverage of <a class="reference internal" href="api/nn.fake_quantization_mixin.html#api-torch-fake-quantization-mixin"><span class="std std-ref">FakeQuantizationMixin</span></a> for <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> layer types, and more limited coverage for
+<a class="reference internal" href="api/nn.quantization_mixin.html#api-torch-quantization-mixin"><span class="std std-ref">QuantizationMixin</span></a> layers. See the <a class="reference internal" href="#api-quantized-module-class-table"><span class="std std-ref">table below</span></a> for a full list of module coverage.</p>
+<div class="section" id="top-level-api">
+<h2>Top-level API<a class="headerlink" href="#top-level-api" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_torch.v2.nn.base.BaseQuantizationMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.nn.base.</span></span><span class="sig-name descname"><span class="pre">BaseQuantizationMixin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/nn/base.html#BaseQuantizationMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin" title="Permalink to this definition"></a></dt>
+<dd><p>Mixin that implements quantization on top of regular pytorch modules.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aimet_torch.v2.nn.base.BaseQuantizationMixin.input_quantizers">
+<span class="sig-name descname"><span class="pre">input_quantizers</span></span><a class="headerlink" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.input_quantizers" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleList</span></code> containing <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects to be applied
+to the layer’s input tensors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>nn.ModuleList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aimet_torch.v2.nn.base.BaseQuantizationMixin.output_quantizers">
+<span class="sig-name descname"><span class="pre">output_quantizers</span></span><a class="headerlink" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.output_quantizers" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleList</span></code> containing <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects to be applied
+to the layer’s output tensors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>nn.ModuleList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aimet_torch.v2.nn.base.BaseQuantizationMixin.param_quantizers">
+<span class="sig-name descname"><span class="pre">param_quantizers</span></span><a class="headerlink" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.param_quantizers" title="Permalink to this definition"></a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleDict</span></code> mapping parameter names to associated <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code>
+objects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>nn.ModuleDict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.nn.base.BaseQuantizationMixin.__quant_init__">
+<span class="sig-name descname"><span class="pre">__quant_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/nn/base.html#BaseQuantizationMixin.__quant_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.__quant_init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializer for quantized module. This method will be invoked right after __init__.</p>
+<p>This method initializes the <a class="reference internal" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.input_quantizers" title="aimet_torch.v2.nn.base.BaseQuantizationMixin.input_quantizers"><code class="xref py py-attr docutils literal notranslate"><span class="pre">input_quantizers</span></code></a>, <a class="reference internal" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.output_quantizers" title="aimet_torch.v2.nn.base.BaseQuantizationMixin.output_quantizers"><code class="xref py py-attr docutils literal notranslate"><span class="pre">output_quantizers</span></code></a>, and <a class="reference internal" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.param_quantizers" title="aimet_torch.v2.nn.base.BaseQuantizationMixin.param_quantizers"><code class="xref py py-attr docutils literal notranslate"><span class="pre">param_quantizers</span></code></a>
+structures to the appropriate sizes based on the number of input tensors, output tensors, and parameters of the
+base <code class="xref py py-class docutils literal notranslate"><span class="pre">nn.Module</span></code> class. All quantizers are initializd to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>For custom quantized classes, this method should be overridden to set the appropriate lengths of
+<a class="reference internal" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.input_quantizers" title="aimet_torch.v2.nn.base.BaseQuantizationMixin.input_quantizers"><code class="xref py py-attr docutils literal notranslate"><span class="pre">input_quantizers</span></code></a> and <a class="reference internal" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.output_quantizers" title="aimet_torch.v2.nn.base.BaseQuantizationMixin.output_quantizers"><code class="xref py py-attr docutils literal notranslate"><span class="pre">output_quantizers</span></code></a> for the given base class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.nn.base.BaseQuantizationMixin.compute_encodings">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/nn/base.html#BaseQuantizationMixin.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.compute_encodings" title="Permalink to this definition"></a></dt>
+<dd><p>Enters the <a class="reference internal" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.compute_encodings" title="aimet_torch.v2.nn.base.BaseQuantizationMixin.compute_encodings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_encodings()</span></code></a> context for all <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects in the layer.</p>
+<p>Inside this context, each quantizer will observe all inputs passed to the quantizer and will compute
+quantization encodings upon exiting the context.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span> <span class="o">=</span> <span class="n">QuantizedLinear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Quantize</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">),</span> <span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">qlinear</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">qlinear</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">qlinear</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.nn.base.BaseQuantizationMixin.quantized_forward">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">quantized_forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/nn/base.html#BaseQuantizationMixin.quantized_forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.nn.base.BaseQuantizationMixin.quantized_forward" title="Permalink to this definition"></a></dt>
+<dd><p>Forward function for quantized module.</p>
+<p>This method will replace the original forward function of the base <code class="xref py py-class docutils literal notranslate"><span class="pre">nn.Module</span></code> class and is
+responsible for computing a quantized version of the base class’ forward function using the configuration of
+the layer’s <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
+<p>The quantization behavior of a quantized module is controlled by the <a class="reference internal" href="quantizer.html#api-torch-quantizers"><span class="std std-ref">quantizers</span></a> contained within the input, output,
+and parameter quantizer attributes listed below.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 27%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>input_quantizers</p></td>
+<td><p>torch.nn.ModuleList</p></td>
+<td><p>List of quantizers for input tensors</p></td>
+</tr>
+<tr class="row-odd"><td><p>param_quantizers</p></td>
+<td><p>torch.nn.ModuleDict</p></td>
+<td><p>Dict mapping parameter names to quantizers</p></td>
+</tr>
+<tr class="row-even"><td><p>output_quantizers</p></td>
+<td><p>torch.nn.ModuleList</p></td>
+<td><p>List of quantizers for output tensors</p></td>
+</tr>
+</tbody>
+</table>
+<p>By assigning and configuring <a class="reference internal" href="quantizer.html#api-torch-quantizers"><span class="std std-ref">quantizers</span></a> to these structures, we define the type of quantization applied to the corresponding
+input index, output index, or parameter name. By default, all the quantizers are set to <cite>None</cite>, meaning that no quantization
+will be applied to the respective tensor.</p>
+<dl>
+<dt>Example: Create a linear layer which performs only per-channel weight quantization</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">aimet_torch.v2</span> <span class="k">as</span> <span class="nn">aimet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">aimet_torch.quantization</span> <span class="k">as</span> <span class="nn">Q</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span> <span class="o">=</span> <span class="n">aimet</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">QuantizedLinear</span><span class="p">(</span><span class="n">out_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">in_features</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Per-channel weight quantization is performed over the `out_features` dimension, so encodings are shape (10, 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">per_channel_quantizer</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">QuantizeDequantize</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bitwidth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">per_channel_quantizer</span>
+</pre></div>
+</div>
+</dd>
+<dt>Example: Create an elementwise multiply layer which quantizes only the output and the second input</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">qmul</span> <span class="o">=</span> <span class="n">aimet</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">QuantizedMultiply</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmul</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">QuantizeDequantize</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">),</span> <span class="n">bitwidth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmul</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">QuantizeDequantize</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">),</span> <span class="n">bitwidth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>In some cases, it may make sense for multiple tensors to share the same quantizer. In this case, we can assign the same
+quantizer to multiple indices.</p>
+<dl>
+<dt>Example: Create an elementwise add layer which shares the same quantizer between its inputs</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">qadd</span> <span class="o">=</span> <span class="n">aimet</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">QuantizedAdd</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quantizer</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">QuantizeDequantize</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">),</span> <span class="n">bitwidth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qadd</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">quantizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qadd</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">quantizer</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="computing-encodings">
+<h2>Computing Encodings<a class="headerlink" href="#computing-encodings" title="Permalink to this heading"></a></h2>
+<p>Before a module can compute a quantized forward pass, all quantizers must first be calibrated inside a <cite>compute_encodings</cite>
+context. When a quantized module enters the <cite>compute_encodings</cite> context, it first disables all input and output quantization
+while the quantizers observe the statistics of the activation tensors passing through them. Upon exiting the context,
+the quantizers calculate appropriate quantization encodings based on these statistics (exactly <em>how</em> the encodings are
+computed is determined by each quantizer’s <a class="reference internal" href="encoding_analyzer.html#api-torch-encoding-analyzer"><span class="std std-ref">encoding analyzer</span></a>).</p>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span> <span class="o">=</span> <span class="n">aimet</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">QuantizedLinear</span><span class="p">(</span><span class="n">out_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">in_features</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">QuantizeDequantize</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">),</span> <span class="n">bitwidth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">QuantizeDequantize</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bitwidth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">qlinear</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="c1"># Pass several samples through the layer to ensure representative statistics</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">calibration_data_loader</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">qlinear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">qlinear</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">())</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">qlinear</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="quantized-module-classes">
+<h2>Quantized Module Classes<a class="headerlink" href="#quantized-module-classes" title="Permalink to this heading"></a></h2>
+<table class="docutils align-default" id="api-quantized-module-class-table">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 38%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>nn.Module</p></th>
+<th class="head"><p>FakeQuantizationMixin</p></th>
+<th class="head"><p>QuantizationMixin</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>torch.nn.AdaptiveAvgPool1d</p></td>
+<td><p>FakeQuantizedAdaptiveAvgPool1d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.AdaptiveAvgPool2d</p></td>
+<td><p>FakeQuantizedAdaptiveAvgPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.AdaptiveAvgPool3d</p></td>
+<td><p>FakeQuantizedAdaptiveAvgPool3d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.AdaptiveMaxPool1d</p></td>
+<td><p>FakeQuantizedAdaptiveMaxPool1d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.AdaptiveMaxPool2d</p></td>
+<td><p>FakeQuantizedAdaptiveMaxPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.AdaptiveMaxPool3d</p></td>
+<td><p>FakeQuantizedAdaptiveMaxPool3d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.AlphaDropout</p></td>
+<td><p>FakeQuantizedAlphaDropout</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.AvgPool1d</p></td>
+<td><p>FakeQuantizedAvgPool1d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.AvgPool2d</p></td>
+<td><p>FakeQuantizedAvgPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.AvgPool3d</p></td>
+<td><p>FakeQuantizedAvgPool3d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.BatchNorm1d</p></td>
+<td><p>FakeQuantizedBatchNorm1d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.BatchNorm2d</p></td>
+<td><p>FakeQuantizedBatchNorm2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.BatchNorm3d</p></td>
+<td><p>FakeQuantizedBatchNorm3d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.CELU</p></td>
+<td><p>FakeQuantizedCELU</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ChannelShuffle</p></td>
+<td><p>FakeQuantizedChannelShuffle</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ConstantPad1d</p></td>
+<td><p>FakeQuantizedConstantPad1d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ConstantPad2d</p></td>
+<td><p>FakeQuantizedConstantPad2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ConstantPad3d</p></td>
+<td><p>FakeQuantizedConstantPad3d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Conv1d</p></td>
+<td><p>FakeQuantizedConv1d</p></td>
+<td><p>QuantizedConv1d</p></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Conv2d</p></td>
+<td><p>FakeQuantizedConv2d</p></td>
+<td><p>QuantizedConv2d</p></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Conv3d</p></td>
+<td><p>FakeQuantizedConv3d</p></td>
+<td><p>QuantizedConv3d</p></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ConvTranspose1d</p></td>
+<td><p>FakeQuantizedConvTranspose1d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ConvTranspose2d</p></td>
+<td><p>FakeQuantizedConvTranspose2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ConvTranspose3d</p></td>
+<td><p>FakeQuantizedConvTranspose3d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.CrossMapLRN2d</p></td>
+<td><p>FakeQuantizedCrossMapLRN2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Dropout</p></td>
+<td><p>FakeQuantizedDropout</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Dropout2d</p></td>
+<td><p>FakeQuantizedDropout2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Dropout3d</p></td>
+<td><p>FakeQuantizedDropout3d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ELU</p></td>
+<td><p>FakeQuantizedELU</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.FeatureAlphaDropout</p></td>
+<td><p>FakeQuantizedFeatureAlphaDropout</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Flatten</p></td>
+<td><p>FakeQuantizedFlatten</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Fold</p></td>
+<td><p>FakeQuantizedFold</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.FractionalMaxPool2d</p></td>
+<td><p>FakeQuantizedFractionalMaxPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.FractionalMaxPool3d</p></td>
+<td><p>FakeQuantizedFractionalMaxPool3d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.GELU</p></td>
+<td><p>FakeQuantizedGELU</p></td>
+<td><p>QuantizedGELU</p></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.GLU</p></td>
+<td><p>FakeQuantizedGLU</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.GroupNorm</p></td>
+<td><p>FakeQuantizedGroupNorm</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Hardshrink</p></td>
+<td><p>FakeQuantizedHardshrink</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Hardsigmoid</p></td>
+<td><p>FakeQuantizedHardsigmoid</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Hardswish</p></td>
+<td><p>FakeQuantizedHardswish</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Hardtanh</p></td>
+<td><p>FakeQuantizedHardtanh</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Identity</p></td>
+<td><p>FakeQuantizedIdentity</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.InstanceNorm1d</p></td>
+<td><p>FakeQuantizedInstanceNorm1d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.InstanceNorm2d</p></td>
+<td><p>FakeQuantizedInstanceNorm2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.InstanceNorm3d</p></td>
+<td><p>FakeQuantizedInstanceNorm3d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.LPPool1d</p></td>
+<td><p>FakeQuantizedLPPool1d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.LPPool2d</p></td>
+<td><p>FakeQuantizedLPPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.LayerNorm</p></td>
+<td><p>FakeQuantizedLayerNorm</p></td>
+<td><p>QuantizedLayerNorm</p></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.LeakyReLU</p></td>
+<td><p>FakeQuantizedLeakyReLU</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Linear</p></td>
+<td><p>FakeQuantizedLinear</p></td>
+<td><p>QuantizedLinear</p></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.LocalResponseNorm</p></td>
+<td><p>FakeQuantizedLocalResponseNorm</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.LogSigmoid</p></td>
+<td><p>FakeQuantizedLogSigmoid</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.LogSoftmax</p></td>
+<td><p>FakeQuantizedLogSoftmax</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.MaxPool1d</p></td>
+<td><p>FakeQuantizedMaxPool1d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.MaxPool2d</p></td>
+<td><p>FakeQuantizedMaxPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.MaxPool3d</p></td>
+<td><p>FakeQuantizedMaxPool3d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.MaxUnpool1d</p></td>
+<td><p>FakeQuantizedMaxUnpool1d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.MaxUnpool2d</p></td>
+<td><p>FakeQuantizedMaxUnpool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.MaxUnpool3d</p></td>
+<td><p>FakeQuantizedMaxUnpool3d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Mish</p></td>
+<td><p>FakeQuantizedMish</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.PReLU</p></td>
+<td><p>FakeQuantizedPReLU</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.PixelShuffle</p></td>
+<td><p>FakeQuantizedPixelShuffle</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.PixelUnshuffle</p></td>
+<td><p>FakeQuantizedPixelUnshuffle</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.RReLU</p></td>
+<td><p>FakeQuantizedRReLU</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ReLU</p></td>
+<td><p>FakeQuantizedReLU</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ReLU6</p></td>
+<td><p>FakeQuantizedReLU6</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ReflectionPad1d</p></td>
+<td><p>FakeQuantizedReflectionPad1d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ReflectionPad2d</p></td>
+<td><p>FakeQuantizedReflectionPad2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ReplicationPad1d</p></td>
+<td><p>FakeQuantizedReplicationPad1d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ReplicationPad2d</p></td>
+<td><p>FakeQuantizedReplicationPad2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.ReplicationPad3d</p></td>
+<td><p>FakeQuantizedReplicationPad3d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.SELU</p></td>
+<td><p>FakeQuantizedSELU</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.SiLU</p></td>
+<td><p>FakeQuantizedSiLU</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Sigmoid</p></td>
+<td><p>FakeQuantizedSigmoid</p></td>
+<td><p>QuantizedSigmoid</p></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Softmax</p></td>
+<td><p>FakeQuantizedSoftmax</p></td>
+<td><p>QuantizedSoftmax</p></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Softmax2d</p></td>
+<td><p>FakeQuantizedSoftmax2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Softmin</p></td>
+<td><p>FakeQuantizedSoftmin</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Softplus</p></td>
+<td><p>FakeQuantizedSoftplus</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Softshrink</p></td>
+<td><p>FakeQuantizedSoftshrink</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Softsign</p></td>
+<td><p>FakeQuantizedSoftsign</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.SyncBatchNorm</p></td>
+<td><p>FakeQuantizedSyncBatchNorm</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Tanh</p></td>
+<td><p>FakeQuantizedTanh</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Tanhshrink</p></td>
+<td><p>FakeQuantizedTanhshrink</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Threshold</p></td>
+<td><p>FakeQuantizedThreshold</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Unflatten</p></td>
+<td><p>FakeQuantizedUnflatten</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Unfold</p></td>
+<td><p>FakeQuantizedUnfold</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Upsample</p></td>
+<td><p>FakeQuantizedUpsample</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.UpsamplingBilinear2d</p></td>
+<td><p>FakeQuantizedUpsamplingBilinear2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.UpsamplingNearest2d</p></td>
+<td><p>FakeQuantizedUpsamplingNearest2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.ZeroPad2d</p></td>
+<td><p>FakeQuantizedZeroPad2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.BCELoss</p></td>
+<td><p>FakeQuantizedBCELoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.BCEWithLogitsLoss</p></td>
+<td><p>FakeQuantizedBCEWithLogitsLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.Bilinear</p></td>
+<td><p>FakeQuantizedBilinear</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.CTCLoss</p></td>
+<td><p>FakeQuantizedCTCLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.CosineSimilarity</p></td>
+<td><p>FakeQuantizedCosineSimilarity</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.CrossEntropyLoss</p></td>
+<td><p>FakeQuantizedCrossEntropyLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.HingeEmbeddingLoss</p></td>
+<td><p>FakeQuantizedHingeEmbeddingLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.HuberLoss</p></td>
+<td><p>FakeQuantizedHuberLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.KLDivLoss</p></td>
+<td><p>FakeQuantizedKLDivLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.L1Loss</p></td>
+<td><p>FakeQuantizedL1Loss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.MSELoss</p></td>
+<td><p>FakeQuantizedMSELoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.MultiLabelMarginLoss</p></td>
+<td><p>FakeQuantizedMultiLabelMarginLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.MultiLabelSoftMarginLoss</p></td>
+<td><p>FakeQuantizedMultiLabelSoftMarginLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.MultiMarginLoss</p></td>
+<td><p>FakeQuantizedMultiMarginLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.NLLLoss</p></td>
+<td><p>FakeQuantizedNLLLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.NLLLoss2d</p></td>
+<td><p>FakeQuantizedNLLLoss2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.PairwiseDistance</p></td>
+<td><p>FakeQuantizedPairwiseDistance</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.PoissonNLLLoss</p></td>
+<td><p>FakeQuantizedPoissonNLLLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.SmoothL1Loss</p></td>
+<td><p>FakeQuantizedSmoothL1Loss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.SoftMarginLoss</p></td>
+<td><p>FakeQuantizedSoftMarginLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.CosineEmbeddingLoss</p></td>
+<td><p>FakeQuantizedCosineEmbeddingLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.GaussianNLLLoss</p></td>
+<td><p>FakeQuantizedGaussianNLLLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.MarginRankingLoss</p></td>
+<td><p>FakeQuantizedMarginRankingLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.TripletMarginLoss</p></td>
+<td><p>FakeQuantizedTripletMarginLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.TripletMarginWithDistanceLoss</p></td>
+<td><p>FakeQuantizedTripletMarginWithDistanceLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.Embedding</p></td>
+<td><p>FakeQuantizedEmbedding</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.EmbeddingBag</p></td>
+<td><p>FakeQuantizedEmbeddingBag</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.GRU</p></td>
+<td><p>FakeQuantizedGRU</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.RNN</p></td>
+<td><p>FakeQuantizedRNN</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.GRUCell</p></td>
+<td><p>FakeQuantizedGRUCell</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.RNNCell</p></td>
+<td><p>FakeQuantizedRNNCell</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.LSTM</p></td>
+<td><p>FakeQuantizedLSTM</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>torch.nn.LSTMCell</p></td>
+<td><p>FakeQuantizedLSTMCell</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>torch.nn.AdaptiveLogSoftmaxWithLoss</p></td>
+<td><p>FakeQuantizedAdaptiveLogSoftmaxWithLoss</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.ChannelShuffle</p></td>
+<td><p>FakeQuantizedChannelShuffle</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.MaxPool2d</p></td>
+<td><p>FakeQuantizedMaxPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.AdaptiveAvgPool2d</p></td>
+<td><p>FakeQuantizedAdaptiveAvgPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.AvgPool2d</p></td>
+<td><p>FakeQuantizedAvgPool2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Cast</p></td>
+<td><p>FakeQuantizedCast</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.DepthToSpaceDCRMode</p></td>
+<td><p>FakeQuantizedDepthToSpaceDCRMode</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.OneHot</p></td>
+<td><p>FakeQuantizedOneHot</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Exponential</p></td>
+<td><p>FakeQuantizedExponential</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Erf</p></td>
+<td><p>FakeQuantizedErf</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Sqrt</p></td>
+<td><p>FakeQuantizedSqrt</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Log</p></td>
+<td><p>FakeQuantizedLog</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Abs</p></td>
+<td><p>FakeQuantizedAbs</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Neg</p></td>
+<td><p>FakeQuantizedNeg</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.ElementwiseCeil</p></td>
+<td><p>FakeQuantizedElementwiseCeil</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.ElementwiseFloor</p></td>
+<td><p>FakeQuantizedElementwiseFloor</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Sin</p></td>
+<td><p>FakeQuantizedSin</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Cos</p></td>
+<td><p>FakeQuantizedCos</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Asin</p></td>
+<td><p>FakeQuantizedAsin</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Atan</p></td>
+<td><p>FakeQuantizedAtan</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Round</p></td>
+<td><p>FakeQuantizedRound</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.LogicalNot</p></td>
+<td><p>FakeQuantizedLogicalNot</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.NonZero</p></td>
+<td><p>FakeQuantizedNonZero</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.ElementwiseUnarySign</p></td>
+<td><p>FakeQuantizedElementwiseUnarySign</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.RSqrt</p></td>
+<td><p>FakeQuantizedRSqrt</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Square</p></td>
+<td><p>FakeQuantizedSquare</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Mean</p></td>
+<td><p>FakeQuantizedMean</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Sum</p></td>
+<td><p>FakeQuantizedSum</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Prod</p></td>
+<td><p>FakeQuantizedProd</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Argmin</p></td>
+<td><p>FakeQuantizedArgmin</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Argmax</p></td>
+<td><p>FakeQuantizedArgmax</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Gather</p></td>
+<td><p>FakeQuantizedGather</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Reshape</p></td>
+<td><p>FakeQuantizedReshape</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.RoiAlign</p></td>
+<td><p>FakeQuantizedRoiAlign</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Permute</p></td>
+<td><p>FakeQuantizedPermute</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.IndexSelect</p></td>
+<td><p>FakeQuantizedIndexSelect</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.TopK</p></td>
+<td><p>FakeQuantizedTopK</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Tile</p></td>
+<td><p>FakeQuantizedTile</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Norm</p></td>
+<td><p>FakeQuantizedNorm</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.CumSum</p></td>
+<td><p>FakeQuantizedCumSum</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Interpolate</p></td>
+<td><p>FakeQuantizedInterpolate</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Normalize</p></td>
+<td><p>FakeQuantizedNormalize</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Pad</p></td>
+<td><p>FakeQuantizedPad</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Shape</p></td>
+<td><p>FakeQuantizedShape</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Expand</p></td>
+<td><p>FakeQuantizedExpand</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.StridedSlice</p></td>
+<td><p>FakeQuantizedStridedSlice</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.MatMul</p></td>
+<td><p>FakeQuantizedMatMul</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Add</p></td>
+<td><p>FakeQuantizedAdd</p></td>
+<td><p>QuantizedAdd</p></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Multiply</p></td>
+<td><p>FakeQuantizedMultiply</p></td>
+<td><p>QuantizedMultiply</p></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Subtract</p></td>
+<td><p>FakeQuantizedSubtract</p></td>
+<td><p>QuantizedSubtract</p></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Divide</p></td>
+<td><p>FakeQuantizedDivide</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.FloorDivide</p></td>
+<td><p>FakeQuantizedFloorDivide</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Greater</p></td>
+<td><p>FakeQuantizedGreater</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Less</p></td>
+<td><p>FakeQuantizedLess</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.GreaterEqual</p></td>
+<td><p>FakeQuantizedGreaterEqual</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.LessEqual</p></td>
+<td><p>FakeQuantizedLessEqual</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.NotEqual</p></td>
+<td><p>FakeQuantizedNotEqual</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Equal</p></td>
+<td><p>FakeQuantizedEqual</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Remainder</p></td>
+<td><p>FakeQuantizedRemainder</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Fmod</p></td>
+<td><p>FakeQuantizedFmod</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Pow</p></td>
+<td><p>FakeQuantizedPow</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.CustomSiLU</p></td>
+<td><p>FakeQuantizedCustomSiLU</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Maximum</p></td>
+<td><p>FakeQuantizedMaximum</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Max</p></td>
+<td><p>FakeQuantizedMax</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Minimum</p></td>
+<td><p>FakeQuantizedMinimum</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Min</p></td>
+<td><p>FakeQuantizedMin</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Bmm</p></td>
+<td><p>FakeQuantizedBmm</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.LogicalOr</p></td>
+<td><p>FakeQuantizedLogicalOr</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.LogicalAnd</p></td>
+<td><p>FakeQuantizedLogicalAnd</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.CustomGather</p></td>
+<td><p>FakeQuantizedCustomGather</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.GatherNd</p></td>
+<td><p>FakeQuantizedGatherNd</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Baddbmm</p></td>
+<td><p>FakeQuantizedBaddbmm</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Addmm</p></td>
+<td><p>FakeQuantizedAddmm</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.ScatterND</p></td>
+<td><p>FakeQuantizedScatterND</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.DynamicConv2d</p></td>
+<td><p>FakeQuantizedDynamicConv2d</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.ScatterElements</p></td>
+<td><p>FakeQuantizedScatterElements</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.BatchNorm</p></td>
+<td><p>FakeQuantizedBatchNorm</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.GroupNorm</p></td>
+<td><p>FakeQuantizedAimetGroupNorm</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.NonMaxSuppression</p></td>
+<td><p>FakeQuantizedNonMaxSuppression</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Split</p></td>
+<td><p>FakeQuantizedSplit</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.Concat</p></td>
+<td><p>FakeQuantizedConcat</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aimet_ops.Where</p></td>
+<td><p>FakeQuantizedWhere</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aimet_ops.MaskedFill</p></td>
+<td><p>FakeQuantizedMaskedFill</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../user_guide/adaround.html" class="btn btn-neutral float-left" title="AIMET AdaRound" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quantizer.html" class="btn btn-neutral float-right" title="Quantizers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
