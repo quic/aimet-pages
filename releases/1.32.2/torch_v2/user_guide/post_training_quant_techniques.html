@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMET Post-Training Quantization Techniques &mdash; AI Model Efficiency Toolkit Documentation: ver 1.32.2</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.32.2
+      </div>
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="Versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      AIMET Variant: <span class="rst-current-version-name"> PyTorch </span>
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Documentation Versions</dt>
+        
+          <dd><a href="https://quic.github.io/aimet-pages/releases/latest/user_guide/index.html">Universal</a></dd>
+        
+          <dd><a href="https://quic.github.io/aimet-pages/releases/latest/torch_v2/torch_docs/index.html">PyTorch</a></dd>
+        
+      </dl>
+    </div>
+  </div>
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/encoding_analyzer.html">Encoding Analyzers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer.html">MinMaxEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer.html">SqnrEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer.html">PercentileEncodingAnalyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/nn.fake_quantization_mixin.html">FakeQuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/nn.quantization_mixin.html">nn.QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/affine/index.html">quantization.affine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.Quantize.html">Quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.QuantizeDequantize.html">QuantizeDequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_.html">quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_dequantize.html">quantize_dequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.dequantize.html">dequantize</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AIMET Post-Training Quantization Techniques</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/post_training_quant_techniques.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="aimet-post-training-quantization-techniques">
+<span id="ug-post-training-quantization"></span><h1>AIMET Post-Training Quantization Techniques<a class="headerlink" href="#aimet-post-training-quantization-techniques" title="Permalink to this heading"></a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>It is observed that some ML models show reduced inference accuracy when run on quantized hardware due to approximation noises. AIMET provides post-training quantization techniques that help adjust the parameters in the model such that the model becomes more quantization-friendly. AIMET post-training quantizations are designed to be applied on pre-trained ML models. These techniques are explained as part of the “Data-Free Quantization Through Weight Equalization and Bias Correction” paper at ICCV 2019 - <a class="reference external" href="https://arxiv.org/abs/1906.04721">https://arxiv.org/abs/1906.04721</a></p>
+</div>
+<div class="section" id="user-flow">
+<h2>User Flow<a class="headerlink" href="#user-flow" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><img alt="../_images/flow_diagram_cle.png" src="../_images/flow_diagram_cle.png" />
+</div></blockquote>
+<ol class="arabic">
+<li><p>BatchNorm Folding: This feature will fold in the batch-norm layers (if present) into surrounding layers.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><a class="reference internal" href="visualization_quant.html#ug-quantization-visualization"><span class="std std-ref">Quantization Visualization</span></a>: AIMET provides visualization tools that help guide the user to determine if AIMET post-training quantization techniques are useful for a given model. Specifically, the visualization tools will show per-channel ranges of parameters to highlight if there is big discrepancy in ranges between different channels in a layer.</p>
+<blockquote>
+<div><img alt="../_images/cle_5.png" src="../_images/cle_5.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Replace ReLU6 with ReLU: This feature replaces ReLU6 layers with ReLU layers. This is needed for the subsequent cross-layer scaling step. However, this replacement can lead to a drop in accuracy for some models. If this drop in accuracy is not acceptable, the user may be better off not using the post-training quantization techniques.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Cross Layer Scaling: In some models, the parameter ranges for different channels in a layer show a wide variance. This feature attempts to equalize the parameter ranges across different channels. As seen below, the ranges of weights per channel in a layer vary significantly.  Cross-Layer Scaling scales layer’s per channel weights of consecutive layers. This helps increase the range for layers with low range and reduce range for layers with high range. Therefore, different channels have similar range and same quantizaion parameters can be used for weights across all channels.</p>
+<blockquote>
+<div><img alt="../_images/cle_1.png" src="../_images/cle_1.png" />
+</div></blockquote>
+<p>As shown below, AIMET takes in a model and equalizes the distribution of weights per channel of consecutive layers. The scaling factor is calculated and used to scale the weights. The output of the model remains the same and the dynamic range of weight distribution is reduced.</p>
+<blockquote>
+<div><img alt="../_images/cle_4.png" src="../_images/cle_4.png" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>High Bias Fold: Cross-layer scaling may result in high bias parameter values for some layers. This technique folds some of the bias of a layer into the subsequent layer’s parameters. High-bias fold requires batch-norm parameters to operate on. If the original model did not batch-norm parameters for a given layer, the high-bias fold technique will not be applied to that layer.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Bias Correction: Quantization sometimes leads to a shift in layer outputs. This techniques helps correct this shift by adjusting the bias parameters of that layer. Bias parameter is iteratively corrected/updated for each layer. The layer whose bias has to be corrected, and all the layers above it, are quantized. There are two techniques, namely  Empirical Bias Correction and Analytical Bias Correction that are supported for bias correction.</p></li>
+</ol>
+<p>In empirical bias correction technique, representative data is passed through both the FP32 model and quantized model. Outputs are extracted for the layer to be corrected from both the models and used for correcting the bias parameter as shown below which describes correcting bias for a single layer. This process continues for all layers in the model.</p>
+<img alt="../_images/bias_correction_empirical.png" src="../_images/bias_correction_empirical.png" />
+<p>In analytical bias correction, data from BatchNorms - when present are used for correction factor estimation instead of passing data through model as in empirical case.</p>
+<img alt="../_images/bias_correction_analytical.png" src="../_images/bias_correction_analytical.png" />
+</div>
+<div class="section" id="cross-layer-equalization-api">
+<h2>Cross-Layer Equalization API<a class="headerlink" href="#cross-layer-equalization-api" title="Permalink to this heading"></a></h2>
+<p>Please refer to the links below to view the Cross-Layer Equalization API for each AIMET variant:</p>
+<ul class="simple">
+<li><p><span class="xref std std-ref">Cross-Layer Equalization for PyTorch</span></p></li>
+<li><p><span class="xref std std-ref">Cross-Layer Equalization for Tensorflow</span></p></li>
+<li><p><span class="xref std std-ref">Cross-Layer Equalization for Keras</span></p></li>
+<li><p><span class="xref std std-ref">Cross-Layer Equalization for ONNX</span></p></li>
+</ul>
+</div>
+<div class="section" id="faqs">
+<h2>FAQs<a class="headerlink" href="#faqs" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>How many samples of data are required to perform Bias Correction?</dt><dd><p><em>Bias Correction requires a representative set of dataset. We have observed that providing 500-1000 samples works well.</em></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Which is better Empirical Bias Correction or Analytical + Empirical Bias Correction?</dt><dd><p><em>If speed is not a bottleneck, then it is suggested to use Empirical Bias Correction, else the hybrid approach of combining both.</em></p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Markus Nagel, Mart van Baalen, Tijmen Blankevoort, Max Welling. “Data-Free Quantization Through Weight Equalization and Bias Correction.” IEEE International Conference on Computer Vision (ICCV), Seoul, October 2019.</p></li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
