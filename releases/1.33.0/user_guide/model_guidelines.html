@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Model Guidelines for PyTorch &mdash; AI Model Efficiency Toolkit Documentation: ver 1.33.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -61,7 +60,6 @@
 <li class="toctree-l4"><a class="reference internal" href="quantization_sim.html#determining-quantization-parameters-encodings">Determining Quantization Parameters (Encodings)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="quantization_sim.html#quantization-schemes">Quantization Schemes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="quantization_sim.html#configuring-quantization-simulation-ops">Configuring Quantization Simulation Ops</a></li>
-<li class="toctree-l4"><a class="reference internal" href="quantization_sim.html#quantization-simulation-apis">Quantization Simulation APIs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="quantization_sim.html#frequently-asked-questions">Frequently Asked Questions</a></li>
 </ul>
 </li>
@@ -76,20 +74,17 @@
 <li class="toctree-l4"><a class="reference internal" href="auto_quant.html">AutoQuant</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="auto_quant.html#overview">Overview</a></li>
 <li class="toctree-l5"><a class="reference internal" href="auto_quant.html#workflow">Workflow</a></li>
-<li class="toctree-l5"><a class="reference internal" href="auto_quant.html#autoquant-api">AutoQuant API</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="adaround.html">Adaptive Rounding (AdaRound)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="adaround.html#adaround-use-cases">AdaRound Use Cases</a></li>
 <li class="toctree-l5"><a class="reference internal" href="adaround.html#common-terminology">Common terminology</a></li>
 <li class="toctree-l5"><a class="reference internal" href="adaround.html#use-cases">Use Cases</a></li>
-<li class="toctree-l5"><a class="reference internal" href="adaround.html#adaround-api">AdaRound API</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="post_training_quant_techniques.html">Cross-Layer Equalization</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#overview">Overview</a></li>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#user-flow">User Flow</a></li>
-<li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#cross-layer-equalization-api">Cross-Layer Equalization API</a></li>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#faqs">FAQs</a></li>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#references">References</a></li>
 </ul>
@@ -97,13 +92,11 @@
 <li class="toctree-l4"><a class="reference internal" href="bn_reestimation.html">BN Re-estimation</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="bn_reestimation.html#overview">Overview</a></li>
 <li class="toctree-l5"><a class="reference internal" href="bn_reestimation.html#workflow">Workflow</a></li>
-<li class="toctree-l5"><a class="reference internal" href="bn_reestimation.html#bn-re-estimation-api">BN Re-estimation API</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="post_training_quant_techniques.html">Bias Correction [Depricated]</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#overview">Overview</a></li>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#user-flow">User Flow</a></li>
-<li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#cross-layer-equalization-api">Cross-Layer Equalization API</a></li>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#faqs">FAQs</a></li>
 <li class="toctree-l5"><a class="reference internal" href="post_training_quant_techniques.html#references">References</a></li>
 </ul>
@@ -115,7 +108,6 @@
 <li class="toctree-l5"><a class="reference internal" href="quant_analyzer.html#overview">Overview</a></li>
 <li class="toctree-l5"><a class="reference internal" href="quant_analyzer.html#requirements">Requirements</a></li>
 <li class="toctree-l5"><a class="reference internal" href="quant_analyzer.html#detailed-analysis-descriptions">Detailed Analysis Descriptions</a></li>
-<li class="toctree-l5"><a class="reference internal" href="quant_analyzer.html#quantanalyzer-api">QuantAnalyzer API</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="visualization_quant.html">Visualizations</a><ul>
@@ -1111,12 +1103,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="model-guidelines-for-pytorch">
+  <div class="section" id="model-guidelines-for-pytorch">
 <h1>Model Guidelines for PyTorch<a class="headerlink" href="#model-guidelines-for-pytorch" title="Permalink to this heading"></a></h1>
 <p>To implement the Cross Layer Equalization API,  aimet_torch.cross_layer_equalization.equalize_model(),  AIMET creates a computing graph to analyze the sequence of Operations in the model.
 If your model is defined using certain constructs, it restricts AIMET from successfully creating and analyzing the computing graph. The following table lists the potential issues and workarounds.</p>
 <p>Note: These restrictions are not applicable, if you are using the <strong>Primitive APIs</strong></p>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 34%" />
+<col style="width: 39%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Potential Issue</p></th>
 <th class="head"><p>Description</p></th>
@@ -1174,7 +1171,7 @@ release.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 
 
            </div>
