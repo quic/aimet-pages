@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Migrate to QuantSim v2 &mdash; AI Model Efficiency Toolkit Documentation: ver 1.33.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
@@ -114,7 +113,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="migrate-to-quantsim-v2">
+  <div class="section" id="migrate-to-quantsim-v2">
 <span id="tutorials-migration-guide"></span><h1>Migrate to QuantSim v2<a class="headerlink" href="#migrate-to-quantsim-v2" title="Permalink to this heading"></a></h1>
 <p>Learn how to migrate your code from QuantSim v1 to QuantSim v2!</p>
 <p>Migration to QuantSim v2 enables access to new features, easier debugging, and simpler code that is easier to extend. This guide provides an overview of the migration process and describes the fundamental differences between the two versions.</p>
@@ -122,14 +121,13 @@
 <p class="admonition-title">Note</p>
 <p>Please be advised that QuantSim v2 is an experimental feature whose APIs and behaviors are subject to change.</p>
 </div>
-<section id="changes-in-quantsim-v2">
+<div class="section" id="changes-in-quantsim-v2">
 <h2>Changes in QuantSim v2<a class="headerlink" href="#changes-in-quantsim-v2" title="Permalink to this heading"></a></h2>
 <p>Before migrating, it is important to understand the behavior and API differences between QuantSim v1 and QuantSim v2. Users can interact with QuantSim through the high level APIs in the same way. Methods like <code class="docutils literal notranslate"><span class="pre">compute_encodings()</span></code> and <code class="docutils literal notranslate"><span class="pre">export()</span></code> will remain the same.</p>
 <p>Under the hood, QuantSim v2 has a different set of building blocks and properties than QuantSim v1, as shown below:</p>
-<a class="reference internal image-reference" href="../../_images/quantsim2.0.png"><img alt="../../_images/quantsim2.0.png" src="../../_images/quantsim2.0.png" style="width: 800px;" />
-</a>
-</section>
-<section id="migration-process">
+<a class="reference internal image-reference" href="../../_images/quantsim2.0.png"><img alt="../../_images/quantsim2.0.png" src="../../_images/quantsim2.0.png" style="width: 800px;" /></a>
+</div>
+<div class="section" id="migration-process">
 <h2>Migration Process<a class="headerlink" href="#migration-process" title="Permalink to this heading"></a></h2>
 <p>The migration process includes the following:</p>
 <ol class="arabic simple">
@@ -137,10 +135,15 @@
 <li><p>Change how internal components of QuantizationSimModel are accessed</p></li>
 <li><p>Remove any dependency on deprecated features</p></li>
 </ol>
-<section id="imports">
+<div class="section" id="imports">
 <h3>Imports<a class="headerlink" href="#imports" title="Permalink to this heading"></a></h3>
 <p>To migrate to QuantSim v2, your imports should originate from the <code class="xref py py-mod docutils literal notranslate"><span class="pre">aimet_torch.v2</span></code> namespace and be replaced as shown below. If your code does not directly access lower-level components, no further code change is needed.</p>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 38%" />
+<col style="width: 47%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>AIMET Classes</p></th>
 <th class="head"><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">aimet_torch</span></code></p></th>
@@ -177,11 +180,11 @@
 <li><p><code class="code highlight python docutils literal highlight-python"><span class="kn">from</span> <span class="nn">aimet_torch.cross_layer_equalization</span> <span class="kn">import</span> <span class="n">equalize_model</span></code></p></li>
 <li><p><code class="code highlight python docutils literal highlight-python"><span class="kn">from</span> <span class="nn">aimet_torch.model_preparer</span> <span class="kn">import</span> <span class="n">prepare_model</span></code></p></li>
 </ul>
-</section>
+</div>
 <hr class="docutils" />
-<section id="quantizationsimmodel">
+<div class="section" id="quantizationsimmodel">
 <h3>QuantizationSimModel<a class="headerlink" href="#quantizationsimmodel" title="Permalink to this heading"></a></h3>
-<section id="moving-from-quantwrapper-to-quantized-modules">
+<div class="section" id="moving-from-quantwrapper-to-quantized-modules">
 <h4>Moving from QuantWrapper to Quantized Modules<a class="headerlink" href="#moving-from-quantwrapper-to-quantized-modules" title="Permalink to this heading"></a></h4>
 <p>To enable quantization in QuantSim v1, modules are wrapped with a QuantizeWrapper. These wrapped modules can be accessed as follows:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aimet_torch.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span> <span class="k">as</span> <span class="n">QuantizationSimModelV1</span>
@@ -232,8 +235,8 @@ FakeQuantizedReLU(
 </pre></div>
 </div>
 <p>For more information on Quantized modules, please refer to the API reference guide <a class="reference internal" href="../quantized_modules.html#api-torch-quantized-modules"><span class="std std-ref">here</span></a>.</p>
-</section>
-<section id="moving-from-staticgrid-and-learnedgrid-quantizer-to-affine-and-float-quantizer">
+</div>
+<div class="section" id="moving-from-staticgrid-and-learnedgrid-quantizer-to-affine-and-float-quantizer">
 <h4>Moving from StaticGrid and LearnedGrid Quantizer to Affine and Float Quantizer<a class="headerlink" href="#moving-from-staticgrid-and-learnedgrid-quantizer-to-affine-and-float-quantizer" title="Permalink to this heading"></a></h4>
 <p>In QuantSim v1, we relied on StaticGridQuantizer and LearnedGridQuantizer. For both, floating point quantization could be enabled based on <code class="docutils literal notranslate"><span class="pre">QuantizationDataType</span></code> passed in.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">aimet_torch.tensor_quantizer</span> <span class="kn">import</span> <span class="n">StaticGridPerChannelQuantizers</span>
@@ -253,8 +256,8 @@ FakeQuantizedReLU(
 </div>
 <p>From the wrapped module (QuantSim v1) or quantized module (QuantSim v2), the attributes to access the quantizers remain consistent: <code class="docutils literal notranslate"><span class="pre">.input_quantizers</span></code> for input quantizers, <code class="docutils literal notranslate"><span class="pre">.output_quantizers</span></code> for output quantizers, and <code class="docutils literal notranslate"><span class="pre">.param_quantizers</span></code> for parameter quantizers.</p>
 <p>For more information on Quantizers, please refer to the API reference guide <a class="reference internal" href="../quantizer.html#api-torch-quantizers"><span class="std std-ref">here</span></a>.</p>
-</section>
-<section id="code-examples">
+</div>
+<div class="section" id="code-examples">
 <h4>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this heading"></a></h4>
 <p><strong>Setup</strong></p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># QuantSim v1</span>
@@ -413,15 +416,15 @@ FakeQuantizedReLU(
 <span class="n">qlinear</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>   <span class="c1"># Prevents encodings from being learned</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="deprecated-features">
+</div>
+</div>
+<div class="section" id="deprecated-features">
 <span id="id1"></span><h3>Deprecated Features<a class="headerlink" href="#deprecated-features" title="Permalink to this heading"></a></h3>
 <p>There are some components that are tied to the QuantSim v1 design that are not needed in QuantSim v2. For example, all QuantSim v2 source code will be implemented in Python to provide easier debugging and improved portability. It is not recommended to use libpymo modules with QuantSim 2.0. Below, you can see a list of these features and the recommended migration guideline:</p>
-<table class="docutils align-default">
+<table class="colwidths-given docutils align-default">
 <colgroup>
-<col style="width: 50.0%" />
-<col style="width: 50.0%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Component in v1</p></th>
@@ -443,9 +446,9 @@ FakeQuantizedReLU(
 </tr>
 </tbody>
 </table>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
            </div>
