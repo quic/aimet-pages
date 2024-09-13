@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.v2.quantization.tensor &mdash; AI Model Efficiency Toolkit Documentation: ver 1.33.5</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/style.css" />
+      <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../../../../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.33.5
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/encoding_analyzer.html">Encoding Analyzers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer.html">MinMaxEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer.html">SqnrEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer.html">PercentileEncodingAnalyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html">FakeQuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/index.html">quantization.affine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.Quantize.html">Quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.QuantizeDequantize.html">QuantizeDequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_.html">quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_dequantize.html">quantize_dequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.dequantize.html">dequantize</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.v2.quantization.tensor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.v2.quantization.tensor</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+<span class="sd">&quot;&quot;&quot; Quantized tensor class implementation &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.utils._pytree</span> <span class="kn">import</span> <span class="n">tree_map</span><span class="p">,</span> <span class="n">tree_flatten</span>
+
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.base</span> <span class="kn">import</span> <span class="n">EncodingBase</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;QuantizedTensorBase&#39;</span><span class="p">,</span> <span class="s1">&#39;QuantizedTensor&#39;</span><span class="p">,</span> <span class="s1">&#39;DequantizedTensor&#39;</span><span class="p">,</span> <span class="s1">&#39;EncodingError&#39;</span><span class="p">]</span>
+
+
+<span class="n">HANDLED_FUNCTIONS</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">def</span> <span class="nf">implements</span><span class="p">(</span><span class="n">torch_function</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Register an override for QuantizedTensorBase</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">HANDLED_FUNCTIONS</span><span class="p">[</span><span class="n">torch_function</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+
+
+<span class="k">class</span> <span class="nc">QuantizedTensorBase</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class to define quantized tensor behavior.</span>
+<span class="sd">    Represents a quantized or dequantized tensor as a subclass of :class:`torch.Tensor` which also holds the quantization encodings.</span>
+<span class="sd">    This object can be safely quantized or dequantized through the :meth:`quantize` and :meth:`dequantize` methods without</span>
+<span class="sd">    changing the represented data values.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; from aimet_torch.v2 import quantization as Q</span>
+<span class="sd">        &gt;&gt;&gt; quantizer = Q.affine.Quantize(shape=(2, 1), bitwidth=8, symmetric=True)</span>
+<span class="sd">        &gt;&gt;&gt; x = torch.tensor([[-1.20, 4.1, -0.21, 2.3],</span>
+<span class="sd">        ...                   [0.2, 5.6, -1.0, -.1]])</span>
+<span class="sd">        &gt;&gt;&gt; with quantizer.compute_encodings():</span>
+<span class="sd">        ...     x_q = quantizer(x)</span>
+<span class="sd">        &gt;&gt;&gt; torch.equal(x_q.encoding.scale, quantizer.get_scale())</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; x_q</span>
+<span class="sd">        QuantizedTensor([[-37., 127.,  -7.,  71.],</span>
+<span class="sd">                         [  5., 127., -23.,  -2.]])</span>
+<span class="sd">        &gt;&gt;&gt; x_q.quantized_repr()</span>
+<span class="sd">        tensor([[-37, 127,  -7,  71],</span>
+<span class="sd">                [  5, 127, -23,  -2]], dtype=torch.int8)</span>
+<span class="sd">        &gt;&gt;&gt; x_q.dequantize()</span>
+<span class="sd">        DequantizedTensor([[-1.1945,  4.1000, -0.2260,  2.2921],</span>
+<span class="sd">                           [ 0.2205,  5.6000, -1.0142, -0.0882]])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">encoding</span><span class="p">:</span> <span class="n">EncodingBase</span>
+
+    <span class="n">_cast_ops</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">half</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">double</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">char</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">short</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">int</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">long</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">cuda</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">cpu</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">to</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Operations that an encoding can always pass through</span>
+    <span class="n">_passthrough_ops</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">contiguous</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Operations that a per-tensor encoding can pass through</span>
+    <span class="n">_pertensor_passthrough_ops</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">expand</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">expand_as</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">flatten</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">masked_select</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">permute</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">repeat</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">reshape</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">reshape_as</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">resize</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">resize_as</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">select</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">squeeze</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">swapdims</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">transpose</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">unflatten</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">view</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">view_as</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">as_strided</span><span class="p">,</span>
+        <span class="c1">#torch.as_strided_copy, TODO: Uncomment when pytorch 1.9 support is fully deprecated</span>
+        <span class="c1">#torch.expand_copy,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">flatten</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">permute</span><span class="p">,</span>
+        <span class="c1">#torch.permute_copy,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">reshape</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">squeeze</span><span class="p">,</span>
+        <span class="c1">#torch.squeeze_copy,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">swapdims</span><span class="p">,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
+        <span class="c1">#torch.t_copy,</span>
+        <span class="c1">#torch.unflatten,</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">,</span>
+        <span class="c1">#torch.unsqueeze_copy,</span>
+        <span class="c1">#torch.view_copy</span>
+    <span class="p">}</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuantizedTensor&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantizes ``self`` with the associated encoding</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method must be an IDEMPOTENT function.</span>
+<span class="sd">            The result of calling this method multiple times should be equal to calling it only once.</span>
+<span class="sd">            In other words, calling this method multiple times should not result in duplicate quantization.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">dequantize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DequantizedTensor&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dequantizes ``self`` with the associated encoding</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            This method must be an IDEMPOTENT function.</span>
+<span class="sd">            The result of calling this method multiple times should be equal to calling it only once.</span>
+<span class="sd">            In other words, calling this method multiple times should not result in duplicate dequantization.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">quantized_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the quantized representation of ``self`` as a :class:`torch.Tensor` with data type :attr:`self.encoding.dtype`</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            The result of this function may not be able to carry a gradient depending on the quantized data type.</span>
+<span class="sd">            Thus, it may be necessary to call this only within an autograd function to allow for backpropagation.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            &gt;&gt;&gt; from aimet_torch.v2 import quantization as Q</span>
+<span class="sd">            &gt;&gt;&gt; quantizer = Q.affine.Quantize(shape=(2, 1), bitwidth=8, symmetric=True)</span>
+<span class="sd">            &gt;&gt;&gt; x = torch.randn((2, 4), requires_grad=True)</span>
+<span class="sd">            &gt;&gt;&gt; with quantizer.compute_encodings():</span>
+<span class="sd">            ...     x_q = quantizer(x)</span>
+<span class="sd">            &gt;&gt;&gt; x_q</span>
+<span class="sd">            QuantizedTensor([[  11.,  -57., -128.,   38.],</span>
+<span class="sd">                             [  28.,   -0., -128.,  -40.]], grad_fn=&lt;AliasBackward0&gt;)</span>
+<span class="sd">            &gt;&gt;&gt; x_q.quantized_repr()</span>
+<span class="sd">            tensor([[  11,  -57, -128,   38],</span>
+<span class="sd">                    [  28,    0, -128,  -40]], dtype=torch.int8)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;encoding&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-floating point dtype `</span><span class="si">{</span><span class="n">ret</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">` is not allowed for quantized tensors.&quot;</span><span class="p">)</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="nd">@implements</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">clone</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">memory_format</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">preserve_format</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a copy of self</span>
+
+<span class="sd">        :param memory_format: Desired memory format of the returned tensor (default=torch.preserve_format)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Note: use encoding.clone() here instead of deepcopy to propagate gradient through operation</span>
+        <span class="n">encoding_clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">_clone</span><span class="p">()</span> <span class="c1"># pylint:disable = protected-access</span>
+        <span class="n">self_clone</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">memory_format</span><span class="o">=</span><span class="n">memory_format</span><span class="p">)</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+        <span class="n">self_clone</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding_clone</span>
+        <span class="k">return</span> <span class="n">self_clone</span>
+
+    <span class="nd">@implements</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">detach</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">detach</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuantizedTensorBase&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a new QuantizedTensorBase with data and encoding detached from the current graph</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">self_detached</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+        <span class="n">self_detached</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">_detach</span><span class="p">()</span> <span class="c1"># pylint:disable = protected-access</span>
+        <span class="k">return</span> <span class="n">self_detached</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__torch_function__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">HANDLED_FUNCTIONS</span><span class="p">:</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span> <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
+            <span class="k">return</span> <span class="n">HANDLED_FUNCTIONS</span><span class="p">[</span><span class="n">func</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__torch_function__</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">flattened_args</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tree_flatten</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">ret</span> <span class="ow">is</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">flattened_args</span><span class="p">):</span>
+            <span class="c1"># Return value is the same object as one of the arguments.</span>
+            <span class="c1"># This implies that func is likely (but not necessarily) an in-place operator.</span>
+            <span class="k">return</span> <span class="n">ret</span>
+
+        <span class="k">if</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_cast_ops</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Type casting to non-floating point dtype `</span><span class="si">{</span><span class="n">ret</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">` is not allowed for quantized tensors. &quot;</span>
+                    <span class="s2">&quot;To cast quantized tensors to integer, use `qtensor.quantzed_repr()`.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Outputs of cast ops can inherit the same encoding as its parents</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">args</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span> <span class="c1"># shallow copy</span>
+
+        <span class="k">if</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_passthrough_ops</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">args</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pertensor_passthrough_ops</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">args</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">granularity</span> <span class="o">==</span> <span class="s2">&quot;pertensor&quot;</span><span class="p">:</span>
+                <span class="c1"># Return a cls object with the same encoding which can later be quantized or dequantized</span>
+                <span class="n">ret</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Return a cls object with no encoding</span>
+                <span class="c1"># If the user later tries to quantize or dequantize this, an error will be thrown</span>
+                <span class="n">ret</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">ret</span>
+
+        <span class="k">def</span> <span class="nf">set_encoding</span><span class="p">(</span><span class="n">qtensor</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">qtensor</span><span class="p">,</span> <span class="s1">&#39;encoding&#39;</span><span class="p">):</span>
+                <span class="n">qtensor</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">qtensor</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># If encoding does not exist, return a plain torch.Tensor</span>
+                <span class="k">return</span> <span class="n">qtensor</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span>
+
+            <span class="c1"># Change device of encoding</span>
+            <span class="c1"># NOTE: We don&#39;t change the dtypes of encoding because scale/offset</span>
+            <span class="c1">#       are sensitive to dtype</span>
+            <span class="n">qtensor</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">qtensor</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">qtensor</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">qtensor</span>
+
+        <span class="k">return</span> <span class="n">tree_map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">set_encoding</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span> <span class="k">else</span> <span class="n">t</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="QuantizedTensor"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.QuantizedTensor">[docs]</a><span class="k">class</span> <span class="nc">QuantizedTensor</span><span class="p">(</span><span class="n">QuantizedTensorBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a quantized tensor object. The object holds quantized values stored in a floating-point tensor along with</span>
+<span class="sd">    an :class:`EncodingBase` object which holds the information necessary to map the quantized values back to the</span>
+<span class="sd">    real/represented values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="QuantizedTensor.quantize"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.QuantizedTensor.quantize">[docs]</a>    <span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuantizedTensor&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns ``self``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">EncodingError</span><span class="p">(</span><span class="s2">&quot;Encoding does not exist&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="QuantizedTensor.dequantize"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.QuantizedTensor.dequantize">[docs]</a>    <span class="k">def</span> <span class="nf">dequantize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DequantizedTensor&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dequantizes ``self`` using :attr:`self.encoding` to produce a :class:`DequantizedTensor` with the same encoding</span>
+<span class="sd">        information.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            &gt;&gt;&gt; from aimet_torch.v2.quantization as Q</span>
+<span class="sd">            &gt;&gt;&gt; x = torch.tensor([[2.57, -2.312],</span>
+<span class="sd">            ...                   [0.153, 0.205]])</span>
+<span class="sd">            &gt;&gt;&gt; quantizer = Q.affine.Quantize(shape=(1, ), bitwidth=8, symmetric=True)</span>
+<span class="sd">            &gt;&gt;&gt; quantizer.set_range(-128 * 0.1, 127 * 0.1)</span>
+<span class="sd">            &gt;&gt;&gt; x_q = quantizer(x)</span>
+<span class="sd">            &gt;&gt;&gt; x_q</span>
+<span class="sd">            QuantizedTensor([[ 26., -23.],</span>
+<span class="sd">                             [  2.,   2.]], grad_fn=&lt;AliasBackward0&gt;)</span>
+<span class="sd">            &gt;&gt;&gt; x_dq = x_q.dequantize()</span>
+<span class="sd">            &gt;&gt;&gt; x_dq</span>
+<span class="sd">            DequantizedTensor([[ 2.6000, -2.3000],</span>
+<span class="sd">                               [ 0.2000,  0.2000]], grad_fn=&lt;AliasBackward0&gt;)</span>
+<span class="sd">            &gt;&gt;&gt; torch.equal(x_dq.encoding.scale, x_q.encoding.scale)</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">EncodingError</span><span class="p">(</span><span class="s2">&quot;Encoding does not exist&quot;</span><span class="p">)</span>
+
+        <span class="n">qtensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">dequantize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">))</span>
+        <span class="n">qtensor</span> <span class="o">=</span> <span class="n">qtensor</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="n">DequantizedTensor</span><span class="p">)</span>
+        <span class="n">qtensor</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">qtensor</span></div>
+
+<div class="viewcode-block" id="QuantizedTensor.quantized_repr"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.QuantizedTensor.quantized_repr">[docs]</a>    <span class="k">def</span> <span class="nf">quantized_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="c1"># FIXME(kyunggeu): This only works for affine encodings.</span>
+        <span class="c1">#                  Needs to be generalized for any kind of encodings</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantize</span><span class="p">()</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DequantizedTensor"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.DequantizedTensor">[docs]</a><span class="k">class</span> <span class="nc">DequantizedTensor</span><span class="p">(</span><span class="n">QuantizedTensorBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a tensor which has been quantized and subsequently dequantized. This object contains real floating point</span>
+<span class="sd">    data as well as an :class:`EncodingBase` object which holds information about the quantization parameters with which</span>
+<span class="sd">    the data was quantized. With this, a :class:`DequantizedTensor` can be converted back to its quantized representation</span>
+<span class="sd">    without further loss in information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;encoding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;encoding&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+        <span class="n">new_instance</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+        <span class="n">new_instance</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">new_instance</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;encoding&quot;</span><span class="p">])</span>
+        <span class="n">new_instance</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">new_instance</span>
+
+<div class="viewcode-block" id="DequantizedTensor.quantize"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.DequantizedTensor.quantize">[docs]</a>    <span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantizedTensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantizes ``self`` using :attr:`self.encoding` to produce a :class:`QuantizedTensor` with the same encoding</span>
+<span class="sd">        information.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            &gt;&gt;&gt; import aimet_torch.v2.quantization as Q</span>
+<span class="sd">            &gt;&gt;&gt; x = torch.tensor([[0.39, 51.0], [3.521, 9.41]])</span>
+<span class="sd">            &gt;&gt;&gt; quant_dequant = Q.affine.QuantizeDequantize((1, ), 8, symmetric=False)</span>
+<span class="sd">            &gt;&gt;&gt; quant_dequant.set_range(-10, 41)</span>
+<span class="sd">            &gt;&gt;&gt; x_qdq = quant_dequant(x)</span>
+<span class="sd">            &gt;&gt;&gt; x_qdq</span>
+<span class="sd">            DequantizedTensor([[ 0.4000, 41.0000],</span>
+<span class="sd">                               [ 3.6000,  9.4000]], grad_fn=&lt;AliasBackward0&gt;)</span>
+<span class="sd">            &gt;&gt;&gt; x_qdq.quantize()</span>
+<span class="sd">            QuantizedTensor([[ 52., 255.],</span>
+<span class="sd">                             [ 68.,  97.]], grad_fn=&lt;AliasBackward0&gt;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">EncodingError</span><span class="p">(</span><span class="s2">&quot;Encoding does not exist&quot;</span><span class="p">)</span>
+
+        <span class="n">qtensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">))</span>
+        <span class="n">qtensor</span> <span class="o">=</span> <span class="n">qtensor</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="n">QuantizedTensor</span><span class="p">)</span>
+        <span class="n">qtensor</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">qtensor</span></div>
+
+<div class="viewcode-block" id="DequantizedTensor.dequantize"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.DequantizedTensor.dequantize">[docs]</a>    <span class="k">def</span> <span class="nf">dequantize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DequantizedTensor&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns ``self``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">EncodingError</span><span class="p">(</span><span class="s2">&quot;Encoding does not exist&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DequantizedTensor.quantized_repr"><a class="viewcode-back" href="../../../../torch_docs/api/quantization/tensor.html#aimet_torch.v2.quantization.tensor.DequantizedTensor.quantized_repr">[docs]</a>    <span class="k">def</span> <span class="nf">quantized_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the quantized representation of ``self`` as a :class:`torch.Tensor` with data type :attr:`self.encoding.dtype`.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            The result of this function may not be able to carry a gradient depending on the quantized data type.</span>
+<span class="sd">            Thus, it may be necessary to call this only within an autograd function to allow for backpropagation.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            &gt;&gt;&gt; import aimet_torch.v2.quantization as Q</span>
+<span class="sd">            &gt;&gt;&gt; x = torch.tensor([[0.39, 51.0], [3.521, 9.41]])</span>
+<span class="sd">            &gt;&gt;&gt; quant_dequant = Q.affine.QuantizeDequantize((1, ), 8, symmetric=False)</span>
+<span class="sd">            &gt;&gt;&gt; quant_dequant.set_range(-10, 41)</span>
+<span class="sd">            &gt;&gt;&gt; x_qdq = quant_dequant(x)</span>
+<span class="sd">            &gt;&gt;&gt; x_qdq</span>
+<span class="sd">            DequantizedTensor([[ 0.4000, 41.0000],</span>
+<span class="sd">                               [ 3.6000,  9.4000]], grad_fn=&lt;AliasBackward0&gt;)</span>
+<span class="sd">            &gt;&gt;&gt; x_qdq.quantized_repr()</span>
+<span class="sd">            tensor([[ 52, 255],</span>
+<span class="sd">                    [ 68,  97]], dtype=torch.uint8)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># FIXME(kyunggeu): This only works for affine encodings.</span>
+        <span class="c1">#                  Needs to be generalized for any kind of encodings</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantize</span><span class="p">()</span><span class="o">.</span><span class="n">as_subclass</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">EncodingError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error that indicates an encoding is missing or invalid&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

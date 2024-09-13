@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.v2.quantsim.config_utils &mdash; AI Model Efficiency Toolkit Documentation: ver 1.33.5</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/style.css" />
+      <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../../../../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.33.5
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/encoding_analyzer.html">Encoding Analyzers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer.html">MinMaxEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer.html">SqnrEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer.html">PercentileEncodingAnalyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html">FakeQuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/index.html">quantization.affine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.Quantize.html">Quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.QuantizeDequantize.html">QuantizeDequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_.html">quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_dequantize.html">quantize_dequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.dequantize.html">dequantize</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.v2.quantsim.config_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.v2.quantsim.config_utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+<span class="sd">&quot;&quot;&quot; Commonly used utilities for configuring quantsim &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">overload</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">aimet_common.utils</span> <span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.quantsim.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.affine</span> <span class="kn">import</span> <span class="n">QuantizeDequantize</span><span class="p">,</span> <span class="n">GroupedBlockQuantizeDequantize</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.float</span> <span class="kn">import</span> <span class="n">FloatQuantizeDequantize</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.utils</span> <span class="kn">import</span> <span class="n">get_device</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">Quant</span><span class="p">)</span>
+
+<span class="n">modules_with_in_out_channels</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span>
+                                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">,</span>
+                                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span>
+                                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv3d</span><span class="p">,</span>
+                                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose1d</span><span class="p">,</span>
+                                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">,</span>
+                                <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose3d</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_get_quantizer_device_or_default</span><span class="p">(</span><span class="n">quantizer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">default_device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get device from quantizer if possible, else return default_device &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">quantizer</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">default_device</span>
+    <span class="k">return</span> <span class="n">device</span>
+
+<span class="k">def</span> <span class="nf">_get_in_channels_dim</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get input channels dimension for the given module &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">modules_with_in_out_channels</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;In channels not defined for module of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose1d</span><span class="p">,</span>
+                           <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">,</span>
+                           <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose3d</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">_get_out_channels_dim</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get input channels dimension for the given module &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">modules_with_in_out_channels</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Out channels not defined for module of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose1d</span><span class="p">,</span>
+                           <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">,</span>
+                           <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose3d</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">_get_block_size_array_for_module</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return block size array for a module given a single block size value, assuming that the block size value is to be</span>
+<span class="sd">    applied to the in_channels dimension, and the out_channels dimension is per channel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">block_size</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">modules_with_in_out_channels</span><span class="p">):</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Single value block size is only supported for modules of types in &#39;</span> \
+                    <span class="sa">f</span><span class="s1">&#39;config_utils.modules_with_in_out_channels, but got module of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="si">}</span><span class="s1">. Update &#39;</span> \
+                    <span class="sa">f</span><span class="s1">&#39;the argument for identifying modules to set to exclude unsupported types.&#39;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Initialize block sizes with -1, meaning blocks will span the entire dimension for each axis</span>
+    <span class="n">block_size_array</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Set in channels dimension block size to block_size, and set out channels dimension block size to 1 (per channel)</span>
+    <span class="n">block_size_array</span><span class="p">[</span><span class="n">_get_in_channels_dim</span><span class="p">(</span><span class="n">module</span><span class="p">)]</span> <span class="o">=</span> <span class="n">block_size</span>
+    <span class="n">block_size_array</span><span class="p">[</span><span class="n">_get_out_channels_dim</span><span class="p">(</span><span class="n">module</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">block_size_array</span>
+
+
+<span class="k">def</span> <span class="nf">_get_block_grouping_array_for_module</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">block_grouping</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return block grouping array for a module given a single block grouping value, assuming that the block grouping value</span>
+<span class="sd">    is to be applied to the in_channels dimension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_grouping</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">block_grouping</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_grouping</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">modules_with_in_out_channels</span><span class="p">):</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Single value block grouping is only supported for modules of types in &#39;</span> \
+                    <span class="sa">f</span><span class="s1">&#39;config_utils.modules_with_in_out_channels, but got module of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="si">}</span><span class="s1">. Update &#39;</span> \
+                    <span class="sa">f</span><span class="s1">&#39;the argument for identifying modules to set to exclude unsupported types.&#39;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Initialize block grouping with 1, meaning no blocks will be grouped together in each dimension</span>
+    <span class="n">block_grouping_array</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Set in channels dimension block size to block_grouping</span>
+    <span class="n">block_grouping_array</span><span class="p">[</span><span class="n">_get_in_channels_dim</span><span class="p">(</span><span class="n">module</span><span class="p">)]</span> <span class="o">=</span> <span class="n">block_grouping</span>
+    <span class="k">return</span> <span class="n">block_grouping_array</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_arg_for_condition</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Transform the given arg into a corresponding condition expression &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">List</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+        <span class="n">module_type</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">module_type</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;List given as arg must contain either torch.nn.Module types or specific &#39;</span>
+                               <span class="s1">&#39;torch.nn.Module objects.&#39;</span><span class="p">)</span>
+        <span class="n">qmodules</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">qmodules</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="n">arg</span>
+    <span class="k">return</span> <span class="n">condition</span>
+
+
+<span class="k">def</span> <span class="nf">_get_weight_quantizer_shape_from_block_size</span><span class="p">(</span><span class="n">quant_layer</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">block_size</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> \
+        <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Given a block size, get the corresponding weight quantizer shape &quot;&quot;&quot;</span>
+    <span class="n">weight_shape</span> <span class="o">=</span> <span class="n">quant_layer</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">block_size</span> <span class="o">=</span> <span class="n">_get_block_size_array_for_module</span><span class="p">(</span><span class="n">quant_layer</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">block_size</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight_shape</span><span class="p">)</span>
+    <span class="n">quantizer_shape</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">weight_shape</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">block_size</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">shape</span> <span class="o">%</span> <span class="n">block_size</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="n">quantizer_shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span> <span class="o">//</span> <span class="n">block_size</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">quantizer_shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">quantizer_shape</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]],</span>
+                                       <span class="n">exponent_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mantissa_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                       <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set activation quantizers of the given module type to float &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">qmodules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span>
+                                       <span class="n">exponent_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mantissa_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set activation quantizers of the given qmodules to float &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
+                                       <span class="n">exponent_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mantissa_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set activation quantizers of all the modules that satisfy the given condition to float. &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="set_activation_quantizers_to_float"><a class="viewcode-back" href="../../../../torch_docs/blockwise_quantization.html#aimet_torch.v2.quantsim.config_utils.set_activation_quantizers_to_float">[docs]</a><span class="k">def</span> <span class="nf">set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">exponent_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                       <span class="n">mantissa_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set activation quantizers of modules to float.</span>
+
+<span class="sd">    :param sim: Quantsim to set activation quantizers for</span>
+<span class="sd">    :param arg: Argument determining which modules to set. This can consist of either:</span>
+
+<span class="sd">        1. A list of torch.nn.Module types, in which case all modules whose type is in the list will be set</span>
+
+<span class="sd">        2. A list of torch.nn.Modules, in which case all modules in the list will be set</span>
+
+<span class="sd">        3. A callable function which takes a torch.nn.Module as input and returns True if the module is to be set, False</span>
+<span class="sd">           otherwise</span>
+<span class="sd">    :param exponent_bits: Number of exponent bits to simulate</span>
+<span class="sd">    :param mantissa_bits: Number of mantissa bits to simulate</span>
+<span class="sd">    :param dtype: torch.dtype to simulate. This argument is mutually exclusive with exponent_bits and mantissa_bits.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; # Assume &#39;sim&#39; is a QuantizationSimModel object imported from aimet_torch.v2.quantsim</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of all Linear and Conv output quantizers to floating point activation quantization:</span>
+<span class="sd">        &gt;&gt;&gt; set_activation_quantizers_to_float(sim=sim,</span>
+<span class="sd">        ...                                    arg=[torch.nn.Linear, torch.nn.Conv2d],</span>
+<span class="sd">        ...                                    dtype=torch.float16)</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of specific model layers&#39; output quantizers to floating point activation quantization:</span>
+<span class="sd">        &gt;&gt;&gt; set_activation_quantizers_to_float(sim=sim,</span>
+<span class="sd">        ...                                    arg=[sim.model.conv2, sim.model.linear1],</span>
+<span class="sd">        ...                                    dtype=torch.float16)</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of only Convolution layers with input channels dim == 128 to floating point activation quantization:</span>
+<span class="sd">        &gt;&gt;&gt; set_activation_quantizers_to_float(sim=sim,</span>
+<span class="sd">        ...                                    arg=lambda module: isinstance(module, torch.nn.Conv2d) and module.weight.shape[1] == 128,</span>
+<span class="sd">        ...                                    dtype=torch.float16)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">condition</span> <span class="o">=</span> <span class="n">_parse_arg_for_condition</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="n">_set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">exponent_bits</span><span class="p">,</span> <span class="n">mantissa_bits</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
+                                        <span class="n">exponent_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mantissa_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                        <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set activation quantizers of all the modules that satisfy the given condition to float. &quot;&quot;&quot;</span>
+    <span class="n">model_device</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">quant_layer</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">named_qmodules</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">quant_layer</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">quant_layer</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">quantizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">device</span> <span class="o">=</span> <span class="n">_get_quantizer_device_or_default</span><span class="p">(</span><span class="n">quantizer</span><span class="p">,</span> <span class="n">model_device</span><span class="p">)</span>
+                    <span class="n">quant_layer</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">FloatQuantizeDequantize</span><span class="p">(</span><span class="n">exponent_bits</span><span class="p">,</span> <span class="n">mantissa_bits</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">quant_layer</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">quantizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">device</span> <span class="o">=</span> <span class="n">_get_quantizer_device_or_default</span><span class="p">(</span><span class="n">quantizer</span><span class="p">,</span> <span class="n">model_device</span><span class="p">)</span>
+                    <span class="n">quant_layer</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">FloatQuantizeDequantize</span><span class="p">(</span><span class="n">exponent_bits</span><span class="p">,</span> <span class="n">mantissa_bits</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]],</span>
+                                           <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of the given module type to blockwise &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">qmodules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                           <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of the given modules to blockwise &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
+                                           <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of modules that satisfy the given condition to blockwise &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="set_blockwise_quantization_for_weights"><a class="viewcode-back" href="../../../../torch_docs/blockwise_quantization.html#aimet_torch.v2.quantsim.config_utils.set_blockwise_quantization_for_weights">[docs]</a><span class="k">def</span> <span class="nf">set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                                           <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set weight parameter quantizers of modules to blockwise.</span>
+
+<span class="sd">    :param sim: Quantsim to set activation quantizers for</span>
+<span class="sd">    :param arg: Argument determining which modules to set. This can consist of either:</span>
+
+<span class="sd">        1. A list of torch.nn.Module types, in which case all modules whose type is in the list will be set</span>
+
+<span class="sd">        2. A list of torch.nn.Modules, in which case all modules in the list will be set</span>
+
+<span class="sd">        3. A callable function which takes a torch.nn.Module as input and returns True if the module is to be set, False</span>
+<span class="sd">           otherwise</span>
+<span class="sd">    :param bitwidth: Bitwidth for affine quantization</span>
+<span class="sd">    :param symmetric: True if affine quantization is symmetric, False otherwise</span>
+<span class="sd">    :param block_size: Block size for affine quantization. This can be an array in which case all layers identified</span>
+<span class="sd">        by arg must have weight shapes compatible with the array length, or can be an integer value, in which case the</span>
+<span class="sd">        block size will be applied to the weight&#39;s in_channels dimension, and per channel will be used for the weight&#39;s</span>
+<span class="sd">        out_channels dimension.</span>
+
+<span class="sd">        A block size value of -1 for a particular dimension is equivalent to a block size equal</span>
+<span class="sd">        to the size of that particular dimension.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; # Assume &#39;sim&#39; is a QuantizationSimModel object imported from aimet_torch.v2.quantsim</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of all Linear and Conv weight quantizers to block_size 64 in the input_channels dimension:</span>
+<span class="sd">        &gt;&gt;&gt; set_blockwise_quantization_for_weights(sim=sim,</span>
+<span class="sd">        ...                                        arg=[torch.nn.Linear, torch.nn.Conv2d],</span>
+<span class="sd">        ...                                        bitwidth=4,</span>
+<span class="sd">        ...                                        symmetric=True,</span>
+<span class="sd">        ...                                        block_size=64)</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of specific model layers&#39; weight quantizer block_size to 64 in the input_channels dimension:</span>
+<span class="sd">        &gt;&gt;&gt; set_blockwise_quantization_for_weights(sim=sim,</span>
+<span class="sd">        ...                                        arg=[sim.model.conv2, sim.model.linear1],</span>
+<span class="sd">        ...                                        bitwidth=4,</span>
+<span class="sd">        ...                                        symmetric=True,</span>
+<span class="sd">        ...                                        block_size=64)</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of only Convolution layers with input channels dim == 128 to block_size 64 in the input_channels dimension</span>
+<span class="sd">        &gt;&gt;&gt; set_blockwise_quantization_for_weights(sim=sim,</span>
+<span class="sd">        ...                                        arg=lambda module: isinstance(module, torch.nn.Conv2d) and module.weight.shape[1] == 128,</span>
+<span class="sd">        ...                                        bitwidth=4,</span>
+<span class="sd">        ...                                        symmetric=True,</span>
+<span class="sd">        ...                                        block_size=64)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">condition</span> <span class="o">=</span> <span class="n">_parse_arg_for_condition</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="n">_set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">bitwidth</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_layers_to_quantizer_shapes_for_block_size</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">block_size</span><span class="p">):</span>
+    <span class="n">layer_to_quantizer_shape_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">invalid_layers_for_block_size</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">quant_layer</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">named_qmodules</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">quant_layer</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;weight&#39;</span> <span class="ow">in</span> <span class="n">quant_layer</span><span class="o">.</span><span class="n">param_quantizers</span> <span class="ow">and</span> \
+                <span class="n">quant_layer</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">quant_layer</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+            <span class="n">layer_to_quantizer_shape_dict</span><span class="p">[</span><span class="n">quant_layer</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">_get_weight_quantizer_shape_from_block_size</span><span class="p">(</span><span class="n">quant_layer</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">layer_to_quantizer_shape_dict</span><span class="p">[</span><span class="n">quant_layer</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">invalid_layers_for_block_size</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">quant_layer</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">invalid_layers_for_block_size</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">invalid_layers_for_block_size</span><span class="p">:</span>
+            <span class="n">error_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Quant layer </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> has shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2"> which does not align with block_size </span><span class="si">{</span><span class="n">block_size</span><span class="si">}</span><span class="s2">. &quot;</span> \
+                        <span class="sa">f</span><span class="s2">&quot;Each dimension&#39;s shape must divide evenly with the corresponding block size.&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Quant layers found whose weights do not align with block size.&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">layer_to_quantizer_shape_dict</span>
+
+
+<span class="k">def</span> <span class="nf">_set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
+                                            <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of modules that satisfy the given condition to blockwise &quot;&quot;&quot;</span>
+    <span class="n">model_device</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">layer_to_quantizer_shape_dict</span> <span class="o">=</span> <span class="n">_get_layers_to_quantizer_shapes_for_block_size</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">layer</span><span class="p">,</span> <span class="n">quantizer_shape</span> <span class="ow">in</span> <span class="n">layer_to_quantizer_shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">layer_block_size</span> <span class="o">=</span> <span class="n">_get_block_size_array_for_module</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">_get_quantizer_device_or_default</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">model_device</span><span class="p">)</span>
+        <span class="n">layer</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuantizeDequantize</span><span class="p">(</span><span class="n">quantizer_shape</span><span class="p">,</span> <span class="n">bitwidth</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                                                              <span class="n">layer_block_size</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">module_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]],</span>
+                                                   <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">decompressed_bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                   <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+                                                   <span class="n">block_grouping</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of the given module type to grouped blockwise &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">qmodules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span>
+                                                   <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">decompressed_bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                   <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+                                                   <span class="n">block_grouping</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of the given modules to grouped blockwise &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+                                                   <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
+                                                   <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">decompressed_bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                   <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+                                                   <span class="n">block_grouping</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of modules that satisfy the given condition to grouped blockwise &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="set_grouped_blockwise_quantization_for_weights"><a class="viewcode-back" href="../../../../torch_docs/blockwise_quantization.html#aimet_torch.v2.quantsim.config_utils.set_grouped_blockwise_quantization_for_weights">[docs]</a><span class="k">def</span> <span class="nf">set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span>
+                                                   <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">decompressed_bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                   <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+                                                   <span class="n">block_grouping</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set weight parameter quantizers of modules to grouped blockwise.</span>
+
+<span class="sd">    :param sim: Quantsim to set activation quantizers for</span>
+<span class="sd">    :param arg: Argument determining which modules to set. This can consist of either:</span>
+
+<span class="sd">        1. A list of torch.nn.Module types, in which case all modules whose type is in the list will be set</span>
+
+<span class="sd">        2. A list of torch.nn.Modules, in which case all modules in the list will be set</span>
+
+<span class="sd">        3. A callable function which takes a torch.nn.Module as input and returns True if the module is to be set, False</span>
+<span class="sd">           otherwise</span>
+<span class="sd">    :param bitwidth: Bitwidth for affine quantization</span>
+<span class="sd">    :param symmetric: True if affine quantization is symmetric, False otherwise</span>
+<span class="sd">    :param decompressed_bw: Decompressed bw for grouped block quantization</span>
+<span class="sd">    :param block_size: Block size for affine quantization. This can be an array in which case all layers identified</span>
+<span class="sd">        by arg must have weight shapes compatible with the array length, or can be an integer value, in which case the</span>
+<span class="sd">        block size will be applied to the weight&#39;s in_channels dimension and per channel will be used for the weight&#39;s</span>
+<span class="sd">        out_channels dimension.</span>
+
+<span class="sd">        A block size value of -1 for a particular dimension is equivalent to a block size equal</span>
+<span class="sd">        to the size of that particular dimension.</span>
+<span class="sd">    :param block_grouping: Block grouping for grouped block quantization. This can be an array in which case all layers</span>
+<span class="sd">        identified by arg must have weight shapes compatible with the array length, or can be an integer value, in which</span>
+<span class="sd">        case the block grouping will be applied to the weight&#39;s in_channels dimension, and no other dimensions will</span>
+<span class="sd">        experience block grouping.</span>
+
+<span class="sd">        A block grouping value of -1 for a particular dimension is equivalent to a block</span>
+<span class="sd">        grouping equal to the number of blocks for that particular dimension.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; # Assume &#39;sim&#39; is a QuantizationSimModel object imported from aimet_torch.v2.quantsim</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of all Linear and Conv weight quantizers to LPBQ with block_size 64 in the input_channels dimension:</span>
+<span class="sd">        &gt;&gt;&gt; set_grouped_blockwise_quantization_for_weights(sim=sim,</span>
+<span class="sd">        ...                                                arg=[torch.nn.Linear, torch.nn.Conv2d],</span>
+<span class="sd">        ...                                                bitwidth=4,</span>
+<span class="sd">        ...                                                symmetric=True,</span>
+<span class="sd">        ...                                                decompressed_bw=8,</span>
+<span class="sd">        ...                                                block_size=64,</span>
+<span class="sd">        ...                                                block_grouping=-1)</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of specific model layers&#39; weight quantizer to LPBQ with block_size 64 in the input_channels dimension:</span>
+<span class="sd">        &gt;&gt;&gt; set_grouped_blockwise_quantization_for_weights(sim=sim,</span>
+<span class="sd">        ...                                                arg=[sim.model.conv2, sim.model.linear1],</span>
+<span class="sd">        ...                                                bitwidth=4,</span>
+<span class="sd">        ...                                                symmetric=True,</span>
+<span class="sd">        ...                                                decompressed_bw=8,</span>
+<span class="sd">        ...                                                block_size=64,</span>
+<span class="sd">        ...                                                block_grouping=-1)</span>
+<span class="sd">        &gt;&gt;&gt; # Allows setting of only Convolution layers with input channels dim == 128 to LPBQ with block_size 64 in the input_channels dimension:</span>
+<span class="sd">        &gt;&gt;&gt; set_grouped_blockwise_quantization_for_weights(sim=sim,</span>
+<span class="sd">        ...                                                arg=lambda module: isinstance(module, torch.nn.Conv2d) and module.weight.shape[1] == 128,</span>
+<span class="sd">        ...                                                bitwidth=4,</span>
+<span class="sd">        ...                                                symmetric=True,</span>
+<span class="sd">        ...                                                decompressed_bw=8,</span>
+<span class="sd">        ...                                                block_size=64,</span>
+<span class="sd">        ...                                                block_grouping=-1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">condition</span> <span class="o">=</span> <span class="n">_parse_arg_for_condition</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="n">_set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">bitwidth</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">,</span> <span class="n">decompressed_bw</span><span class="p">,</span> <span class="n">block_size</span><span class="p">,</span>
+                                                    <span class="n">block_grouping</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+                                                    <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
+                                                    <span class="n">bitwidth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">decompressed_bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                                    <span class="n">block_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+                                                    <span class="n">block_grouping</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Set weight parameter quantizers of modules that satisfy the given condition to grouped blockwise &quot;&quot;&quot;</span>
+    <span class="n">model_device</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">layer_to_quantizer_shape_dict</span> <span class="o">=</span> <span class="n">_get_layers_to_quantizer_shapes_for_block_size</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">layer</span><span class="p">,</span> <span class="n">quantizer_shape</span> <span class="ow">in</span> <span class="n">layer_to_quantizer_shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">layer_block_size</span> <span class="o">=</span> <span class="n">_get_block_size_array_for_module</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)</span>
+        <span class="n">layer_block_grouping</span> <span class="o">=</span> <span class="n">_get_block_grouping_array_for_module</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">block_grouping</span><span class="p">)</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">_get_quantizer_device_or_default</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">model_device</span><span class="p">)</span>
+        <span class="n">layer</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GroupedBlockQuantizeDequantize</span><span class="p">(</span><span class="n">quantizer_shape</span><span class="p">,</span> <span class="n">bitwidth</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">,</span>
+                                                                          <span class="n">decompressed_bw</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">layer_block_size</span><span class="p">,</span>
+                                                                          <span class="n">layer_block_grouping</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.v2.nn.fake_quant &mdash; AI Model Efficiency Toolkit Documentation: ver 1.33.5</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/style.css" />
+      <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../../../../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.33.5
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/encoding_analyzer.html">Encoding Analyzers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer.html">MinMaxEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer.html">SqnrEncodingAnalyzer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/generated/aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer.html">PercentileEncodingAnalyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html">FakeQuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/index.html">quantization.affine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.Quantize.html">Quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.QuantizeDequantize.html">QuantizeDequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_.html">quantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.quantize_dequantize.html">quantize_dequantize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/generated/aimet_torch.v2.quantization.affine.dequantize.html">dequantize</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.v2.nn.fake_quant</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.v2.nn.fake_quant</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#pylint: disable=too-many-lines</span>
+<span class="sd">&quot;&quot;&quot;Fake-quantized modules&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">torch.nn.modules.adaptive</span> <span class="kn">import</span> <span class="n">_ASMoutput</span>
+<span class="kn">from</span> <span class="nn">torch.nn.utils.rnn</span> <span class="kn">import</span> <span class="n">PackedSequence</span>
+<span class="kn">from</span> <span class="nn">torch.utils._pytree</span> <span class="kn">import</span> <span class="n">tree_map</span>
+
+<span class="kn">import</span> <span class="nn">aimet_torch.elementwise_ops</span> <span class="k">as</span> <span class="nn">aimet_ops</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">BaseQuantizationMixin</span><span class="p">,</span> <span class="n">_BaseQuantizedUnaryOpMixin</span><span class="p">,</span> <span class="n">_BaseQuantizedBinaryOpMixin</span><span class="p">,</span> <span class="n">_BaseQuantizedTernaryOpMixin</span> <span class="c1"># pylint: disable=import-error</span>
+
+
+<span class="k">class</span> <span class="nc">FakeQuantMeta</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets :meth:`forward` to :meth:`quantized_forward` if only :meth:`quantized_forward` is defined</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;quantized_forward&quot;</span> <span class="ow">in</span> <span class="n">namespace</span> <span class="ow">and</span> <span class="s2">&quot;forward&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">namespace</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Support for defining `quantized_forward` in place of `forward` method will be deprecated, &quot;</span>
+                          <span class="s2">&quot;please use `forward` instead.&quot;</span><span class="p">,</span>
+                          <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">namespace</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">namespace</span><span class="p">[</span><span class="s2">&quot;quantized_forward&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FakeQuantizationMixin"><a class="viewcode-back" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html#aimet_torch.v2.nn.FakeQuantizationMixin">[docs]</a><span class="k">class</span> <span class="nc">FakeQuantizationMixin</span><span class="p">(</span><span class="n">BaseQuantizationMixin</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">FakeQuantMeta</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mixin that implements fake-quantization on top of regular pytorch modules.</span>
+
+<span class="sd">    Specifically, a fake-quantized module will quantize input, output, and parameter tensors with</span>
+<span class="sd">    its held :class:`QuantizerBase` objects during the :meth:`forward` method and use the inherited :class:torch.nn.Module`</span>
+<span class="sd">    forward method to compute the layer operation. If all input, output, and parameter quantizers are ``None``, a</span>
+<span class="sd">    fake-quantized module will behave exactly the same as its parent :class:`torch.nn.Module`.</span>
+
+<span class="sd">    A fake-quantized module can be initialized from scratch using the same syntax as the parent module, or can be</span>
+<span class="sd">    formed from an existing module using the :meth:`from_module` method.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        input_quantizers (nn.ModuleList): :class:`ModuleList` containing :class:`QuantizerBase` objects to be applied</span>
+<span class="sd">            to the layer&#39;s input tensors</span>
+<span class="sd">        output_quantizers (nn.ModuleList): :class:`ModuleList` containing :class:`QuantizerBase` objects to be applied</span>
+<span class="sd">            to the layer&#39;s output tensors</span>
+<span class="sd">        param_quantizers (nn.ModuleDict): :class:`ModuleDict` mapping parameter names to associated :class:`QuantizerBase`</span>
+<span class="sd">            objects</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; qlinear = FakeQuantizedLinear(in_features=10, out_features=20, bias=False)</span>
+<span class="sd">        &gt;&gt;&gt; print(qlinear)</span>
+<span class="sd">        FakeQuantizedLinear(</span>
+<span class="sd">          in_features=10, out_features=20, bias=False</span>
+<span class="sd">          (param_quantizers): ModuleDict(</span>
+<span class="sd">            (weight): None</span>
+<span class="sd">          )</span>
+<span class="sd">          (input_quantizers): ModuleList(</span>
+<span class="sd">            (0): None</span>
+<span class="sd">          )</span>
+<span class="sd">          (output_quantizers): ModuleList(</span>
+<span class="sd">            (0): None</span>
+<span class="sd">          )</span>
+<span class="sd">        )</span>
+
+
+<span class="sd">        &gt;&gt;&gt; linear = torch.nn.Linear(in_features=10, out_features=20, bias=True)</span>
+<span class="sd">        &gt;&gt;&gt; qlinear = FakeQuantizationMixin.from_module(linear)</span>
+<span class="sd">        &gt;&gt;&gt; print(qlinear)</span>
+<span class="sd">        FakeQuantizedLinear(</span>
+<span class="sd">          in_features=10, out_features=20, bias=True</span>
+<span class="sd">          (param_quantizers): ModuleDict(</span>
+<span class="sd">            (weight): None</span>
+<span class="sd">            (bias): None</span>
+<span class="sd">          )</span>
+<span class="sd">          (input_quantizers): ModuleList(</span>
+<span class="sd">            (0): None</span>
+<span class="sd">          )</span>
+<span class="sd">          (output_quantizers): ModuleList(</span>
+<span class="sd">            (0): None</span>
+<span class="sd">          )</span>
+<span class="sd">        )</span>
+<span class="sd">        &gt;&gt;&gt; qlinear.weight is linear.weight</span>
+<span class="sd">        True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cls_to_qcls</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="c1"># ouantized class -&gt; original class</span>
+    <span class="n">qcls_to_cls</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span> <span class="c1"># original class -&gt; quantized class</span>
+
+<div class="viewcode-block" id="FakeQuantizationMixin.forward"><a class="viewcode-back" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html#aimet_torch.v2.nn.FakeQuantizationMixin.forward">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes a fake-quantized version of the parent module&#39;s forward method.</span>
+
+<span class="sd">        The :meth:`forward` method should perform the following logic in order:</span>
+
+<span class="sd">            1) Apply existing input quantizers to input tensors</span>
+<span class="sd">            2) Apply existing param quantizers to the layer&#39;s parameters</span>
+<span class="sd">            3) Call the inherited :class:`torch.nn.Module` forward method with quantized inputs and parameters</span>
+<span class="sd">            4) Apply existing output quantizers to the outputs of the forward method</span>
+
+<span class="sd">        If all input, output, and parameter quantizers are ``None``, this method will behave exactly the same as</span>
+<span class="sd">        its parent module&#39;s forward pass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">module_cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wrap a regular module class into a fake-quantized module class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">module_cls</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected module_cls to be a subclass of torch.nn.Module. &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="n">module_cls</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module_cls</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">cls_to_qcls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">cls_to_qcls</span><span class="p">[</span><span class="n">module_cls</span><span class="p">]</span>
+
+        <span class="n">quantized_cls_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;FakeQuantized</span><span class="si">{</span><span class="n">module_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">base_classes</span> <span class="o">=</span> <span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">module_cls</span><span class="p">)</span>
+        <span class="n">quantized_cls</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">quantized_cls_name</span><span class="p">,</span> <span class="n">base_classes</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;__module__&#39;</span><span class="p">:</span> <span class="vm">__name__</span><span class="p">})</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">module_cls</span><span class="p">)(</span><span class="n">quantized_cls</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FakeQuantizationMixin.implements"><a class="viewcode-back" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html#aimet_torch.v2.nn.FakeQuantizationMixin.implements">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">implements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">module_cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decorator for registering a fake-quantized implementation of the given base class.</span>
+
+<span class="sd">        This decorator registers the defined class as the fake-quantized version of module_cls such that calling</span>
+<span class="sd">        :meth:`from_module` on an instance of module_cls will output an instance of the decorated class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            module_cls: The base :class:`torch.nn.Module` class</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">quantized_cls</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">cls_to_qcls</span><span class="p">[</span><span class="n">module_cls</span><span class="p">]</span> <span class="o">=</span> <span class="n">quantized_cls</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">qcls_to_cls</span><span class="p">[</span><span class="n">quantized_cls</span><span class="p">]</span> <span class="o">=</span> <span class="n">module_cls</span>
+            <span class="k">return</span> <span class="n">quantized_cls</span>
+        <span class="k">return</span> <span class="n">wrapper</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">_FakeQuantizedUnaryOpMixin</span><span class="p">(</span><span class="n">_BaseQuantizedUnaryOpMixin</span><span class="p">,</span> <span class="n">FakeQuantizationMixin</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">_FakeQuantizedBinaryOpMixin</span><span class="p">(</span><span class="n">_BaseQuantizedBinaryOpMixin</span><span class="p">,</span> <span class="n">FakeQuantizationMixin</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">_FakeQuantizedTernaryOpMixin</span><span class="p">(</span><span class="n">_BaseQuantizedTernaryOpMixin</span><span class="p">,</span> <span class="n">FakeQuantizationMixin</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+    <span class="k">pass</span>
+
+
+
+<span class="c1">########################</span>
+<span class="c1">### torch.nn.Modules ###</span>
+<span class="c1">########################</span>
+
+<span class="c1"># Below are the lists of modules with regular code patterns</span>
+<span class="c1"># that takes tensors as the first N arguments and returns single tensor as output</span>
+<span class="n">_TORCH_NN_UNARY_MODULES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveMaxPool1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveMaxPool2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveMaxPool3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AlphaDropout</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AvgPool1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AvgPool2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">AvgPool3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">CELU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ChannelShuffle</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ConstantPad1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ConstantPad2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ConstantPad3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Conv3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">CrossMapLRN2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">,</span>
+    <span class="c1"># nn.Dropout1d, # Not supported in torch &lt; 1.12</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Dropout2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Dropout3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">FeatureAlphaDropout</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Fold</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">FractionalMaxPool2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">FractionalMaxPool3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">GLU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Hardshrink</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Hardsigmoid</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Hardswish</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Hardtanh</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">InstanceNorm1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">InstanceNorm2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">InstanceNorm3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">LPPool1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">LPPool2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">LocalResponseNorm</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">LogSigmoid</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MaxUnpool1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MaxUnpool2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MaxUnpool3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Mish</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">PReLU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">PixelShuffle</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">PixelUnshuffle</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">RReLU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReLU6</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReflectionPad1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReflectionPad2d</span><span class="p">,</span>
+    <span class="c1"># nn.ReflectionPad3d, # Not supported in torch &lt; 1.10</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReplicationPad1d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReplicationPad2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ReplicationPad3d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">SELU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Softmax2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Softmin</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Softplus</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Softshrink</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Softsign</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">SyncBatchNorm</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Tanhshrink</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Threshold</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Unflatten</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Unfold</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Upsample</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">UpsamplingBilinear2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">UpsamplingNearest2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">ZeroPad2d</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">_TORCH_NN_BINARY_MODULES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">Bilinear</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">CTCLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">CosineSimilarity</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">HingeEmbeddingLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">HuberLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">KLDivLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">L1Loss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MultiLabelMarginLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MultiLabelSoftMarginLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MultiMarginLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">NLLLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">NLLLoss2d</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">PairwiseDistance</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">PoissonNLLLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">SmoothL1Loss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">SoftMarginLoss</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">_TORCH_NN_TERNARY_MODULES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">CosineEmbeddingLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">GaussianNLLLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">MarginRankingLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">TripletMarginLoss</span><span class="p">,</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">TripletMarginWithDistanceLoss</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_register_global_variable</span><span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Variable name &quot;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">&quot; already exists in the global namespace.&#39;</span><span class="p">)</span>
+    <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">var_name</span><span class="p">:</span> <span class="n">obj</span><span class="p">})</span>
+
+
+<span class="c1"># Auto-generate quantized module definitions for regular-patterned modules</span>
+<span class="k">for</span> <span class="n">_module_cls</span> <span class="ow">in</span> <span class="n">_TORCH_NN_UNARY_MODULES</span><span class="p">:</span>
+    <span class="n">_quantized_cls</span> <span class="o">=</span> <span class="n">_FakeQuantizedUnaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">_module_cls</span><span class="p">)</span>
+    <span class="n">_register_global_variable</span><span class="p">(</span><span class="n">_quantized_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">_quantized_cls</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_module_cls</span> <span class="ow">in</span> <span class="n">_TORCH_NN_BINARY_MODULES</span><span class="p">:</span>
+    <span class="n">_quantized_cls</span> <span class="o">=</span> <span class="n">_FakeQuantizedBinaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">_module_cls</span><span class="p">)</span>
+    <span class="n">_register_global_variable</span><span class="p">(</span><span class="n">_quantized_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">_quantized_cls</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_module_cls</span> <span class="ow">in</span> <span class="n">_TORCH_NN_TERNARY_MODULES</span><span class="p">:</span>
+    <span class="n">_quantized_cls</span> <span class="o">=</span> <span class="n">_FakeQuantizedTernaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">_module_cls</span><span class="p">)</span>
+    <span class="n">_register_global_variable</span><span class="p">(</span><span class="n">_quantized_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">_quantized_cls</span><span class="p">)</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedEmbedding</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for nn.Embedding.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([])</span> <span class="c1"># nn.Embedding takes no float input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for nn.Embedding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch_quantized_parameters</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">EmbeddingBag</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedEmbeddingBag</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">EmbeddingBag</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for nn.EmbeddingBag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="c1"># pylint: disable=arguments-differ</span>
+                          <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+                          <span class="n">offsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">per_sample_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for nn.EmbeddingBag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">per_sample_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">per_sample_weights</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch_quantized_parameters</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span> <span class="n">per_sample_weights</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="k">class</span> <span class="nc">_FakeQuantizedRNNBaseMixin</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for nn.GRU and nn.RNN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">PackedSequence</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span> <span class="o">=</span> <span class="nb">input</span>
+                <span class="n">quantized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
+                <span class="nb">input</span> <span class="o">=</span> <span class="n">PackedSequence</span><span class="p">(</span><span class="n">quantized_data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">hx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">hx</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch_quantized_parameters</span><span class="p">():</span>
+            <span class="n">output</span><span class="p">,</span> <span class="n">hidden</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">hx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">PackedSequence</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span> <span class="o">=</span> <span class="n">output</span>
+                <span class="n">quantized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">PackedSequence</span><span class="p">(</span><span class="n">quantized_data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">hidden</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">hidden</span>
+
+<span class="n">FakeQuantizedGRU</span> <span class="o">=</span> <span class="n">_FakeQuantizedRNNBaseMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GRU</span><span class="p">)</span>
+<span class="n">FakeQuantizedRNN</span> <span class="o">=</span> <span class="n">_FakeQuantizedRNNBaseMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">RNN</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_FakeQuantizedRNNCellBaseMixin</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">hx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for nn.GRUCell and nn.RNNCell.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">hx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">hx</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch_quantized_parameters</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">hx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+<span class="n">FakeQuantizedGRUCell</span> <span class="o">=</span> <span class="n">_FakeQuantizedRNNCellBaseMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GRUCell</span><span class="p">)</span>
+<span class="n">FakeQuantizedRNNCell</span> <span class="o">=</span> <span class="n">_FakeQuantizedRNNCellBaseMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">RNNCell</span><span class="p">)</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedLSTM</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for nn.LSTM.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for nn.LSTM.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">PackedSequence</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span> <span class="o">=</span> <span class="nb">input</span>
+            <span class="n">quantized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">PackedSequence</span><span class="p">(</span><span class="n">quantized_data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">hx</span>
+            <span class="n">h_quantizer</span><span class="p">,</span> <span class="n">c_quantizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">h_quantizer</span><span class="p">:</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="n">h_quantizer</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">c_quantizer</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">c_quantizer</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">hx</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch_quantized_parameters</span><span class="p">():</span>
+            <span class="n">output</span><span class="p">,</span> <span class="n">hidden</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">hx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">PackedSequence</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span> <span class="o">=</span> <span class="n">output</span>
+                <span class="n">quantized_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">PackedSequence</span><span class="p">(</span><span class="n">quantized_data</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="n">h_n</span><span class="p">,</span> <span class="n">c_n</span> <span class="o">=</span> <span class="n">hidden</span>
+        <span class="n">h_quantizer</span><span class="p">,</span> <span class="n">c_quantizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">h_quantizer</span><span class="p">:</span>
+            <span class="n">h_n</span> <span class="o">=</span> <span class="n">h_quantizer</span><span class="p">(</span><span class="n">h_n</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c_quantizer</span><span class="p">:</span>
+            <span class="n">c_n</span> <span class="o">=</span> <span class="n">c_quantizer</span><span class="p">(</span><span class="n">c_n</span><span class="p">)</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="p">(</span><span class="n">h_n</span><span class="p">,</span> <span class="n">c_n</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">hidden</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">LSTMCell</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedLSTMCell</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTMCell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for nn.LSTMCell.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">hx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for nn.LSTMCell.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">hx</span>
+            <span class="n">h_quantizer</span><span class="p">,</span> <span class="n">c_quantizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">h_quantizer</span><span class="p">:</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="n">h_quantizer</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">c_quantizer</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">c_quantizer</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">hx</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch_quantized_parameters</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">hx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveLogSoftmaxWithLoss</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedAdaptiveLogSoftmaxWithLoss</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveLogSoftmaxWithLoss</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for nn.AdaptiveLogSoftmaxWithLoss.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">target_</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for nn.AdaptiveLogSoftmaxWithLoss.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span>  <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">input_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">input_</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">target_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">target_</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_patch_quantized_parameters</span><span class="p">():</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_</span><span class="p">,</span> <span class="n">target_</span><span class="p">)</span>
+
+        <span class="n">output</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">outputs</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">loss</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_ASMoutput</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
+
+
+
+<span class="c1"># Quantized definitions of the following nn.Modules are intentionally omitted:</span>
+<span class="c1">#  * nn.MultiheadAttention</span>
+<span class="c1">#  * nn.Transformer</span>
+<span class="c1">#  * nn.TransformerDecoder</span>
+<span class="c1">#  * nn.TransformerDecoderLayer</span>
+<span class="c1">#  * nn.TransformerEncoder</span>
+<span class="c1">#  * nn.TransformerEncoderLayer</span>
+
+
+
+
+
+<span class="c1">###########################</span>
+<span class="c1">### AIMET V1 custom ops ###</span>
+<span class="c1">###########################</span>
+
+<span class="c1"># These class names are already occupied by torch.nn.Modules.</span>
+<span class="c1"># To avoid name collision, we add prefix &quot;Aimet&quot; to the variable names as an ad-hoc workaraound.</span>
+<span class="n">FakeQuantizedAimetChannelShuffle</span> <span class="o">=</span> <span class="n">_FakeQuantizedUnaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">ChannelShuffle</span><span class="p">)</span>
+<span class="n">FakeQuantizedAimetMaxPool2d</span> <span class="o">=</span> <span class="n">_FakeQuantizedUnaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">)</span>
+<span class="n">FakeQuantizedAimetAdaptiveAvgPool2d</span> <span class="o">=</span> <span class="n">_FakeQuantizedUnaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">AdaptiveAvgPool2d</span><span class="p">)</span>
+<span class="n">FakeQuantizedAimetAvgPool2d</span> <span class="o">=</span> <span class="n">_FakeQuantizedUnaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">AvgPool2d</span><span class="p">)</span>
+
+<span class="n">_AIMET_V1_UNARY_MODULES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">AMax</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">AMin</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Cast</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">DepthToSpaceCRDMode</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">DepthToSpaceDCRMode</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">OneHot</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Exponential</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Erf</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Sqrt</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Log</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Abs</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Neg</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">ElementwiseCeil</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">ElementwiseFloor</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Sin</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Cos</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Asin</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Atan</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Round</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">LogicalNot</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">NonZero</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">ElementwiseUnarySign</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">RSqRt</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Square</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Mean</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Sum</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Prod</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Argmin</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Argmax</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Gather</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Reshape</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">RoiAlign</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Permute</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">IndexSelect</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">TopK</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Tile</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Norm</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">CumSum</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Interpolate</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Normalize</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Pad</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Shape</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Expand</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">StridedSlice</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">RmsNorm</span>
+<span class="p">]</span>
+<span class="n">_AIMET_V1_BINARY_MODULES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">MatMul</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Add</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Multiply</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Subtract</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Divide</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">FloorDivide</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Greater</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Less</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">GreaterEqual</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">LessEqual</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">NotEqual</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Equal</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Remainder</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Fmod</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Pow</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">CustomSiLU</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Maximum</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Max</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Minimum</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Min</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Bmm</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">LogicalOr</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">LogicalAnd</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">CustomGather</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">GatherNd</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">_AIMET_V1_TERNARY_MODULES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Baddbmm</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Addmm</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">ScatterND</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">DynamicConv2d</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">DynamicLinear</span><span class="p">,</span>
+    <span class="n">aimet_ops</span><span class="o">.</span><span class="n">ScatterElements</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Auto-generate quantized module definitions for regular-patterned modules</span>
+<span class="k">for</span> <span class="n">_module_cls</span> <span class="ow">in</span> <span class="n">_AIMET_V1_UNARY_MODULES</span><span class="p">:</span>
+    <span class="n">_quantized_cls</span> <span class="o">=</span> <span class="n">_FakeQuantizedUnaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">_module_cls</span><span class="p">)</span>
+    <span class="n">_register_global_variable</span><span class="p">(</span><span class="n">_quantized_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">_quantized_cls</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_module_cls</span> <span class="ow">in</span> <span class="n">_AIMET_V1_BINARY_MODULES</span><span class="p">:</span>
+    <span class="n">_quantized_cls</span> <span class="o">=</span> <span class="n">_FakeQuantizedBinaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">_module_cls</span><span class="p">)</span>
+    <span class="n">_register_global_variable</span><span class="p">(</span><span class="n">_quantized_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">_quantized_cls</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_module_cls</span> <span class="ow">in</span> <span class="n">_AIMET_V1_TERNARY_MODULES</span><span class="p">:</span>
+    <span class="n">_quantized_cls</span> <span class="o">=</span> <span class="n">_FakeQuantizedTernaryOpMixin</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">_module_cls</span><span class="p">)</span>
+    <span class="n">_register_global_variable</span><span class="p">(</span><span class="n">_quantized_cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">_quantized_cls</span><span class="p">)</span>
+
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedBatchNorm</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">aimet_ops</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for aimet_ops.BatchNorm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="c1"># pylint: disable=too-many-arguments, arguments-differ</span>
+                          <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+                          <span class="n">running_mean</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+                          <span class="n">running_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span>
+                          <span class="n">weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                          <span class="n">momentum</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                          <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for aimet_ops.BatchNorm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">running_mean</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">running_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">running_mean</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">running_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">running_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">](</span><span class="n">running_var</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">3</span><span class="p">](</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="n">bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">4</span><span class="p">](</span><span class="n">bias</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">running_mean</span><span class="p">,</span> <span class="n">running_var</span><span class="p">,</span>
+                                     <span class="n">weight</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">momentum</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedAimetGroupNorm</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">aimet_ops</span><span class="o">.</span><span class="n">GroupNorm</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for aimet_ops.GroupNorm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="c1"># pylint: disable=arguments-differ</span>
+                          <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+                          <span class="n">num_groups</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                          <span class="n">weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for aimet_ops.GroupNorm.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">](</span><span class="n">weight</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="n">bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">3</span><span class="p">](</span><span class="n">bias</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">NonMaxSuppression</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedNonMaxSuppression</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">aimet_ops</span><span class="o">.</span><span class="n">NonMaxSuppression</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for aimet_ops.NonMaxSuppression.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for aimet_ops.NonMaxSuppression.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">boxes</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">args</span> <span class="c1"># boxes are integer tensors</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="c1"># Use same input quantizer for all the score tensors</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">tree_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scores</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">Split</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedSplit</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Split</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for aimet_ops.Split.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for aimet_ops.Split.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span> <span class="o">=</span> <span class="n">args</span>
+
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="c1"># Use same output quantizer for all the output tensors</span>
+            <span class="n">quantize_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">out</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">out</span><span class="p">)</span> <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="k">else</span> <span class="n">out</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">tree_map</span><span class="p">(</span><span class="n">quantize_fn</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">Concat</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedConcat</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Concat</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for aimet_ops.Concat.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_num_inputs</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_inputs</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">export_input_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extends super().export to repeat input quantizer&#39;s encodings :attr:`self._num_inputs` times</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_encodings</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">export_input_encodings</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">input_encodings</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_inputs</span>
+
+    <span class="k">def</span> <span class="nf">import_input_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                               <span class="n">encodings</span><span class="p">,</span>
+                               <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                               <span class="n">partial</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                               <span class="n">requires_grad</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
+                               <span class="n">allow_overwrite</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extends super().import_input_encodings to set `self._num_inputs` based on length of encodings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_inputs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">encodings</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">import_input_encodings</span><span class="p">(</span><span class="n">encodings</span><span class="p">,</span>
+                                       <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span>
+                                       <span class="n">partial</span><span class="o">=</span><span class="n">partial</span><span class="p">,</span>
+                                       <span class="n">requires_grad</span><span class="o">=</span><span class="n">requires_grad</span><span class="p">,</span>
+                                       <span class="n">allow_overwrite</span><span class="o">=</span><span class="n">allow_overwrite</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">):</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for aimet_ops.Concat.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_inputs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="c1"># Use same input quantizer for all the input tensors</span>
+            <span class="n">quantize_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">inp</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">inp</span><span class="p">)</span> <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="k">else</span> <span class="n">inp</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">tree_map</span><span class="p">(</span><span class="n">quantize_fn</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">Where</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedWhere</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">aimet_ops</span><span class="o">.</span><span class="n">Where</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for aimet_ops.Where.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for aimet_ops.MaskedFill.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=redefined-builtin</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">input</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">](</span><span class="n">other</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+
+<span class="nd">@FakeQuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">aimet_ops</span><span class="o">.</span><span class="n">MaskedFill</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FakeQuantizedMaskedFill</span><span class="p">(</span><span class="n">FakeQuantizationMixin</span><span class="p">,</span> <span class="n">aimet_ops</span><span class="o">.</span><span class="n">MaskedFill</span><span class="p">):</span> <span class="c1"># pylint: disable=abstract-method</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized class definition for aimet_ops.MaskedFill.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+        <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span> <span class="c1"># pylint: disable=arguments-differ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantized forward impl for aimet_ops.MaskedFill.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">is_floating_point</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
