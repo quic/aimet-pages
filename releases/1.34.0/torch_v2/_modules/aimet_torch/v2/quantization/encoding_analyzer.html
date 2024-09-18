@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.v2.quantization.encoding_analyzer &mdash; AI Model Efficiency Toolkit Documentation: ver 1.34.0</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/style.css" />
+      <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../../../../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.34.0
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/encoding_analyzer.html">Encoding Analyzers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html">FakeQuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/index.html">quantization.affine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.v2.quantization.encoding_analyzer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.v2.quantization.encoding_analyzer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1"># pylint: disable=redefined-builtin</span>
+<span class="c1"># pylint: disable=missing-docstring</span>
+
+<span class="sd">&quot;&quot;&quot; Computes statistics and encodings &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.utils</span> <span class="kn">import</span> <span class="n">reduce</span><span class="p">,</span> <span class="n">StatisticsNotFoundError</span><span class="p">,</span> <span class="n">_is_expandable</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">_MinMaxRange</span><span class="p">:</span>
+    <span class="nb">min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">_Histogram</span><span class="p">:</span>
+    <span class="n">histogram</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">bin_edges</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="nb">max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">_Statistics</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;_Statistics&#39;</span><span class="p">,</span> <span class="n">_MinMaxRange</span><span class="p">,</span> <span class="n">_Histogram</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">_Observer</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">_Statistics</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Observes and gathers statistics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">collect_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Statistics</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">merge_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">_Statistics</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">reset_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Statistics</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">_MinMaxObserver</span><span class="p">(</span><span class="n">_Observer</span><span class="p">[</span><span class="n">_MinMaxRange</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Observer for Min-Max calibration technique</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">_MinMaxRange</span><span class="p">()</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">collect_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MinMaxRange</span><span class="p">:</span>
+        <span class="n">new_min</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">reduce_op</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">new_max</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">reduce_op</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="n">_MinMaxRange</span><span class="p">(</span><span class="n">new_min</span><span class="p">,</span> <span class="n">new_max</span><span class="p">)</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">merge_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">_MinMaxRange</span><span class="p">):</span>
+        <span class="n">updated_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">min</span>
+        <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">updated_min</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">updated_min</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">updated_min</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">updated_min</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">min</span><span class="p">)</span>
+
+        <span class="n">updated_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">max</span>
+        <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">updated_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">updated_max</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">updated_max</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">updated_max</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">_MinMaxRange</span><span class="p">(</span><span class="n">updated_min</span><span class="p">,</span> <span class="n">updated_max</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reset_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">_MinMaxRange</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_MinMaxRange</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
+
+
+<span class="k">class</span> <span class="nc">_HistogramObserver</span><span class="p">(</span><span class="n">_Observer</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Observer for Histogram based calibration techniques (percentile, MSE)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">num_bins</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">=</span> <span class="n">num_bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_histograms</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_histograms</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_Histogram</span><span class="p">())</span>
+
+
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">collect_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_expandable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">input_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> is incompatible with input of shape </span><span class="si">{</span><span class="n">input_tensor</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">hist_stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">input_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">input_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">histogram_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="n">padded_histogram_shape</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="o">*</span><span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">histogram_shape</span><span class="p">)),</span>
+            <span class="o">*</span><span class="n">histogram_shape</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">hist_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_histograms</span><span class="p">):</span>
+            <span class="n">hist_input</span> <span class="o">=</span> <span class="n">input_tensor</span>
+
+            <span class="k">for</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">padded_histogram_shape</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="c1"># elements in current axis, ex: could be W*C, C, or 1 for input_shape [H, W, C]</span>
+                <span class="n">numel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">padded_histogram_shape</span><span class="p">[</span><span class="n">axis</span><span class="o">+</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+                <span class="c1"># index where hist_input at current dimension will be sliced at</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">hist_num</span> <span class="o">//</span> <span class="n">numel</span><span class="p">)</span> <span class="o">%</span> <span class="n">dim</span>
+                <span class="n">hist_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">hist_input</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">index</span><span class="p">),</span> <span class="n">axis</span><span class="p">)</span>
+
+            <span class="n">hist_min</span><span class="p">,</span> <span class="n">hist_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_inf_inputs</span><span class="p">(</span><span class="n">hist_input</span><span class="p">)</span>
+            <span class="n">bin_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_bin_edges</span><span class="p">(</span><span class="n">min_val</span><span class="o">=</span><span class="n">hist_min</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">hist_max</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">input_tensor</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">histogram</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">histc</span><span class="p">(</span><span class="n">hist_input</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="n">bin_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">max</span><span class="o">=</span><span class="n">bin_edges</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># clip inf values to hist_min and hist_max and adjust for any fp errors</span>
+            <span class="n">histogram</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_input</span> <span class="o">&lt;</span> <span class="n">bin_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">histogram</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">hist_input</span> <span class="o">&gt;</span> <span class="n">bin_edges</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">hist_stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_Histogram</span><span class="p">(</span><span class="n">histogram</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">,</span> <span class="n">hist_min</span><span class="p">,</span> <span class="n">hist_max</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">hist_stats</span>
+
+    <span class="c1"># pylint: disable=no-self-use</span>
+    <span class="k">def</span> <span class="nf">_handle_inf_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hist_input</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">hist_input</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Input tensor cannot contain only infinite values&#39;</span><span class="p">)</span>
+
+        <span class="nb">min</span> <span class="o">=</span> <span class="n">hist_input</span><span class="p">[</span><span class="n">hist_input</span><span class="o">.</span><span class="n">isfinite</span><span class="p">()]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="nb">max</span> <span class="o">=</span> <span class="n">hist_input</span><span class="p">[</span><span class="n">hist_input</span><span class="o">.</span><span class="n">isfinite</span><span class="p">()]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span>
+
+    <span class="k">def</span> <span class="nf">_create_bin_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+        <span class="c1"># Adjust min/max values to be in line with PyTorch&#39;s torch.histc implementation</span>
+        <span class="k">if</span> <span class="n">max_val</span> <span class="o">==</span> <span class="n">min_val</span><span class="p">:</span>
+            <span class="n">min_val</span> <span class="o">=</span> <span class="n">min_val</span> <span class="o">-</span> <span class="mf">0.5</span>
+            <span class="n">max_val</span> <span class="o">=</span> <span class="n">max_val</span> <span class="o">+</span> <span class="mf">0.5</span>
+
+        <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span> <span class="o">=</span> <span class="n">min_val</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">max_val</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span>
+
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="n">step</span> <span class="o">+</span> <span class="n">min_val</span>
+
+    <span class="k">def</span> <span class="nf">_get_bin_num</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bin_width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">curr_min</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">bin_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">index_tensor</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">curr_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">bin_width</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">index_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="n">bin_tensor</span><span class="p">)</span>
+
+    <span class="c1"># pylint: disable=arguments-differ</span>
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">merge_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_stats_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">],</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">histogram</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">new_stats_list</span>
+            <span class="k">return</span>
+
+        <span class="n">hist_inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_stats_list</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">new_stats</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_stats_list</span><span class="p">):</span>
+            <span class="n">curr_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">curr_input</span> <span class="o">=</span> <span class="n">hist_inputs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+            <span class="n">updated_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">new_stats</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">min</span><span class="p">)</span>
+            <span class="n">updated_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">new_stats</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+
+            <span class="c1"># if the current histogram can capture new_stats within in its range</span>
+            <span class="k">if</span> <span class="n">updated_min</span> <span class="o">==</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">min</span> <span class="ow">and</span> <span class="n">updated_max</span> <span class="o">==</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
+                <span class="n">histogram_updates</span> <span class="o">=</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">histogram</span>
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">dest_bin_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">updated_max</span> <span class="o">-</span> <span class="n">updated_min</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span>
+                <span class="n">src_bin_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">curr_stats</span><span class="o">.</span><span class="n">max</span> <span class="o">-</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">min</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span>
+                <span class="n">histogram_updates</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">input_tensor</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+                <span class="n">src_bin_start</span> <span class="o">=</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">min</span> <span class="o">+</span> <span class="p">(</span><span class="n">src_bin_width</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">input_tensor</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+                <span class="n">dest_bin_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bin_num</span><span class="p">(</span><span class="n">dest_bin_width</span><span class="p">,</span> <span class="n">updated_min</span><span class="p">,</span> <span class="n">src_bin_start</span><span class="p">)</span>
+                <span class="n">dest_bin_end</span> <span class="o">=</span> <span class="n">updated_min</span> <span class="o">+</span> <span class="n">dest_bin_width</span> <span class="o">*</span> <span class="p">(</span><span class="n">dest_bin_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># split curr_hist if values in source bin cannot neatly fold into dest bin</span>
+                <span class="n">split_hist_value</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(((</span><span class="n">dest_bin_end</span> <span class="o">-</span> <span class="n">src_bin_start</span><span class="p">)</span> <span class="o">/</span> <span class="n">src_bin_width</span><span class="p">)</span> <span class="o">*</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">histogram</span><span class="p">)</span>
+                <span class="n">dest_bin_updates</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">split_hist_value</span><span class="p">,</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">histogram</span><span class="p">)</span>
+
+                <span class="c1"># update appropriate bin with either the full or split curr_hist value</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dest_bin</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dest_bin_index</span><span class="p">):</span>
+                    <span class="n">histogram_updates</span><span class="p">[</span><span class="n">dest_bin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dest_bin_updates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+                <span class="c1"># if curr_hist is split, update other bin that the remaining values fall into</span>
+                <span class="n">other_bins</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dest_bin_updates</span> <span class="o">&lt;</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">histogram</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">other_bin_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bin_num</span><span class="p">(</span><span class="n">dest_bin_width</span><span class="p">,</span> <span class="n">updated_min</span><span class="p">,</span> <span class="n">src_bin_start</span> <span class="o">+</span> <span class="n">dest_bin_width</span><span class="p">)</span>
+                <span class="n">other_bin_updates</span> <span class="o">=</span> <span class="n">curr_stats</span><span class="o">.</span><span class="n">histogram</span> <span class="o">-</span> <span class="n">dest_bin_updates</span>
+                <span class="k">for</span> <span class="n">bin_num</span> <span class="ow">in</span> <span class="n">other_bins</span><span class="p">:</span>
+                    <span class="n">histogram_updates</span><span class="p">[</span><span class="n">other_bin_index</span><span class="p">[</span><span class="n">bin_num</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">other_bin_updates</span><span class="p">[</span><span class="n">bin_num</span><span class="p">]</span>
+
+            <span class="c1"># create histogram given input tensor and full range</span>
+            <span class="n">expanded_histogram</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">histc</span><span class="p">(</span><span class="n">curr_input</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="n">updated_min</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">updated_max</span><span class="p">)</span>
+            <span class="n">expanded_histogram</span> <span class="o">+=</span> <span class="n">histogram_updates</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">expanded_histogram</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="c1"># clip inf values to hist_min and hist_max</span>
+            <span class="n">expanded_histogram</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">curr_input</span> <span class="o">==</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span>
+            <span class="n">expanded_histogram</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">curr_input</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span>
+
+            <span class="n">expanded_bin_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_bin_edges</span><span class="p">(</span><span class="n">min_val</span><span class="o">=</span><span class="n">updated_min</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">updated_max</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">expanded_histogram</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">_Histogram</span><span class="p">(</span><span class="n">expanded_histogram</span><span class="p">,</span> <span class="n">expanded_bin_edges</span><span class="p">,</span> <span class="n">updated_min</span><span class="p">,</span> <span class="n">updated_max</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reset_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_histograms</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_Histogram</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
+
+<div class="viewcode-block" id="EncodingAnalyzer"><a class="viewcode-back" href="../../../../torch_docs/encoding_analyzer.html#aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer">[docs]</a><span class="k">class</span> <span class="nc">EncodingAnalyzer</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">_Statistics</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observer</span><span class="p">:</span> <span class="n">_Observer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">observer</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">update_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Statistics</span><span class="p">:</span>
+        <span class="n">new_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">collect_stats</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">merge_stats</span><span class="p">(</span><span class="n">new_stats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_stats</span>
+
+    <span class="k">def</span> <span class="nf">reset_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">reset_stats</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">compute_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_encodings_from_stats</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">get_stats</span><span class="p">(),</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute_dynamic_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                  <span class="n">is_symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span><span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_encodings_from_stats</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">collect_stats</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">),</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">compute_encodings_from_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">_Statistics</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span>\
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">pass</span></div>
+
+
+<span class="n">_MINIMUM_SCALE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+
+
+<div class="viewcode-block" id="MinMaxEncodingAnalyzer"><a class="viewcode-back" href="../../../../torch_docs/encoding_analyzer.html#aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer">[docs]</a><span class="k">class</span> <span class="nc">MinMaxEncodingAnalyzer</span><span class="p">(</span><span class="n">EncodingAnalyzer</span><span class="p">[</span><span class="n">_MinMaxRange</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encoding Analyzer for Min-Max calibration technique</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">observer</span> <span class="o">=</span> <span class="n">_MinMaxObserver</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span>
+
+    <span class="c1">#pylint: disable=too-many-locals</span>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">compute_encodings_from_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">_MinMaxRange</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span>\
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">num_steps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The number of quantization bins cannot be less than or equal to 0.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">stats</span><span class="o">.</span><span class="n">max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StatisticsNotFoundError</span><span class="p">(</span><span class="s1">&#39;No statistics present to compute encodings.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># enforces that 0 is within the min/max</span>
+        <span class="n">min_with_zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">max_with_zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+         <span class="c1"># adjusts any min/max pairing that are too close</span>
+        <span class="n">tensor_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_with_zero</span> <span class="o">-</span> <span class="n">min_with_zero</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_steps</span>
+        <span class="n">adjustment_step</span> <span class="o">=</span> <span class="n">_MINIMUM_SCALE</span> <span class="o">*</span> <span class="p">(</span><span class="n">tensor_diff</span> <span class="o">&lt;</span> <span class="n">_MINIMUM_SCALE</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_symmetric</span><span class="p">:</span>
+            <span class="n">updated_max</span> <span class="o">=</span> <span class="n">max_with_zero</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">adjustment_step</span>
+            <span class="n">updated_min</span> <span class="o">=</span> <span class="n">min_with_zero</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">adjustment_step</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">updated_max</span> <span class="o">=</span> <span class="n">max_with_zero</span> <span class="o">+</span> <span class="n">num_steps</span> <span class="o">*</span> <span class="n">adjustment_step</span>
+            <span class="n">updated_min</span> <span class="o">=</span> <span class="n">min_with_zero</span>
+
+        <span class="k">if</span> <span class="n">is_symmetric</span><span class="p">:</span>
+            <span class="n">num_pos_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">num_neg_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">updated_max</span> <span class="o">/</span> <span class="n">num_pos_steps</span><span class="p">,</span> <span class="o">-</span><span class="n">updated_min</span> <span class="o">/</span> <span class="n">num_neg_steps</span><span class="p">)</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">num_neg_steps</span>
+            <span class="n">updated_min</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">*</span> <span class="n">delta</span>
+            <span class="n">updated_max</span> <span class="o">=</span> <span class="n">num_pos_steps</span> <span class="o">*</span> <span class="n">delta</span>
+
+        <span class="c1"># replace pos and neg inf respectively</span>
+        <span class="n">updated_max</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">updated_max</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+        <span class="n">updated_min</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">updated_min</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">updated_min</span><span class="p">,</span> <span class="n">updated_max</span></div>
+
+
+<span class="k">def</span> <span class="nf">adjust_min_max</span><span class="p">(</span><span class="n">curr_min</span><span class="p">,</span> <span class="n">curr_max</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">):</span>
+    <span class="c1"># ensure that 0 is in the range</span>
+    <span class="n">curr_min</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">curr_min</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">curr_min</span><span class="p">))</span>
+    <span class="n">curr_max</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">curr_max</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">curr_max</span><span class="p">))</span>
+
+    <span class="c1"># ensure that min/max are finite</span>
+    <span class="n">curr_min</span><span class="o">.</span><span class="n">clamp_</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">curr_max</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">curr_max</span><span class="o">.</span><span class="n">clamp_</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">curr_max</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+
+    <span class="c1"># ensure that min/max aren&#39;t too close</span>
+    <span class="n">tensor_threshold</span> <span class="o">=</span> <span class="p">(</span><span class="n">curr_max</span> <span class="o">-</span> <span class="n">curr_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_steps</span>
+
+    <span class="k">if</span> <span class="n">is_symmetric</span><span class="p">:</span>
+        <span class="n">curr_min</span><span class="p">[</span><span class="n">tensor_threshold</span> <span class="o">&lt;</span> <span class="n">_MINIMUM_SCALE</span><span class="p">]</span> <span class="o">-=</span> <span class="n">_MINIMUM_SCALE</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">curr_max</span><span class="p">[</span><span class="n">tensor_threshold</span> <span class="o">&lt;</span> <span class="n">_MINIMUM_SCALE</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_MINIMUM_SCALE</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">curr_max</span><span class="p">[</span><span class="n">tensor_threshold</span> <span class="o">&lt;</span> <span class="n">_MINIMUM_SCALE</span><span class="p">]</span> <span class="o">+=</span> <span class="n">_MINIMUM_SCALE</span> <span class="o">*</span> <span class="n">num_steps</span>
+
+    <span class="k">if</span> <span class="n">is_symmetric</span><span class="p">:</span>
+        <span class="n">num_pos_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">num_neg_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">curr_max</span> <span class="o">/</span> <span class="n">num_pos_steps</span><span class="p">,</span> <span class="o">-</span><span class="n">curr_min</span> <span class="o">/</span> <span class="n">num_neg_steps</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">num_neg_steps</span>
+
+        <span class="n">curr_min</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">*</span> <span class="n">delta</span>
+        <span class="n">curr_max</span> <span class="o">=</span> <span class="n">num_pos_steps</span> <span class="o">*</span> <span class="n">delta</span>
+
+    <span class="k">return</span> <span class="n">curr_min</span><span class="p">,</span> <span class="n">curr_max</span>
+
+<span class="c1"># pylint: disable=arguments-differ</span>
+<div class="viewcode-block" id="PercentileEncodingAnalyzer"><a class="viewcode-back" href="../../../../torch_docs/encoding_analyzer.html#aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer">[docs]</a><span class="k">class</span> <span class="nc">PercentileEncodingAnalyzer</span><span class="p">(</span><span class="n">EncodingAnalyzer</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encoding Analyzer for Percentile calibration technique</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">num_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">percentile</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_bins</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Number of bins cannot be less than or equal to 0.&#39;</span><span class="p">)</span>
+
+        <span class="n">observer</span> <span class="o">=</span> <span class="n">_HistogramObserver</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">num_bins</span><span class="o">=</span><span class="n">num_bins</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_percentile</span><span class="p">(</span><span class="n">percentile</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_percentile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percentile</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the clipping percentile of the encoding analyzer. The encoding analyzer will clip the (100% - percentile)</span>
+<span class="sd">        largest and smallest observed values from the encoding range when computing encodings.</span>
+
+<span class="sd">        :param percentile: Value from 50.0 to 100.0 indicating the clipping percentile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">percentile</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="ow">or</span> <span class="n">percentile</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Percentile value must be within 50-100 range&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">percentile</span> <span class="o">=</span> <span class="n">percentile</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">update_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Statistics</span><span class="p">:</span>
+        <span class="n">new_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">collect_stats</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">merge_stats</span><span class="p">(</span><span class="n">new_stats</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_stats</span>
+
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">compute_encodings_from_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">],</span> <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span>\
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+
+        <span class="k">if</span> <span class="n">num_steps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The number of quantization bins cannot be less than or equal to 0.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">histogram</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StatisticsNotFoundError</span><span class="p">(</span><span class="s1">&#39;No statistics present to compute encodings.&#39;</span><span class="p">)</span>
+
+        <span class="n">encoding_min_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">encoding_max_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">list_elem</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">:</span>
+            <span class="n">cum_sum</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">list_elem</span><span class="o">.</span><span class="n">histogram</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># trim percentile value from min and max</span>
+            <span class="n">max_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">cum_sum</span><span class="p">,</span> <span class="n">cum_sum</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">percentile</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span>
+            <span class="n">min_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">cum_sum</span><span class="p">,</span> <span class="n">cum_sum</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">percentile</span><span class="o">/</span><span class="mi">100</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">percentile</span> <span class="o">==</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">min_index</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">max_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">curr_min</span> <span class="o">=</span> <span class="n">list_elem</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">[</span><span class="n">min_index</span><span class="p">]</span>
+            <span class="n">curr_max</span> <span class="o">=</span> <span class="n">list_elem</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">[</span><span class="n">max_index</span><span class="p">]</span>
+            <span class="c1"># adjust min/max</span>
+            <span class="n">updated_min</span><span class="p">,</span> <span class="n">updated_max</span> <span class="o">=</span> <span class="n">adjust_min_max</span><span class="p">(</span><span class="n">curr_min</span><span class="p">,</span> <span class="n">curr_max</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">)</span>
+            <span class="n">encoding_min_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated_min</span><span class="p">)</span>
+            <span class="n">encoding_max_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated_max</span><span class="p">)</span>
+
+        <span class="n">encoding_min</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">encoding_min_list</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">histogram</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">encoding_min</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">encoding_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">encoding_max</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">encoding_max_list</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">histogram</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">encoding_max</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">encoding_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">encoding_min</span><span class="p">,</span> <span class="n">encoding_max</span></div>
+
+
+<div class="viewcode-block" id="SqnrEncodingAnalyzer"><a class="viewcode-back" href="../../../../torch_docs/encoding_analyzer.html#aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer">[docs]</a><span class="k">class</span> <span class="nc">SqnrEncodingAnalyzer</span><span class="p">(</span><span class="n">EncodingAnalyzer</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encoding Analyzer for SQNR Calibration technique</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span>
+                 <span class="n">num_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">asymmetric_delta_candidates</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span>
+                 <span class="n">symmetric_delta_candidates</span><span class="o">=</span><span class="mi">101</span><span class="p">,</span>
+                 <span class="n">offset_candidates</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
+                 <span class="n">max_parallelism</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                 <span class="n">gamma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param shape: Shape of calculated encoding</span>
+<span class="sd">        :param num_bins: number of bins to use per histogram</span>
+<span class="sd">        :param asymmetric_delta_candidates: number of delta values to search over in asymmetric mode</span>
+<span class="sd">        :param symmetric_delta_candidates: number of delta values to search over in symmetric mode</span>
+<span class="sd">        :param offset_candidates: number of offset values to search over in asymmetric mode</span>
+<span class="sd">        :param max_parallelism: maximum number of encodings to process parallely (higher number results in higher</span>
+<span class="sd">            memory usage but faster computation)</span>
+<span class="sd">        :param gamma: weighting factor on clipping noise (higher value results in less clipping noise)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">num_bins</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Number of bins cannot be less than or equal to 0.&#39;</span><span class="p">)</span>
+        <span class="n">observer</span> <span class="o">=</span> <span class="n">_HistogramObserver</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">num_bins</span><span class="o">=</span><span class="n">num_bins</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">asym_delta_candidates</span> <span class="o">=</span> <span class="n">asymmetric_delta_candidates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sym_delta_candidates</span> <span class="o">=</span> <span class="n">symmetric_delta_candidates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_offset_candidates</span> <span class="o">=</span> <span class="n">offset_candidates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">gamma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_parallelism</span> <span class="o">=</span> <span class="n">max_parallelism</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">update_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Statistics</span><span class="p">:</span>
+        <span class="n">new_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">collect_stats</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">merge_stats</span><span class="p">(</span><span class="n">new_stats</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_stats</span>
+
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">compute_encodings_from_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">],</span> <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span>\
+            <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Searches for encodings which produce the lowest expected SQNR based on the histograms in stats</span>
+
+<span class="sd">        :param stats: A list of _Histogram objects with length equal to the number of encodings to compute</span>
+<span class="sd">        :param num_steps: The number of bins the quantized range is split into</span>
+<span class="sd">        :param is_symmetric: If True, computes symmetric encodings, else computes asymmetric encodings</span>
+<span class="sd">        :return: Tuple of computed encodings (min, max) as tensors with shape self.shape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">histogram</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StatisticsNotFoundError</span><span class="p">(</span><span class="s1">&#39;No statistics present to compute encodings.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_steps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The number of quantization bins cannot be less than or equal to 0.&#39;</span><span class="p">)</span>
+        <span class="n">chunked_stats</span> <span class="o">=</span> <span class="p">[</span><span class="n">stats</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">max_parallelism</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">stats</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_parallelism</span><span class="p">)]</span>
+        <span class="n">best_deltas</span><span class="p">,</span> <span class="n">best_offsets</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">stats_</span> <span class="ow">in</span> <span class="n">chunked_stats</span><span class="p">:</span>
+            <span class="n">test_deltas</span><span class="p">,</span> <span class="n">test_offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pick_test_candidates</span><span class="p">(</span><span class="n">stats_</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">is_symmetric</span><span class="p">)</span>
+            <span class="n">best_delta</span><span class="p">,</span> <span class="n">best_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_best_candidates</span><span class="p">(</span><span class="n">test_deltas</span><span class="p">,</span> <span class="n">test_offsets</span><span class="p">,</span> <span class="n">stats_</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+            <span class="n">best_deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_delta</span><span class="p">)</span>
+            <span class="n">best_offsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_offset</span><span class="p">)</span>
+        <span class="n">best_offset</span> <span class="o">=</span> <span class="n">best_offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_symmetric</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">best_offsets</span><span class="p">)</span>
+        <span class="n">best_delta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">best_deltas</span><span class="p">)</span>
+        <span class="n">min_enc</span> <span class="o">=</span> <span class="n">best_offset</span> <span class="o">*</span> <span class="n">best_delta</span>
+        <span class="n">max_enc</span> <span class="o">=</span> <span class="n">min_enc</span> <span class="o">+</span> <span class="n">num_steps</span> <span class="o">*</span> <span class="n">best_delta</span>
+        <span class="k">return</span> <span class="n">min_enc</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> \
+               <span class="n">max_enc</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_pick_test_candidates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">):</span>
+        <span class="c1"># min/max.shape = (num_histograms, )</span>
+        <span class="n">min_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">stat</span><span class="o">.</span><span class="n">min</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">])</span>
+        <span class="n">max_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">stat</span><span class="o">.</span><span class="n">max</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">])</span>
+        <span class="n">min_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">min_vals</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">min_vals</span><span class="p">))</span>
+        <span class="n">max_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_vals</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">max_vals</span><span class="p">))</span>
+        <span class="n">max_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span> <span class="o">+</span> <span class="n">_MINIMUM_SCALE</span> <span class="o">*</span> <span class="n">num_steps</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pick_test_candidates_symmetric</span><span class="p">(</span><span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pick_test_candidates_asymmetric</span><span class="p">(</span><span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_pick_test_candidates_asymmetric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects the set of deltas and offsets over which to search for the optimal encodings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Note: casting to float32 for two reason:</span>
+        <span class="c1">#       1) float16 on CPU is not well-supported in pytorch</span>
+        <span class="c1">#       2) Computing int16 encodings using f16 can result in inf (2 ** 16 - 1 == inf in fp16)</span>
+        <span class="n">tensor_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="n">min_vals</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">}</span>
+        <span class="n">max_delta</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_vals</span> <span class="o">-</span> <span class="n">min_vals</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_steps</span>
+        <span class="n">observed_offset</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">min_vals</span> <span class="o">/</span> <span class="n">max_delta</span><span class="p">)</span>
+        <span class="n">observed_min</span> <span class="o">=</span> <span class="n">max_delta</span> <span class="o">*</span> <span class="n">observed_offset</span>
+        <span class="n">observed_max</span> <span class="o">=</span> <span class="n">observed_min</span> <span class="o">+</span> <span class="n">max_delta</span> <span class="o">*</span> <span class="n">num_steps</span>
+        <span class="n">num_deltas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asym_delta_candidates</span>
+        <span class="n">search_space</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">num_deltas</span><span class="p">),</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">tensor_kwargs</span><span class="p">)</span>
+        <span class="c1"># test_deltas.shape = (num_histograms, num_tests)</span>
+        <span class="n">test_deltas</span> <span class="o">=</span> <span class="n">max_delta</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">search_space</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_deltas</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># test_offsets.shape = (num_offsets)</span>
+        <span class="n">num_offsets</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_offset_candidates</span><span class="p">)</span>
+        <span class="n">test_offset_step</span> <span class="o">=</span> <span class="n">num_steps</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_offsets</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># subtract 2 because we add the observed offset</span>
+        <span class="n">test_offsets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=-</span><span class="n">num_steps</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">test_offset_step</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">test_offset_step</span><span class="p">,</span> <span class="o">**</span><span class="n">tensor_kwargs</span><span class="p">))</span>
+        <span class="n">test_offsets</span> <span class="o">=</span> <span class="n">test_offsets</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">min_vals</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Add in the observed offset as a candidate, test_offsets.shape = (num_histograms, num_offsets + 1)</span>
+        <span class="n">test_offsets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">test_offsets</span><span class="p">,</span> <span class="n">observed_offset</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clamp_delta_offset_values</span><span class="p">(</span><span class="n">observed_min</span><span class="p">,</span> <span class="n">observed_max</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">test_deltas</span><span class="p">,</span> <span class="n">test_offsets</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_pick_test_candidates_symmetric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects the set of deltas over which to search for the optimal symmetric encodings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tensor_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="n">min_vals</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">}</span>
+        <span class="n">max_delta</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_vals</span><span class="p">,</span> <span class="o">-</span><span class="n">min_vals</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_steps</span>
+        <span class="n">test_offsets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">num_steps</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">tensor_kwargs</span><span class="p">)</span>
+        <span class="n">num_deltas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sym_delta_candidates</span>
+        <span class="n">search_space</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">num_deltas</span><span class="p">),</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">tensor_kwargs</span><span class="p">)</span>
+        <span class="n">test_deltas</span> <span class="o">=</span> <span class="n">max_delta</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">search_space</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_deltas</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># test_deltas.shape = (num_histograms, num_deltas, 1)</span>
+        <span class="c1"># test_offsets.shape = (1, 1, 1)</span>
+        <span class="n">min_delta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="n">_MINIMUM_SCALE</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="o">**</span><span class="n">tensor_kwargs</span><span class="p">)</span>
+        <span class="n">test_deltas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">test_deltas</span><span class="p">,</span> <span class="n">min_delta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">test_deltas</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">test_offsets</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_clamp_delta_offset_values</span><span class="p">(</span><span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">test_deltas</span><span class="p">,</span> <span class="n">test_offsets</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clamps delta/offset encodings such that represented range falls within the observed min/max range of inputs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># test_min shape = (num_histograms, num_deltas, num_offsets)</span>
+        <span class="n">test_min</span> <span class="o">=</span> <span class="n">test_deltas</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">test_offsets</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">test_max</span> <span class="o">=</span> <span class="n">test_min</span> <span class="o">+</span> <span class="n">test_deltas</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_steps</span>
+        <span class="c1"># Clamp min/max to observed min/max</span>
+        <span class="n">test_min</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">min_vals</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">test_min</span><span class="p">)</span>
+        <span class="n">test_max</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_vals</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">test_max</span><span class="p">)</span>
+        <span class="c1"># Recompute delta/offset with clamped min/max</span>
+        <span class="c1"># Returned delta/offset shapes = (num_histograms, num_deltas, num_offsets)</span>
+        <span class="n">test_deltas</span> <span class="o">=</span> <span class="p">(</span><span class="n">test_max</span> <span class="o">-</span> <span class="n">test_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_steps</span>
+        <span class="n">min_delta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="n">_MINIMUM_SCALE</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">test_deltas</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                                           <span class="n">dtype</span><span class="o">=</span><span class="n">test_deltas</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">test_deltas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">test_deltas</span><span class="p">,</span> <span class="n">min_delta</span><span class="p">)</span>
+        <span class="n">test_offsets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">test_min</span> <span class="o">/</span> <span class="n">test_deltas</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">test_deltas</span><span class="p">,</span> <span class="n">test_offsets</span>
+
+    <span class="k">def</span> <span class="nf">_select_best_candidates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_deltas</span><span class="p">,</span> <span class="n">test_offsets</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Searches all pairs of (delta, offset) in test_deltas, test_offsets to find the set with the lowest expected SQNR</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_clip_and_quant_noise</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">test_deltas</span><span class="p">,</span> <span class="n">test_offsets</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">min_idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">noise</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">best_delta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">test_deltas</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">min_idx</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">test_offsets</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">best_offset</span> <span class="o">=</span> <span class="n">test_offsets</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">best_offset</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">test_offsets</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">min_idx</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">best_delta</span><span class="p">,</span> <span class="n">best_offset</span>
+
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_estimate_clip_and_quant_noise</span><span class="p">(</span><span class="n">stats</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_Histogram</span><span class="p">],</span>
+                                       <span class="n">test_deltas</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                                       <span class="n">test_offsets</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                                       <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                       <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the error from quantization for each delta, offset pair in test_deltas, test_offsets.</span>
+<span class="sd">        We approximately reconstruct x from hists by assuming all elements within a given bin fall exactly on the</span>
+<span class="sd">        midpoint of that bin.</span>
+
+<span class="sd">        :param stats: list of _Histogram objects of observed input values</span>
+<span class="sd">        :param test_deltas: Tensor holding the values of all deltas to search with shape (num_hists, num_deltas, num_offsets)</span>
+<span class="sd">        :param test_offsets: Tensor holding values of all offsets to search with shape (num_hists, num_deltas, num_offsets)</span>
+<span class="sd">        :param num_steps: Number of quantization steps, i.e., (2 ** bitwidth) - 1</span>
+<span class="sd">        :param gamma: Fudge factor to trade off between saturation cost and quantization cost. When gamma=1.0, this</span>
+<span class="sd">                      approximates the MSE of the quantization function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tensor_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="n">test_deltas</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="n">test_deltas</span><span class="o">.</span><span class="n">dtype</span><span class="p">}</span>
+        <span class="n">hists</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">stat</span><span class="o">.</span><span class="n">histogram</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">])</span>
+        <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">stat</span><span class="o">.</span><span class="n">bin_edges</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">])</span>
+        <span class="n">hist_delta</span> <span class="o">=</span> <span class="n">bin_edges</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bin_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># hist_midpoints is shape (hists, num_bins)</span>
+        <span class="n">hist_offsets</span> <span class="o">=</span> <span class="n">hist_delta</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bin_edges</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">tensor_kwargs</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">hist_midpoints</span> <span class="o">=</span> <span class="p">(</span><span class="n">bin_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">hist_delta</span><span class="o">/</span><span class="mi">2</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">hist_offsets</span>
+        <span class="c1"># hists_midpoints_qdq is shape (hists, num_deltas, num_offsets, num_bins)</span>
+        <span class="n">test_offsets_bcast</span> <span class="o">=</span> <span class="n">test_offsets</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">test_deltas_bcast</span> <span class="o">=</span> <span class="n">test_deltas</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">hist_midpoints_qdq</span> <span class="o">=</span> <span class="n">hist_midpoints</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">test_deltas_bcast</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">test_offsets_bcast</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">gamma</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">clipped</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">hist_midpoints_qdq</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span>
+                                       <span class="n">hist_midpoints_qdq</span> <span class="o">&gt;</span> <span class="n">num_steps</span><span class="p">)</span>
+        <span class="n">hist_midpoints_qdq</span> <span class="o">=</span> <span class="n">hist_midpoints_qdq</span><span class="o">.</span><span class="n">clamp_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">)</span><span class="o">.</span><span class="n">add_</span><span class="p">(</span><span class="n">test_offsets_bcast</span><span class="p">)</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">test_deltas_bcast</span><span class="p">)</span>
+        <span class="n">square_error</span> <span class="o">=</span> <span class="n">hist_midpoints_qdq</span><span class="o">.</span><span class="n">sub_</span><span class="p">(</span><span class="n">hist_midpoints</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">pow_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">hists</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="k">if</span> <span class="n">gamma</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="c1"># Apply the gamma &quot;fudge factor&quot; to the clipped errors</span>
+            <span class="n">square_error</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">clipped</span><span class="p">,</span> <span class="n">square_error</span> <span class="o">*</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">square_error</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">square_error</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
