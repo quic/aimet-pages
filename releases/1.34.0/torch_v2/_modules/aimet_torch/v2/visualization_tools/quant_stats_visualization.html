@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimet_torch.v2.visualization_tools.quant_stats_visualization &mdash; AI Model Efficiency Toolkit Documentation: ver 1.34.0</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/style.css" />
+      <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../../../../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../../../../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.34.0
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/encoding_analyzer.html">Encoding Analyzers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.fake_quantization_mixin.html">FakeQuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/affine/index.html">quantization.affine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">aimet_torch.v2.visualization_tools.quant_stats_visualization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for aimet_torch.v2.visualization_tools.quant_stats_visualization</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2023-2023, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot; Tool to visualize min and max activations/weights of quantized modules in a given model&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">bokeh.events</span> <span class="kn">import</span> <span class="n">DocumentReady</span><span class="p">,</span> <span class="n">Reset</span>
+<span class="kn">from</span> <span class="nn">bokeh.layouts</span> <span class="kn">import</span> <span class="n">row</span><span class="p">,</span> <span class="n">column</span>
+<span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">ColumnDataSource</span><span class="p">,</span> <span class="n">TextInput</span><span class="p">,</span> <span class="n">CustomJS</span><span class="p">,</span> <span class="n">Range1d</span><span class="p">,</span> <span class="n">HoverTool</span><span class="p">,</span> <span class="n">CustomJSHover</span><span class="p">,</span> <span class="n">Div</span><span class="p">,</span> \
+    <span class="n">BooleanFilter</span><span class="p">,</span> <span class="n">CDSView</span><span class="p">,</span> <span class="n">Spacer</span><span class="p">,</span> <span class="n">DataTable</span><span class="p">,</span> <span class="n">StringFormatter</span><span class="p">,</span> <span class="n">TableColumn</span>
+<span class="kn">from</span> <span class="nn">bokeh.models.tools</span> <span class="kn">import</span> <span class="n">ResetTool</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">curdoc</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.quantsim</span> <span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.utils</span> <span class="kn">import</span> <span class="n">get_ordered_list_of_modules</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.base</span> <span class="kn">import</span> <span class="n">QuantizerBase</span>
+<span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.encoding_analyzer</span> <span class="kn">import</span> <span class="n">_MinMaxObserver</span>
+
+
+<div class="viewcode-block" id="visualize_stats"><a class="viewcode-back" href="../../../../torch_docs/api/visualization_tools.html#aimet_torch.v2.visualization_tools.visualize_stats">[docs]</a><span class="k">def</span> <span class="nf">visualize_stats</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Produces an interactive html to view the stats collected by each quantizer during calibration</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        The QuantizationSimModel input is expected to have been calibrated before using this function. Stats will only</span>
+<span class="sd">        be plotted for activations/parameters with quantizers containing calibration statistics.</span>
+
+<span class="sd">        Currently, this tool is only compatible with quantizers containing :class:`MinMaxEncodingAnalyzer` encoding</span>
+<span class="sd">        analyzers (i.e., :attr:`QuantScheme.post_training_tf` and :attr:`QuantScheme.training_range_learning_with_tf_init`</span>
+<span class="sd">        quant schemes).</span>
+
+<span class="sd">    Creates an interactive visualization of min and max activations/weights of all quantized modules in the input</span>
+<span class="sd">    QuantSim object. The features include:</span>
+
+<span class="sd">        - Adjustable threshold values to flag layers whose min or max activations/weights exceed the set thresholds</span>
+<span class="sd">        - Tables containing names and ranges for layers exceeding threshold values</span>
+
+<span class="sd">    Saves the visualization as a .html at the given path.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; sim = aimet_torch.v2.quantsim.QuantizationSimModel(model, dummy_input, quant_scheme=QuantScheme.post_training_tf)</span>
+<span class="sd">        &gt;&gt;&gt; with aimet_torch.v2.nn.compute_encodings(sim.model):</span>
+<span class="sd">        ...     for data, _ in data_loader:</span>
+<span class="sd">        ...         sim.model(data)</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; visualize_stats(sim, dummy_input, &quot;./quant_stats_visualization.html&quot;)</span>
+
+<span class="sd">    :param sim: Calibrated QuantizationSimModel</span>
+<span class="sd">    :param dummy_input: Sample input used to trace the model</span>
+<span class="sd">    :param save_path: Path for saving the visualization. Default is &quot;./quant_stats_visualization.html&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">QuantizationSimModel</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected type &#39;aimet_torch.v2.quantsim.QuantizationSimModel&#39;, got &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">check_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+
+    <span class="c1"># Flatten the quantized modules into an ordered list for easier indexing in the plots</span>
+    <span class="n">ordered_list</span> <span class="o">=</span> <span class="p">(</span><span class="n">get_ordered_list_of_modules</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">))</span>
+    <span class="n">namelist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">minlist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">maxlist</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">ordered_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">QuantizerBase</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">observer</span><span class="p">,</span> <span class="n">_MinMaxObserver</span><span class="p">):</span>
+                <span class="n">rng</span> <span class="o">=</span> <span class="n">module</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="n">namelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">minlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">min</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+                    <span class="n">maxlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">max</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="c1"># TODO - Handle other quant schemes</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">namelist</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">&quot;No stats found to plot. Either there were no quantized modules, or calibration was not performed before calling this function, or observers of type other than _MinMaxObserver were used.&quot;</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">namelist</span><span class="p">)))</span>
+
+    <span class="c1"># Save an interactive bokeh plot as a standalone html in the specified directory with the specified name if provided</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">save_path</span><span class="p">:</span>
+        <span class="n">save_path</span> <span class="o">=</span> <span class="s2">&quot;quant_stats_visualization.html&quot;</span>
+    <span class="n">check_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+
+    <span class="n">visualizer</span> <span class="o">=</span> <span class="n">QuantStatsVisualizer</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">namelist</span><span class="p">,</span> <span class="n">minlist</span><span class="p">,</span> <span class="n">maxlist</span><span class="p">)</span>
+    <span class="n">visualizer</span><span class="o">.</span><span class="n">export_plot_as_html</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">check_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Function for sanity check on the given path &quot;&quot;&quot;</span>
+    <span class="n">path_to_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path_to_directory</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_to_directory</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">path_to_directory</span><span class="si">}</span><span class="s2">&#39; is not a directory.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.html&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;save_path&#39; must end with &#39;.html&#39;.&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DataSources</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold the Bokeh ColumnDataSource objects needed in the visualization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">idx</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span>
+                 <span class="n">namelist</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span>
+                 <span class="n">minlist</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span>
+                 <span class="n">maxlist</span><span class="p">:</span><span class="nb">list</span><span class="p">,</span>
+                 <span class="n">p</span><span class="p">:</span> <span class="n">figure</span><span class="p">,</span>
+                 <span class="n">default_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                 <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">namelist</span><span class="o">=</span><span class="n">namelist</span><span class="p">,</span> <span class="n">minlist</span><span class="o">=</span><span class="n">minlist</span><span class="p">,</span> <span class="n">maxlist</span><span class="o">=</span><span class="n">maxlist</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values_source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">default_ymax</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymax&#39;</span><span class="p">]],</span>
+                      <span class="n">default_ymin</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymin&#39;</span><span class="p">]],</span>
+                      <span class="n">default_maxclip</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_maxclip&#39;</span><span class="p">]],</span>
+                      <span class="n">default_minclip</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_minclip&#39;</span><span class="p">]],</span>
+                      <span class="n">default_xmax</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_xmax&#39;</span><span class="p">]],</span>
+                      <span class="n">default_xmin</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_xmin&#39;</span><span class="p">]]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limits_source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ymax</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymax&#39;</span><span class="p">]],</span> <span class="n">ymin</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymin&#39;</span><span class="p">]],</span>
+                      <span class="n">xmin</span><span class="o">=</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">x_range</span><span class="o">.</span><span class="n">start</span><span class="p">],</span> <span class="n">xmax</span><span class="o">=</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">x_range</span><span class="o">.</span><span class="n">end</span><span class="p">],</span>
+                      <span class="n">minclip</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_minclip&#39;</span><span class="p">]],</span>
+                      <span class="n">maxclip</span><span class="o">=</span><span class="p">[</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_maxclip&#39;</span><span class="p">]]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_marker_source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[],</span> <span class="n">y</span><span class="o">=</span><span class="p">[],</span> <span class="n">names</span><span class="o">=</span><span class="p">[],</span> <span class="n">min_activations</span><span class="o">=</span><span class="p">[],</span> <span class="n">max_activations</span><span class="o">=</span><span class="p">[],</span> <span class="n">fmt_min_activations</span><span class="o">=</span><span class="p">[],</span>
+                      <span class="n">fmt_max_activations</span><span class="o">=</span><span class="p">[]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_marker_source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[],</span> <span class="n">y</span><span class="o">=</span><span class="p">[],</span> <span class="n">names</span><span class="o">=</span><span class="p">[],</span> <span class="n">min_activations</span><span class="o">=</span><span class="p">[],</span> <span class="n">max_activations</span><span class="o">=</span><span class="p">[],</span> <span class="n">fmt_min_activations</span><span class="o">=</span><span class="p">[],</span>
+                      <span class="n">fmt_max_activations</span><span class="o">=</span><span class="p">[]))</span>
+
+
+<span class="k">class</span> <span class="nc">TableObjects</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for holding various objects related to the table elements in the visualization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasources</span><span class="p">:</span> <span class="n">DataSources</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_name_filter</span> <span class="o">=</span> <span class="n">BooleanFilter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_name_filter</span> <span class="o">=</span> <span class="n">BooleanFilter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_name_view</span> <span class="o">=</span> <span class="n">CDSView</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_name_filter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_name_view</span> <span class="o">=</span> <span class="n">CDSView</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_name_filter</span><span class="p">)</span>
+
+        <span class="n">min_columns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">TableColumn</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s2">&quot;names&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Layer Name&quot;</span><span class="p">,</span>
+                        <span class="n">formatter</span><span class="o">=</span><span class="n">StringFormatter</span><span class="p">(</span><span class="n">font_style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">),</span>
+            <span class="n">TableColumn</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s2">&quot;fmt_min_activations&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Min Activation&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+            <span class="n">TableColumn</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s2">&quot;fmt_max_activations&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Max Activation&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_data_table</span> <span class="o">=</span> <span class="n">DataTable</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">min_marker_source</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_name_view</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">min_columns</span><span class="p">,</span>
+                                        <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                        <span class="n">sortable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">selectable</span><span class="o">=</span><span class="s2">&quot;checkbox&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+                                        <span class="n">index_position</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_header</span><span class="o">=</span><span class="s2">&quot;row index&quot;</span><span class="p">,</span> <span class="n">index_width</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+                                        <span class="p">)</span>
+
+        <span class="n">max_columns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">TableColumn</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s2">&quot;names&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Layer Name&quot;</span><span class="p">,</span>
+                        <span class="n">formatter</span><span class="o">=</span><span class="n">StringFormatter</span><span class="p">(</span><span class="n">font_style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">),</span>
+            <span class="n">TableColumn</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s2">&quot;fmt_min_activations&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Min Activation&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+            <span class="n">TableColumn</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s2">&quot;fmt_max_activations&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Max Activation&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_data_table</span> <span class="o">=</span> <span class="n">DataTable</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">max_marker_source</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_name_view</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">max_columns</span><span class="p">,</span>
+                                        <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                        <span class="n">sortable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">selectable</span><span class="o">=</span><span class="s2">&quot;checkbox&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+                                        <span class="n">index_position</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">index_header</span><span class="o">=</span><span class="s2">&quot;row index&quot;</span><span class="p">,</span> <span class="n">index_width</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+                                        <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">InputWidgets</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold various input widgets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymin_input</span> <span class="o">=</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymin&#39;</span><span class="p">]),</span>
+                                    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Enter lower display limit of the plot&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymax_input</span> <span class="o">=</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymax&#39;</span><span class="p">]),</span>
+                                    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Enter upper display limit of the plot&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minclip_input</span> <span class="o">=</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_minclip&#39;</span><span class="p">]),</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Enter lower threshold value for activations/weights&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxclip_input</span> <span class="o">=</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_maxclip&#39;</span><span class="p">]),</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Enter upper threshold value for activations/weights&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_name_input</span> <span class="o">=</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Enter name filter&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_name_input</span> <span class="o">=</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Enter name filter&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">CustomCallbacks</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to hold Custom JavaScript Callbacks for interactivity in the visualization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_change_callback</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_callback</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_name_filter_callback</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_name_filter_callback</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">class</span> <span class="nc">QuantStatsVisualizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for constructing the visualization with functionality to export the plot as</span>
+
+<span class="sd">    :param idx: List with indexing for the ordered list of quantized modules.</span>
+<span class="sd">    :param namelist: List containing names of the ordered list of quantized modules.</span>
+<span class="sd">    :param minlist: List containing min activations of the ordered list of quantized modules.</span>
+<span class="sd">    :param maxlist: List containing max activations of the ordered list of quantized modules.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">namelist</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">minlist</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">maxlist</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span> <span class="o">=</span> <span class="n">namelist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minlist</span> <span class="o">=</span> <span class="n">minlist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxlist</span> <span class="o">=</span> <span class="n">maxlist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_add_plot_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasources</span><span class="p">:</span> <span class="n">DataSources</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="n">x0</span><span class="o">=</span><span class="s1">&#39;xmin&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="o">=</span><span class="s1">&#39;xmax&#39;</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="s1">&#39;ymin&#39;</span><span class="p">,</span> <span class="n">y1</span><span class="o">=</span><span class="s1">&#39;ymin&#39;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">limits_source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="n">x0</span><span class="o">=</span><span class="s1">&#39;xmin&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="o">=</span><span class="s1">&#39;xmax&#39;</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="s1">&#39;ymax&#39;</span><span class="p">,</span> <span class="n">y1</span><span class="o">=</span><span class="s1">&#39;ymax&#39;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">limits_source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="n">x0</span><span class="o">=</span><span class="s1">&#39;xmin&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="o">=</span><span class="s1">&#39;xmax&#39;</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="s1">&#39;minclip&#39;</span><span class="p">,</span> <span class="n">y1</span><span class="o">=</span><span class="s1">&#39;minclip&#39;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+                  <span class="n">line_dash</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
+                  <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">limits_source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="n">x0</span><span class="o">=</span><span class="s1">&#39;xmin&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="o">=</span><span class="s1">&#39;xmax&#39;</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="s1">&#39;maxclip&#39;</span><span class="p">,</span> <span class="n">y1</span><span class="o">=</span><span class="s1">&#39;maxclip&#39;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+                  <span class="n">line_dash</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
+                  <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">limits_source</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="s1">&#39;idx&#39;</span><span class="p">,</span> <span class="s1">&#39;maxlist&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">data_source</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="s2">&quot;Max Activation&quot;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="s1">&#39;idx&#39;</span><span class="p">,</span> <span class="s1">&#39;minlist&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">data_source</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="s2">&quot;Min Activation&quot;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_add_min_max_markers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasources</span><span class="p">:</span> <span class="n">DataSources</span><span class="p">):</span>
+        <span class="n">min_markers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">circle_x</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">min_marker_source</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s2">&quot;navy&quot;</span><span class="p">)</span>
+        <span class="n">max_markers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">circle_x</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">max_marker_source</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">line_color</span><span class="o">=</span><span class="s2">&quot;navy&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span>  <span class="n">min_markers</span><span class="p">,</span> <span class="n">max_markers</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_min_max_hovertools</span><span class="p">(</span><span class="n">min_markers</span><span class="p">,</span> <span class="n">max_markers</span><span class="p">):</span>
+        <span class="n">format_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    if (Math.abs(value) &lt; 1e-3 || Math.abs(value) &gt; 1e3) {</span>
+<span class="s2">                    return value.toExponential(2);</span>
+<span class="s2">                    } else {</span>
+<span class="s2">                    return value.toFixed(2);</span>
+<span class="s2">                    }</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+
+        <span class="n">format_hover</span> <span class="o">=</span> <span class="n">CustomJSHover</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="n">format_code</span><span class="p">)</span>
+
+        <span class="n">min_hover</span> <span class="o">=</span> <span class="n">HoverTool</span><span class="p">(</span><span class="n">renderers</span><span class="o">=</span><span class="p">[</span><span class="n">min_markers</span><span class="p">],</span> <span class="n">tooltips</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;@names&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Max Activation&quot;</span><span class="p">,</span> <span class="s2">&quot;@max_activations</span><span class="si">{custom}</span><span class="s2">&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Min Activation&quot;</span><span class="p">,</span> <span class="s2">&quot;@min_activations</span><span class="si">{custom}</span><span class="s2">&quot;</span><span class="p">),</span>
+        <span class="p">],</span> <span class="n">formatters</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;@min_activations&quot;</span><span class="p">:</span> <span class="n">format_hover</span><span class="p">,</span>
+            <span class="s2">&quot;@max_activations&quot;</span><span class="p">:</span> <span class="n">format_hover</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="n">max_hover</span> <span class="o">=</span> <span class="n">HoverTool</span><span class="p">(</span><span class="n">renderers</span><span class="o">=</span><span class="p">[</span><span class="n">max_markers</span><span class="p">],</span> <span class="n">tooltips</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;@names&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Max Activation&quot;</span><span class="p">,</span> <span class="s2">&quot;@max_activations</span><span class="si">{custom}</span><span class="s2">&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Min Activation&quot;</span><span class="p">,</span> <span class="s2">&quot;@min_activations</span><span class="si">{custom}</span><span class="s2">&quot;</span><span class="p">),</span>
+        <span class="p">],</span> <span class="n">formatters</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;@min_activations&quot;</span><span class="p">:</span> <span class="n">format_hover</span><span class="p">,</span>
+            <span class="s2">&quot;@max_activations&quot;</span><span class="p">:</span> <span class="n">format_hover</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">min_hover</span><span class="p">,</span> <span class="n">max_hover</span>
+
+
+    <span class="k">def</span> <span class="nf">_define_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasources</span><span class="p">,</span> <span class="n">tableobjects</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="p">):</span>
+        <span class="n">customcallbacks</span> <span class="o">=</span> <span class="n">CustomCallbacks</span><span class="p">()</span>
+
+        <span class="n">customcallbacks</span><span class="o">.</span><span class="n">limit_change_callback</span> <span class="o">=</span> <span class="n">CustomJS</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">limits_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">limits_source</span><span class="p">,</span>
+                                                   <span class="n">data_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">data_source</span><span class="p">,</span>
+                                                   <span class="n">min_marker_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">min_marker_source</span><span class="p">,</span>
+                                                   <span class="n">max_marker_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">max_marker_source</span><span class="p">,</span>
+                                                   <span class="n">ymax_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymax_input</span><span class="p">,</span>
+                                                   <span class="n">ymin_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymin_input</span><span class="p">,</span>
+                                                   <span class="n">maxclip_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">maxclip_input</span><span class="p">,</span>
+                                                   <span class="n">minclip_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">minclip_input</span><span class="p">,</span>
+                                                   <span class="n">plot</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+                                                   <span class="n">min_name_filter</span><span class="o">=</span><span class="n">tableobjects</span><span class="o">.</span><span class="n">min_name_filter</span><span class="p">,</span>
+                                                   <span class="n">max_name_filter</span><span class="o">=</span><span class="n">tableobjects</span><span class="o">.</span><span class="n">max_name_filter</span><span class="p">,</span>
+                                                   <span class="p">),</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                // Function to adaptively format numerical values in scientific notation</span>
+<span class="s2">                // if they are large in magnitude</span>
+<span class="s2">                function formatValue(value) {</span>
+<span class="s2">                    if (Math.abs(value) &lt; 1e-3 || Math.abs(value) &gt; 1e3) {</span>
+<span class="s2">                        return value.toExponential(2);</span>
+<span class="s2">                    } else {</span>
+<span class="s2">                        return value.toFixed(2);</span>
+<span class="s2">                    }</span>
+<span class="s2">                }</span>
+<span class="s2">                </span>
+<span class="s2">                // Reading values from input widgets and setting plot y axis range  </span>
+<span class="s2">                const limits_data = limits_source.data;</span>
+<span class="s2">                limits_data[&#39;ymax&#39;] = [parseFloat(ymax_input.value)];</span>
+<span class="s2">                limits_data[&#39;ymin&#39;] = [parseFloat(ymin_input.value)];</span>
+<span class="s2">                plot.y_range.start = limits_data[&#39;ymin&#39;][0];</span>
+<span class="s2">                plot.y_range.end = limits_data[&#39;ymax&#39;][0];</span>
+<span class="s2">                limits_data[&#39;maxclip&#39;] = [parseFloat(maxclip_input.value)];</span>
+<span class="s2">                limits_data[&#39;minclip&#39;] = [parseFloat(minclip_input.value)];</span>
+<span class="s2">                </span>
+<span class="s2">                // Updating the min and max marker sources</span>
+<span class="s2">                const activation_data = data_source.data;</span>
+<span class="s2">                const idx = activation_data[&#39;idx&#39;];</span>
+<span class="s2">                const minlist = activation_data[&#39;minlist&#39;];</span>
+<span class="s2">                const maxlist = activation_data[&#39;maxlist&#39;];</span>
+<span class="s2">                const namelist = activation_data[&#39;namelist&#39;];</span>
+<span class="s2">                const min_marker_x = [];</span>
+<span class="s2">                const min_marker_y = [];</span>
+<span class="s2">                const min_marker_names = [];</span>
+<span class="s2">                const min_marker_min_activations = [];</span>
+<span class="s2">                const min_marker_max_activations = [];</span>
+<span class="s2">                const min_marker_fmt_min_activations = [];</span>
+<span class="s2">                const min_marker_fmt_max_activations = [];</span>
+<span class="s2">                for (let i = 0; i &lt; idx.length; i++) {</span>
+<span class="s2">                    if (minlist[i] &lt; limits_data[&#39;minclip&#39;][0]) {</span>
+<span class="s2">                        min_marker_x.push(idx[i]);</span>
+<span class="s2">                        min_marker_y.push(limits_data[&#39;minclip&#39;][0]);</span>
+<span class="s2">                        min_marker_names.push(namelist[i]);</span>
+<span class="s2">                        min_marker_min_activations.push(minlist[i]);</span>
+<span class="s2">                        min_marker_max_activations.push(maxlist[i]);</span>
+<span class="s2">                        min_marker_fmt_min_activations.push(formatValue(minlist[i]));</span>
+<span class="s2">                        min_marker_fmt_max_activations.push(formatValue(maxlist[i]));</span>
+<span class="s2">                    }</span>
+<span class="s2">                }</span>
+<span class="s2">                min_marker_source.data[&#39;x&#39;] = min_marker_x;</span>
+<span class="s2">                min_marker_source.data[&#39;y&#39;] = min_marker_y;</span>
+<span class="s2">                min_marker_source.data[&#39;names&#39;] = min_marker_names;</span>
+<span class="s2">                min_marker_source.data[&#39;min_activations&#39;] = min_marker_min_activations;</span>
+<span class="s2">                min_marker_source.data[&#39;max_activations&#39;] = min_marker_max_activations;</span>
+<span class="s2">                min_marker_source.data[&#39;fmt_min_activations&#39;] = min_marker_fmt_min_activations;</span>
+<span class="s2">                min_marker_source.data[&#39;fmt_max_activations&#39;] = min_marker_fmt_max_activations;</span>
+<span class="s2">                min_name_filter.booleans = new Array(min_marker_names.length).fill(true);</span>
+
+<span class="s2">                const max_marker_x = [];</span>
+<span class="s2">                const max_marker_y = [];</span>
+<span class="s2">                const max_marker_names = [];</span>
+<span class="s2">                const max_marker_min_activations = [];</span>
+<span class="s2">                const max_marker_max_activations = [];</span>
+<span class="s2">                const max_marker_fmt_min_activations = [];</span>
+<span class="s2">                const max_marker_fmt_max_activations = [];</span>
+<span class="s2">                for (let i = 0; i &lt; idx.length; i++) {</span>
+<span class="s2">                    if (maxlist[i] &gt; limits_data[&#39;maxclip&#39;][0]) {</span>
+<span class="s2">                        max_marker_x.push(idx[i]);</span>
+<span class="s2">                        max_marker_y.push(limits_data[&#39;maxclip&#39;][0]);</span>
+<span class="s2">                        max_marker_names.push(namelist[i]);</span>
+<span class="s2">                        max_marker_min_activations.push(minlist[i]);</span>
+<span class="s2">                        max_marker_max_activations.push(maxlist[i]);</span>
+<span class="s2">                        max_marker_fmt_min_activations.push(formatValue(minlist[i]));</span>
+<span class="s2">                        max_marker_fmt_max_activations.push(formatValue(maxlist[i]));</span>
+<span class="s2">                    }</span>
+<span class="s2">                }</span>
+
+<span class="s2">                max_marker_source.data[&#39;x&#39;] = max_marker_x;</span>
+<span class="s2">                max_marker_source.data[&#39;y&#39;] = max_marker_y;</span>
+<span class="s2">                max_marker_source.data[&#39;names&#39;] = max_marker_names;</span>
+<span class="s2">                max_marker_source.data[&#39;min_activations&#39;] = max_marker_min_activations;</span>
+<span class="s2">                max_marker_source.data[&#39;max_activations&#39;] = max_marker_max_activations;</span>
+<span class="s2">                max_marker_source.data[&#39;fmt_min_activations&#39;] = max_marker_fmt_min_activations;</span>
+<span class="s2">                max_marker_source.data[&#39;fmt_max_activations&#39;] = max_marker_fmt_max_activations;</span>
+<span class="s2">                max_name_filter.booleans = new Array(max_marker_names.length).fill(true);</span>
+<span class="s2">                </span>
+<span class="s2">                // Emitting the changes made to ColumnDataSources</span>
+<span class="s2">                limits_source.change.emit();</span>
+<span class="s2">                min_marker_source.change.emit();</span>
+<span class="s2">                max_marker_source.change.emit();</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">customcallbacks</span><span class="o">.</span><span class="n">reset_callback</span> <span class="o">=</span> <span class="n">CustomJS</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">limits_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">limits_source</span><span class="p">,</span>
+                                            <span class="n">data_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">data_source</span><span class="p">,</span>
+                                            <span class="n">default_values_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">default_values_source</span><span class="p">,</span>
+                                            <span class="n">min_marker_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">min_marker_source</span><span class="p">,</span>
+                                            <span class="n">max_marker_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">max_marker_source</span><span class="p">,</span>
+                                            <span class="n">ymax_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymax_input</span><span class="p">,</span>
+                                            <span class="n">ymin_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymin_input</span><span class="p">,</span>
+                                            <span class="n">maxclip_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">maxclip_input</span><span class="p">,</span>
+                                            <span class="n">minclip_input</span><span class="o">=</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">minclip_input</span><span class="p">,</span>
+                                            <span class="n">plot</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+                                            <span class="n">min_name_filter</span><span class="o">=</span><span class="n">tableobjects</span><span class="o">.</span><span class="n">min_name_filter</span><span class="p">,</span>
+                                            <span class="n">max_name_filter</span><span class="o">=</span><span class="n">tableobjects</span><span class="o">.</span><span class="n">max_name_filter</span><span class="p">,</span>
+                                            <span class="p">),</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                // Function to adaptively format numerical values in scientific notation</span>
+<span class="s2">                // if they are large in magnitude</span>
+<span class="s2">                function formatValue(value) {</span>
+<span class="s2">                    if (Math.abs(value) &lt; 1e-3 || Math.abs(value) &gt; 1e3) {</span>
+<span class="s2">                        return value.toExponential(2);</span>
+<span class="s2">                    } else {</span>
+<span class="s2">                        return value.toFixed(2);</span>
+<span class="s2">                    }</span>
+<span class="s2">                }</span>
+<span class="s2">                </span>
+<span class="s2">                // Resetting the limits source with default values</span>
+<span class="s2">                limits_source.data[&#39;ymax&#39;] = default_values_source.data[&#39;default_ymax&#39;];</span>
+<span class="s2">                limits_source.data[&#39;ymin&#39;] = default_values_source.data[&#39;default_ymin&#39;];</span>
+<span class="s2">                limits_source.data[&#39;xmax&#39;] = default_values_source.data[&#39;default_xmax&#39;];</span>
+<span class="s2">                limits_source.data[&#39;xmin&#39;] = default_values_source.data[&#39;default_xmin&#39;];</span>
+<span class="s2">                limits_source.data[&#39;maxclip&#39;] = default_values_source.data[&#39;default_maxclip&#39;];</span>
+<span class="s2">                limits_source.data[&#39;minclip&#39;] = default_values_source.data[&#39;default_minclip&#39;];</span>
+<span class="s2">                const limits_data = limits_source.data;</span>
+
+<span class="s2">                // Resetting the plot ranges</span>
+<span class="s2">                plot.y_range.start = limits_data[&#39;ymin&#39;][0];</span>
+<span class="s2">                plot.y_range.end = limits_data[&#39;ymax&#39;][0];</span>
+<span class="s2">                plot.x_range.start = limits_data[&#39;xmin&#39;][0];</span>
+<span class="s2">                plot.x_range.end = limits_data[&#39;xmax&#39;][0];</span>
+
+<span class="s2">                // Resetting the input widget values</span>
+<span class="s2">                ymax_input.value = limits_data[&#39;ymax&#39;][0].toString();</span>
+<span class="s2">                ymin_input.value = limits_data[&#39;ymin&#39;][0].toString();</span>
+<span class="s2">                maxclip_input.value = limits_data[&#39;maxclip&#39;][0].toString();</span>
+<span class="s2">                minclip_input.value = limits_data[&#39;minclip&#39;][0].toString();</span>
+<span class="s2">                </span>
+<span class="s2">                // Updating the min and max marker sources</span>
+<span class="s2">                const activation_data = data_source.data;</span>
+<span class="s2">                const idx = activation_data[&#39;idx&#39;];</span>
+<span class="s2">                const minlist = activation_data[&#39;minlist&#39;];</span>
+<span class="s2">                const maxlist = activation_data[&#39;maxlist&#39;];</span>
+<span class="s2">                const namelist = activation_data[&#39;namelist&#39;];</span>
+<span class="s2">                const min_marker_x = [];</span>
+<span class="s2">                const min_marker_y = [];</span>
+<span class="s2">                const min_marker_names = [];</span>
+<span class="s2">                const min_marker_min_activations = [];</span>
+<span class="s2">                const min_marker_max_activations = [];</span>
+<span class="s2">                const min_marker_fmt_min_activations = [];</span>
+<span class="s2">                const min_marker_fmt_max_activations = [];</span>
+<span class="s2">                for (let i = 0; i &lt; idx.length; i++) {</span>
+<span class="s2">                    if (minlist[i] &lt; limits_data[&#39;minclip&#39;][0]) {</span>
+<span class="s2">                        min_marker_x.push(idx[i]);</span>
+<span class="s2">                        min_marker_y.push(limits_data[&#39;minclip&#39;][0]);</span>
+<span class="s2">                        min_marker_names.push(namelist[i]);</span>
+<span class="s2">                        min_marker_min_activations.push(minlist[i]);</span>
+<span class="s2">                        min_marker_max_activations.push(maxlist[i]);</span>
+<span class="s2">                        min_marker_fmt_min_activations.push(formatValue(minlist[i]));</span>
+<span class="s2">                        min_marker_fmt_max_activations.push(formatValue(maxlist[i]));</span>
+<span class="s2">                    }</span>
+<span class="s2">                }</span>
+<span class="s2">                min_marker_source.data[&#39;x&#39;] = min_marker_x;</span>
+<span class="s2">                min_marker_source.data[&#39;y&#39;] = min_marker_y;</span>
+<span class="s2">                min_marker_source.data[&#39;names&#39;] = min_marker_names;</span>
+<span class="s2">                min_marker_source.data[&#39;min_activations&#39;] = min_marker_min_activations;</span>
+<span class="s2">                min_marker_source.data[&#39;max_activations&#39;] = min_marker_max_activations;</span>
+<span class="s2">                min_marker_source.data[&#39;fmt_min_activations&#39;] = min_marker_fmt_min_activations;</span>
+<span class="s2">                min_marker_source.data[&#39;fmt_max_activations&#39;] = min_marker_fmt_max_activations;</span>
+<span class="s2">                min_name_filter.booleans = new Array(min_marker_names.length).fill(true);</span>
+
+<span class="s2">                const max_marker_x = [];</span>
+<span class="s2">                const max_marker_y = [];</span>
+<span class="s2">                const max_marker_names = [];</span>
+<span class="s2">                const max_marker_min_activations = [];</span>
+<span class="s2">                const max_marker_max_activations = [];</span>
+<span class="s2">                const max_marker_fmt_min_activations = [];</span>
+<span class="s2">                const max_marker_fmt_max_activations = [];</span>
+<span class="s2">                for (let i = 0; i &lt; idx.length; i++) {</span>
+<span class="s2">                    if (maxlist[i] &gt; limits_data[&#39;maxclip&#39;][0]) {</span>
+<span class="s2">                        max_marker_x.push(idx[i]);</span>
+<span class="s2">                        max_marker_y.push(limits_data[&#39;maxclip&#39;][0]);</span>
+<span class="s2">                        max_marker_names.push(namelist[i]);</span>
+<span class="s2">                        max_marker_min_activations.push(minlist[i]);</span>
+<span class="s2">                        max_marker_max_activations.push(maxlist[i]);</span>
+<span class="s2">                        max_marker_fmt_min_activations.push(formatValue(minlist[i]));</span>
+<span class="s2">                        max_marker_fmt_max_activations.push(formatValue(maxlist[i]));</span>
+<span class="s2">                    }</span>
+<span class="s2">                }</span>
+
+<span class="s2">                max_marker_source.data[&#39;x&#39;] = max_marker_x;</span>
+<span class="s2">                max_marker_source.data[&#39;y&#39;] = max_marker_y;</span>
+<span class="s2">                max_marker_source.data[&#39;names&#39;] = max_marker_names;</span>
+<span class="s2">                max_marker_source.data[&#39;min_activations&#39;] = max_marker_min_activations;</span>
+<span class="s2">                max_marker_source.data[&#39;max_activations&#39;] = max_marker_max_activations;</span>
+<span class="s2">                max_marker_source.data[&#39;fmt_min_activations&#39;] = max_marker_fmt_min_activations;</span>
+<span class="s2">                max_marker_source.data[&#39;fmt_max_activations&#39;] = max_marker_fmt_max_activations;</span>
+<span class="s2">                max_name_filter.booleans = new Array(max_marker_names.length).fill(true);</span>
+<span class="s2">                </span>
+<span class="s2">                // Emitting the changes made to ColumnDataSources</span>
+<span class="s2">                limits_source.change.emit();</span>
+<span class="s2">                min_marker_source.change.emit();</span>
+<span class="s2">                max_marker_source.change.emit();</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">customcallbacks</span><span class="o">.</span><span class="n">min_name_filter_callback</span> <span class="o">=</span> <span class="n">CustomJS</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">marker_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">min_marker_source</span><span class="p">,</span>
+                                                      <span class="n">text_filter</span><span class="o">=</span><span class="n">tableobjects</span><span class="o">.</span><span class="n">min_name_filter</span><span class="p">,</span>
+                                                      <span class="p">),</span>
+                                            <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                // Filter all names having entered pattern as a substring</span>
+<span class="s2">                text_filter.booleans = Array.from(marker_source.data[&#39;names&#39;]).map(t =&gt; t.includes(cb_obj.value));</span>
+<span class="s2">                marker_source.change.emit();</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">customcallbacks</span><span class="o">.</span><span class="n">max_name_filter_callback</span> <span class="o">=</span> <span class="n">CustomJS</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">marker_source</span><span class="o">=</span><span class="n">datasources</span><span class="o">.</span><span class="n">max_marker_source</span><span class="p">,</span>
+                                                      <span class="n">text_filter</span><span class="o">=</span><span class="n">tableobjects</span><span class="o">.</span><span class="n">max_name_filter</span><span class="p">,</span>
+                                                      <span class="p">),</span>
+                                            <span class="n">code</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                // Filter all names having entered pattern as a substring</span>
+<span class="s2">                text_filter.booleans = Array.from(marker_source.data[&#39;names&#39;]).map(t =&gt; t.includes(cb_obj.value));</span>
+<span class="s2">                marker_source.change.emit();</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">customcallbacks</span>
+
+    <span class="k">def</span> <span class="nf">_attach_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">js_on_event</span><span class="p">(</span><span class="n">Reset</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">reset_callback</span><span class="p">)</span>
+        <span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymax_input</span><span class="o">.</span><span class="n">js_on_change</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">limit_change_callback</span><span class="p">)</span>
+        <span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymin_input</span><span class="o">.</span><span class="n">js_on_change</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">limit_change_callback</span><span class="p">)</span>
+        <span class="n">inputwidgets</span><span class="o">.</span><span class="n">maxclip_input</span><span class="o">.</span><span class="n">js_on_change</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">limit_change_callback</span><span class="p">)</span>
+        <span class="n">inputwidgets</span><span class="o">.</span><span class="n">minclip_input</span><span class="o">.</span><span class="n">js_on_change</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">limit_change_callback</span><span class="p">)</span>
+        <span class="n">inputwidgets</span><span class="o">.</span><span class="n">min_name_input</span><span class="o">.</span><span class="n">js_on_change</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">min_name_filter_callback</span><span class="p">)</span>
+        <span class="n">inputwidgets</span><span class="o">.</span><span class="n">max_name_input</span><span class="o">.</span><span class="n">js_on_change</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">max_name_filter_callback</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_create_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="p">,</span> <span class="n">tableobjects</span><span class="p">):</span>
+        <span class="n">heading_1</span> <span class="o">=</span> <span class="n">Div</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;&lt;h2&gt;Quant Stats Visualizer&lt;/h2&gt;&quot;</span><span class="p">)</span>
+        <span class="n">heading_2</span> <span class="o">=</span> <span class="n">Div</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;&lt;h2&gt;List of layers with Min activation/weight lesser than lower threshold&lt;/h2&gt;&quot;</span><span class="p">)</span>
+        <span class="n">heading_3</span> <span class="o">=</span> <span class="n">Div</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;&lt;h2&gt;List of layers with Max activation/weight higher than upper threshold&lt;/h2&gt;&quot;</span><span class="p">)</span>
+
+        <span class="n">sp1</span> <span class="o">=</span> <span class="n">Spacer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+        <span class="n">row1</span> <span class="o">=</span> <span class="n">row</span><span class="p">(</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymin_input</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="o">.</span><span class="n">ymax_input</span><span class="p">)</span>
+        <span class="n">row2</span> <span class="o">=</span> <span class="n">row</span><span class="p">(</span><span class="n">inputwidgets</span><span class="o">.</span><span class="n">minclip_input</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="o">.</span><span class="n">maxclip_input</span><span class="p">)</span>
+        <span class="n">inputs1</span> <span class="o">=</span> <span class="n">column</span><span class="p">(</span><span class="n">row1</span><span class="p">,</span> <span class="n">row2</span><span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">column</span><span class="p">(</span><span class="n">heading_1</span><span class="p">,</span> <span class="n">inputs1</span><span class="p">,</span> <span class="n">sp1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+                        <span class="n">row</span><span class="p">(</span><span class="n">column</span><span class="p">(</span><span class="n">heading_2</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="o">.</span><span class="n">min_name_input</span><span class="p">,</span> <span class="n">tableobjects</span><span class="o">.</span><span class="n">min_data_table</span><span class="p">),</span>
+                            <span class="n">column</span><span class="p">(</span><span class="n">heading_3</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="o">.</span><span class="n">max_name_input</span><span class="p">,</span> <span class="n">tableobjects</span><span class="o">.</span><span class="n">max_data_table</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">layout</span>
+
+    <span class="k">def</span> <span class="nf">export_plot_as_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for constructing the visualization and saving it to the given path.</span>
+
+<span class="sd">        :param save_path: Path for saving the visualization.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">curdoc</span><span class="p">()</span><span class="o">.</span><span class="n">theme</span> <span class="o">=</span> <span class="s1">&#39;light_minimal&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span>
+               <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+               <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Min Max Activations/Weights of quantized modules for given model&quot;</span><span class="p">,</span>
+               <span class="n">x_axis_label</span><span class="o">=</span><span class="s2">&quot;Layer index&quot;</span><span class="p">,</span>
+               <span class="n">y_axis_label</span><span class="o">=</span><span class="s2">&quot;Activation/Weight&quot;</span><span class="p">,</span>
+               <span class="n">tools</span><span class="o">=</span><span class="s2">&quot;pan,wheel_zoom,box_zoom&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Defining the default values of plotting parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_xmax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_xmin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_maxclip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymax&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_minclip&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymin&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">x_range</span> <span class="o">=</span> <span class="n">Range1d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">y_range</span> <span class="o">=</span> <span class="n">Range1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymax&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">[</span><span class="s1">&#39;default_ymin&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Creating and adding a reset tool</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">ResetTool</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">add_tools</span><span class="p">(</span><span class="n">rt</span><span class="p">)</span>
+
+        <span class="c1"># Defining Bokeh ColumnDataSources</span>
+        <span class="n">datasources</span> <span class="o">=</span> <span class="n">DataSources</span><span class="p">(</span><span class="n">idx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span>
+                                  <span class="n">namelist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="p">,</span>
+                                  <span class="n">minlist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">minlist</span><span class="p">,</span>
+                                  <span class="n">maxlist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxlist</span><span class="p">,</span>
+                                  <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+                                  <span class="n">default_values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">,</span>
+                                  <span class="p">)</span>
+
+        <span class="c1"># Creating plot objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_plot_lines</span><span class="p">(</span><span class="n">datasources</span><span class="p">)</span>
+
+        <span class="c1"># Marker points to see which layers cross the thresholds</span>
+        <span class="n">min_markers</span><span class="p">,</span> <span class="n">max_markers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_min_max_markers</span><span class="p">(</span><span class="n">datasources</span><span class="p">)</span>
+
+        <span class="c1"># Defining a hover functionality to see layer details on hovering on the marker points</span>
+        <span class="n">min_hover</span><span class="p">,</span> <span class="n">max_hover</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_min_max_hovertools</span><span class="p">(</span><span class="n">min_markers</span><span class="p">,</span> <span class="n">max_markers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">add_tools</span><span class="p">(</span><span class="n">min_hover</span><span class="p">,</span> <span class="n">max_hover</span><span class="p">)</span>
+
+        <span class="c1"># Defining the table objects and name filter views</span>
+        <span class="n">tableobjects</span> <span class="o">=</span> <span class="n">TableObjects</span><span class="p">(</span><span class="n">datasources</span><span class="p">)</span>
+
+        <span class="c1"># Creating the input widgets</span>
+        <span class="n">inputwidgets</span> <span class="o">=</span> <span class="n">InputWidgets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_values</span><span class="p">)</span>
+
+        <span class="c1"># Defining Custom JavaScript callbacks</span>
+        <span class="n">customcallbacks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_define_callbacks</span><span class="p">(</span><span class="n">datasources</span><span class="p">,</span> <span class="n">tableobjects</span><span class="p">,</span> <span class="n">inputwidgets</span><span class="p">)</span>
+
+        <span class="c1"># Attach events to corresponding callbacks</span>
+        <span class="n">curdoc</span><span class="p">()</span><span class="o">.</span><span class="n">js_on_event</span><span class="p">(</span><span class="n">DocumentReady</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="o">.</span><span class="n">reset_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attach_callbacks</span><span class="p">(</span><span class="n">inputwidgets</span><span class="p">,</span> <span class="n">customcallbacks</span><span class="p">)</span>
+
+        <span class="c1"># Define the formatting</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_layout</span><span class="p">(</span><span class="n">inputwidgets</span><span class="p">,</span> <span class="n">tableobjects</span><span class="p">)</span>
+
+        <span class="c1"># Save as standalone html</span>
+        <span class="n">save</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
