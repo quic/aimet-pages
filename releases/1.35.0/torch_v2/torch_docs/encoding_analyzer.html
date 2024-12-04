@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Encoding Analyzers &mdash; AI Model Efficiency Toolkit Documentation: ver 1.35.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="quantization.float" href="api/quantization/float/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.35.0
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/quantization/affine/index.html">quantization.affine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/quantization/float/index.html">quantization.float</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Encoding Analyzers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Encoding Analyzers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/torch_docs/encoding_analyzer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="api/quantization/float/index.html" class="btn btn-neutral float-left" title="quantization.float" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="encoding-analyzers">
+<span id="api-torch-encoding-analyzer"></span><h1>Encoding Analyzers<a class="headerlink" href="#encoding-analyzers" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.quantization.encoding_analyzer.</span></span><span class="sig-name descname"><span class="pre">EncodingAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantization/encoding_analyzer.html#EncodingAnalyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer" title="Permalink to this definition"></a></dt>
+<dd><p>Base class that gathers statistics of input data and computes encodings</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer.compute_encodings">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_symmetric</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantization/encoding_analyzer.html#EncodingAnalyzer.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer.compute_encodings" title="Permalink to this definition"></a></dt>
+<dd><p>Computes encodings based on the input data &amp; calibration scheme and returns the encoding minimum and maximum value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_steps</strong> (<em>int</em>) – Number of steps used in quantization.</p></li>
+<li><p><strong>is_symmetric</strong> (<em>bool</em>) – True if encodings are symmetric</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Encoding min and max as a tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer.reset_stats">
+<span class="sig-name descname"><span class="pre">reset_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantization/encoding_analyzer.html#EncodingAnalyzer.reset_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer.reset_stats" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the internal stats</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer.update_stats">
+<span class="sig-name descname"><span class="pre">update_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantization/encoding_analyzer.html#EncodingAnalyzer.update_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.quantization.encoding_analyzer.EncodingAnalyzer.update_stats" title="Permalink to this definition"></a></dt>
+<dd><p>Updates the internal statistics given the input data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_tensor</strong> (<em>torch.Tensor</em>) – Input data</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="variants">
+<h2>Variants<a class="headerlink" href="#variants" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.quantization.encoding_analyzer.</span></span><span class="sig-name descname"><span class="pre">MinMaxEncodingAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantization/encoding_analyzer.html#MinMaxEncodingAnalyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.quantization.encoding_analyzer.MinMaxEncodingAnalyzer" title="Permalink to this definition"></a></dt>
+<dd><p>EncodingAnalyzer subclass which uses min-max calibration. This involves tracking the minimum and maximum observed values and computing the min-max range as <span class="math notranslate nohighlight">\([min(input), max(input)]\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shape</strong> (<em>tuple</em>) – Shape of calculated encoding</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.encoding_analyzer</span> <span class="kn">import</span> <span class="n">MinMaxEncodingAnalyzer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span> <span class="o">=</span> <span class="n">MinMaxEncodingAnalyzer</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">is_symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">(tensor([-2.0991]), tensor([2.3696]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">reset_stats</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="go">_MinMaxRange(min=tensor([-2.1721]), max=tensor([2.2592]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">is_symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">(tensor([-2.1721]), tensor([2.2592]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.quantization.encoding_analyzer.</span></span><span class="sig-name descname"><span class="pre">SqnrEncodingAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2048</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asymmetric_delta_candidates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">17</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric_delta_candidates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_candidates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_parallelism</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantization/encoding_analyzer.html#SqnrEncodingAnalyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.quantization.encoding_analyzer.SqnrEncodingAnalyzer" title="Permalink to this definition"></a></dt>
+<dd><p>EncodingAnalyzer subclass which uses SQNR calibration. This involves recording values in a histogram and computing the min-max range based on values that produce the lowest expected SQNR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> (<em>tuple</em>) – Shape of calculated encoding</p></li>
+<li><p><strong>num_bins</strong> (<em>int</em>) – Number of bins used to create the histogram</p></li>
+<li><p><strong>asymmetric_delta_candidates</strong> (<em>int</em>) – Number of delta values to search over in asymmetric mode</p></li>
+<li><p><strong>symmetric_delta_candidates</strong> (<em>int</em>) – Number of delta values to search over in symmetric mode</p></li>
+<li><p><strong>offset_candidates</strong> (<em>int</em>) – Number of offset values to search over in asymmetric mode</p></li>
+<li><p><strong>max_parallelism</strong> (<em>int</em>) – Maximum number of encodings to process in parallel (higher number results in higher memory usage but faster computation)</p></li>
+<li><p><strong>gamma</strong> (<em>float</em>) – Weighting factor on clipping noise (higher value results in less clipping noise)</p></li>
+<li><p><strong>percentile</strong> (<em>float</em>) – Percentile value which is used to clip values</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.encoding_analyzer</span> <span class="kn">import</span> <span class="n">SqnrEncodingAnalyzer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span> <span class="o">=</span> <span class="n">SqnrEncodingAnalyzer</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">num_bins</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">gamma</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">is_symmetric</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="go">(tensor([-2.3612]), tensor([2.8497]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">reset_stats</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="go">[_Histogram(histogram=tensor([ 2.,  0.,  8.,  8., 16., 22., 23., 12.,  6.,  3.]), bin_edges=tensor([-2.8907, -2.3625, -1.8343, -1.3061, -0.7779, -0.2497,  0.2784,  0.8066, 1.3348,  1.8630,  2.3912]), min=tensor(-2.8907), max=tensor(2.3912))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">is_symmetric</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="go">(tensor([-2.7080]), tensor([2.2438]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.quantization.encoding_analyzer.</span></span><span class="sig-name descname"><span class="pre">PercentileEncodingAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2048</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantization/encoding_analyzer.html#PercentileEncodingAnalyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.quantization.encoding_analyzer.PercentileEncodingAnalyzer" title="Permalink to this definition"></a></dt>
+<dd><p>EncodingAnalyzer subclass which uses percentile calibration. This involves recording values in a histogram and computing the min-max range given a percentile value <span class="math notranslate nohighlight">\(p\)</span>. The range would be computed after clipping (100 - <span class="math notranslate nohighlight">\(p\)</span>)% of the largest and smallest observed values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shape</strong> (<em>tuple</em>) – Shape of calculated encoding</p></li>
+<li><p><strong>num_bins</strong> (<em>int</em>) – Number of bins used to create the histogram</p></li>
+<li><p><strong>percentile</strong> (<em>float</em>) – Percentile value which is used to clip values</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aimet_torch.v2.quantization.encoding_analyzer</span> <span class="kn">import</span> <span class="n">PercentileEncodingAnalyzer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span> <span class="o">=</span> <span class="n">PercentileEncodingAnalyzer</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">num_bins</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">percentile</span> <span class="o">=</span> <span class="mi">80</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">is_symmetric</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="go">(tensor([-1.1188]), tensor([0.3368]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">reset_stats</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="go">[_Histogram(histogram=tensor([ 1.,  1.,  8., 13., 19., 27., 16., 10.,  3.,  2.]), bin_edges=tensor([-2.5710, -2.0989, -1.6269, -1.1548, -0.6827, -0.2106,  0.2614,  0.7335, 1.2056,  1.6776,  2.1497]), min=tensor(-2.5710), max=tensor(2.1497))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoding_analyzer</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">num_steps</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">is_symmetric</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="go">(tensor([-1.1548]), tensor([0.2614]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api/quantization/float/index.html" class="btn btn-neutral float-left" title="quantization.float" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
