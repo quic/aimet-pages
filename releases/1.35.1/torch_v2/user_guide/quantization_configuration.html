@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantization simulation configuration &mdash; AI Model Efficiency Toolkit Documentation: ver 1.35.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.35.1
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/affine/index.html">quantization.affine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/encoding_analyzer.html">Encoding Analyzers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quantization simulation configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/quantization_configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quantization-simulation-configuration">
+<span id="ug-quantsim-config"></span><h1>Quantization simulation configuration<a class="headerlink" href="#quantization-simulation-configuration" title="Permalink to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>You can configure settings such as quantizer enablement, per-channel quantization, symmetric quantization, and specifying fused ops when quantizing, for example to match the quantization rules for a particular runtime you would like to simulate.</p>
+<p>Quantizer placement and settings are set in a JSON configuration file. The configuration is applied when the Quantization Simulation API is called.</p>
+<p>For examples on how to provide a specific configuration file to AIMET Quantization Simulation,
+see <span class="xref std std-doc">PyTorch Quantsim</span>, <span class="xref std std-doc">TensorFlow Quantsim</span>, and <span class="xref std std-doc">Keras Quantsim</span>.</p>
+<p>Begin with the default configuration file, <cite>default-quantsim-config-file</cite>.</p>
+<p>Most of the time, no changes to the default configuration file are needed.</p>
+</section>
+<section id="configuration-file-structure">
+<h2>Configuration file structure<a class="headerlink" href="#configuration-file-structure" title="Permalink to this heading"></a></h2>
+<p>The configuration file contains six main sections, ordered from less- to more specific:</p>
+<img alt="../_images/quantsim_config_file.png" src="../_images/quantsim_config_file.png" />
+<p>Rules defined in a more general section are overridden by subsequent rules defined in a more specific case.
+For example, you can specify in “defaults” that no layers be quantized, but then turn on quantization for specific layers in the “op_type” section.</p>
+</section>
+<section id="modifying-configuration-file-sections">
+<h2>Modifying configuration file sections<a class="headerlink" href="#modifying-configuration-file-sections" title="Permalink to this heading"></a></h2>
+<p>Configure individual sections as described here.</p>
+<ol class="arabic">
+<li><p><strong>defaults</strong>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;defaults&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;ops&quot;</span><span class="p">:</span> <span class="p">{</span>                                <span class="c1"># Required dictionary, but can be empty</span>
+        <span class="s2">&quot;is_output_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>      <span class="c1"># Optional: Possible settings: True</span>
+        <span class="s2">&quot;is_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span>             <span class="c1"># Optional: Possible settings: True, False</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>                             <span class="c1"># Required dictionary, but can be empty</span>
+        <span class="s2">&quot;is_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>             <span class="c1"># Optional: Possible settings: True, False</span>
+        <span class="s2">&quot;is_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>              <span class="c1"># Optional: Possible settings: True, False</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;strict_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>            <span class="c1"># Optional: Possible settings: True, False</span>
+    <span class="s2">&quot;unsigned_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>           <span class="c1"># Optional: Possible settings: True, False</span>
+    <span class="s2">&quot;per_channel_quantization&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span>     <span class="c1"># Optional: Possible settings: True, False</span>
+    <span class="p">},</span>
+</pre></div>
+</div>
+<p>In the defaults section, include an “ops” dictionary and a “params” dictionary (though these dictionaries can be empty).</p>
+<p>The “ops” dictionary holds settings that apply to all activation quantizers in the model.
+The following settings are available:</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>is_output_quantized:</dt><dd><p>Optional. If included, must be “True”.
+Including this setting turns on all output activation quantizers by default.
+If not specified, all activation quantizers are disabled to start.</p>
+<p>In cases when the runtime quantizes input activations, this is only done for certain op types.
+To configure these settings for specific op types see below.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>is_symmetric:</dt><dd><p>Optional. If included, value is “True” or “False”.</p>
+<p>“True” places all activation quantizers in symmetric mode by default.</p>
+<p>“False”, or omitting the parameter, sets all activation quantizers to asymmetric mode by default.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The “params” dictionary holds settings that apply to all parameter quantizers in the model.
+The following settings are available:</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>is_quantized:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” turns on all parameter quantizers by default.</p>
+<p>“False”, or omitting the parameter, disables all parameter quantizers by default.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>is_symmetric:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” places all parameter quantizers in symmetric mode by default.</p>
+<p>“False”, or omitting the parameter, sets all parameter quantizers to asymmetric mode by default.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>Outside the “ops” and “params” dictionaries, the following additional quantizer settings are available:</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>strict_symmetric:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” causes quantizers configured in symmetric mode to use strict symmetric quantization.</p>
+<p>“False”, or omitting the parameter, causes quantizers configured in symmetric mode to not use strict symmetric quantization.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>unsigned_symmetric:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” causes quantizers configured in symmetric mode use unsigned symmetric quantization when available.</p>
+<p>“False”, or omitting the parameter, causes quantizers configured in symmetric mode to not use unsigned symmetric quantization.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>per_channel_quantization:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” causes parameter quantizers to use per-channel quantization rather than per-tensor quantization.</p>
+<p>“False” or omitting the parameter, causes parameter quantizers to use per-tensor quantization.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><strong>params</strong>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>                         <span class="c1"># Can specify 0 or more param types</span>
+        <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;is_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>     <span class="c1"># Optional: Possible settings: True, False</span>
+            <span class="s2">&quot;is_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>      <span class="c1"># Optional: Possible settings: True, False</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+</pre></div>
+</div>
+<p>In the params section, configure settings for parameters that apply throughout the model.
+For example, adding settings for “weight” affects all parameters of type “weight” in the model.
+Supported parameter types include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>weight</p></li>
+<li><p>bias</p></li>
+</ul>
+</div></blockquote>
+<p>For each parameter type, the following settings are available:</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>is_quantized:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” turns on all parameter quantizers of that type.</p>
+<p>“False” disables all parameter quantizers of that type.</p>
+<p>Omitting the setting causes the parameter to use the setting specified by the defaults section.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>is_symmetric:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” places all parameter quantizers of that type in symmetric mode.</p>
+<p>“False” places all parameter quantizers of that type in asymmetric mode.</p>
+<p>Omitting the setting causes the parameter to use the setting specified by the defaults section.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><p><strong>op_type</strong>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;op_type&quot;</span><span class="p">:</span> <span class="p">{</span>                                <span class="c1"># Can specify 0 or more ONNX op types</span>
+        <span class="s2">&quot;Gemm&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;is_input_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>       <span class="c1"># Optional: Possible settings: True</span>
+            <span class="s2">&quot;is_output_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;False&quot;</span><span class="p">,</span>     <span class="c1"># Optional: Possible settings: True, False</span>
+            <span class="s2">&quot;per_channel_quantization&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="c1"># Optional: Possible settings: True, False</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>                         <span class="c1"># Optional, can specify 1 or more param types</span>
+                <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;is_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>     <span class="c1"># Optional: Possible settings: True, False</span>
+                    <span class="s2">&quot;is_symmetric&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>      <span class="c1"># Optional: Possible settings: True, False</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+</pre></div>
+</div>
+<p>In the op_type section, configure settings affecting particular op types.
+The configuration file supports ONNX op types, and internally maps the type to a PyTorch or TensorFlow op type depending on which framework is used.</p>
+<p>For each op type, the following settings are available:</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>is_input_quantized:</dt><dd><p>Optional. If included, must be “True”.</p>
+<p>Including this setting turns on input quantization for all ops of this op type.</p>
+<p>Omitting the setting keeps input quantization disabled for all ops of this op type.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>is_output_quantized:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” turns on output quantization for all ops of this op type.</p>
+<p>“False” disables output quantization for all ops of this op type.</p>
+<p>Omitting the setting causes output quantizers of this op type to fall back to the setting specified by the defaults section.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>is_symmetric:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” places all quantizers of this op type in symmetric mode.</p>
+<p>“False” places all quantizers of this op type in asymmetric mode.</p>
+<p>Omitting the setting causes quantizers of this op type to fall back to the setting specified by the defaults section.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>per_channel_quantization:</dt><dd><p>Optional.  If included, value is “True” or “False”.</p>
+<p>“True” sets parameter quantizers of this op type to use per-channel quantization rather than per-tensor quantization.</p>
+<p>“False” sets parameter quantizers of this op type to use per-tensor quantization.</p>
+<p>Omitting the setting causes parameter quantizers of this op type to fall back to the setting specified by the defaults section.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>For a particular op type, settings for particular parameter types can also be specified.
+For example, specifying settings for weight parameters of a Conv op type affects only Conv weights and not weights of Gemm op types.</p>
+<p>To specify settings for param types of an op type, include a “params” dictionary under the op type.
+Settings for this section follow the same convention as settings for parameter types in the “params” section, but only affect parameters for this op type.</p>
+</div></blockquote>
+</li>
+<li><p><strong>supergroups</strong>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;supergroups&quot;</span><span class="p">:</span> <span class="p">[</span>    <span class="c1"># Can specify 0 or more supergroup lists made up of ONNX op types</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Conv&quot;</span><span class="p">,</span> <span class="s2">&quot;Relu&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Conv&quot;</span><span class="p">,</span> <span class="s2">&quot;Clip&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Add&quot;</span><span class="p">,</span> <span class="s2">&quot;Relu&quot;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;op_list&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Gemm&quot;</span><span class="p">,</span> <span class="s2">&quot;Relu&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+</pre></div>
+</div>
+<p>Supergroups are a sequence of operations that are fused during quantization, meaning no quantization noise is introduced between members of the supergroup.
+For example, specifying [“Conv, “Relu”] as a supergroup disables quantization between any adjacent Conv and Relu ops in the model.</p>
+<p>When searching for supergroups in the model, only sequential groups of ops with no branches in between are matched with supergroups defined in the list.
+Using [“Conv”, “Relu”] as an example, if there were a Conv op in the model whose output is used by both a Relu op and a second op, the supergroup would not include those Conv and Relu ops.</p>
+<p>To specify supergroups in the config file, add each entry as a list of op type strings.
+The configuration file supports ONNX op types, and internally maps the type to a PyTorch or TensorFlow op type depending on which framework is used.</p>
+</div></blockquote>
+</li>
+<li><p><strong>model_input</strong>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;model_input&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_input_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>    <span class="c1"># Optional: Possible settings: True</span>
+    <span class="p">},</span>
+</pre></div>
+</div>
+<p>Use the “model_input” section to configure the quantization of inputs to the model.
+The following setting is available:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>is_input_quantized:</dt><dd><p>Optional. If included, must be “True”.
+Including this setting turns on quantization for input quantizers to the model.
+Omitting the setting keeps input quantizers at settings resulting from more general configurations.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>model_output</strong>:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="s2">&quot;model_output&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_output_quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span>   <span class="c1"># Optional: Possible settings: True</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Use the “model_output” section to configure the quantization of outputs of the model.
+The following setting is available:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>is_output_quantized:</dt><dd><p>Optional. If included, it must be set to “True”.
+Including this setting turns on quantization for output quantizers of the model.
+Omitting the setting keeps input quantizers at settings resulting from more general configurations.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

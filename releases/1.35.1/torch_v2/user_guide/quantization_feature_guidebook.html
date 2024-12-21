@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMET quantization diagnostics &mdash; AI Model Efficiency Toolkit Documentation: ver 1.35.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.35.1
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/affine/index.html">quantization.affine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/encoding_analyzer.html">Encoding Analyzers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AIMET quantization diagnostics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/quantization_feature_guidebook.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="aimet-quantization-diagnostics">
+<span id="ug-quant-debug"></span><h1>AIMET quantization diagnostics<a class="headerlink" href="#aimet-quantization-diagnostics" title="Permalink to this heading"></a></h1>
+<p>AIMET supports various neural network quantization techniques. See <a class="reference internal" href="index.html#ug-index"><span class="std std-ref">User Guide</span></a>.</p>
+<p>If the model’s performance is still not satisfactory after applying an AIMET quantization feature, we recommend a set of diagnostic steps to identify the bottlenecks and improve performance. These debugging steps can provide insights as to why a quantized model underperforms and help to address the underlying issues, but they are not algorithmic. Some trial and error might be required.</p>
+<p>The steps are shown as a flow chart in the following figure and are described in more detail below:</p>
+<a class="reference internal image-reference" href="../_images/quantization_debugging_flow_chart.png"><img alt="../_images/quantization_debugging_flow_chart.png" src="../_images/quantization_debugging_flow_chart.png" style="width: 700px; height: 800px;" />
+</a>
+<dl class="simple">
+<dt><strong>1. FP32 confidence check</strong></dt><dd><p>First, ensure that the floating-point and quantized model behave similarly in the forward pass, especially when using custom quantization pipelines. Set the quantized model bit-width to 32 bits for both weights and activation, or by-pass the quantization operation if possible, and check that the accuracy matches that of the FP32 model.</p>
+</dd>
+<dt><strong>2. Weights or activations quantization</strong></dt><dd><p>Next, identify how activation or weight quantization impacts the performance independently. Does performance recover if all weights are quantized to a higher bit-width while activations are kept in a lower bitwidth, or vice versa? This step can show the relative contribution of activations and weight quantization to the overall performance drop and point toward the appropriate solution.</p>
+</dd>
+<dt><strong>3. Fixing weight quantization</strong></dt><dd><p>If the previous step shows that weight quantization causes significant accuracy drop, try the following solutions:</p>
+<ol class="arabic simple">
+<li><p>Apply cross-layer equalization (CLE) if not already implemented, especially for models with depth-wise separable convolutions.</p></li>
+<li><p>Try per-channel quantization. This addresses the issue of uneven per-channel weight distribution.</p></li>
+<li><p>Apply bias correction or AdaRound if calibration data is available.</p></li>
+</ol>
+</dd>
+<dt><strong>4. Fixing activation quantization</strong></dt><dd><p>Generic CLE can lead to uneven activation distribution. To reduce the quantization error from activation quantization, try using different range setting methods or adjust CLE to take activation quantization ranges into account.</p>
+</dd>
+<dt><strong>5. Doing per-layer analysis</strong></dt><dd><p>If global solutions have not restored accuracy to acceptable levels, consider each quantizer individually. Set each quantizer sequentially to the target bit-width while holding the rest of the network at 32 bits (see inner <cite>for</cite> loop in figure.</p>
+</dd>
+<dt><strong>6. Visualizing layers</strong></dt><dd><p>If the quantization of an individual tensor leads to significant accuracy drop, try visualizing the tensor distribution at different granularities, for example per-channel, and dimensions,for example per-token or per-embedding for activations in BERT.</p>
+</dd>
+<dt><strong>7. Fixing individual quantizers</strong></dt><dd><p>The previous step (visualization) can reveal the source of a tensor’s sensitivity to quantization. Some common solutions involve custom range setting for this quantizer or allowing a higher bit-width for a problematic quantizer. If the problem is fixed and the accuracy recovers, continue to the next quantizer. If not, you might have to resort to other methods, such as quantization-aware training (QAT).</p>
+</dd>
+<dt><strong>8. Quantize the model</strong></dt><dd><p>After you complete these steps, quantize the complete model to the desired bit-width. If the accuracy is acceptable, this yields a final quantized model ready to use. Otherwise, consider higher bit-widths and smaller granularities or revert to more powerful quantization methods, such as quantization-aware training.</p>
+</dd>
+</dl>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

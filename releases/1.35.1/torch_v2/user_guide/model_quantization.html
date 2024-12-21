@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIMET model quantization &mdash; AI Model Efficiency Toolkit Documentation: ver 1.35.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+      <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+    
+    
+    <a href="../torch_docs/index.html" class="icon icon-home">
+    AI Model Efficiency Toolkit
+      <img src="../_static/brain_logo.png" class="logo" alt="Logo"/>
+    </a>
+      <div class="version">
+        1.35.1
+      </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_host.html">Install in Host Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../install/install_docker.html">Install in Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/tutorials/quickstart_guide.html">Quickstart Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/examples/ptq.html">Post-Training Quantization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Feature Descriptions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="adaround.html"> Adaptive Rounding (AdaRound)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AIMET PyTorch API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantized_modules.html">Quantized Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/quantizer.html">Quantizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/nn.quantization_mixin.html">QuantizationMixin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/affine/index.html">quantization.affine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/api/quantization/float/index.html">quantization.float</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../torch_docs/encoding_analyzer.html">Encoding Analyzers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../torch_docs/index.html">AI Model Efficiency Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../torch_docs/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AIMET model quantization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/model_quantization.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="aimet-model-quantization">
+<span id="ug-model-quantization"></span><h1>AIMET model quantization<a class="headerlink" href="#aimet-model-quantization" title="Permalink to this heading"></a></h1>
+<p>Models are trained on floating-point hardware like CPUs and GPUs. However, when you run these models on quantized hardware with fixed-precision operations, the model parameters must be fixed-precision. For example, when running on hardware that supports 8-bit integer operations, the floating point parameters in the trained model need to be converted to 8-bit integers.</p>
+<p>For some models, reduction to 8-bit fixed-precision introduces noise that causes a loss of accuracy. AIMET provides techniques and tools to create quantized models that minimize this loss of accuracy.</p>
+<section id="use-cases">
+<h2>Use cases<a class="headerlink" href="#use-cases" title="Permalink to this heading"></a></h2>
+<p>This section briefly describes how AIMET’s quantization features apply to typical use cases.</p>
+<dl>
+<dt>Quantization simulation</dt><dd><p>AIMET enables you to simulate running models on quantized targets. This helps you estimate on-target accuracy without requiring you to move the model to a quantized target platform.</p>
+<p>A quantization simulation workflow is illustrated here:</p>
+<img alt="../_images/quant_use_case_1.PNG" src="../_images/quant_use_case_1.PNG" />
+</dd>
+<dt>Post-training quantization (PTQ)</dt><dd><p>PTQ techniques make a model more quantization-friendly without requiring model retraining or fine-tuning. PTQ is recommended as a first step in a quantization workflow because:</p>
+<ul class="simple">
+<li><p>PTQ does not require the original training pipeline; an evaluation pipeline is sufficient</p></li>
+<li><p>PTQ requires only a small, unlabeled dataset for calibration</p></li>
+<li><p>PTQ is fast and easy to use</p></li>
+</ul>
+<p>The PTQ workflow is illustrated here:</p>
+<img alt="../_images/quant_use_case_3.PNG" src="../_images/quant_use_case_3.PNG" />
+<p>With PTQ techniques, model accuracy may still be reduced. In such cases, fine-tuning is recommended.</p>
+</dd>
+<dt>Quantization-aware training (QAT) and fine-tuning</dt><dd><p>QAT enable you to fine-tune a model with quantization operations inserted in the network graph. In effect, it makes the model parameters robust to quantization noise.</p>
+<p>Compared to PTQ, QAT requires a training pipeline and dataset and takes longer because it needs some fine-tuning, but it can provide better accuracy, especially at low bitwidths.</p>
+<p>A typical QAT workflow is illustrated here:</p>
+<img alt="../_images/quant_use_case_2.PNG" src="../_images/quant_use_case_2.PNG" />
+</dd>
+</dl>
+<p>_aimet-quantization-features:</p>
+</section>
+<section id="aimet-quantization-features">
+<h2>AIMET quantization features<a class="headerlink" href="#aimet-quantization-features" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<dl>
+<dt><a class="reference internal" href="quantization_sim.html"><span class="doc">Quantization Simulation (QuantSim)</span></a></dt><dd><p>QuantSim modifies a model by inserting quantization simulation operations, providing a first-order estimate of expected runtime accuracy on quantized hardware.</p>
+</dd>
+<dt><a class="reference internal" href="quantization_aware_training.html#ug-quantization-aware-training"><span class="std std-ref">Quantization-Aware Training (QAT)</span></a></dt><dd><p>QAT enables fine-tuning of QuantSim model parameters by taking quantization into account.</p>
+<p>Two modes of QAT are supported:</p>
+<dl class="simple">
+<dt>Regular QAT</dt><dd><p>Fine-tuning of model parameters. Trainable parameters such as module weights, biases, etc. can be
+updated. The scale and offset quantization parameters for activation quantizers remain constant. Scale and offset parameters for weight quantizers will update to reflect new weight values after each training step.</p>
+</dd>
+<dt>QAT with range learning</dt><dd><p>In addition to trainable module weights and scale/offset parameters for weight quantizers, scale/offset
+parameters for activation quantizers are also updated during each training step.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<section id="post-training-quantization">
+<h3><span class="hideitem">Post-Training Quantization</span><a class="headerlink" href="#post-training-quantization" title="Permalink to this heading"></a></h3>
+<dl>
+<dt>Post-training quantization (PTQ) techniques</dt><dd><p>Post-training quantization techniques help improve quantized model accuracy without needing to re-train.</p>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="simple">
+<dt><a class="reference internal" href="auto_quant.html#ug-auto-quant"><span class="std std-ref">AutoQuant</span></a></dt><dd><p>AIMET provides an API that integrates the post-training quantization techniques described below. AutoQuant is recommended for PTQ. If desired, individual techniques can be invoked using standalone feature specific APIs.</p>
+</dd>
+<dt><a class="reference internal" href="adaround.html#ug-adaround"><span class="std std-ref">Adaptive rounding (AdaRound)</span></a></dt><dd><p>Determines optimal rounding for weight tensors to improve quantized performance.</p>
+</dd>
+<dt><a class="reference internal" href="post_training_quant_techniques.html#ug-post-training-quantization"><span class="std std-ref">Cross-Layer Equalization</span></a>:</dt><dd><p>Equalizes weight ranges in consecutive layers. Implementation is variant-specific; see the API for your platform:
+<span class="xref std std-ref">PyTorch</span>
+<span class="xref std std-ref">Keras</span>
+<span class="xref std std-ref">ONNX</span></p>
+</dd>
+<dt><a class="reference internal" href="bn_reestimation.html#ug-bn-reestimation"><span class="std std-ref">BN re-estimation</span></a></dt><dd><p>Re-estimates Batch Norm layer statistics before folding the Batch Norm layers.</p>
+</dd>
+<dt><a class="reference internal" href="post_training_quant_techniques.html#ug-post-training-quantization"><span class="std std-ref">Bias Correction</span></a> (Deprecated)</dt><dd><p>Bias correction is deprecated. Use <a class="reference internal" href="adaround.html#ug-adaround"><span class="std std-ref">AdaRound</span></a> instead.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="debugging-and-analysis-tools">
+<h3><span class="hideitem">Debugging and Analysis Tools</span><a class="headerlink" href="#debugging-and-analysis-tools" title="Permalink to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+</div>
+<dl class="simple">
+<dt>Debugging and analysis tools</dt><dd><dl class="simple">
+<dt><a class="reference internal" href="quant_analyzer.html#ug-quant-analyzer"><span class="std std-ref">QuantAnalyzer</span></a>:</dt><dd><p>Automated debugging of the model to understand sensitivity to weight and/or activation quantization, individual layer sensitivity, etc.</p>
+</dd>
+<dt><a class="reference internal" href="visualization_quant.html#ug-quantization-visualization"><span class="std std-ref">Visualizations</span></a>:</dt><dd><p>Visualizations and histograms of weight and activation ranges.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</section>
+<section id="aimet-quantization-workflow">
+<h2>AIMET quantization workflow<a class="headerlink" href="#aimet-quantization-workflow" title="Permalink to this heading"></a></h2>
+<p>This section describes the recommended workflow for quantizing a neural network.</p>
+<blockquote>
+<div><img alt="../_images/quantization_workflow.PNG" src="../_images/quantization_workflow.PNG" />
+</div></blockquote>
+<p><strong>1. Prep and validate the model</strong></p>
+<p>Before attempting quantization, ensure that models are defined according to model guidelines. These guidelines depend on the ML framework (PyTorch or TensorFlow) that the model is written in.</p>
+<section id="pytorch">
+<h3><span class="hideitem">PyTorch</span><a class="headerlink" href="#pytorch" title="Permalink to this heading"></a></h3>
+<p><span class="xref std std-doc">PyTorch Model Guidelines</span></p>
+<blockquote>
+<div><p>PyTorch has two utilities to automate model complaince:</p>
+<ul class="simple">
+<li><p>The Model Validator utility automates checking PyTorch model requirements</p></li>
+<li><p>The Model Preparer utility automates updating model definition to align with requirements</p></li>
+</ul>
+<p>In model prep and validation using PyTorch, we recommend the following flow:</p>
+<img alt="../_images/pytorch_model_prep_and_validate.PNG" src="../_images/pytorch_model_prep_and_validate.PNG" />
+<p>Use the Model Validator utility to check if the model can be run with AIMET. If validator checks fail, put Model Preparer in the pipeline and retry Model Validator. If the validator continues to generate warnings, update the model definition by hand.</p>
+<p>For more information on Model Validator and Model Preparer, see
+<span class="xref std std-doc">AIMET PyTorch Quantization APIs</span>.</p>
+</div></blockquote>
+<p><strong>2. Apply PTQ and AutoQuant</strong></p>
+<p>Apply PTQ techniques to adjust model parameters and make the model more robust to quantization. We recommend trying AutoQuant first. AutoQuant tries various other PTQ methods and finds the best combination of methods to apply. See <a href="#id1"><span class="problematic" id="id2">:ref:`aimet-quantization-features`_</span></a>.</p>
+<p><strong>3. Use QAT</strong></p>
+<p>If model accuracy is still not satisfactory after PTQ/AutoQuant, use QAT to fine-tune the model. See <a class="reference internal" href="quantization_aware_training.html"><span class="doc">AIMET Quantization Features</span></a>.</p>
+<p><strong>4. Export models</strong></p>
+<p>To move the model onto the target, you need:</p>
+<ul class="simple">
+<li><p>A model with updated weights</p></li>
+<li><p>An encodings file containing quantization parameters associated with each quantization operation</p></li>
+</ul>
+<p>AIMET QuantSim can export both items. The exported model type differs based on the ML framework used:</p>
+<ul class="simple">
+<li><p><cite>.onnx</cite> for PyTorch</p></li>
+<li><p><cite>meta</cite> / <cite>checkpoint</cite> for TensorFlow</p></li>
+<li><p><cite>.h5</cite> and <cite>.pb</cite> for Keras</p></li>
+</ul>
+<p>The exact steps to export the model and encodings file depend on which AIMET Quantization features are used:</p>
+<ul class="simple">
+<li><p>Calling AutoQuant automatically exports the model and encodings file.</p></li>
+<li><p>If you use QAT, call <cite>.export()</cite> on the QuantSim object.</p></li>
+<li><p>If you use lower-level PTQ techniques like CLE, first create a QuantSim object from the modified model, then call <cite>.export()</cite> on the QuantSim object.</p></li>
+</ul>
+</section>
+</section>
+<section id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<p>Applying AIMET Quantization features may involve some trial and error in order to find the best optimizations to apply on a particular model. If quantization accuracy does not seem to improve, see the debugging steps in the <a class="reference internal" href="quantization_feature_guidebook.html#ug-quant-debug"><span class="std std-ref">Quantization Diagnostics</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Qualcomm Innovation Center, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
