@@ -1,0 +1,760 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Mixed precision" href="mixed%20precision/index.html" /><link rel="prev" title="Batch norm folding" href="bnf.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>Cross-layer equalization - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/aimet-furo.css?v=6d7e6c94" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.0.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userguide/index.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/quantization_workflow.html">Quantization workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/debugging_guidelines.html">Debugging guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/on_target_inference.html">On-target inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quantsim/index.html">Quantization Simulation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quantsim/calibration.html">Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quantsim/qat.html">QAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quantsim/advanced.html">Advanced</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Feature Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed%20precision/index.html">Mixed precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis%20tools/index.html">Analysis tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compression/index.html">Compression</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../apiref/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../apiref/torch/index.html">aimet_torch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../apiref/tensorflow/index.html">aimet_tensorflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../apiref/onnx/index.html">aimet_onnx</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="cross-layer-equalization">
+<span id="featureguide-cle"></span><h1>Cross-layer equalization<a class="headerlink" href="#cross-layer-equalization" title="Link to this heading">¶</a></h1>
+<section id="context">
+<h2>Context<a class="headerlink" href="#context" title="Link to this heading">¶</a></h2>
+<p>Quantization of floating point models into lower bitwidths introduces quantization noise on the weights and activations, which often leads to reduced model performance. To minimize quantization noise, there are a variety of post training quantization (PTQ) techniques offered by AIMET. You can learn more about these techniques <a class="reference external" href="https://arxiv.org/pdf/1906.04721">here</a>.</p>
+<p>AIMET’s cross-layer equalization tool involves the following techniques:</p>
+<ul>
+<li><p><strong>Batch Norm Folding</strong>: This feature folds batch norm layers into adjacent convolutional and linear layers. You can learn more <a class="reference internal" href="bnf.html#featureguide-bnf"><span class="std std-ref">here</span></a></p></li>
+<li><p><strong>Cross Layer Scaling</strong>: In some models, the parameter ranges for different channels in a layer show a wide variance (as shown below). This feature attempts to equalize the distribution of weights per channel of consecutive layers. Thus, different channels have a similar range and the same quantization parameters can be used for weights across all channels.</p>
+<blockquote>
+<div><figure class="align-default">
+<img alt="../_images/cross_layer_scaling.png" src="../_images/cross_layer_scaling.png" />
+</figure>
+</div></blockquote>
+</li>
+<li><p><strong>High Bias Fold</strong>: Cross layer scaling may result in high bias parameter values for some layers. This technique folds some of the bias of a layer into the subsequent layer’s parameters. This feature requires batch norm parameters to operate on and will not be applied otherwise.</p></li>
+</ul>
+</section>
+<section id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">¶</a></h2>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-0">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">mobilenet_v2</span>
+
+<span class="c1"># General setup that can be changed as needed</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-1">
+TensorFlow</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>Load the model for cross-layer equalization. In this code example, we will use MobileNetV2.</p>
+<p>It’s recommended to apply the TensorFlow <cite>prepare_model</cite> API before applying AIMET functionalities. After preparation, we find that the model contains consecutive convolutions, which can be optimized through cross-layer equalization.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_tensorflow.keras.cross_layer_equalization</span><span class="w"> </span><span class="kn">import</span> <span class="n">equalize_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_tensorflow.keras.model_preparer</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">applications</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">applications</span><span class="o">.</span><span class="n">MobileNetV2</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+
+<span class="n">prepared_model</span> <span class="o">=</span> <span class="n">prepare_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** Before cross-layer equalization ***&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">prepared_model.layers[1]:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">prepared_model.layers[4]:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Prev Conv weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Next Conv weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>Model: &quot;mobilenetv2_1.00_224&quot;
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to
+==================================================================================================
+ input_1 (InputLayer)           [(None, 224, 224, 3  0           []
+                                )]
+
+ Conv1 (Conv2D)                 (None, 112, 112, 32  864         [&#39;input_1[0][0]&#39;]
+                                )
+
+ bn_Conv1 (BatchNormalization)  (None, 112, 112, 32  128         [&#39;Conv1[0][0]&#39;]
+                                )
+
+ Conv1_relu (ReLU)              (None, 112, 112, 32  0           [&#39;bn_Conv1[0][0]&#39;]
+                                )
+
+ expanded_conv_depthwise (Depth  (None, 112, 112, 32  288        [&#39;Conv1_relu[0][0]&#39;]
+ wiseConv2D)                    )
+ ...
+
+*** Before cross-layer equalization ***
+
+prepared_model.layers[1]:
+&lt;class &#39;keras.layers.convolutional.conv2d.Conv2D&#39;&gt;
+
+prepared_model.layers[4]:
+&lt;class &#39;keras.layers.convolutional.depthwise_conv2d.DepthwiseConv2D&#39;&gt;
+
+Prev Conv weight
+[[[[-1.71659231e-01 -3.33731920e-01  5.30122258e-02 -5.93232973e-21
+     2.08742931e-01 -1.20433941e-01  1.75700430e-02 -3.10708203e-22
+    -9.62498877e-03  1.90229788e-01 -3.67278278e-01  3.95997976e-22
+    ...
+     3.87471542e-02 -3.67677957e-02 -3.23011987e-02 -4.83861901e-02
+     1.23156421e-02 -5.57984132e-03 -6.53976866e-04 -1.92511864e-02
+    -2.09685047e-22  1.19186290e-01 -2.52912678e-02  2.02078857e-02]]]]
+
+Next Conv weight
+[[[[-9.15259957e-01]
+   [ 6.11176670e-01]
+   [-4.27415752e+00]
+   ...
+   [-1.17871511e+00]
+   [ 2.55578518e+00]
+   [ 3.69716495e-01]]]]
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-2">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>Load the model for cross-layer equalization. In this code example, we will convert PyTorch MobileNetV2 to ONNX and use it in the subsequent code.</p>
+<p>It’s recommended to simplify the ONNX model before applying AIMET functionalities. After simplification, we find that the model contains consecutive convolutions, which can be optimized through cross-layer equalization.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">onnx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">onnxsim</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.cross_layer_equalization</span><span class="w"> </span><span class="kn">import</span> <span class="n">equalize_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MobileNet_V2_Weights</span><span class="p">,</span> <span class="n">mobilenet_v2</span>
+
+<span class="n">pt_model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">MobileNet_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pt_model</span><span class="p">)</span>
+
+<span class="c1"># Shape for each ImageNet sample is (3 channels) x (224 height) x (224 width)</span>
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+
+<span class="c1"># Modify file_path as you wish, we are using temporary directory for now</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mobilenet_v2.onnx&#39;</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span>
+    <span class="n">pt_model</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">dummy_input</span><span class="p">,),</span>
+    <span class="n">file_path</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># Load exported ONNX model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+<span class="c1"># Simplifying the model</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">onnxsim</span><span class="o">.</span><span class="n">simplify</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ONNX Simplifier failed. Proceeding with unsimplified model&#39;</span><span class="p">)</span>
+
+<span class="n">initializers</span> <span class="o">=</span> <span class="p">{</span><span class="n">init</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">init</span> <span class="k">for</span> <span class="n">init</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">initializer</span><span class="p">}</span>
+<span class="n">prev_conv_weight</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span>
+    <span class="n">initializers</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="p">)</span>
+<span class="n">next_conv_weight</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span>
+    <span class="n">initializers</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Before cross-layer equalization ***&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.graph.node[4]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.graph.node[5]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Prev Conv weight&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prev_conv_weight</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Next Conv weight&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">next_conv_weight</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>MobileNetV2(
+  (features): Sequential(
+    (0): Conv2dNormActivation(
+      (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU6(inplace=True)
+    )
+    ...
+)
+*** Before cross-layer equalization ***
+
+model.graph.node[4]:
+/features/features.1/conv/conv.1/Conv
+
+model.graph.node[5]:
+/features/features.2/conv/conv.0/conv.0.0/Conv
+
+Prev Conv weight
+[[[[ 1.83640555e-01]]
+  [[ 6.34215236e-01]]
+  [[ 8.44993666e-02]]
+  ...
+  [[-6.70130579e-17]]
+  [[-1.37757687e-02]]
+  [[ 9.16839484e-03]]]]
+
+Next Conv weight
+[[[[-8.41059163e-02]]
+  [[-1.12039044e-01]]
+  [[-2.72468403e-02]]
+  ...
+  [[ 9.46642041e-01]]
+  [[ 4.35139937e-03]]
+  [[ 2.57021021e-02]]]]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-1">
+<h3>Step 1<a class="headerlink" href="#step-1" title="Link to this heading">¶</a></h3>
+<p>Execute AIMET cross-layer equalization API</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-3">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.cross_layer_equalization</span><span class="w"> </span><span class="kn">import</span> <span class="n">equalize_model</span>
+
+<span class="c1"># Performs BatchNorm folding, cross layer scaling and high bias folding</span>
+<span class="n">equalize_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-4">
+TensorFlow</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>Execute AIMET cross-layer equalization API</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cle_applied_model</span> <span class="o">=</span> <span class="n">equalize_model</span><span class="p">(</span><span class="n">prepared_model</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** After cross-layer equalization ***&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Prev Conv weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cle_applied_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Next Conv weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cle_applied_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>*** After cross-layer equalization ***
+
+Prev Conv weight
+[[[[-3.01457286e-01 -1.49024737e+00  6.10569119e-01 -1.29590677e-19
+     1.51547194e-01 -1.51446089e-01  1.38100997e-01 -4.89249423e-21
+    -5.16245179e-02  4.64579314e-01 -2.44408584e+00  1.22219264e-20
+    ...
+     1.67510852e-01 -2.60713138e-02 -1.05549544e-01 -2.53403008e-01
+     1.39502389e-02 -1.54620111e-02 -1.97294299e-02 -9.41715762e-02
+    -6.88260233e-21  8.95088911e-02 -1.87630311e-01  2.48399768e-02]]]]
+
+Next Conv weight
+[[[[-1.00347728e-01]
+   [ 6.30402938e-02]
+   [-9.67416465e-01]
+    ...
+   [-7.88373709e-01]
+   [ 6.75162792e-01]
+   [ 1.48045555e-01]]]]
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-5">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>Execute AIMET cross-layer equalization API</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cross-layer equalization is working as in-place manner</span>
+<span class="n">equalize_model</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+
+<span class="n">prev_conv_weight</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span>
+    <span class="n">initializers</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="p">)</span>
+<span class="n">next_conv_weight</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span>
+    <span class="n">initializers</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** After cross-layer equalization ***&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Prev Conv weight&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prev_conv_weight</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Next Conv weight&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">next_conv_weight</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>*** After cross-layer equalization ***
+
+Prev Conv weight
+[[[[ 6.28238320e-02]]
+  [[ 2.16966406e-01]]
+  [[ 2.89074164e-02]]
+  ...
+  [[-2.44632760e-17]]
+  [[-5.02887694e-03]]
+  [[ 3.34694423e-03]]]]
+
+Next Conv weight
+[[[[-2.4585028e-01]]
+  [[-3.5856506e-01]]
+  [[-3.3467390e-02]]
+  ...
+  [[ 1.2930528e+00]]
+  [[ 1.6213797e-02]]
+  [[ 7.0406616e-02]]]]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-6">
+PyTorch</label><div class="sd-tab-content docutils">
+<p><strong>Top-level API</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_torch.cross_layer_equalization.equalize_model">
+<span class="sig-prename descclassname"><span class="pre">aimet_torch.cross_layer_equalization.</span></span><span class="sig-name descname"><span class="pre">equalize_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shapes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/cross_layer_equalization.html#equalize_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.cross_layer_equalization.equalize_model" title="Link to this definition">¶</a></dt>
+<dd><p>High-level API to perform Cross-Layer Equalization (CLE) on the given model. The model is equalized in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></span>) – Model to equalize</p></li>
+<li><p><strong>input_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Shape of the input (can be a tuple or a list of tuples if multiple inputs)</p></li>
+<li><p><strong>dummy_input</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – A dummy input to the model. Can be a Tensor or a Tuple of Tensors. dummy_input will be
+placed on CPU if not already.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-7">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p><strong>Top-level API</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_tensorflow.keras.cross_layer_equalization.equalize_model">
+<span class="sig-prename descclassname"><span class="pre">aimet_tensorflow.keras.cross_layer_equalization.</span></span><span class="sig-name descname"><span class="pre">equalize_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/keras/cross_layer_equalization.html#equalize_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_tensorflow.keras.cross_layer_equalization.equalize_model" title="Link to this definition">¶</a></dt>
+<dd><p>High-level API to perform Cross-Layer Equalization (CLE) on the given model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></span>) – tf.keras.Model</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CLE applied tf.keras.Model</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-8">
+ONNX</label><div class="sd-tab-content docutils">
+<p><strong>Top-level API</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_onnx.cross_layer_equalization.equalize_model">
+<span class="sig-prename descclassname"><span class="pre">aimet_onnx.cross_layer_equalization.</span></span><span class="sig-name descname"><span class="pre">equalize_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/cross_layer_equalization.html#equalize_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.cross_layer_equalization.equalize_model" title="Link to this definition">¶</a></dt>
+<dd><p>High-level API to perform Cross-Layer Equalization (CLE) on the given model. The model is equalized in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelProto</span></code></span>) – Model to equalize</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="mixed%20precision/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Mixed precision</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="bnf.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Batch norm folding</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Cross-layer equalization</a><ul>
+<li><a class="reference internal" href="#context">Context</a></li>
+<li><a class="reference internal" href="#workflow">Workflow</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#step-1">Step 1</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#aimet_torch.cross_layer_equalization.equalize_model"><code class="docutils literal notranslate"><span class="pre">equalize_model()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_tensorflow.keras.cross_layer_equalization.equalize_model"><code class="docutils literal notranslate"><span class="pre">equalize_model()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.cross_layer_equalization.equalize_model"><code class="docutils literal notranslate"><span class="pre">equalize_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
