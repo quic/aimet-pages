@@ -1,0 +1,885 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>Quantsim and Adaround - Per Channel Quantization (PCQ) - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/aimet-furo.css?v=22b0637d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.3.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/index.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../userguide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../userguide/quantization_tools.html">AIMET features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../userguide/quantization_workflow.html">Quantization workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../userguide/debugging_guidelines.html">Debugging guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../userguide/on_target_inference.html">On-target inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../quantsim/index.html">Quantization Simulation Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Quantization Simulation Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../quantsim/calibration.html">Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../quantsim/qat.html">QAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../quantsim/blockwise.html">Blockwise quantization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../featureguide/index.html">Feature Guide</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Feature Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../featureguide/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../featureguide/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../featureguide/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../featureguide/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../featureguide/mixed%20precision/index.html">Mixed precision</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Mixed precision</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/mixed%20precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/mixed%20precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../featureguide/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../featureguide/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../featureguide/analysis%20tools/index.html">Analysis tools</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Analysis tools</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/analysis%20tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/analysis%20tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/analysis%20tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../featureguide/compression/index.html">Compression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Compression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../featureguide/compression/channel_pruning.html">Channel pruning</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Channel pruning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../featureguide/compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../featureguide/quantized%20LoRa/index.html">Quantized LoRa</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Quantized LoRa</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/quantized%20LoRa/qw_lora.html">QW-LoRa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../featureguide/quantized%20LoRa/qwa_lora.html">QWA-LoRa</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Example Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../apiref/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../apiref/torch/index.html">aimet_torch</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of aimet_torch</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/migration_guide.html">Migrate to aimet_torch 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/quantsim.html">aimet_torch.quantsim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/adaround.html">aimet_torch.adaround</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../apiref/torch/nn.html">aimet_torch.nn</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of aimet_torch.nn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizationMixin.html">QuantizationMixin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveAvgPool1d.html">QuantizedAdaptiveAvgPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveAvgPool2d.html">QuantizedAdaptiveAvgPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveAvgPool3d.html">QuantizedAdaptiveAvgPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveMaxPool1d.html">QuantizedAdaptiveMaxPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveMaxPool2d.html">QuantizedAdaptiveMaxPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveMaxPool3d.html">QuantizedAdaptiveMaxPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAlphaDropout.html">QuantizedAlphaDropout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAvgPool1d.html">QuantizedAvgPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAvgPool2d.html">QuantizedAvgPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedAvgPool3d.html">QuantizedAvgPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedBCELoss.html">QuantizedBCELoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedBCEWithLogitsLoss.html">QuantizedBCEWithLogitsLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedBatchNorm1d.html">QuantizedBatchNorm1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedBatchNorm2d.html">QuantizedBatchNorm2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedBatchNorm3d.html">QuantizedBatchNorm3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedBilinear.html">QuantizedBilinear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCELU.html">QuantizedCELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCTCLoss.html">QuantizedCTCLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedChannelShuffle.html">QuantizedChannelShuffle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCircularPad1d.html">QuantizedCircularPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCircularPad2d.html">QuantizedCircularPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCircularPad3d.html">QuantizedCircularPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConstantPad1d.html">QuantizedConstantPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConstantPad2d.html">QuantizedConstantPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConstantPad3d.html">QuantizedConstantPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConv1d.html">QuantizedConv1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConv2d.html">QuantizedConv2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConv3d.html">QuantizedConv3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConvTranspose1d.html">QuantizedConvTranspose1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConvTranspose2d.html">QuantizedConvTranspose2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedConvTranspose3d.html">QuantizedConvTranspose3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCosineEmbeddingLoss.html">QuantizedCosineEmbeddingLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCosineSimilarity.html">QuantizedCosineSimilarity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedCrossEntropyLoss.html">QuantizedCrossEntropyLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedDropout.html">QuantizedDropout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedDropout1d.html">QuantizedDropout1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedDropout2d.html">QuantizedDropout2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedDropout3d.html">QuantizedDropout3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedELU.html">QuantizedELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedEmbedding.html">QuantizedEmbedding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedEmbeddingBag.html">QuantizedEmbeddingBag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedFeatureAlphaDropout.html">QuantizedFeatureAlphaDropout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedFlatten.html">QuantizedFlatten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedFold.html">QuantizedFold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedFractionalMaxPool2d.html">QuantizedFractionalMaxPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedFractionalMaxPool3d.html">QuantizedFractionalMaxPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedGELU.html">QuantizedGELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedGLU.html">QuantizedGLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedGRU.html">QuantizedGRU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedGRUCell.html">QuantizedGRUCell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedGaussianNLLLoss.html">QuantizedGaussianNLLLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedGroupNorm.html">QuantizedGroupNorm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedHardshrink.html">QuantizedHardshrink</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedHardsigmoid.html">QuantizedHardsigmoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedHardswish.html">QuantizedHardswish</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedHardtanh.html">QuantizedHardtanh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedHingeEmbeddingLoss.html">QuantizedHingeEmbeddingLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedHuberLoss.html">QuantizedHuberLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedInstanceNorm1d.html">QuantizedInstanceNorm1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedInstanceNorm2d.html">QuantizedInstanceNorm2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedInstanceNorm3d.html">QuantizedInstanceNorm3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedKLDivLoss.html">QuantizedKLDivLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedL1Loss.html">QuantizedL1Loss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLPPool1d.html">QuantizedLPPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLPPool2d.html">QuantizedLPPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLSTM.html">QuantizedLSTM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLSTMCell.html">QuantizedLSTMCell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLayerNorm.html">QuantizedLayerNorm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLeakyReLU.html">QuantizedLeakyReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLinear.html">QuantizedLinear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLocalResponseNorm.html">QuantizedLocalResponseNorm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLogSigmoid.html">QuantizedLogSigmoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedLogSoftmax.html">QuantizedLogSoftmax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMSELoss.html">QuantizedMSELoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMarginRankingLoss.html">QuantizedMarginRankingLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMaxPool1d.html">QuantizedMaxPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMaxPool2d.html">QuantizedMaxPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMaxPool3d.html">QuantizedMaxPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMaxUnpool1d.html">QuantizedMaxUnpool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMaxUnpool2d.html">QuantizedMaxUnpool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMaxUnpool3d.html">QuantizedMaxUnpool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMish.html">QuantizedMish</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMultiLabelMarginLoss.html">QuantizedMultiLabelMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMultiLabelSoftMarginLoss.html">QuantizedMultiLabelSoftMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedMultiMarginLoss.html">QuantizedMultiMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedNLLLoss.html">QuantizedNLLLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedNLLLoss2d.html">QuantizedNLLLoss2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedPReLU.html">QuantizedPReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedPairwiseDistance.html">QuantizedPairwiseDistance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedPixelShuffle.html">QuantizedPixelShuffle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedPixelUnshuffle.html">QuantizedPixelUnshuffle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedPoissonNLLLoss.html">QuantizedPoissonNLLLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedRNN.html">QuantizedRNN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedRNNCell.html">QuantizedRNNCell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedRReLU.html">QuantizedRReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReLU.html">QuantizedReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReLU6.html">QuantizedReLU6</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReflectionPad1d.html">QuantizedReflectionPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReflectionPad2d.html">QuantizedReflectionPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReflectionPad3d.html">QuantizedReflectionPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReplicationPad1d.html">QuantizedReplicationPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReplicationPad2d.html">QuantizedReplicationPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedReplicationPad3d.html">QuantizedReplicationPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSELU.html">QuantizedSELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSiLU.html">QuantizedSiLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSigmoid.html">QuantizedSigmoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSmoothL1Loss.html">QuantizedSmoothL1Loss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSoftMarginLoss.html">QuantizedSoftMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSoftmax.html">QuantizedSoftmax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSoftmax2d.html">QuantizedSoftmax2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSoftmin.html">QuantizedSoftmin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSoftplus.html">QuantizedSoftplus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSoftshrink.html">QuantizedSoftshrink</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedSoftsign.html">QuantizedSoftsign</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedTanh.html">QuantizedTanh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedTanhshrink.html">QuantizedTanhshrink</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedThreshold.html">QuantizedThreshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedTripletMarginLoss.html">QuantizedTripletMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedTripletMarginWithDistanceLoss.html">QuantizedTripletMarginWithDistanceLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedUnflatten.html">QuantizedUnflatten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedUnfold.html">QuantizedUnfold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedUpsample.html">QuantizedUpsample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedUpsamplingBilinear2d.html">QuantizedUpsamplingBilinear2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedUpsamplingNearest2d.html">QuantizedUpsamplingNearest2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedZeroPad1d.html">QuantizedZeroPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedZeroPad2d.html">QuantizedZeroPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.nn.QuantizedZeroPad3d.html">QuantizedZeroPad3d</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../apiref/torch/quantization.html">aimet_torch.quantization</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of aimet_torch.quantization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.QuantizedTensorBase.html">QuantizedTensorBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.QuantizedTensor.html">QuantizedTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.DequantizedTensor.html">DequantizedTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.affine.Quantize.html">Quantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.affine.QuantizeDequantize.html">QuantizeDequantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.float.FloatQuantizeDequantize.html">FloatQuantizeDequantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.affine.quantize.html">quantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.affine.quantize_dequantize.html">quantize_dequantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../apiref/torch/generated/aimet_torch.quantization.affine.dequantize.html">dequantize</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/seq_mse.html">aimet_torch.seq_mse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/lpbq.html">aimet_torch.quantsim.config_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/bnf.html">aimet_torch.batch_norm_fold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/cle.html">aimet_torch.cross_layer_equalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/model_preparer.html">aimet_torch.model_preparer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/model_validator.html">aimet_torch.model_validator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/mp.html">aimet_torch.mixed_precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/quant_analyzer.html">aimet_torch.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/autoquant.html">aimet_torch.autoquant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/bn.html">aimet_torch.bn_reestimation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/interactive_visualization.html">aimet_torch.visualization_tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/layer_output_generation.html">aimet_torch.layer_output_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/peft_lora.html">aimet_torch.peft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/compress.html">aimet_torch.compress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/v1/quantsim.html">aimet_torch.v1.quantsim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/v1/adaround.html">aimet_torch.v1.adaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/v1/seq_mse.html">aimet_torch.v1.seq_mse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/v1/quant_analyzer.html">aimet_torch.v1.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/v1/autoquant.html">aimet_torch.v1.autoquant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/torch/v1/amp.html">aimet_torch.v1.amp</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../apiref/tensorflow/index.html">aimet_tensorflow</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of aimet_tensorflow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/quantsim.html">aimet_tensorflow.quantsim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/adaround.html">aimet_tensorflow.adaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/bnf.html">aimet_tensorflow.batch_norm_fold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/cle.html">aimet_tensorflow.cross_layer_equalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/amp.html">aimet_tensorflow.mixed_precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/quant_analyzer.html">aimet_tensorflow.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/autoquant.html">aimet_tensorflow.auto_quant_v2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/layer_output_generation.html">aimet_tensorflow.layer_output_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/model_preparer.html">aimet_tensorflow.model_preparer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/tensorflow/compress.html">aimet_tensorflow.compress</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../apiref/onnx/index.html">aimet_onnx</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of aimet_onnx</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/quantsim.html">aimet_onnx.quantsim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/adaround.html">aimet_onnx.adaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/seq_mse.html">aimet_onnx.seq_mse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/lpbq.html">aimet_onnx.quantsim.set_grouped_blockwise_quantization_for_weights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/bnf.html">aimet_onnx.batch_norm_fold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/cle.html">aimet_onnx.cross_layer_equalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/amp.html">aimet_onnx.mixed_precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/quant_analyzer.html">aimet_onnx.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apiref/onnx/layer_output_generation.html">aimet_onnx.layer_output_utils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release_notes.html">Release Notes</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="Quantsim-and-Adaround---Per-Channel-Quantization-(PCQ)">
+<h1>Quantsim and Adaround - Per Channel Quantization (PCQ)<a class="headerlink" href="#Quantsim-and-Adaround---Per-Channel-Quantization-(PCQ)" title="Link to this heading">¶</a></h1>
+<p>This notebook illustrates the use of AIMET Adaround feature.</p>
+<p>AIMET quantization features, by default, use the “nearest rounding” technique for achieving quantization. When using the “nearest rounding” technique, the weight value is quantized to the nearest integer value. The Adaptive Rounding (AdaRound) feature, uses a smaller subset of the unlabelled training data to adaptively round the weights. AdaRound, optimizes a loss function using the unlabelled training data to adaptively decide whether to quantize a specific weight to the integer value near it
+or away from it. Using the AdaRound quantization, a model is able to achieve an accuracy closer to the FP32 model, while using low bit-width integer quantization.</p>
+<p><strong>Per Channel Quantization</strong> AIMET by default performs quantization on a per tensor basis. However, for better quantization performance (specifically networks with many convolutions) quantization can be done on a per channel quantization basis.</p>
+<p>The difference between per tensor and per channel quantization can be illustrated with a single 2D convolution layer in Keras. Imagine that we have a 2D convolution layer with 64 filters, a kernel size of 3, and input of shape of (28, 28, 1). If we were to per tensor quantize this layer, we would look at the entirety of the convolutions weight matrix (convolution kernel). From here, we would take its overall max, overall min, and compute the encoding to quantize the entire matrix. In contrast,
+on a per channel basis, we would repeat the process of finding a min, max, and computing an encoding. However, we would repeat this for every output channel in the convolution. In this example, that would mean we would have 64 encodings that are unique to each channel. This more detailed calculation is what attributes to better performance in quantization.</p>
+<p><em>Example Keras Conv2D Layer</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">layers</span>
+<span class="n">conv2d_layer</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="Overall-flow">
+<h2>Overall flow<a class="headerlink" href="#Overall-flow" title="Link to this heading">¶</a></h2>
+<p>This notebook covers the following</p>
+<ol class="arabic simple">
+<li><p>Instantiate the example evaluation and training pipeline</p></li>
+<li><p>Load the FP32 model and evaluate the model to find the baseline FP32 accuracy</p></li>
+<li><p>Apply PCQ Adaround and get corresponding model</p></li>
+<li><p>Create a PCQ quantization simulation model (with fake quantization ops inserted) from the Adaround model and evaluate this simuation model to get a quantized accuracy score</p></li>
+<li><p>Exporting the simulation models encodings and how to take them to SNPE/QNN</p></li>
+</ol>
+</section>
+<section id="What-this-notebook-is-not">
+<h2>What this notebook is not<a class="headerlink" href="#What-this-notebook-is-not" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>This notebook is not designed to show state-of-the-art results. For example, it uses a relatively quantization-friendly model like Resnet50. Also, some optimization parameters are deliberately chosen to have the notebook execute more quickly.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="Dataset">
+<h3>Dataset<a class="headerlink" href="#Dataset" title="Link to this heading">¶</a></h3>
+<p>This notebook relies on the ImageNet dataset for the task of image classification. If you already have a version of the dataset readily available, please use that. Else, please download the dataset from appropriate location (e.g. <a class="reference external" href="https://image-net.org/challenges/LSVRC/2012/index">https://image-net.org/challenges/LSVRC/2012/index</a>.php#).</p>
+<p><strong>Note</strong>: To speed up the execution of this notebook, you may use a reduced subset of the ImageNet dataset. E.g. the entire ILSVRC2012 dataset has 1000 classes, 1000 training samples per class and 50 validation samples per class. But for the purpose of running this notebook, you could perhaps reduce the dataset to say 2 samples per class. This exercise is left upto the reader and is not necessary.</p>
+<p>Edit the cell below and specify the directory where the downloaded ImageNet dataset is saved.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>DATASET_DIR = &quot;/path/to/dataset/dir/&quot;          # Please replace this with a real directory
+</pre></div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="1.-Example-evaluation-and-training-pipeline">
+<h3>1. Example evaluation and training pipeline<a class="headerlink" href="#1.-Example-evaluation-and-training-pipeline" title="Link to this heading">¶</a></h3>
+<p>The following is an example training and validation loop for this image classification task.</p>
+<ul class="simple">
+<li><p><strong>Does AIMET have any limitations on how the training, validation pipeline is written?</strong> Not really. We will see later that AIMET will modify the user’s model to create a QuantizationSim model which is still a Keras model. This QuantizationSim model can be used in place of the original model when doing inference or training.</p></li>
+<li><p><strong>Does AIMET put any limitation on the interface of the evaluate() or train() methods?</strong> Not really. You should be able to use your existing evaluate and train routines as-is.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import tensorflow as tf
+from Examples.common import image_net_config
+from Examples.tensorflow.utils.keras.image_net_dataset import ImageNetDataset
+from Examples.tensorflow.utils.keras.image_net_evaluator import ImageNetEvaluator
+
+
+class ImageNetDataPipeline:
+    &quot;&quot;&quot;
+    Provides APIs for model evaluation and finetuning using ImageNet Dataset.
+    &quot;&quot;&quot;
+
+    @staticmethod
+    def get_val_dataset() -&gt; tf.data.Dataset:
+        &quot;&quot;&quot;
+        Instantiates a validation dataloader for ImageNet dataset and returns it
+        :return: A tensorflow dataset
+        &quot;&quot;&quot;
+        data_loader = ImageNetDataset(DATASET_DIR,
+                                      image_size=image_net_config.dataset[&#39;image_size&#39;],
+                                      batch_size=image_net_config.evaluation[&#39;batch_size&#39;])
+
+        return data_loader
+
+    @staticmethod
+    def evaluate(model, iterations=None) -&gt; float:
+        &quot;&quot;&quot;
+        Given a Keras model, evaluates its Top-1 accuracy on the validation dataset
+        :param model: The Keras model to be evaluated.
+        :param iterations: The number of iterations to run. If None, all the data will be used
+        :return: The accuracy for the sample with the maximum accuracy.
+        &quot;&quot;&quot;
+        evaluator = ImageNetEvaluator(DATASET_DIR,
+                                      image_size=image_net_config.dataset[&quot;image_size&quot;],
+                                      batch_size=image_net_config.evaluation[&quot;batch_size&quot;])
+
+        return evaluator.evaluate(model=model, iterations=iterations)
+<br/></pre></div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score">
+<h3>2. Load the model and evaluate to get a baseline FP32 accuracy score<a class="headerlink" href="#2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score" title="Link to this heading">¶</a></h3>
+<p>For this example notebook, we are going to load a pretrained ResNet50 model from Keras. Similarly, you can load any pretrained Keras model instead.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from tensorflow.keras.applications.resnet50 import ResNet50
+
+model = ResNet50(include_top=True,
+                 weights=&quot;imagenet&quot;,
+                 input_tensor=None,
+                 input_shape=None,
+                 pooling=None,
+                 classes=1000)
+</pre></div>
+</div>
+</div>
+<p>Let’s determine the FP32 (floating point 32-bit) accuracy of this model using the evaluate() routine</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ImageNetDataPipeline.evaluate(model=model, iterations=10)
+</pre></div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="3.-Create-a-quantization-simulation-model-and-determine-quantized-accuracy">
+<h3>3. Create a quantization simulation model and determine quantized accuracy<a class="headerlink" href="#3.-Create-a-quantization-simulation-model-and-determine-quantized-accuracy" title="Link to this heading">¶</a></h3>
+</section>
+<section id="Fold-Batch-Normalization-layers">
+<h3>Fold Batch Normalization layers<a class="headerlink" href="#Fold-Batch-Normalization-layers" title="Link to this heading">¶</a></h3>
+<p>Before we determine the simulated quantized accuracy using QuantizationSimModel, we will fold the BatchNormalization (BN) layers in the model. These layers get folded into adjacent Convolutional layers. The BN layers that cannot be folded are left as they are.</p>
+<p><strong>Note</strong>: For per channel to be enabled, we pass a config file in which the config file has <em>per_channel_quantization</em> set to <em>True</em>. This config file will be used later on with Adaround as well. Having one place describing the quantization style ensures that we don’t mismatch when applying QuantSim and Adaround together.</p>
+<p><strong>Why do we need to this?</strong> On quantized runtimes (like TFLite, SnapDragon Neural Processing SDK, etc.), it is a common practice to fold the BN layers. Doing so, results in an inferences/sec speedup since unnecessary computation is avoided. Now from a floating point compute perspective, a BN-folded model is mathematically equivalent to a model with BN layers from an inference perspective, and produces the same accuracy. However, folding the BN layers can increase the range of the tensor values
+for the weight parameters of the adjacent layers. And this can have a negative impact on the quantized accuracy of the model (especially when using INT8 or lower precision). So, we want to simulate that on-target behavior by doing BN folding here.</p>
+<p>The following code calls AIMET to fold the BN layers of a given model. <strong>NOTE: During folding, a new model is returned. Please use the returned model for the rest of the pipeline.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from aimet_tensorflow.keras.batch_norm_fold import fold_all_batch_norms
+from aimet_tensorflow.keras.quantsim import QuantizationSimModel
+from aimet_common.defs import QuantScheme
+
+_, model = fold_all_batch_norms(model)
+sim = QuantizationSimModel(model=model,
+                           quant_scheme=QuantScheme.post_training_tf,
+                           rounding_mode=&quot;nearest&quot;,
+                           default_output_bw=8,
+                           default_param_bw=8,
+                           config_file=&quot;Examples/tensorflow/utils/keras/pcq_quantsim_config&quot;)  # NOTE: We tell QuantSim to run per channel quantization through the config file defined here.
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Even though AIMET has added ‘quantizer’ nodes to the model graph but the model is not ready to be used yet. Before we can use the sim model for inference or training, we need to find appropriate scale/offset quantization parameters for each ‘quantizer’ node. For activation quantization nodes, we need to pass unlabeled data samples through the model to collect range statistics which will then let AIMET calculate appropriate scale/offset quantization parameters. This process is sometimes referred
+to as calibration. AIMET simply refers to it as ‘computing encodings’.</p>
+<p>So we create a routine to pass unlabeled data samples through the model. This should be fairly simple - use the existing train or validation data loader to extract some samples and pass them to the model. We don’t need to compute any loss metric etc. So we can just ignore the model output for this purpose. A few pointers regarding the data samples</p>
+<ul class="simple">
+<li><p>In practice, we need a very small percentage of the overall data samples for computing encodings. For example, the training dataset for ImageNet has 1M samples. For computing encodings we only need 500 or 1000 samples.</p></li>
+<li><p>It may be beneficial if the samples used for computing encoding are well distributed. It’s not necessary that all classes need to be covered etc. since we are only looking at the range of values at every layer activation. However, we definitely want to avoid an extreme scenario like all ‘dark’ or ‘light’ samples are used - e.g. only using pictures captured at night might not give ideal results.</p></li>
+</ul>
+<p>The following shows an example of a routine that passes unlabeled samples through the model for computing encodings. This routine can be written in many different ways, this is just an example.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from tensorflow.keras.utils import Progbar
+from tensorflow.keras.applications.resnet import preprocess_input
+
+def pass_calibration_data(sim_model, samples):
+    tf_dataset = ImageNetDataPipeline.get_val_dataset()
+    dataset = tf_dataset.dataset
+    batch_size = tf_dataset.batch_size
+
+    progbar = Progbar(samples)
+
+    batch_cntr = 0
+    for inputs, _ in dataset:
+        sim_model(preprocess_input(inputs))
+
+        batch_cntr += 1
+        progbar_stat_update = \
+            batch_cntr * batch_size if (batch_cntr * batch_size) &lt; samples else samples
+        progbar.update(progbar_stat_update)
+        if (batch_cntr * batch_size) &gt; samples:
+            break
+<br/></pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Now we call AIMET to use the above routine to pass data through the model and then subsequently compute the quantization encodings. Encodings here refer to scale/offset quantization parameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>sim.compute_encodings(forward_pass_callback=pass_calibration_data,
+                      forward_pass_callback_args=1000)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Now the QuantizationSim model is ready to be used for inference. First we can pass this model to the same evaluation routine we used before. The evaluation routine will now give us a simulated quantized accuracy score for INT8 quantization instead of the FP32 accuracy score we saw before.</p>
+</section>
+<hr class="docutils" />
+<section id="4.-Apply-Adaround">
+<h3>4. Apply Adaround<a class="headerlink" href="#4.-Apply-Adaround" title="Link to this heading">¶</a></h3>
+<p>We can now apply AdaRound to this model in a per channel quantization fashion.</p>
+<p><strong>Note</strong>: For per channel to be enabled, we pass a config file to <code class="docutils literal notranslate"><span class="pre">apply_adaround</span></code> in which the config file has <em>per_channel_quantization</em> set to <em>True</em> just as we did with QuantSim.</p>
+<p>Some of the parameters for AdaRound are described below</p>
+<ul class="simple">
+<li><p><strong>data_set:</strong> AdaRound needs a dataset to use data samples for the layer-by-layer optimization to learn the rounding vectors. Either a training or validation dataloader could be passed in.</p></li>
+<li><p><strong>num_batches:</strong> The number of batches used to evaluate the model while calculating the quantization encodings. Typically we want AdaRound to use around 2000 samples. So with a batch size of 32, this may translate to 64 batches. To speed up the execution here we are using a batch size of 1.</p></li>
+<li><p><strong>default_num_iterations:</strong> The number of iterations to adaround each layer. Default value is set to 10000 and we strongly recommend to not reduce this number. But in this example we are using 32 to speed up the execution runtime.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>import os
+from tensorflow.keras.applications.resnet import preprocess_input
+from tensorflow.keras.preprocessing import image_dataset_from_directory
+from aimet_tensorflow.keras.adaround_weight import Adaround, AdaroundParameters
+from aimet_common.defs import QuantScheme
+
+ada_round_data = image_dataset_from_directory(directory=DATASET_DIR,
+                                              labels=&quot;inferred&quot;,
+                                              label_mode=&quot;categorical&quot;,
+                                              batch_size=image_net_config.evaluation[&quot;batch_size&quot;],
+                                              shuffle=False,
+                                              image_size=(image_net_config.dataset[&quot;image_width&quot;],
+                                                          image_net_config.dataset[&quot;image_height&quot;]))
+ada_round_data = ada_round_data.map(lambda x, y: preprocess_input(x))
+
+params = AdaroundParameters(data_set=ada_round_data,
+                            num_batches=1, default_num_iterations=32)
+
+os.makedirs(&quot;./output/&quot;, exist_ok=True)
+ada_model = Adaround.apply_adaround(model, params, path=&quot;output&quot;, filename_prefix=&quot;adaround&quot;,
+                                    default_param_bw=8, default_quant_scheme=QuantScheme.post_training_tf,
+                                    config_file=&quot;Examples/tensorflow/utils/keras/pcq_quantsim_config&quot;)  # NOTE: The same config file used in QuantSim is used here as well. Again, telling Adaround to enable PCQ.
+<br/></pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Now, we can determine the simulated quantized accuracy of the model after applying Adaround. We again create a simulation model like before and evaluate to determine simulated quantized accuracy.</p>
+<p><strong>Note:</strong> There are two important things to understand in the following cell.</p>
+<ul class="simple">
+<li><p><strong>Parameter Biwidth Precision</strong>: The QuantizationSimModel must be created with the same parameter bitwidth precision that was used in the apply_adaround() created.</p></li>
+<li><p><strong>Freezing the parameter encodings</strong>: After creating the QuantizationSimModel, the set_and_freeze_param_encodings() API must be called before calling the compute_encodings() API. While applying AdaRound, the parameter values have been rounded up or down based on these initial encodings internally created. Fo r Quantization Simulation accuracy, it is important to freeze these encodings. If the parameters encodings are NOT frozen, the call to compute_encodings() will alter the value of the
+parameters encoding and Quantization Simulation accuracy will not be correct.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>from aimet_tensorflow.keras.quantsim import QuantizationSimModel
+
+sim = QuantizationSimModel(model=ada_model,
+                           quant_scheme=QuantScheme.post_training_tf,
+                           rounding_mode=&quot;nearest&quot;,
+                           default_output_bw=8,
+                           default_param_bw=8,
+                           config_file=&quot;Examples/tensorflow/utils/keras/pcq_quantsim_config&quot;)  # NOTE: The same config file used in the first QuantSim.
+
+sim.set_and_freeze_param_encodings(encoding_path=os.path.join(&quot;output&quot;, &#39;adaround.encodings&#39;))
+
+sim.compute_encodings(forward_pass_callback=pass_calibration_data,
+                      forward_pass_callback_args=1000)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Now the QuantizationSim model is ready to be used for inference. First we can pass this model to the same evaluation routine we used before. The evaluation routine will now give us a simulated quantized accuracy score for INT8 quantization instead of the FP32 accuracy score we saw before.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>ImageNetDataPipeline.evaluate(model=sim.model, iterations=10)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Depending on your settings you may have observed a slight gain in accuracy after applying adaround. Of course, this was just an example. Please try this against the model of your choice and play with the number of samples to get the best results.</p>
+<p>Now the next step would be to take this model to target. For this purpose, we need to export the model with the updated weights without the fake quant ops. And also to export the encodings (scale/offset quantization parameters). AIMET QuantizationSimModel provides an export API for this purpose.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre><span></span>sim.export(path=&#39;./output&#39;, filename_prefix=&#39;resnet50_pcq_adaround&#39;)
+</pre></div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="Summary">
+<h3>Summary<a class="headerlink" href="#Summary" title="Link to this heading">¶</a></h3>
+<p>This example illustrated how AIMET AdaRound and QuantSim API is invoked to achieve post training quantization on a per channel basis. To use AIMET for your specific needs, replace the model with your model and replace the data pipeline with your data pipeline. This will provide you a quick starting point. As indicated above, some parameters in this example have been chosen in such a way way to make this example execute faster.</p>
+<p>Hope this notebook was useful for you to understand how to use AIMET for performing Adaround and QuantSim on a per channel basis.</p>
+<p>Few additional resources</p>
+<ul class="simple">
+<li><p>Refer to the AIMET API docs to know more details of the APIs and optional parameters</p></li>
+<li><p>Refer to the other example notebooks to understand how to use AIMET post-training quantization techniques and QAT techniques</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Quantsim and Adaround - Per Channel Quantization (PCQ)</a><ul>
+<li><a class="reference internal" href="#Overall-flow">Overall flow</a></li>
+<li><a class="reference internal" href="#What-this-notebook-is-not">What this notebook is not</a><ul>
+<li><a class="reference internal" href="#Dataset">Dataset</a></li>
+<li><a class="reference internal" href="#1.-Example-evaluation-and-training-pipeline">1. Example evaluation and training pipeline</a></li>
+<li><a class="reference internal" href="#2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score">2. Load the model and evaluate to get a baseline FP32 accuracy score</a></li>
+<li><a class="reference internal" href="#3.-Create-a-quantization-simulation-model-and-determine-quantized-accuracy">3. Create a quantization simulation model and determine quantized accuracy</a></li>
+<li><a class="reference internal" href="#Fold-Batch-Normalization-layers">Fold Batch Normalization layers</a></li>
+<li><a class="reference internal" href="#4.-Apply-Adaround">4. Apply Adaround</a></li>
+<li><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
