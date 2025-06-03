@@ -1,0 +1,1045 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Cross-layer equalization" href="cle.html" /><link rel="prev" title="Sequential MSE" href="seq_mse.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>Batch norm folding - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/aimet-furo.css?v=22b0637d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.7.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../userguide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/quantization_tools.html">AIMET features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/quantization_workflow.html">Quantization workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/debugging_guidelines.html">Debugging guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/on_target_inference.html">On-target inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../quantsim/index.html">Quantization Simulation Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Quantization Simulation Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../quantsim/calibration.html">Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quantsim/qat.html">QAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quantsim/blockwise.html">Blockwise quantization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Feature Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Feature Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adascale.html">AdaScale</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="mixed%20precision/index.html">Mixed precision</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Mixed precision</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="mixed%20precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mixed%20precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="analysis%20tools/index.html">Analysis tools</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Analysis tools</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="analysis%20tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis%20tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis%20tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="compression/index.html">Compression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Compression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="compression/channel_pruning.html">Channel pruning</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Channel pruning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="quantized%20LoRa/index.html">Quantized LoRa</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Quantized LoRa</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="quantized%20LoRa/qw_lora.html">QW-LoRa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quantized%20LoRa/qwa_lora.html">QWA-LoRa</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Example Notebooks</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../apiref/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apiref/torch/index.html">aimet_torch</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of aimet_torch</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/migration_guide.html">Migrate to aimet_torch 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/quantsim.html">aimet_torch.quantsim</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../apiref/torch/nn.html">aimet_torch.nn</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of aimet_torch.nn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizationMixin.html">QuantizationMixin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveAvgPool1d.html">QuantizedAdaptiveAvgPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveAvgPool2d.html">QuantizedAdaptiveAvgPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveAvgPool3d.html">QuantizedAdaptiveAvgPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveMaxPool1d.html">QuantizedAdaptiveMaxPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveMaxPool2d.html">QuantizedAdaptiveMaxPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAdaptiveMaxPool3d.html">QuantizedAdaptiveMaxPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAlphaDropout.html">QuantizedAlphaDropout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAvgPool1d.html">QuantizedAvgPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAvgPool2d.html">QuantizedAvgPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedAvgPool3d.html">QuantizedAvgPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedBCELoss.html">QuantizedBCELoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedBCEWithLogitsLoss.html">QuantizedBCEWithLogitsLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedBatchNorm1d.html">QuantizedBatchNorm1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedBatchNorm2d.html">QuantizedBatchNorm2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedBatchNorm3d.html">QuantizedBatchNorm3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedBilinear.html">QuantizedBilinear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCELU.html">QuantizedCELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCTCLoss.html">QuantizedCTCLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedChannelShuffle.html">QuantizedChannelShuffle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCircularPad1d.html">QuantizedCircularPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCircularPad2d.html">QuantizedCircularPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCircularPad3d.html">QuantizedCircularPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConstantPad1d.html">QuantizedConstantPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConstantPad2d.html">QuantizedConstantPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConstantPad3d.html">QuantizedConstantPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConv1d.html">QuantizedConv1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConv2d.html">QuantizedConv2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConv3d.html">QuantizedConv3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConvTranspose1d.html">QuantizedConvTranspose1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConvTranspose2d.html">QuantizedConvTranspose2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedConvTranspose3d.html">QuantizedConvTranspose3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCosineEmbeddingLoss.html">QuantizedCosineEmbeddingLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCosineSimilarity.html">QuantizedCosineSimilarity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedCrossEntropyLoss.html">QuantizedCrossEntropyLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedDropout.html">QuantizedDropout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedDropout1d.html">QuantizedDropout1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedDropout2d.html">QuantizedDropout2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedDropout3d.html">QuantizedDropout3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedELU.html">QuantizedELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedEmbedding.html">QuantizedEmbedding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedEmbeddingBag.html">QuantizedEmbeddingBag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedFeatureAlphaDropout.html">QuantizedFeatureAlphaDropout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedFlatten.html">QuantizedFlatten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedFold.html">QuantizedFold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedFractionalMaxPool2d.html">QuantizedFractionalMaxPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedFractionalMaxPool3d.html">QuantizedFractionalMaxPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedGELU.html">QuantizedGELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedGLU.html">QuantizedGLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedGRU.html">QuantizedGRU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedGRUCell.html">QuantizedGRUCell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedGaussianNLLLoss.html">QuantizedGaussianNLLLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedGroupNorm.html">QuantizedGroupNorm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedHardshrink.html">QuantizedHardshrink</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedHardsigmoid.html">QuantizedHardsigmoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedHardswish.html">QuantizedHardswish</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedHardtanh.html">QuantizedHardtanh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedHingeEmbeddingLoss.html">QuantizedHingeEmbeddingLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedHuberLoss.html">QuantizedHuberLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedInstanceNorm1d.html">QuantizedInstanceNorm1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedInstanceNorm2d.html">QuantizedInstanceNorm2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedInstanceNorm3d.html">QuantizedInstanceNorm3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedKLDivLoss.html">QuantizedKLDivLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedL1Loss.html">QuantizedL1Loss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLPPool1d.html">QuantizedLPPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLPPool2d.html">QuantizedLPPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLSTM.html">QuantizedLSTM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLSTMCell.html">QuantizedLSTMCell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLayerNorm.html">QuantizedLayerNorm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLeakyReLU.html">QuantizedLeakyReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLinear.html">QuantizedLinear</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLocalResponseNorm.html">QuantizedLocalResponseNorm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLogSigmoid.html">QuantizedLogSigmoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedLogSoftmax.html">QuantizedLogSoftmax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMSELoss.html">QuantizedMSELoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMarginRankingLoss.html">QuantizedMarginRankingLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMaxPool1d.html">QuantizedMaxPool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMaxPool2d.html">QuantizedMaxPool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMaxPool3d.html">QuantizedMaxPool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMaxUnpool1d.html">QuantizedMaxUnpool1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMaxUnpool2d.html">QuantizedMaxUnpool2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMaxUnpool3d.html">QuantizedMaxUnpool3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMish.html">QuantizedMish</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMultiLabelMarginLoss.html">QuantizedMultiLabelMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMultiLabelSoftMarginLoss.html">QuantizedMultiLabelSoftMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedMultiMarginLoss.html">QuantizedMultiMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedNLLLoss.html">QuantizedNLLLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedNLLLoss2d.html">QuantizedNLLLoss2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedPReLU.html">QuantizedPReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedPairwiseDistance.html">QuantizedPairwiseDistance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedPixelShuffle.html">QuantizedPixelShuffle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedPixelUnshuffle.html">QuantizedPixelUnshuffle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedPoissonNLLLoss.html">QuantizedPoissonNLLLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedRNN.html">QuantizedRNN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedRNNCell.html">QuantizedRNNCell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedRReLU.html">QuantizedRReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReLU.html">QuantizedReLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReLU6.html">QuantizedReLU6</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReflectionPad1d.html">QuantizedReflectionPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReflectionPad2d.html">QuantizedReflectionPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReflectionPad3d.html">QuantizedReflectionPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReplicationPad1d.html">QuantizedReplicationPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReplicationPad2d.html">QuantizedReplicationPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedReplicationPad3d.html">QuantizedReplicationPad3d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSELU.html">QuantizedSELU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSiLU.html">QuantizedSiLU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSigmoid.html">QuantizedSigmoid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSmoothL1Loss.html">QuantizedSmoothL1Loss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSoftMarginLoss.html">QuantizedSoftMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSoftmax.html">QuantizedSoftmax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSoftmax2d.html">QuantizedSoftmax2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSoftmin.html">QuantizedSoftmin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSoftplus.html">QuantizedSoftplus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSoftshrink.html">QuantizedSoftshrink</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedSoftsign.html">QuantizedSoftsign</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedTanh.html">QuantizedTanh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedTanhshrink.html">QuantizedTanhshrink</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedThreshold.html">QuantizedThreshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedTripletMarginLoss.html">QuantizedTripletMarginLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedTripletMarginWithDistanceLoss.html">QuantizedTripletMarginWithDistanceLoss</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedUnflatten.html">QuantizedUnflatten</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedUnfold.html">QuantizedUnfold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedUpsample.html">QuantizedUpsample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedUpsamplingBilinear2d.html">QuantizedUpsamplingBilinear2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedUpsamplingNearest2d.html">QuantizedUpsamplingNearest2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedZeroPad1d.html">QuantizedZeroPad1d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedZeroPad2d.html">QuantizedZeroPad2d</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.nn.QuantizedZeroPad3d.html">QuantizedZeroPad3d</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../apiref/torch/quantization.html">aimet_torch.quantization</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of aimet_torch.quantization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.QuantizedTensorBase.html">QuantizedTensorBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.QuantizedTensor.html">QuantizedTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.DequantizedTensor.html">DequantizedTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.affine.Quantize.html">Quantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.affine.QuantizeDequantize.html">QuantizeDequantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.float.FloatQuantizeDequantize.html">FloatQuantizeDequantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.affine.quantize.html">quantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.affine.quantize_dequantize.html">quantize_dequantize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apiref/torch/generated/aimet_torch.quantization.affine.dequantize.html">dequantize</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/onnx.html">aimet_torch.onnx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/adaround.html">aimet_torch.adaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/seq_mse.html">aimet_torch.seq_mse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/adascale.html">aimet_torch.adascale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/lpbq.html">aimet_torch.quantsim.config_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/bnf.html">aimet_torch.batch_norm_fold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/cle.html">aimet_torch.cross_layer_equalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/model_preparer.html">aimet_torch.model_preparer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/model_validator.html">aimet_torch.model_validator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/mp.html">aimet_torch.mixed_precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/quant_analyzer.html">aimet_torch.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/autoquant.html">aimet_torch.autoquant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/bn.html">aimet_torch.bn_reestimation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/interactive_visualization.html">aimet_torch.visualization_tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/layer_output_generation.html">aimet_torch.layer_output_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/peft_lora.html">aimet_torch.peft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/compress.html">aimet_torch.compress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/omniquant.html">aimet_torch.omniquant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/v1/quantsim.html">aimet_torch.v1.quantsim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/v1/adaround.html">aimet_torch.v1.adaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/v1/seq_mse.html">aimet_torch.v1.seq_mse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/v1/quant_analyzer.html">aimet_torch.v1.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/v1/autoquant.html">aimet_torch.v1.autoquant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/torch/v1/amp.html">aimet_torch.v1.amp</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apiref/tensorflow/index.html">aimet_tensorflow</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of aimet_tensorflow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/quantsim.html">aimet_tensorflow.quantsim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/adaround.html">aimet_tensorflow.adaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/bnf.html">aimet_tensorflow.batch_norm_fold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/cle.html">aimet_tensorflow.cross_layer_equalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/amp.html">aimet_tensorflow.mixed_precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/quant_analyzer.html">aimet_tensorflow.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/autoquant.html">aimet_tensorflow.auto_quant_v2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/layer_output_generation.html">aimet_tensorflow.layer_output_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/model_preparer.html">aimet_tensorflow.model_preparer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/tensorflow/compress.html">aimet_tensorflow.compress</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apiref/onnx/index.html">aimet_onnx</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of aimet_onnx</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/quantsim.html">aimet_onnx.quantsim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/adaround.html">aimet_onnx.adaround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/seq_mse.html">aimet_onnx.seq_mse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/lpbq.html">aimet_onnx.quantsim.set_grouped_blockwise_quantization_for_weights</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/bnf.html">aimet_onnx.batch_norm_fold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/cle.html">aimet_onnx.cross_layer_equalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/amp.html">aimet_onnx.mixed_precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/quant_analyzer.html">aimet_onnx.quant_analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apiref/onnx/layer_output_generation.html">aimet_onnx.layer_output_utils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="batch-norm-folding">
+<span id="featureguide-bnf"></span><h1>Batch norm folding<a class="headerlink" href="#batch-norm-folding" title="Link to this heading">¶</a></h1>
+<section id="context">
+<h2>Context<a class="headerlink" href="#context" title="Link to this heading">¶</a></h2>
+<p>Batch norm folding (BNF) is a technique widely used in deep learning inference runtimes, including <a class="reference external" href="https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk">Qualcomm® AI Engine Direct</a>.
+In BNF, batch normalization layers are folded into the weights and biases of adjacent convolution layers where possible to eliminate unnecessary computations.</p>
+<p>To accurately simulate inference in these runtimes, perform BNF on the floating-point model before applying quantization. Doing so not only speeds performance (inferences per second) but also often improves the accuracy of the quantized model by removing redundant computations and requantization. AIMET enables you to apply BNF to the pre-quantized model as a precursor to simulating this on-target behavior in the quantization simulation (QuantSim) model.</p>
+</section>
+<section id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">¶</a></h2>
+<section id="procedure">
+<h3>Procedure<a class="headerlink" href="#procedure" title="Link to this heading">¶</a></h3>
+<section id="step-1">
+<h4>Step 1<a class="headerlink" href="#step-1" title="Link to this heading">¶</a></h4>
+<p>Load the model.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-0">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>This example uses the MobileNetV2 model.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">mobilenet_v2</span>
+
+<span class="c1"># General setup that can be changed as needed</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>MobileNetV2(
+  (features): Sequential(
+    (0): Conv2dNormActivation(
+      (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU6(inplace=True)
+    )
+    ...
+)
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-1">
+TensorFlow</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>This example uses the MobileNetV2 model.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_tensorflow.keras.batch_norm_fold</span><span class="w"> </span><span class="kn">import</span> <span class="n">fold_all_batch_norms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_tensorflow.keras.model_preparer</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">applications</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">applications</span><span class="o">.</span><span class="n">MobileNetV2</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>Model: &quot;mobilenetv2_1.00_224&quot;
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to
+==================================================================================================
+ input_1 (InputLayer)           [(None, 224, 224, 3  0           []
+                                )]
+
+ Conv1 (Conv2D)                 (None, 112, 112, 32  864         [&#39;input_1[0][0]&#39;]
+                                )
+
+ bn_Conv1 (BatchNormalization)  (None, 112, 112, 32  128         [&#39;Conv1[0][0]&#39;]
+                                )
+
+ Conv1_relu (ReLU)              (None, 112, 112, 32  0           [&#39;bn_Conv1[0][0]&#39;]
+                                )
+ ...
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-2">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>This example converts the PyTorch MobileNetV2 to ONNX and subsequently uses the ONNX model.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">onnx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">onnxsim</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.batch_norm_fold</span><span class="w"> </span><span class="kn">import</span> <span class="n">fold_all_batch_norms_to_weight</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MobileNet_V2_Weights</span><span class="p">,</span> <span class="n">mobilenet_v2</span>
+
+<span class="n">pt_model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">MobileNet_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pt_model</span><span class="p">)</span>
+
+<span class="c1"># Shape for each ImageNet sample is (3 channels) x (224 height) x (224 width)</span>
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+
+<span class="c1"># Modify file_path as you wish, we are using temporary directory for now</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;mobilenet_v2.onnx&#39;</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span>
+    <span class="n">pt_model</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">dummy_input</span><span class="p">,),</span>
+    <span class="n">file_path</span><span class="p">,</span>
+    <span class="n">do_constant_folding</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">],</span>
+    <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">],</span>
+    <span class="n">dynamic_axes</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;input&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;batch_size&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;batch_size&#39;</span><span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="c1"># Load exported ONNX model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>MobileNetV2(
+  (features): Sequential(
+    (0): Conv2dNormActivation(
+      (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): ReLU6(inplace=True)
+    )
+    ...
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2">
+<h4>Step 2<a class="headerlink" href="#step-2" title="Link to this heading">¶</a></h4>
+<p>Prepare the model, if required by the model framework.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-3">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>No preparation step is needed for PyTorch.</p>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-4">
+TensorFlow</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>AIMET provides the TensorFlow <cite>prepare_model</cite> API, which pre-processes the user model if necessary.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prepared_model</span> <span class="o">=</span> <span class="n">prepare_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** Before batch norm folding ***&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">prepared_model.layers[1]:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">prepared_model.layers[2]:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Conv weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prepared_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>*** Before batch norm folding ***
+
+prepared_model.layers[1]:
+&lt;class &#39;keras.layers.convolutional.conv2d.Conv2D&#39;&gt;
+
+prepared_model.layers[2]:
+&lt;class &#39;keras.layers.normalization.batch_normalization.BatchNormalization&#39;&gt;
+
+Conv weight:
+[[[[-1.71659231e-01 -3.33731920e-01  5.30122258e-02 -5.93232973e-21
+     2.08742931e-01 -1.20433941e-01  1.75700430e-02 -3.10708203e-22
+    -9.62498877e-03  1.90229788e-01 -3.67278278e-01  3.95997976e-22
+  ...
+     3.87471542e-02 -3.67677957e-02 -3.23011987e-02 -4.83861901e-02
+     1.23156421e-02 -5.57984132e-03 -6.53976866e-04 -1.92511864e-02
+    -2.09685047e-22  1.19186290e-01 -2.52912678e-02  2.02078857e-02]]]]
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-5">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>We recommend that you simplify the ONNX model as follows.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Unlike AIMET, which supports both forward/backward folding, ONNX simplifier only performs backward folding.</span>
+<span class="c1"># Therefore, we disable the corresponding optimization in `skipped_optimizers` and proceed with the example</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">onnxsim</span><span class="o">.</span><span class="n">simplify</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">skipped_optimizers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fuse_bn_into_conv&#39;</span><span class="p">])</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ONNX Simplifier failed. Proceeding with unsimplified model&#39;</span><span class="p">)</span>
+
+<span class="n">initializers</span> <span class="o">=</span> <span class="p">{</span><span class="n">init</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">init</span> <span class="k">for</span> <span class="n">init</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">initializer</span><span class="p">}</span>
+<span class="n">conv_weight_name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">conv_weight</span> <span class="o">=</span> <span class="n">initializers</span><span class="p">[</span><span class="n">conv_weight_name</span><span class="p">]</span>
+<span class="n">conv_weight_array</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">conv_weight</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Before batch norm folding ***&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.graph.node[0]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.graph.node[1]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Conv weight&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conv_weight_array</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>*** Before batch norm folding ***
+
+model.graph.node[0]:
+name: &quot;/features/features.0/features.0.0/Conv&quot;
+
+model.graph.node[1]:
+name: &quot;/features/features.0/features.0.1/BatchNormalization&quot;
+
+Conv weight:
+[[[[-6.31080866e-02 -1.87656835e-01 -1.51876003e-01]
+   [-4.93787616e-01 -6.42477691e-01 -5.89348674e-01]
+   [-6.80053532e-01 -9.74478185e-01 -7.63172388e-01]]
+  ...
+  [[ 1.24257803e-02 -4.73242160e-03 -1.81884710e-02]
+   [ 2.32141271e-01  7.22583652e-01  1.21250950e-01]
+   [-2.59643137e-01 -7.18673885e-01 -9.19778645e-02]]]]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3">
+<h4>Step 3<a class="headerlink" href="#step-3" title="Link to this heading">¶</a></h4>
+<p>Perform the batch norm folding.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-6">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>Execute the AIMET BNF API.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Before batch norm folding ***&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.features[0][0]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.features[0][1]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.batch_norm_fold</span><span class="w"> </span><span class="kn">import</span> <span class="n">fold_all_batch_norms</span>
+<span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** After batch norm folding ***&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.features[0][0]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.features[0][1]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>*** Before batch norm folding ***
+
+model.features[0][0]:
+Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+
+model.features[0][1]:
+BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+
+
+*** After batch norm folding ***
+
+model.features[0][0]:
+Conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+
+model.features[0][1]:
+Identity()
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-7">
+TensorFlow</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>Execute the AIMET BNF API.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">folded_model</span> <span class="o">=</span> <span class="n">fold_all_batch_norms</span><span class="p">(</span><span class="n">prepared_model</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** After batch norm folding ***&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">folded_model.layers[1]:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">folded_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">folded_model.layers[2]:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">folded_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Conv weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">folded_model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>*** After batch norm folding ***
+
+folded_model.layers[1]:
+&lt;class &#39;keras.layers.convolutional.conv2d.Conv2D&#39;&gt;
+
+folded_model.layers[2]:
+&lt;class &#39;keras.layers.activation.relu.ReLU&#39;&gt;
+
+Conv weight
+[[[[-3.01457286e-01 -1.49024737e+00  6.10569119e-01 -1.29590677e-19
+     1.51547194e-01 -1.51446089e-01  1.38100997e-01 -4.89249423e-21
+    -5.16245179e-02  4.64579314e-01 -2.44408584e+00  1.22219264e-20
+     ...
+     1.67510852e-01 -2.60713138e-02 -1.05549544e-01 -2.53403008e-01
+     1.39502389e-02 -1.54620111e-02 -1.97294299e-02 -9.41715762e-02
+    -6.88260233e-21  8.95088911e-02 -1.87630311e-01  2.48399768e-02]]]]
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-8">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="tab-heading docutils container">
+<p>Execute the AIMET BNF API.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">fold_all_batch_norms_to_weight</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+
+<span class="n">conv_weight</span> <span class="o">=</span> <span class="n">initializers</span><span class="p">[</span><span class="n">conv_weight_name</span><span class="p">]</span>
+<span class="n">conv_weight_array</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">numpy_helper</span><span class="o">.</span><span class="n">to_array</span><span class="p">(</span><span class="n">conv_weight</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** After batch norm folding ***&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.graph.node[0]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">model.graph.node[1]:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Conv weight&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conv_weight_array</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>*** After batch norm folding ***
+
+model.graph.node[0]:
+name: &quot;/features/features.0/features.0.0/Conv&quot;
+
+model.graph.node[1]:
+name: &quot;/features/features.0/features.0.2/Clip&quot;
+
+Conv weight:
+[[[[-2.00183112e-02 -5.95260113e-02 -4.81760912e-02]
+   [-1.56632766e-01 -2.03798249e-01 -1.86945379e-01]
+   [-2.15717569e-01 -3.09111059e-01 -2.42083430e-01]]
+   ...
+  [[ 1.21066449e-02 -4.61087702e-03 -1.77213307e-02]
+   [ 2.26179108e-01  7.04025269e-01  1.18136823e-01]
+   [-2.52974629e-01 -7.00215936e-01 -8.96155685e-02]]]]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-9">
+PyTorch</label><div class="sd-tab-content docutils">
+<p><strong>Top-level API</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_torch.batch_norm_fold.fold_all_batch_norms">
+<span class="sig-prename descclassname"><span class="pre">aimet_torch.batch_norm_fold.</span></span><span class="sig-name descname"><span class="pre">fold_all_batch_norms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_torch.batch_norm_fold.fold_all_batch_norms" title="Link to this definition">¶</a></dt>
+<dd><p>Fold all batch_norm layers in a model into the weight of the corresponding conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></span>) – Model</p></li>
+<li><p><strong>input_shapes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>]]</span>) – Input shapes for the model (can be one or multiple inputs)</p></li>
+<li><p><strong>dummy_input</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – A dummy input to the model. Can be a Tensor or a Tuple of Tensors</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Linear</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv1d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ConvTranspose2d</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm1d</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm2d</span></code>]]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of pairs of layers [(Conv/Linear, BN layer that got folded)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<input id="sd-tab-item-10" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-10">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p><strong>Top-level API</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_tensorflow.keras.batch_norm_fold.fold_all_batch_norms">
+<span class="sig-prename descclassname"><span class="pre">aimet_tensorflow.keras.batch_norm_fold.</span></span><span class="sig-name descname"><span class="pre">fold_all_batch_norms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_tensorflow/keras/batch_norm_fold.html#fold_all_batch_norms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_tensorflow.keras.batch_norm_fold.fold_all_batch_norms" title="Link to this definition">¶</a></dt>
+<dd><p>Fold all batch_norm layers in a model into corresponding conv/linear layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></span>) – model to find all batch norms for</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2D</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dense</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2DTranspose</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DepthwiseConv2D</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNormalization</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple of List of conv/linear layers with associated bn op / activation info
+and a new model with the Batch Normalization layers folded</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<input id="sd-tab-item-11" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-11">
+ONNX</label><div class="sd-tab-content docutils">
+<p><strong>Top-level API</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_onnx.batch_norm_fold.fold_all_batch_norms_to_weight">
+<span class="sig-prename descclassname"><span class="pre">aimet_onnx.batch_norm_fold.</span></span><span class="sig-name descname"><span class="pre">fold_all_batch_norms_to_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/batch_norm_fold.html#fold_all_batch_norms_to_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.batch_norm_fold.fold_all_batch_norms_to_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Fold all possible batch_norm layers in a model into the weight of the corresponding conv layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelProto</span></code></span>) – onnx Model to perform BN fold on</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of pairs of layers [(Conv/Linear, BN layer that got folded)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="cle.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Cross-layer equalization</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="seq_mse.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Sequential MSE</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Batch norm folding</a><ul>
+<li><a class="reference internal" href="#context">Context</a></li>
+<li><a class="reference internal" href="#workflow">Workflow</a><ul>
+<li><a class="reference internal" href="#procedure">Procedure</a><ul>
+<li><a class="reference internal" href="#step-1">Step 1</a></li>
+<li><a class="reference internal" href="#step-2">Step 2</a></li>
+<li><a class="reference internal" href="#step-3">Step 3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#aimet_torch.batch_norm_fold.fold_all_batch_norms"><code class="docutils literal notranslate"><span class="pre">fold_all_batch_norms()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_tensorflow.keras.batch_norm_fold.fold_all_batch_norms"><code class="docutils literal notranslate"><span class="pre">fold_all_batch_norms()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.batch_norm_fold.fold_all_batch_norms_to_weight"><code class="docutils literal notranslate"><span class="pre">fold_all_batch_norms_to_weight()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
