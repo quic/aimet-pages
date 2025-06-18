@@ -1,0 +1,783 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Optimization techniques" href="../featureguide/index.html" /><link rel="prev" title="Quantization-aware training" href="qat.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>Per-block quantization - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/aimet-furo.css?v=22b0637d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.8.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../userguide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/quantization_tools.html">AIMET features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/quantization_workflow.html">Quantization workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/debugging_guidelines.html">Debugging guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../userguide/on_target_inference.html">On-target inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Quantization Simulation Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Quantization Simulation Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="calibration.html">Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qat.html">QAT</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Blockwise quantization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../featureguide/index.html">Feature Guide</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Feature Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/adascale.html">AdaScale</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../featureguide/mixed%20precision/index.html">Mixed precision</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Mixed precision</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/mixed%20precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/mixed%20precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../featureguide/analysis%20tools/index.html">Analysis tools</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Analysis tools</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/analysis%20tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/analysis%20tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/analysis%20tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../featureguide/compression/index.html">Compression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Compression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../featureguide/compression/channel_pruning.html">Channel pruning</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Channel pruning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../featureguide/compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../featureguide/quantized%20LoRa/index.html">Quantized LoRa</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Quantized LoRa</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/quantized%20LoRa/qw_lora.html">QW-LoRa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../featureguide/quantized%20LoRa/qwa_lora.html">QWA-LoRa</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../featureguide/omniquant.html">OmniQuant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../apiref/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../external/index.html">External Resources</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of External Resources</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-models/">Qualcomm Hub Models</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-apps/">Qualcomm Hub Apps</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://aihub.qualcomm.com/">Qualcomm AI Hub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="per-block-quantization">
+<span id="quantsim-blockwise"></span><h1>Per-block quantization<a class="headerlink" href="#per-block-quantization" title="Link to this heading">¶</a></h1>
+<p>This page describes blockwise techniques and tools for <em>calibration</em>, the process of determining quantization parameters. See <a class="reference internal" href="calibration.html#quantsim-calibration"><span class="std std-ref">Calibration</span></a> for basic information about performing calibration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The terms “per-block quantization” and “blockwise quantization” are used interchangeably.</p>
+</div>
+<p>When performing calibration for a tensor, you can compute encodings for the whole tensor, or split the tensor into parts (channels or blocks) and compute encodings for each part.</p>
+<p>We recommended that you quantize as granularly as possible. Finer granularity typically results in better quantized accuracy.</p>
+<p>In order of preference, use:</p>
+<ol class="arabic simple">
+<li><p>Blockwise quantization (BQ)</p></li>
+<li><p>Per-channel quantization</p></li>
+<li><p>Per-tensor quantization</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Blockwise and per-channel quantization are supported only for weights, not activations, on Qualcomm runtimes.</p>
+</div>
+<section id="executing-per-block-quantization">
+<h2>Executing per-block quantization<a class="headerlink" href="#executing-per-block-quantization" title="Link to this heading">¶</a></h2>
+<p>To enable blockwise quantization, instantiate a <cite>QuantizeDequantize</cite> object with blockwise settings and replace an existing quantizer with the new quantizer.</p>
+<p>Specify the block sizes for each dimension of the tensor in the  <cite>block_size</cite> parameter. Note the relationship between   <cite>block_size</cite> arguments and the QuantizeDequantize object’s shape, and with the shape of the tensor being quantized.</p>
+<p>The following rules apply:</p>
+<ul>
+<li><p>If  <cite>block_size</cite> is provided, the length of  <cite>block_size</cite> must match the length of the <cite>QuantizeDequantize</cite> object’s shape.</p></li>
+<li><p>If  <cite>block_size</cite> is provided, it must be no longer than the number of dimensions of the tensor.</p></li>
+<li><p>Block sizes must evenly divide each of the tensor’s dimensions. For example, if a tensor’s shape is (2, 2, 6, 10), then (2, 1, 3, 5) is a valid  <cite>block_size</cite>, since each tensor dimension is divisible by the corresponding block size.</p>
+<p>In formal terms, for  <cite>block_size</cite> [b<sub>1</sub>, b<sub>2</sub>,, …, b<sub>n</sub>,] and <cite>QuantizeDequantize</cite> shape [s<sub>1</sub>, s<sub>2</sub>,, …, s<sub>n</sub>,], the tensor’s shape must satisfy this relationship:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[tensor.shape\left[:-n\right] == \left[b_1 * s_1, b_2 * s_2, ..., b_n * s_n\right]\]</div>
+</div>
+</li>
+<li><p>For any dimension, you can use a block size value of -1 to instruct the quantizer to automatically determine the block size based on shape of the <cite>QuantizeDequantize</cite> object and the tensor in that dimension.</p></li>
+</ul>
+<p>Following are examples of valid and invalid combinations of tensor shape, <cite>QuantizeDequantize</cite> shape, and  <cite>block_size</cite>.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-0">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Invalid combination: block_size is not the same length as QuantizeDequantize shape</span>
+<span class="n">tensor</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">QuantizeDequantize</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+<span class="n">block_size</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Invalid combination: block_size * QuantizeDequantize shape != tensor shape:</span>
+<span class="n">tensor</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">QuantizeDequantize</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">block_size</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Valid combination:</span>
+<span class="n">tensor</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">QuantizeDequantize</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">block_size</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Valid combination (note that though tensor shape is 3d, only the final 2 dimensions correspond to block_size</span>
+<span class="c1"># and QuantizeDequantize shape):</span>
+<span class="n">tensor</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">QuantizeDequantize</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">block_size</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Valid combination:</span>
+<span class="n">tensor</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">QuantizeDequantize</span> <span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">block_size</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>    <span class="c1"># block_size will be inferred to be (2, 5)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-1">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-2">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported</p>
+</div>
+</div>
+<p>To allow for experimentation, the <cite>QuantizeDequantize</cite> object supports arbitrary block sizes. However, the Qualcomm runtime imposes the following restrictions:</p>
+<ul class="simple">
+<li><p>Blockwise quantization runs on weight (not activation) quantizers only.</p></li>
+<li><p>Block size must be set to one for the output channel dimension.</p></li>
+<li><p>Block size may take an arbitrary value for the input channel dimension (it must still divide evenly into the input channel tensor shape).</p></li>
+<li><p>Block size must be equal to the tensor size for all other dimensions.</p></li>
+<li><p>Layers running with blockwise-quantized weights must be running with quantized floating-point activations.</p></li>
+</ul>
+<p>The following code examples show how to configure convolution and linear layers to  blockwise quantization.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-3">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.quantization.affine</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantizeDequantize</span>
+
+<span class="c1"># Assume sim.model.conv_1 refers to a QuantizedConv2d layer with weight param shape of (16, 64, 2, 2)</span>
+<span class="c1"># Below settings equate to a block size of 16 in the input channels dimension.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">conv_1</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuantizeDequantize</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                                                 <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                                                 <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                                 <span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># (-1, -1, -1, -1) works too</span>
+
+<span class="c1"># Assume sim.model.linear_1 refers to a QuantizedLinear layer with weight param shape of (12, 16)</span>
+<span class="c1"># Below settings equate to a block size of 4 in the input channels dimension.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">conv_1</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuantizeDequantize</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                                                                 <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                                                 <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                                 <span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>  <span class="c1"># (-1, -1) works too</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-4">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-5">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+</section>
+<section id="low-power-blockwise-quantization">
+<h2>Low power blockwise quantization<a class="headerlink" href="#low-power-blockwise-quantization" title="Link to this heading">¶</a></h2>
+<p>Qualcomm® AI Engine Direct supports an alternative to blockwise quantization called Low Power Blockwise Quantization (LPBQ).</p>
+<p>In LPBQ, blockwise encodings at a lower bit width are adjusted such that they lie on a common higher-bit-width per-channel grid. This enables models to run on existing per channel kernels and still benefit from blockwise quantization.</p>
+<p>LPBQ encodings require less storage than blockwise quantization encodings because only the low bit-width integer scale expansion factors need to be stored per-block (the floating point encoding scales are stored per-channel).</p>
+<p>LPBQ quantization is part of the <code class="xref py py-class docutils literal notranslate"><span class="pre">aimet_torch.quantization.affine.GroupedBlockQuantizeDequantize</span></code> class.</p>
+<p>Besides the  <cite>block_size</cite> argument described in the  blockwise Quantization section, LPBQ requires two additional arguments:</p>
+<dl>
+<dt><cite>decompressed_bw</cite></dt><dd><p>The higher bit-width value for the per channel grid that the lower bit-width blockwise encodings are expanded to. The <cite>decompressed_bw</cite> value must be greater than or equal to the  bit width of the quantizer.</p>
+</dd>
+<dt><cite>block_grouping</cite></dt><dd><p>The number of blocks for each dimension that are grouped when expanding the lower bit-width blockwise encodings. The block grouping for a particular dimension must be divisible by the number of blocks in that dimension.</p>
+<p>As with block size, a block grouping value of -1 is automatically interpreted as the number of blocks in that dimension.</p>
+</dd>
+</dl>
+<p>To allow for experimentation, the <cite>GroupedBlockQuantizeDequantize</cite> object supports arbitrary block sizes. However, the Qualcomm runtime imposes the following restrictions on LPBQ:</p>
+<ul class="simple">
+<li><p>Blockwise quantization runs on weight (not activation) quantizers only.</p></li>
+<li><p>Block size must be set to one for the output channel dimension.</p></li>
+<li><p>Block size may take an arbitrary value for the input channel dimension (it must still divide evenly into the input channel tensor shape).</p></li>
+<li><p>Block size must be equal to the tensor size for all other dimensions.</p></li>
+<li><p>Block groupings must be set to one for all dimensions, except for the input channels dimension which should be
+set to the number of blocks in that dimension.</p></li>
+</ul>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-6">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.quantization.affine</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupedBlockQuantizeDequantize</span>
+
+<span class="c1"># Assume sim.model.conv_1 refers to a QuantizedConv2d layer with weight param shape of (16, 64, 2, 2)</span>
+<span class="c1"># Below settings equate to a block size of 16 in the input channels dimension.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">conv_1</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GroupedBlockQuantizeDequantize</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                                                             <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                                                             <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                                             <span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                                                                             <span class="n">decompressed_bw</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                                                                             <span class="n">block_grouping</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>   <span class="c1"># (1, -1, 1, 1) works too</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-7">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-8">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+</section>
+<section id="exporting-blockwise-quantized-models">
+<h2>Exporting blockwise-quantized models<a class="headerlink" href="#exporting-blockwise-quantized-models" title="Link to this heading">¶</a></h2>
+<p>Blockwise quantization generates a larger number of encodings than per tensor or per channel quantization. To reduce the size of the exported encodings JSON file and the time needed to write the file, blockwise quantization uses an improved file format, designated 1.0.0, for the export.</p>
+<p>The 1.0.0 encoding format is supported by the Qualcomm runtime and can be used to export per tensor, per channel, blockwise, and LPBQ quantizer encodings.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If  blockwise and/or LPBQ quantizers are present in the model, the 1.0.0 format <em>must</em> be used when exporting encodings for the Qualcomm runtime.</p>
+</div>
+<p>The following code snippet shows how to export encodings in the 1.0.0 format:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-9">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantsim</span>
+
+<span class="c1"># Assume &#39;sim&#39; is a QuantizationSimModel object imported from aimet_torch.quantsim</span>
+
+<span class="c1"># Set encoding_version to 1.0.0</span>
+<span class="n">quantsim</span><span class="o">.</span><span class="n">encoding_version</span> <span class="o">=</span> <span class="s1">&#39;1.0.0&#39;</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;./data&#39;</span><span class="p">,</span> <span class="s1">&#39;exported_model&#39;</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-10" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-10">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-11" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-11">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+<p>See the <a class="reference internal" href="encoding_spec.html#quantsim-encoding-spec"><span class="std std-ref">Encoding specifications</span></a> page, which describes encodings specifications in detail.</p>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
+<p><strong>Top-level API to configure BQ quantization</strong></p>
+<p>As described above, the Qualcomm runtime is constrained to running floating point activations for layers that use  blockwise quantization. We provide the following utility function to help transform multiple layers’ quantizers to float quantization:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.quantsim.config_utils.</span></span><span class="sig-name descname"><span class="pre">set_activation_quantizers_to_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent_bits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mantissa_bits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/config_utils.html#set_activation_quantizers_to_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set activation quantizers of modules to float.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../apiref/torch/quantsim.html#aimet_torch.QuantizationSimModel" title="aimet_torch.v2.quantsim.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim to set activation quantizers for</p></li>
+<li><p><strong>arg</strong> – <p>Argument determining which modules to set. This can consist of either:</p>
+<ol class="arabic simple">
+<li><p>A list of torch.nn.Module types, in which case all modules whose type is in the list will be set</p></li>
+<li><p>A list of torch.nn.Modules, in which case all modules in the list will be set</p></li>
+<li><p>A callable function which takes a torch.nn.Module as input and returns True if the module is to be set, False
+otherwise</p></li>
+</ol>
+</p></li>
+<li><p><strong>exponent_bits</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Number of exponent bits to simulate</p></li>
+<li><p><strong>mantissa_bits</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Number of mantissa bits to simulate</p></li>
+<li><p><strong>dtype</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>]</span>) – torch.dtype to simulate. This argument is mutually exclusive with exponent_bits and mantissa_bits.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assume &#39;sim&#39; is a QuantizationSimModel object imported from aimet_torch.v2.quantsim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of all Linear and Conv output quantizers to floating point activation quantization:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                   <span class="n">arg</span><span class="o">=</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">],</span>
+<span class="gp">... </span>                                   <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of specific model layers&#39; output quantizers to floating point activation quantization:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                   <span class="n">arg</span><span class="o">=</span><span class="p">[</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear1</span><span class="p">],</span>
+<span class="gp">... </span>                                   <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of only Convolution layers with input channels dim == 128 to floating point activation quantization:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_activation_quantizers_to_float</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                   <span class="n">arg</span><span class="o">=</span><span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">128</span><span class="p">,</span>
+<span class="gp">... </span>                                   <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.quantsim.config_utils.</span></span><span class="sig-name descname"><span class="pre">set_blockwise_quantization_for_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitwidth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/config_utils.html#set_blockwise_quantization_for_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set weight parameter quantizers of modules to blockwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../apiref/torch/quantsim.html#aimet_torch.QuantizationSimModel" title="aimet_torch.v2.quantsim.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim to set weight quantizers for</p></li>
+<li><p><strong>arg</strong> – <p>Argument determining which modules to set. This can consist of either:</p>
+<ol class="arabic simple">
+<li><p>A list of torch.nn.Module types, in which case all modules whose type is in the list will be set</p></li>
+<li><p>A list of torch.nn.Modules, in which case all modules in the list will be set</p></li>
+<li><p>A callable function which takes a torch.nn.Module as input and returns True if the module is to be set, False
+otherwise</p></li>
+</ol>
+</p></li>
+<li><p><strong>bitwidth</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Bitwidth for affine quantization</p></li>
+<li><p><strong>symmetric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – True if affine quantization is symmetric, False otherwise</p></li>
+<li><p><strong>block_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>]]</span>) – <p>Block size for affine quantization. This can be an array in which case all layers identified
+by arg must have weight shapes compatible with the array length, or can be an integer value, in which case the
+block size will be applied to the weight’s in_channels dimension, and per channel will be used for the weight’s
+out_channels dimension.</p>
+<p>A block size value of -1 for a particular dimension is equivalent to a block size equal
+to the size of that particular dimension.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assume &#39;sim&#39; is a QuantizationSimModel object imported from aimet_torch.v2.quantsim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of all Linear and Conv weight quantizers to block_size 64 in the input_channels dimension:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">arg</span><span class="o">=</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">],</span>
+<span class="gp">... </span>                                       <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">block_size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of specific model layers&#39; weight quantizer block_size to 64 in the input_channels dimension:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">arg</span><span class="o">=</span><span class="p">[</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear1</span><span class="p">],</span>
+<span class="gp">... </span>                                       <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">block_size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of only Convolution layers with input channels dim == 128 to block_size 64 in the input_channels dimension</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">arg</span><span class="o">=</span><span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">128</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">block_size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Note the second argument in the function, which specifies a subset of layers to switch to blockwise quantization. Refer to the function docstring for the valid input types for this argument.</p>
+<p>The  <cite>block_size</cite> argument can be a single integer value instead of an array. In this case, the output channels dimension is set to a block size of one, the input channels dimension to the supplied value, and all other dimensions to the dimension’s size.</p>
+<p>This enables you to handle layers with differing weight shapes (such as convolution layers with 4d weights vs. linear layers with 2d weights) with a single API call. If an array for  <cite>block_size</cite> is passed instead, the API has to be called multiple times for each set of layers with different weight dimensions (because the length of the  <cite>block_size</cite> array must match the number of dimensions for its layer’s weight).</p>
+<p><strong>Top-level API to configure LPBQ quantization</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.quantsim.config_utils.</span></span><span class="sig-name descname"><span class="pre">set_grouped_blockwise_quantization_for_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitwidth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decompressed_bw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_grouping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/config_utils.html#set_grouped_blockwise_quantization_for_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set weight parameter quantizers of modules to grouped blockwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../apiref/torch/quantsim.html#aimet_torch.QuantizationSimModel" title="aimet_torch.v2.quantsim.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim to set weight quantizers for</p></li>
+<li><p><strong>arg</strong> – <p>Argument determining which modules to set. This can consist of either:</p>
+<ol class="arabic simple">
+<li><p>A list of torch.nn.Module types, in which case all modules whose type is in the list will be set</p></li>
+<li><p>A list of torch.nn.Modules, in which case all modules in the list will be set</p></li>
+<li><p>A callable function which takes a torch.nn.Module as input and returns True if the module is to be set, False
+otherwise</p></li>
+</ol>
+</p></li>
+<li><p><strong>bitwidth</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Bitwidth for affine quantization</p></li>
+<li><p><strong>symmetric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – True if affine quantization is symmetric, False otherwise</p></li>
+<li><p><strong>decompressed_bw</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Decompressed bw for grouped block quantization</p></li>
+<li><p><strong>block_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>]]</span>) – <p>Block size for affine quantization. This can be an array in which case all layers identified
+by arg must have weight shapes compatible with the array length, or can be an integer value, in which case the
+block size will be applied to the weight’s in_channels dimension and per channel will be used for the weight’s
+out_channels dimension.</p>
+<p>A block size value of -1 for a particular dimension is equivalent to a block size equal
+to the size of that particular dimension.</p>
+</p></li>
+<li><p><strong>block_grouping</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>]]</span>) – <p>Block grouping for grouped block quantization. This can be an array in which case all layers
+identified by arg must have weight shapes compatible with the array length, or can be an integer value, in which
+case the block grouping will be applied to the weight’s in_channels dimension, and no other dimensions will
+experience block grouping.</p>
+<p>A block grouping value of -1 for a particular dimension is equivalent to a block
+grouping equal to the number of blocks for that particular dimension.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assume &#39;sim&#39; is a QuantizationSimModel object imported from aimet_torch.v2.quantsim</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of all Linear and Conv weight quantizers to LPBQ with block_size 64 in the input_channels dimension:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">arg</span><span class="o">=</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">],</span>
+<span class="gp">... </span>                                               <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">decompressed_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">block_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">block_grouping</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of specific model layers&#39; weight quantizer to LPBQ with block_size 64 in the input_channels dimension:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">arg</span><span class="o">=</span><span class="p">[</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">conv2</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">linear1</span><span class="p">],</span>
+<span class="gp">... </span>                                               <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">decompressed_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">block_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">block_grouping</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Allows setting of only Convolution layers with input channels dim == 128 to LPBQ with block_size 64 in the input_channels dimension:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">set_grouped_blockwise_quantization_for_weights</span><span class="p">(</span><span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">arg</span><span class="o">=</span><span class="k">lambda</span> <span class="n">module</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">128</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">bitwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">decompressed_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">block_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+<span class="gp">... </span>                                               <span class="n">block_grouping</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>This utility enables you to configure quantized layers to use grouped blockwise quantization by supplying a <cite>decompressed_bw</cite>,  <cite>block_size</cite>, and <cite>block_grouping</cite>. Similar to <code class="xref py py-func docutils literal notranslate"><span class="pre">set_blockwise_quantization_for_weights()</span></code>, <cite>block_grouping</cite> can be a single value. In this case the input_channel’s dimension is assigned the value, and all other dimensions are assigned a value of one.</p>
+<p>Different layers can have different numbers of blocks for the input channels dimension for the same block size. If you assign -1 as the single <cite>block_grouping</cite> value, the input channels dimension automatically uses a <cite>block_grouping</cite> value equal to the number of blocks in any affected layer. This enbles you to configure all affected layers to LPBQ quantization with a single API call.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../featureguide/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Optimization techniques</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="qat.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Quantization-aware training</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Per-block quantization</a><ul>
+<li><a class="reference internal" href="#executing-per-block-quantization">Executing per-block quantization</a></li>
+<li><a class="reference internal" href="#low-power-blockwise-quantization">Low power blockwise quantization</a></li>
+<li><a class="reference internal" href="#exporting-blockwise-quantized-models">Exporting blockwise-quantized models</a></li>
+<li><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

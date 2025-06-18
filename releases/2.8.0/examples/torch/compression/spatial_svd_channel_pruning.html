@@ -1,0 +1,768 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>Model compression using spatial SVD and channel pruning - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/aimet-furo.css?v=22b0637d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.8.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../userguide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/quantization_tools.html">AIMET features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/quantization_workflow.html">Quantization workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/debugging_guidelines.html">Debugging guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/on_target_inference.html">On-target inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../quantsim/index.html">Quantization Simulation Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Quantization Simulation Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../quantsim/calibration.html">Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quantsim/qat.html">QAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quantsim/blockwise.html">Blockwise quantization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../featureguide/index.html">Feature Guide</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Feature Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/adascale.html">AdaScale</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/mixed%20precision/index.html">Mixed precision</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Mixed precision</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/mixed%20precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/mixed%20precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/analysis%20tools/index.html">Analysis tools</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Analysis tools</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/analysis%20tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/analysis%20tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/analysis%20tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/compression/index.html">Compression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Compression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../featureguide/compression/channel_pruning.html">Channel pruning</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Channel pruning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../featureguide/compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/quantized%20LoRa/index.html">Quantized LoRa</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Quantized LoRa</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/quantized%20LoRa/qw_lora.html">QW-LoRa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/quantized%20LoRa/qwa_lora.html">QWA-LoRa</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/omniquant.html">OmniQuant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../apiref/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../external/index.html">External Resources</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of External Resources</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-models/">Qualcomm Hub Models</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-apps/">Qualcomm Hub Apps</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://aihub.qualcomm.com/">Qualcomm AI Hub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="Model-compression-using-spatial-SVD-and-channel-pruning">
+<h1>Model compression using spatial SVD and channel pruning<a class="headerlink" href="#Model-compression-using-spatial-SVD-and-channel-pruning" title="Link to this heading">¶</a></h1>
+<p>This notebook contains a working example of AIMET model compression using the singular value decomposition (SVD) technique followed by the channel pruning technique.</p>
+<p>Both techniques are structured pruning techniques that aim to reduce computational MACS or memory requirements of the model. After applying either of the techniques, the compressed model must be fine-tuned (meaning trained again for a few epochs) to restore accuracy to a level near the original model’s.</p>
+<p>See <a class="reference external" href="/user_guide/spatial_svd_channel_pruning">AIMET spatial SVD</a> for a detailed discussion of these and other compression techniques.</p>
+<section id="Overall-flow">
+<h2>Overall flow<a class="headerlink" href="#Overall-flow" title="Link to this heading">¶</a></h2>
+<p>The example follows these high-level steps:</p>
+<ol class="arabic simple">
+<li><p>Instantiate the example evaluation and training pipeline</p></li>
+<li><p>Load the model and evaluate it to find the baseline accuracy</p></li>
+<li><p>Compress the model and fine-tune:</p>
+<ol class="arabic simple">
+<li><p>Compress model using spatial SVD and evaluate it to find post-compression accuracy</p></li>
+<li><p>Fine-tune the model after spatial SVD</p></li>
+<li><p>Compress model using channel pruning and evaluate it to find post-compression accuracy</p></li>
+<li><p>Fine-tune the model after channel pruning</p></li>
+</ol>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This notebook does not show state-of-the-art results. For example, it uses a relatively quantization-friendly model (Resnet18). Also, some optimization parameters like number of fine-tuning epochs are chosen to improve execution speed in the notebook.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="Dataset">
+<h2>Dataset<a class="headerlink" href="#Dataset" title="Link to this heading">¶</a></h2>
+<p>This example does image classification on the ImageNet dataset. If you already have a version of the data set, use that. Otherwise download the data set, for example from <a class="reference external" href="https://image-net.org/challenges/LSVRC/2012/index">https://image-net.org/challenges/LSVRC/2012/index</a> .</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The dataloader provided in this example relies on these features of the ImageNet data set:</p>
+<ul class="simple">
+<li><p>Subfolders <code class="docutils literal notranslate"><span class="pre">train</span></code> for the training samples and <code class="docutils literal notranslate"><span class="pre">val</span></code> for the validation samples. See the <a class="reference external" href="https://pytorch.org/vision/0.8/_modules/torchvision/datasets/imagenet.html">pytorch dataset description</a> for more details.</p></li>
+<li><p>One subdirectory per class, and one file per image sample.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To speed up the execution of this notebook, you can use a reduced subset of the ImageNet dataset. For example: The entire ILSVRC2012 dataset has 1000 classes, 1000 training samples per class and 50 validation samples per class. However, for the purpose of running this notebook, you can reduce the dataset to, say, two samples per class.</p>
+</div>
+<p>Edit the cell below to specify the directory where the downloaded ImageNet dataset is saved.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>DATASET_DIR = &#39;/path/to/dataset/&#39;         # Replace this path with a real directory
+</pre></div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="1.-Instantiate-the-example-training-and-validation-pipeline">
+<h2>1. Instantiate the example training and validation pipeline<a class="headerlink" href="#1.-Instantiate-the-example-training-and-validation-pipeline" title="Link to this heading">¶</a></h2>
+<p><strong>Use the following training and validation loop for the image classification task.</strong></p>
+<p>Things to note:</p>
+<ul class="simple">
+<li><p>AIMET does not put limitations on how the training and validation pipeline is written. AIMET modifies the user’s model to create a QuantizationSim model, which is still a PyTorch model. The QuantizationSim model can be used in place of the original model when doing inference or training.</p></li>
+<li><p>AIMET doesn not put limitations on the interface of the <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> or <code class="docutils literal notranslate"><span class="pre">train()</span></code> methods. You should be able to use your existing evaluate and train routines as-is.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import os
+import torch
+from typing import List
+from Examples.common import image_net_config
+from Examples.torch.utils.image_net_evaluator import ImageNetEvaluator
+from Examples.torch.utils.image_net_trainer import ImageNetTrainer
+from Examples.torch.utils.image_net_data_loader import ImageNetDataLoader
+
+class ImageNetDataPipeline:
+
+    @staticmethod
+    def get_val_dataloader() -&gt; torch.utils.data.DataLoader:
+        &quot;&quot;&quot;
+        Instantiates a validation dataloader for ImageNet dataset and returns it
+        &quot;&quot;&quot;
+        data_loader = ImageNetDataLoader(DATASET_DIR,
+                                         image_size=image_net_config.dataset[&#39;image_size&#39;],
+                                         batch_size=image_net_config.evaluation[&#39;batch_size&#39;],
+                                         is_training=False,
+                                         num_workers=image_net_config.evaluation[&#39;num_workers&#39;]).data_loader
+        return data_loader
+
+    @staticmethod
+    def evaluate(model: torch.nn.Module, iterations: int, use_cuda: bool) -&gt; float:
+        &quot;&quot;&quot;
+        Given a torch model, evaluates its Top-1 accuracy on the dataset
+        :param model: the model to evaluate
+        :param iterations: the number of batches to be used to evaluate the model. A value of &#39;None&#39; means the model will be
+                           evaluated on the entire dataset once.
+        :param use_cuda: whether or not the GPU should be used.
+        &quot;&quot;&quot;
+        evaluator = ImageNetEvaluator(DATASET_DIR, image_size=image_net_config.dataset[&#39;image_size&#39;],
+                                      batch_size=image_net_config.evaluation[&#39;batch_size&#39;],
+                                      num_workers=image_net_config.evaluation[&#39;num_workers&#39;])
+
+        return evaluator.evaluate(model, iterations=iterations, use_cuda=use_cuda)
+
+    @staticmethod
+    def finetune(model: torch.nn.Module, epochs: int, learning_rate: float, learning_rate_schedule: List, use_cuda: bool):
+        &quot;&quot;&quot;
+        Given a torch model, finetunes the model to improve its accuracy
+        :param model: the model to finetune
+        :param epochs: The number of epochs used during the finetuning step.
+        :param learning_rate: The learning rate used during the finetuning step.
+        :param learning_rate_schedule: The learning rate schedule used during the finetuning step.
+        :param use_cuda: whether or not the GPU should be used.
+        &quot;&quot;&quot;
+        trainer = ImageNetTrainer(DATASET_DIR, image_size=image_net_config.dataset[&#39;image_size&#39;],
+                                  batch_size=image_net_config.train[&#39;batch_size&#39;],
+                                  num_workers=image_net_config.train[&#39;num_workers&#39;])
+
+        trainer.train(model, max_epochs=epochs, learning_rate=learning_rate,
+                      learning_rate_schedule=learning_rate_schedule, use_cuda=use_cuda)
+</pre></div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score">
+<h2>2. Load the model and evaluate to get a baseline FP32 accuracy score<a class="headerlink" href="#2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score" title="Link to this heading">¶</a></h2>
+<p><strong>2.1 Load a pretrained resnet18 model from torchvision.</strong></p>
+<p>You can load any pretrained PyTorch model instead.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from torchvision.models import resnet18
+
+model = resnet18(pretrained=True)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>2.2 Decide whether to place the model on a CPU or CUDA device.</strong></p>
+<p>This example uses CUDA if it is available. You can change this logic and force a device placement if needed.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>use_cuda = False
+if torch.cuda.is_available():
+    use_cuda = True
+    model.to(torch.device(&#39;cuda&#39;))
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>2.3 Compute the floating point 32-bit (FP32) accuracy of this model using the evaluate() routine.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>accuracy = ImageNetDataPipeline.evaluate(model, iterations=None, use_cuda=use_cuda)
+print(accuracy)
+</pre></div>
+</div>
+</div>
+</section>
+<section id="3.-Compress-the-model-and-fine-tune">
+<h2>3. Compress the model and fine-tune<a class="headerlink" href="#3.-Compress-the-model-and-fine-tune" title="Link to this heading">¶</a></h2>
+<p><strong>3.1. Compress the model using spatial SVD and evaluate it to find post-compression accuracy.</strong></p>
+<p>Use AIMET to define compression parameters for spatial SVD.</p>
+<p>Some key parameters:</p>
+<ul class="simple">
+<li><p><strong>target_comp_ratio</strong>: The desired compression ratio for Channel Pruning. This example uses 0.9 to compress the model by 10%.</p></li>
+<li><p><strong>num_comp_ratio_candidates</strong>: Defines how many compression ratios to try. To calculate how compressible each layer is, AIMET tried difference compression ratios. The value three causes AIMET to try values of 0.33, 0.66, and 1.00. Higher values result in more granular measurements but take longer to complete. In practice a good compromise is 10.</p></li>
+<li><p><strong>modules_to_ignore</strong>: A list that contains the references of model layers to ignore during compression. This example adds the first layer for illustration purposes. Other layers can be added if desired.</p></li>
+<li><p><strong>mode</strong>: <strong>Auto</strong> mode performs per-layer compressibility analysis and calculates how much to compress each layer. The alternative is <strong>Manual</strong>.</p></li>
+<li><p><strong>eval_callback</strong>: The model evaluation function. The expected signature of the evaluate function is <code class="docutils literal notranslate"><span class="pre">&lt;function_name&gt;(model,</span> <span class="pre">eval_iterations,</span> <span class="pre">use_cuda)</span></code> The function should return an accuracy metric.</p></li>
+<li><p><strong>eval_iterations</strong>: The number of batches of data with which to evaluate the model during compression. The example uses one for execution speed. In practice, use a high enough number to give good accuracy results. The eval callback is expected to use the same samples for every invocation of the callback.</p></li>
+<li><p><strong>compress_scheme</strong>: The ‘spatial svd’ compression scheme.</p></li>
+<li><p><strong>cost_metric</strong>: Set to target either MACs or memory for reduction by the desired compression ratio. The example chooses ‘mac’.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from decimal import Decimal
+from aimet_torch.defs import GreedySelectionParameters, SpatialSvdParameters
+from aimet_common.defs import CompressionScheme, CostMetric
+
+greedy_params = GreedySelectionParameters(target_comp_ratio=Decimal(0.8),
+                                          num_comp_ratio_candidates=3)
+modules_to_ignore = [model.conv1]
+auto_params = SpatialSvdParameters.AutoModeParams(greedy_select_params=greedy_params,
+                                                  modules_to_ignore=modules_to_ignore)
+params = SpatialSvdParameters(mode=SpatialSvdParameters.Mode.auto, params=auto_params)
+
+eval_callback = ImageNetDataPipeline.evaluate
+eval_iterations = 1
+compress_scheme = CompressionScheme.spatial_svd
+cost_metric = CostMetric.mac
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>3.2 Call the AIMET ModelCompressor.compress_model API using the above parameters.</strong></p>
+<p>This call returns a compressed model and relevant statistics. The ModelCompressor evaluates the model while compressing using the evaluation function from the data pipeline.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from aimet_torch.compress import ModelCompressor
+ssvd_compressed_model, ssvd_comp_stats = ModelCompressor.compress_model(model=model,
+                                                                        eval_callback=eval_callback,
+                                                                        eval_iterations=eval_iterations,
+                                                                        input_shape=(1, 3, 224, 224),
+                                                                        compress_scheme=compress_scheme,
+                                                                        cost_metric=cost_metric,
+                                                                        parameters=params)
+
+print(ssvd_comp_stats)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>The QuantizationSim model is now ready to be used for inference or training.</p>
+<p><strong>3.3 Pass the model to the same evaluation routine as before to calculate a simulated quantized accuracy score for the compressed model.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>accuracy = ImageNetDataPipeline.evaluate(ssvd_compressed_model, iterations=None, use_cuda=use_cuda)
+print(accuracy)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Model accuracy falls sharply after compression. This is expected. Fine-tuning is used to recover accuracy.</p>
+<p><strong>3.4. Fine-tune the model.</strong></p>
+<p>As with any training job, hyper-parameters need to be searched for optimal results. Good starting points are to use a learning rate on the same order as the ending learning rate when training the original model, and to drop the learning rate by a factor of 10 every 5 epochs or so.</p>
+<p>This example trains for only one epoch, but you can experiment with the parameters however you like.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ImageNetDataPipeline.finetune(ssvd_compressed_model, epochs=1, learning_rate=5e-7, learning_rate_schedule=[5, 10],
+                              use_cuda=use_cuda)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>3.5 After fine-tuning, evaluate the model again to see the improvements in accuracy.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>accuracy = ImageNetDataPipeline.evaluate(ssvd_compressed_model, iterations=None, use_cuda=use_cuda)
+print(accuracy)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Of course, there might be little gain in accuracy after only one epoch of training. Experiment with the hyper-parameters to get better results.</p>
+<p><strong>3.6 Optionally, save the model.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>os.makedirs(&#39;./output/&#39;, exist_ok=True)
+torch.save(ssvd_compressed_model, &#39;./output/ssvd_finetuned_model&#39;)
+</pre></div>
+</div>
+</div>
+<p><strong>3.7. Further compress the model using channel pruning and evaluate it to find post-compression accuracy.</strong></p>
+<p>Define compression parameters for channel pruning.</p>
+<p>Some key parameters:</p>
+<ul class="simple">
+<li><p><strong>data_loader</strong>: The data loader that channel pruning uses to load unlabelled data samples for the layer-by-layer reconstruction procedure. You can pass your existing validation or training-set loader.</p></li>
+<li><p><strong>num_reconstruction_samples</strong>: The number of samples used in the layer-by-layer reconstruction procedure. the example value of 10 here was chosen for quick execution but is too low for real compression. A typical “real” setting is about 1000 samples.</p></li>
+<li><p><strong>allow_custom_downsample_ops</strong>: If enabled, AIMET channel pruning inserts downsample ops into the model graph if needed, enabling more convolutional layers to be considered for pruning at the cost of memory overhead. We suggest disabling this by default.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from aimet_torch.defs import ChannelPruningParameters
+
+greedy_params = GreedySelectionParameters(target_comp_ratio=Decimal(0.9),
+                                          num_comp_ratio_candidates=3)
+modules_to_ignore = [ssvd_compressed_model.conv1]
+auto_params = ChannelPruningParameters.AutoModeParams(greedy_select_params=greedy_params,
+                                                      modules_to_ignore=modules_to_ignore)
+
+data_loader = ImageNetDataPipeline.get_val_dataloader()
+params = ChannelPruningParameters(data_loader=data_loader,
+                                  num_reconstruction_samples=10,
+                                  allow_custom_downsample_ops=False,
+                                  mode=ChannelPruningParameters.Mode.auto,
+                                  params=auto_params)
+
+eval_callback = ImageNetDataPipeline.evaluate
+eval_iterations = 1
+compress_scheme = CompressionScheme.channel_pruning
+cost_metric = CostMetric.mac
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>3.8 Call the AIMET ModelCompressor.compress_model API using the above parameters.</strong></p>
+<p>This call returns a compressed model and relevant statistics. The ModelCompressor evaluates the model while compressing using the evaluation function from the data pipeline.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ssvd_cp_compressed_model, cp_comp_stats = ModelCompressor.compress_model(model=ssvd_compressed_model,
+                                                                         eval_callback=eval_callback,
+                                                                         eval_iterations=eval_iterations,
+                                                                         input_shape=(1, 3, 224, 224),
+                                                                         compress_scheme=compress_scheme,
+                                                                         cost_metric=cost_metric,
+                                                                         parameters=params)
+
+print(cp_comp_stats)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>3.9 Pass the model to the same evaluation routine as before to calculate a simulated quantized accuracy score for the compressed model.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>accuracy = ImageNetDataPipeline.evaluate(ssvd_cp_compressed_model, iterations=None, use_cuda=use_cuda)
+print(accuracy)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Model accuracy falls sharply after compression. This is expected. Fine-tuning is used to recover accuracy.</p>
+<p><strong>3.10 Fine-tune the model.</strong></p>
+<p>As with any training job, hyper-parameters need to be searched for optimal results. Good starting points are to use a learning rate on the same order as the ending learning rate when training the original model, and to drop the learning rate by a factor of 10 every 5 epochs or so.</p>
+<p>This example trains for only one epoch, but you can experiment with the parameters however you like.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ImageNetDataPipeline.finetune(ssvd_cp_compressed_model, epochs=2, learning_rate=15e-4, learning_rate_schedule=[1],
+                              use_cuda=use_cuda)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p><strong>3.11 After fine-tuning, evaluate the model again to see the improvements in accuracy.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>accuracy = ImageNetDataPipeline.evaluate(ssvd_cp_compressed_model, iterations=None, use_cuda=use_cuda)
+print(accuracy)
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<p>Of course, there might be little gain in accuracy after only one epoch of training. Experiment with the hyper-parameters to get better results.</p>
+</section>
+<section id="Next-steps">
+<h2>Next steps<a class="headerlink" href="#Next-steps" title="Link to this heading">¶</a></h2>
+<p>The next step is to save the model.</p>
+<p><strong>Save the fine-tuned model.</strong></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>os.makedirs(&#39;./output/&#39;, exist_ok=True)
+torch.save(ssvd_cp_compressed_model, &#39;./output/ssvd_cp_finetuned_model&#39;)
+</pre></div>
+</div>
+</div>
+</section>
+<section id="For-more-information">
+<h2>For more information<a class="headerlink" href="#For-more-information" title="Link to this heading">¶</a></h2>
+<p>See the <a class="reference external" href="https://quic.github.io/aimet-pages/AimetDocs/api_docs/index.html">AIMET API docs</a> for details about the AIMET APIs and optional parameters.</p>
+<p>See the <a class="reference external" href="https://github.com/quic/aimet/tree/develop/Examples/torch/compression">other example notebooks</a> to learn how to use other AIMET compression techniques.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Model compression using spatial SVD and channel pruning</a><ul>
+<li><a class="reference internal" href="#Overall-flow">Overall flow</a></li>
+<li><a class="reference internal" href="#Dataset">Dataset</a></li>
+<li><a class="reference internal" href="#1.-Instantiate-the-example-training-and-validation-pipeline">1. Instantiate the example training and validation pipeline</a></li>
+<li><a class="reference internal" href="#2.-Load-the-model-and-evaluate-to-get-a-baseline-FP32-accuracy-score">2. Load the model and evaluate to get a baseline FP32 accuracy score</a></li>
+<li><a class="reference internal" href="#3.-Compress-the-model-and-fine-tune">3. Compress the model and fine-tune</a></li>
+<li><a class="reference internal" href="#Next-steps">Next steps</a></li>
+<li><a class="reference internal" href="#For-more-information">For more information</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
