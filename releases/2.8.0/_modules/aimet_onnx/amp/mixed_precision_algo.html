@@ -1,0 +1,1010 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>aimet_onnx.amp.mixed_precision_algo - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/aimet-furo.css?v=22b0637d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.8.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../userguide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/quantization_tools.html">AIMET features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/quantization_workflow.html">Quantization workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/debugging_guidelines.html">Debugging guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userguide/on_target_inference.html">On-target inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../quantsim/index.html">Quantization Simulation Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Quantization Simulation Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../quantsim/calibration.html">Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quantsim/qat.html">QAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quantsim/blockwise.html">Blockwise quantization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../featureguide/index.html">Feature Guide</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Feature Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/adascale.html">AdaScale</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/mixed%20precision/index.html">Mixed precision</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Mixed precision</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/mixed%20precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/mixed%20precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/analysis%20tools/index.html">Analysis tools</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Analysis tools</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/analysis%20tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/analysis%20tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/analysis%20tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/compression/index.html">Compression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Compression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../featureguide/compression/channel_pruning.html">Channel pruning</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Channel pruning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../featureguide/compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../featureguide/quantized%20LoRa/index.html">Quantized LoRa</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Quantized LoRa</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/quantized%20LoRa/qw_lora.html">QW-LoRa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../featureguide/quantized%20LoRa/qwa_lora.html">QWA-LoRa</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../featureguide/omniquant.html">OmniQuant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Example Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../apiref/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../external/index.html">External Resources</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of External Resources</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-models/">Qualcomm Hub Models</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-apps/">Qualcomm Hub Apps</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://aihub.qualcomm.com/">Qualcomm AI Hub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for aimet_onnx.amp.mixed_precision_algo</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+<span class="sd">&quot;&quot;&quot;Evaluator class for mixed precision&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">onnxruntime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ort</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">AimetLogger</span><span class="p">,</span> <span class="n">save_json_yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.defs</span><span class="w"> </span><span class="kn">import</span> <span class="n">CallbackFunc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.amp.mixed_precision_algo</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GreedyMixedPrecisionAlgo</span> <span class="k">as</span> <span class="n">MixedPrecisionAlgo</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.amp.quantizer_groups</span><span class="w"> </span><span class="kn">import</span> <span class="n">reformat_supported_kernels</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.amp.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">sort_accuracy_list</span><span class="p">,</span>
+    <span class="n">CANDIDATE_WITH_DTYPE</span><span class="p">,</span>
+    <span class="n">ACCURACY_LIST</span><span class="p">,</span>
+    <span class="n">disable_quantizers</span><span class="p">,</span>
+    <span class="n">enable_quantizers</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.amp</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">mixed_precision_utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.amp.quantizer_groups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">find_quantizer_group</span><span class="p">,</span>
+    <span class="n">QuantizerGroup</span><span class="p">,</span>
+    <span class="n">find_supported_candidates</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.quantsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">load_encodings_to_sim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.qc_quantize_op</span><span class="w"> </span><span class="kn">import</span> <span class="n">QcQuantizeOp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.defs</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">MixedPrecision</span><span class="p">)</span>
+
+
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_disable_all_quantizers</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Temporarily disable all quantizers in the model within with-as block.</span>
+
+<span class="sd">    :param sim: Quantized sim model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">active_quantizers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="n">quantizer</span> <span class="k">for</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">enabled</span>
+    <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">active_quantizers</span><span class="p">:</span>
+            <span class="n">quantizer</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">active_quantizers</span><span class="p">:</span>
+            <span class="n">quantizer</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="EvalCallbackFactory">
+<a class="viewcode-back" href="../../../featureguide/mixed%20precision/amp.html#aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EvalCallbackFactory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Factory class for various built-in eval callbacks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+        <span class="n">forward_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param data_loader: Data loader to be used for evaluation</span>
+<span class="sd">        :param forward_fn: Function that runs forward pass and returns the output tensor.</span>
+<span class="sd">                           This function is expected to take 1) a model 2) List of starting op names</span>
+<span class="sd">                           3) List of output op names and 4) batch yielded from the data set, and</span>
+<span class="sd">                           return a single tf.Tensor (or np.ndarray) object which represents the output of the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_loader</span> <span class="o">=</span> <span class="n">data_loader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_forward_fn</span> <span class="o">=</span> <span class="n">forward_fn</span> <span class="ow">or</span> <span class="n">_default_forward_fn</span>
+
+        <span class="c1"># storing batchwise fp32 outputs in the list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_batchwise_fp32_outputs_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_forward_fn_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Forward pass was expected to return a numpy.ndarray, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;but returned an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="s2">&quot;Try specifying `forward_fn` to adapt the output.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="n">_DEFAULT_SQNR_NUM_SAMPLES</span> <span class="o">=</span> <span class="mi">128</span>
+
+<div class="viewcode-block" id="EvalCallbackFactory.sqnr">
+<a class="viewcode-back" href="../../../featureguide/mixed%20precision/amp.html#aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory.sqnr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sqnr</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">_DEFAULT_SQNR_NUM_SAMPLES</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns SQNR eval callback.</span>
+<span class="sd">        NOTE: sim object is required to enable/disable quantizer_info objects associated with quant ops.</span>
+
+<span class="sd">        :param sim: Quantized sim model</span>
+<span class="sd">        :param num_samples: Number of samples used for evaluation</span>
+<span class="sd">        :return: A callback function that evaluates model SQNR between fp32_outputs and quantized outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">evaluate_sqnr</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+            <span class="n">_evaluate_sqnr</span><span class="p">,</span>
+            <span class="n">sim</span><span class="o">=</span><span class="n">sim</span><span class="p">,</span>
+            <span class="n">data_loader</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_loader</span><span class="p">,</span>
+            <span class="n">forward_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_forward_fn_wrapper</span><span class="p">,</span>
+            <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span>
+            <span class="n">batchwise_fp32_outputs_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_batchwise_fp32_outputs_list</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">CallbackFunc</span><span class="p">(</span><span class="n">evaluate_sqnr</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_default_forward_fn</span><span class="p">(</span><span class="n">sess</span><span class="p">:</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">output_tensors</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">inputs</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">output_tensors</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_sqnr</span><span class="p">(</span>
+    <span class="n">session</span><span class="p">:</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">,</span>
+    <span class="n">_</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+    <span class="n">data_loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+    <span class="n">forward_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">batchwise_fp32_outputs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute SQNR given a model and a data loader.</span>
+
+<span class="sd">    :param session: sim session</span>
+<span class="sd">    :param sim: Quantization sim model</span>
+<span class="sd">    :param data_loader: Data loader to evaluate SQNR from</span>
+<span class="sd">    :param forward_fn: Function that runs forward pass and returns the output tensor.</span>
+<span class="sd">    :param num_samples: Number of samples used for evaluation</span>
+<span class="sd">    :return: SQNR in dB scale</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">sim</span><span class="o">.</span><span class="n">session</span> <span class="o">==</span> <span class="n">session</span><span class="p">,</span> <span class="p">(</span>
+        <span class="s2">&quot;session associated with sim and session passed to this callback should be same.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">capture_fp32_output_only_once</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">batchwise_fp32_outputs_list</span><span class="p">:</span>
+        <span class="n">capture_fp32_output_only_once</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">sqnr</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">data_loader</span><span class="o">.</span><span class="n">batch_size</span> <span class="ow">or</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_loader</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">*</span> <span class="n">batch_size</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">capture_fp32_output_only_once</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">_disable_all_quantizers</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+                    <span class="n">fp32_output</span> <span class="o">=</span> <span class="n">forward_fn</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                <span class="n">batchwise_fp32_outputs_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fp32_output</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fp32_output</span> <span class="o">=</span> <span class="n">batchwise_fp32_outputs_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">quantized_output</span> <span class="o">=</span> <span class="n">forward_fn</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="c1"># Accumulate signal by noise ratio</span>
+            <span class="n">sqnr</span> <span class="o">+=</span> <span class="n">_compute_sqnr</span><span class="p">(</span><span class="n">fp32_output</span><span class="p">,</span> <span class="n">quantized_output</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="c1"># Convert SQNR into dB scale</span>
+    <span class="n">sqnr_db</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">sqnr</span> <span class="o">/</span> <span class="n">num_samples</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sqnr_db</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_sqnr</span><span class="p">(</span><span class="n">orig_tensor</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">noisy_tensor</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute SQNR between two tensors.</span>
+
+<span class="sd">    :param orig_tensor: Original tensor</span>
+<span class="sd">    :param noisy_tensor: Noisy tensor</span>
+<span class="sd">    :return: SQNR</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">orig_tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">noisy_tensor</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># SQNR := E[signal**2] / E[noise**2]</span>
+    <span class="n">signal</span> <span class="o">=</span> <span class="n">orig_tensor</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">orig_tensor</span> <span class="o">-</span> <span class="n">noisy_tensor</span>
+    <span class="n">sqnr</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">noise</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">+</span> <span class="mf">0.0001</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">sqnr</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GreedyMixedPrecisionAlgo</span><span class="p">(</span><span class="n">MixedPrecisionAlgo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Naive Greedy MixedPrecisionAlgo class&quot;&quot;&quot;</span>
+
+    <span class="c1"># pylint: disable=too-many-arguments</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+        <span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CANDIDATE_WITH_DTYPE</span><span class="p">],</span>
+        <span class="n">eval_callback_for_phase1</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">eval_callback_for_phase2</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">clean_start</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">forward_pass_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">use_all_amp_candidates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">phase1_optimize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param sim: Quantized sim model</span>
+<span class="sd">        :param candidates: List of Tuple of all possible [bitwidth, QuantizationDataType] values to quantize to</span>
+<span class="sd">        :param eval_callback_for_phase1: Callable object used to measure sensitivity of each</span>
+<span class="sd">                                     quantizer group during phase 1. The phase 1 involves finding accuracy list/sensitivity of each</span>
+<span class="sd">                                     module. Therefore, a user might want to run the phase 1 with a smaller dataset</span>
+<span class="sd">        :param eval_callback_for_phase2: Callale object used to get accuracy of quantized model</span>
+<span class="sd">                                     for phase 2 calculations. The phase 2 involves finding pareto front curve</span>
+<span class="sd">        :param results_dir: Path to save results and cache intermediate results</span>
+<span class="sd">        :param clean_start: If true, any cached information from previous runs will be deleted prior to starting the</span>
+<span class="sd">                            mixed-precision analysis. If false, prior cached information will be used if applicable. Note</span>
+<span class="sd">                            it is the user&#39;s responsibility to set this flag to true if anything in the model or</span>
+<span class="sd">                            quantization parameters changes compared to the previous run.</span>
+<span class="sd">        :param forward_pass_callback: Callable object used to compute quantization encodings</span>
+<span class="sd">        :param use_all_amp_candidates: Using the “supported_kernels” field in the config file (under defaults</span>
+<span class="sd">                    and op_type sections), a list of supported candidates can be specified. All the AMP candidates</span>
+<span class="sd">                    which are passed through the “candidates” field may not be supported based on the data passed</span>
+<span class="sd">                    through “supported_kernels”. When the field “use_all_amp_candidates” is set to True, the AMP algo</span>
+<span class="sd">                    will ignore the &quot;supported_kernels&quot; in the config file and will continue to use all the candidates.</span>
+<span class="sd">        :phase1_optimize: If user set this parameter to true then phase1 optimized logic will be executed else default code will be executed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mac_dict</span> <span class="o">=</span> <span class="n">mixed_precision_utils</span><span class="o">.</span><span class="n">create_mac_dict</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase1_optimize</span> <span class="o">=</span> <span class="n">phase1_optimize</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">sim</span><span class="p">,</span>
+            <span class="n">candidates</span><span class="p">,</span>
+            <span class="n">eval_callback_for_phase1</span><span class="p">,</span>
+            <span class="n">eval_callback_for_phase2</span><span class="p">,</span>
+            <span class="n">forward_pass_callback</span><span class="p">,</span>
+            <span class="n">mac_dict</span><span class="p">,</span>
+            <span class="n">results_dir</span><span class="p">,</span>
+            <span class="n">clean_start</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_param_name_to_op_name_dict</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">mixed_precision_utils</span><span class="o">.</span><span class="n">find_param_name_to_parent_name_dict</span><span class="p">(</span>
+                <span class="n">sim</span><span class="o">.</span><span class="n">connected_graph</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">supported_kernels</span> <span class="o">=</span> <span class="n">reformat_supported_kernels</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">get_supported_kernels</span><span class="p">())</span>
+
+        <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_supported_candidates_per_quantizer_group</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_candidate_options</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">find_supported_candidates</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quantizer_groups</span><span class="p">,</span>
+            <span class="n">candidates</span><span class="p">,</span>
+            <span class="n">supported_kernels</span><span class="p">,</span>
+            <span class="n">mixed_precision_utils</span><span class="o">.</span><span class="n">get_quantizer_to_op_type_dict</span><span class="p">(</span><span class="n">sim</span><span class="p">),</span>
+            <span class="n">use_all_amp_candidates</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_and_save_accuracy_list_optimized</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">baseline_candidate</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ACCURACY_LIST</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a list of tuples of (quantizer_group, bitwidth, accuracy score)</span>
+
+<span class="sd">        :param baseline_candidate: Candidate [bitwidth, dtype] which yields max accuracy</span>
+<span class="sd">        :return: Sorted accuracy list containing tuples of (quantizer, candidate, accuracy score, bit ops reduction)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=too-many-locals, too-many-branches, too-many-statements</span>
+        <span class="n">index_of_quantizer_group</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">quantizer_group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantizer_groups</span><span class="p">):</span>
+            <span class="n">index_of_quantizer_group</span><span class="p">[</span><span class="n">quantizer_group</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+
+        <span class="n">accuracy_list</span><span class="p">:</span> <span class="n">ACCURACY_LIST</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">,</span> <span class="s2">&quot;.cache&quot;</span><span class="p">,</span> <span class="s2">&quot;accuracy_list.pkl&quot;</span><span class="p">)</span>
+        <span class="n">combinations_already_computed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean_start</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removed old cached files and restarting computation&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">accuracy_list</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="n">combinations_already_computed</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">quantizer_group</span><span class="p">,</span> <span class="n">candidate</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">quantizer_group</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">accuracy_list</span>
+                <span class="p">)</span>
+
+        <span class="n">disabled_quantizers</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Disable all quantizers</span>
+            <span class="k">for</span> <span class="n">quantizer_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantizer_groups</span><span class="p">:</span>
+                <span class="n">quantizers</span> <span class="o">=</span> <span class="n">quantizer_group</span><span class="o">.</span><span class="n">get_active_quantizers</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_module_name_dict</span>
+                <span class="p">)</span>
+                <span class="n">disable_quantizers</span><span class="p">(</span><span class="n">quantizers</span><span class="p">)</span>
+                <span class="n">disabled_quantizers</span><span class="p">[</span><span class="n">quantizer_group</span><span class="p">]</span> <span class="o">=</span> <span class="n">quantizers</span>
+
+            <span class="c1"># quantizer_groups_per_candidate = {&quot;candidate1&quot;:[quantizer_group1,quantizer_group2,...]}</span>
+            <span class="c1"># quantizer_groups_per_candidate is the dictionary with keys as candidates and values as quantizer groups that supports the corresponding candidate</span>
+            <span class="c1"># quantizer_groups_per_candidate is like reverse mapping to self._supported_candidates_per_quantizer_group</span>
+            <span class="n">quantizer_groups_per_candidate</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span>
+                <span class="n">quantizer_group</span><span class="p">,</span>
+                <span class="n">candidates</span><span class="p">,</span>
+            <span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supported_candidates_per_quantizer_group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+                    <span class="n">quantizer_groups_per_candidate</span><span class="p">[</span><span class="n">candidate</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">quantizer_group</span><span class="p">)</span>
+
+            <span class="c1"># Loop through all possible bitwidths(candidates). Set all the quantizer groups to the corresponding bitwidth(candidate)</span>
+            <span class="c1"># Compute encodings by disabling the parameters and  reuse the encodings</span>
+            <span class="k">for</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">quantizer_groups</span> <span class="ow">in</span> <span class="n">quantizer_groups_per_candidate</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">candidate</span> <span class="o">==</span> <span class="n">baseline_candidate</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># configure the sim model with the candidate by enabling the quantizers and set quantizers to corresponding candidate</span>
+                <span class="k">for</span> <span class="n">quantizer_group</span> <span class="ow">in</span> <span class="n">quantizer_groups</span><span class="p">:</span>
+                    <span class="n">quantizers</span> <span class="o">=</span> <span class="n">disabled_quantizers</span><span class="p">[</span><span class="n">quantizer_group</span><span class="p">]</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">enable_quantizers</span><span class="p">(</span><span class="n">quantizers</span><span class="p">)</span>
+                        <span class="c1"># Set quantizer bitwidth to candidate (bitwidth)</span>
+                        <span class="n">quantizer_group</span><span class="o">.</span><span class="n">set_quantizers_to_candidate</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_module_name_dict</span><span class="p">,</span> <span class="n">candidate</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="s2">&quot;Exception occured while setting Quantizers to Candidate: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">e</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># list to store all the param quantizers</span>
+                <span class="n">param_quantizers_qgp</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">quantizer_group</span> <span class="ow">in</span> <span class="n">quantizer_groups</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">quantizer_group</span><span class="o">.</span><span class="n">get_param_quantizers</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_module_name_dict</span>
+                    <span class="p">):</span>
+                        <span class="k">if</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+                            <span class="n">param_quantizers_qgp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">quantizer</span><span class="p">)</span>
+
+                <span class="c1"># compute encodings</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback_args</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># export encodings</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_export_encodings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">)</span>
+
+                <span class="c1"># disable the parameter quantization</span>
+                <span class="n">disable_quantizers</span><span class="p">(</span><span class="n">param_quantizers_qgp</span><span class="p">)</span>
+
+                <span class="c1"># compute encodings with out parameter quantization</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback_args</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="c1"># export activation encodings</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_export_activation_encodings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">)</span>
+                <span class="c1"># enable the parameter quantization</span>
+                <span class="n">enable_quantizers</span><span class="p">(</span><span class="n">param_quantizers_qgp</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_load_param_encodings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">)</span>
+
+                <span class="c1"># Disable all the quantizers</span>
+                <span class="k">for</span> <span class="n">quantizer_group</span> <span class="ow">in</span> <span class="n">quantizer_groups</span><span class="p">:</span>
+                    <span class="n">quantizers</span> <span class="o">=</span> <span class="n">quantizer_group</span><span class="o">.</span><span class="n">get_active_quantizers</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_module_name_dict</span>
+                    <span class="p">)</span>
+                    <span class="n">disable_quantizers</span><span class="p">(</span><span class="n">quantizers</span><span class="p">)</span>
+                    <span class="n">disabled_quantizers</span><span class="p">[</span><span class="n">quantizer_group</span><span class="p">]</span> <span class="o">=</span> <span class="n">quantizers</span>
+
+                <span class="c1"># Loop over all the quantizer groups and enable one at a time and calculate resulting model accuracy and disable the enabled quantizer</span>
+                <span class="c1"># Accuracy list will contain tuples of the quantizer, bitwidth, and accuracy score</span>
+                <span class="k">for</span> <span class="n">quantizer_group</span> <span class="ow">in</span> <span class="n">quantizer_groups</span><span class="p">:</span>
+                    <span class="n">quantizers</span> <span class="o">=</span> <span class="n">disabled_quantizers</span><span class="p">[</span><span class="n">quantizer_group</span><span class="p">]</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">enable_quantizers</span><span class="p">(</span><span class="n">quantizers</span><span class="p">)</span>
+
+                        <span class="c1"># If starting the computation from an already existing state, then check if that combination</span>
+                        <span class="c1"># has already been executed</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">quantizer_group</span><span class="p">,</span>
+                            <span class="n">candidate</span><span class="p">,</span>
+                        <span class="p">)</span> <span class="ow">in</span> <span class="n">combinations_already_computed</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># Compute accuracy of model with new candidate (bitwidth)</span>
+                        <span class="n">eval_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_model</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">eval_callback_for_phase1</span>
+                        <span class="p">)</span>
+
+                        <span class="n">bit_ops_reduction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_bit_ops_reduction_for_acc_list</span><span class="p">(</span>
+                            <span class="n">quantizer_group</span><span class="p">,</span> <span class="n">baseline_candidate</span><span class="p">,</span> <span class="n">candidate</span>
+                        <span class="p">)</span>
+                        <span class="n">accuracy_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">quantizer_group</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">eval_score</span><span class="p">,</span> <span class="n">bit_ops_reduction</span><span class="p">)</span>
+                        <span class="p">)</span>
+                        <span class="c1"># Sort accuracy list, first by descending accuracy score, then by descending order of addition of bitwidths if accuracy</span>
+                        <span class="c1"># scores are identical, if that is also identical we sort by relative bit ops change in descending order</span>
+                        <span class="c1"># If bit ops reduction is also the same, then we sort in ascending order based on occurence of</span>
+                        <span class="c1"># quantizer group in the model</span>
+                        <span class="n">accuracy_list</span> <span class="o">=</span> <span class="n">sort_accuracy_list</span><span class="p">(</span>
+                            <span class="n">accuracy_list</span><span class="p">,</span> <span class="n">index_of_quantizer_group</span>
+                        <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_export_accuracy_list</span><span class="p">(</span><span class="n">accuracy_list</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results_dir</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Quantizer: </span><span class="si">%s</span><span class="s2"> candidate: </span><span class="si">%s</span><span class="s2"> eval_score: </span><span class="si">%f</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">quantizer_group</span><span class="p">,</span>
+                            <span class="n">candidate</span><span class="p">,</span>
+                            <span class="n">eval_score</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="k">finally</span><span class="p">:</span>
+                        <span class="c1"># Disable the quantizer</span>
+                        <span class="n">disable_quantizers</span><span class="p">(</span><span class="n">quantizers</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># set all quantizers to baseline candidate</span>
+            <span class="k">for</span> <span class="n">quantizer_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantizer_groups</span><span class="p">:</span>
+                <span class="n">quantizers</span> <span class="o">=</span> <span class="n">disabled_quantizers</span><span class="p">[</span><span class="n">quantizer_group</span><span class="p">]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Enable the disabled quantizers</span>
+                    <span class="n">enable_quantizers</span><span class="p">(</span><span class="n">quantizers</span><span class="p">)</span>
+                    <span class="n">quantizer_group</span><span class="o">.</span><span class="n">set_quantizers_to_candidate</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_module_name_dict</span><span class="p">,</span> <span class="n">baseline_candidate</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;Exception occured while setting Quantizers to Candidate: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span>
+                    <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Completed Accuracy list computation&quot;</span><span class="p">)</span>
+        <span class="c1"># Recompute encodings after quantizer&#39;s bitwidth is set back to self._max_bitwidth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback_args</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">accuracy_list</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_export_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export encodings of the sim model to the given path</span>
+
+<span class="sd">        :param path: Encodings will store in the given path/.cache folder</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;.cache&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">results_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;encodings_with_param.encodings&quot;</span><span class="p">)</span>
+        <span class="c1"># pylint: disable=protected-access</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">_export_encodings</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_export_activation_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export encodings of the sim model to the given path</span>
+
+<span class="sd">        :param path: Encodings will store in the given path/.cache folder</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;.cache&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">results_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;encodings_with_act.encodings&quot;</span><span class="p">)</span>
+        <span class="c1"># pylint: disable=protected-access</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">_export_encodings</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_param_encodings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads parameter encodings to the sim model</span>
+
+<span class="sd">        :param path: Folder Path where encodings file is present</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">param_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;.cache/encodings_with_param.encodings&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load encodings file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">param_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+            <span class="n">param_encodings</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+        <span class="c1"># Loading activation encodings also along with param encodings to get compatible with load_encodings_to_sim function</span>
+        <span class="c1"># These activation encodings are already present in quantsim model</span>
+        <span class="n">act_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;.cache/encodings_with_act.encodings&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">act_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+            <span class="n">act_encodings</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+        <span class="n">param_encodings</span><span class="p">[</span><span class="s2">&quot;activation_encodings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">act_encodings</span><span class="p">[</span><span class="s2">&quot;activation_encodings&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Save the updated encodings to the file</span>
+        <span class="n">save_json_yaml</span><span class="p">(</span><span class="n">param_path</span><span class="p">,</span> <span class="n">param_encodings</span><span class="p">)</span>
+        <span class="c1"># load encodings</span>
+        <span class="n">load_encodings_to_sim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="p">,</span> <span class="n">param_path</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Removing the files created by _export_encodings function</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">param_path</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">act_path</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_model</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">eval_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates a model</span>
+
+<span class="sd">        :param eval_callback: Callback function that contains eval function and eval args</span>
+<span class="sd">        :return: Eval score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">eval_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_quantizer_group</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">QcQuantizeOp</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">QuantizerGroup</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds quantizer groups in a quantization sim</span>
+<span class="sd">        :param sim: Quantization sim</span>
+<span class="sd">        :return: Dictionary mapping quantized op name to quantizer,</span>
+<span class="sd">            and a List of quantizer groups</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">find_quantizer_group</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">baseline_candidate_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">CANDIDATE_WITH_DTYPE</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the _baseline_candidate_options which is the intersection of amp candidates and candidates supported by</span>
+<span class="sd">        all the quantizer groups</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseline_candidate_options</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_bit_ops_reduction_for_acc_list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">quantizer_group</span><span class="p">:</span> <span class="n">QuantizerGroup</span><span class="p">,</span>
+        <span class="n">max_candidate</span><span class="p">:</span> <span class="n">CANDIDATE_WITH_DTYPE</span><span class="p">,</span>
+        <span class="n">candidate</span><span class="p">:</span> <span class="n">CANDIDATE_WITH_DTYPE</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds reduction in bit ops from max candidate to new candidate</span>
+
+<span class="sd">        :param quantizer_group: Quantizer group</span>
+<span class="sd">        :param max_candidate: Maximum bitwidth and data type for the TensorQuantizer</span>
+<span class="sd">        :param candidate: Activation bitwidth, parameter bitwidth</span>
+<span class="sd">        :return: Bit ops reduction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">mixed_precision_utils</span><span class="o">.</span><span class="n">find_bit_ops_reduction</span><span class="p">(</span>
+            <span class="n">quantizer_group</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mac_dict</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_param_name_to_op_name_dict</span><span class="p">,</span>
+            <span class="n">max_candidate</span><span class="p">,</span>
+            <span class="n">candidate</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_running_bit_ops</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">quantizer_group</span><span class="p">:</span> <span class="n">QuantizerGroup</span><span class="p">,</span>
+        <span class="n">module_bitwidth_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="n">max_candidate</span><span class="p">:</span> <span class="n">CANDIDATE_WITH_DTYPE</span><span class="p">,</span>
+        <span class="n">candidate</span><span class="p">:</span> <span class="n">CANDIDATE_WITH_DTYPE</span><span class="p">,</span>
+        <span class="n">running_bit_ops</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates running bit ops value for every quantizer group</span>
+
+<span class="sd">        :param quantizer_group: A group of activation &amp; parameter quantizers</span>
+<span class="sd">        :param module_bitwidth_dict: Dict; Key: Module name value: Activation, parameter bitwidth of module</span>
+<span class="sd">        :param max_candidate: Maximum bitwidth and data type for the TensorQuantizer</span>
+<span class="sd">        :param candidate: candidate to change the quantizer group to</span>
+<span class="sd">        :param running_bit_ops: Running bit ops value calculated uptil the quantizer group</span>
+<span class="sd">        :return: Running bit ops value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">running_bit_ops</span> <span class="o">=</span> <span class="n">mixed_precision_utils</span><span class="o">.</span><span class="n">calculate_running_bit_ops</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mac_dict</span><span class="p">,</span>
+            <span class="n">quantizer_group</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_param_name_to_op_name_dict</span><span class="p">,</span>
+            <span class="n">module_bitwidth_dict</span><span class="p">,</span>
+            <span class="n">max_candidate</span><span class="p">,</span>
+            <span class="n">candidate</span><span class="p">,</span>
+            <span class="n">running_bit_ops</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">running_bit_ops</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_and_save_accuracy_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">baseline_candidate</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase1_optimize</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_and_save_accuracy_list_optimized</span><span class="p">(</span><span class="n">baseline_candidate</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_create_and_save_accuracy_list</span><span class="p">(</span><span class="n">baseline_candidate</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_op_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates op graph</span>
+
+<span class="sd">        :param sim: QuantizationSimModel object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_optimize_mp_profile_and_evaluate_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses OpGraph if available to optimize the mixed precision profile in the sim object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Apply exception rules logic to enforce a valid quantizer configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">_apply_exception_rules</span><span class="p">()</span>  <span class="c1"># pylint: disable = protected-access</span>
+
+        <span class="c1"># Recompute quantizer encodings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">forward_pass_callback_args</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># Compute new accuracy score</span>
+        <span class="n">eval_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">algo_params</span><span class="o">.</span><span class="n">eval_callback_for_phase2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">eval_score</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reduce_mp_convert_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reduce mixed precision convert ops if enabled and supported</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
