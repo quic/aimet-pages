@@ -1,0 +1,739 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Automatic mixed precision" href="amp.html" /><link rel="prev" title="Mixed precision" href="index.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.07.19 -->
+        <title>Manual mixed precision - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/aimet-furo.css?v=22b0637d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.13.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../overview/index.html">Overview</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Overview</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../overview/install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../overview/install/index.html">Install</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quantization_workflow.html">Quantization Workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/quantsim.html">Quantization Simulation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Quantization Simulation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/notebooks.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/on_target_inference.html">Running Quantized Models on-device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/debugging_guidelines.html">Debugging Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Techniques</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Techniques</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../ptq.html">Post Training Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../qat.html">Quantization Aware Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blockwise.html">Blockwise Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lpbq.html">Low-Power Blockwise Quantization</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Mixed precision</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Mixed precision</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../analysis_tools/index.html">Analysis tools</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Analysis tools</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../analysis_tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analysis_tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analysis_tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../compression/index.html">Compression</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Compression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../compression/channel_pruning.html">Channel pruning</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Channel pruning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../ptq_techniques/index.html">PTQ Techniques</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of PTQ Techniques</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/adascale.html">AdaScale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/omniquant.html">OmniQuant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/spinquant.html">SpinQuant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../apiref/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../external/index.html">External Resources</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of External Resources</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-models/">Qualcomm Hub Models</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-apps/">Qualcomm Hub Apps</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://aihub.qualcomm.com/">Qualcomm AI Hub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="manual-mixed-precision">
+<span id="featureguide-mmp"></span><h1>Manual mixed precision<a class="headerlink" href="#manual-mixed-precision" title="Link to this heading">¶</a></h1>
+<section id="context">
+<h2>Context<a class="headerlink" href="#context" title="Link to this heading">¶</a></h2>
+<p>To effectively use mixed precision, you must find the correct quantizers to run at higher precision settings. This requires complex, error-prone graph traversals. The AIMET manual mixed precision (MMP) configurator hides this issue by providing easy-to-use APIs to configure the model in mixed precision. You can change the precision of a layer by directly specifying the layer and the intended precision. MMP configurator also analyzes and reports how the mixed precision was achieved.</p>
+<p>MMP configurator enables you to change the precision of the following within a model:</p>
+<ul class="simple">
+<li><p>A leaf layer</p></li>
+<li><p>A non-leaf layer (a layer composed of multiple leaf layers)</p></li>
+<li><p>All layers of a certain type</p></li>
+<li><p>Model input tensors or a subset of input tensors</p></li>
+<li><p>Model output tensors or a subset of output tensors</p></li>
+</ul>
+</section>
+<section id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">¶</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h3>
+<p>Manual mixed precision is supported only on PyTorch models.</p>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-0">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">mobilenet_v2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.quantsim_config.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_path_for_per_channel_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.quantsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.v2.mixed_precision</span><span class="w"> </span><span class="kn">import</span> <span class="n">MixedPrecisionConfigurator</span>
+
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="c1"># create the sim object. Feel free to change the default settings as you wish</span>
+<span class="n">quant_sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                                 <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">,</span>
+                                 <span class="n">default_param_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                                 <span class="n">default_output_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                                 <span class="n">config_file</span><span class="o">=</span><span class="n">get_path_for_per_channel_config</span><span class="p">())</span>
+
+<span class="c1"># create the MMP configurator object</span>
+<span class="n">mp_configurator</span> <span class="o">=</span> <span class="n">MixedPrecisionConfigurator</span><span class="p">(</span><span class="n">quant_sim</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-1">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-2">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+<section id="step-1-applying-mmp-api-options">
+<h4>Step 1: Applying MMP API options<a class="headerlink" href="#step-1-applying-mmp-api-options" title="Link to this heading">¶</a></h4>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All requests are processed using the leaf layers in the model.</p>
+</div>
+<p>MMP provides the following APIs to change layers’ precision. The APIs can be called in any order. In case of conflicts, the latest request overrides an older request. For example:</p>
+<ul class="simple">
+<li><p>If one of the following APIs is called multiple times but with a different precision for the same layer, only the latest call is serviced.</p></li>
+<li><p>The last request takes precedence even if the requests are from two different APIs. For example, say you call a non-leaf layer L1 with precision P1 and then a leaf layer L2, inside L1, with precision P2. This sets all the layers in L1 to precision P1, except layer L2 which is set to P2.</p></li>
+</ul>
+</section>
+<section id="set-precision-of-a-leaf-layer">
+<h4>Set precision of a leaf layer<a class="headerlink" href="#set-precision-of-a-leaf-layer" title="Link to this heading">¶</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-3">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mp_configurator</span><span class="o">.</span><span class="n">set_precision</span><span class="p">(</span><span class="n">quant_sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="s1">&#39;int16&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-4" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-4">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-5">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+</section>
+<section id="set-precision-of-a-non-leaf-layer">
+<h4>Set precision of a non-leaf layer<a class="headerlink" href="#set-precision-of-a-non-leaf-layer" title="Link to this heading">¶</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-6">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mp_configurator</span><span class="o">.</span><span class="n">set_precision</span><span class="p">(</span><span class="n">quant_sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">conv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">,</span> <span class="n">param</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="s1">&#39;int16&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-7">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-8" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-8">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+</section>
+<section id="set-precision-based-on-layer-type">
+<h4>Set precision based on layer type<a class="headerlink" href="#set-precision-based-on-layer-type" title="Link to this heading">¶</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-9">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mp_configurator</span><span class="o">.</span><span class="n">set_precision</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">AvgPool2d</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-10" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-10">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-11" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-11">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+</section>
+<section id="set-model-input-precision">
+<h4>Set model input precision<a class="headerlink" href="#set-model-input-precision" title="Link to this heading">¶</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-12">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mp_configurator</span><span class="o">.</span><span class="n">set_model_input_precision</span><span class="p">(</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-13" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-13">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-14" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-14">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+<p>If a model has more than one input tensor (for example, the structure is [In1, In2]), you can set just one of them (say In2) to a new precision (say P1) by setting <code class="docutils literal notranslate"><span class="pre">activation=[None,</span> <span class="pre">P1]</span></code> in the above API.</p>
+</section>
+<section id="set-model-output-precision">
+<h4>Set model output precision<a class="headerlink" href="#set-model-output-precision" title="Link to this heading">¶</a></h4>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-15" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-15">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mp_configurator</span><span class="o">.</span><span class="n">set_model_output_precision</span><span class="p">(</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-16" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-16">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-17" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-17">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+<p>If a model has more than one output tensor (for example, the structure is [Out1, Out2, Out3]), you can set just one of them (say Out2) to a new precision (say P1) by setting <code class="docutils literal notranslate"><span class="pre">activation=[None,</span> <span class="pre">P1,</span> <span class="pre">None]</span></code> in the above API.</p>
+</section>
+</section>
+<section id="step-2-applying-the-profile">
+<h3>Step 2: Applying the profile<a class="headerlink" href="#step-2-applying-the-profile" title="Link to this heading">¶</a></h3>
+<p>All of the <cite>set precision</cite> family of calls from step 1 are processed at once when the following <code class="docutils literal notranslate"><span class="pre">apply(...)</span></code> API is called.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-18" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-18">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mp_configurator</span><span class="o">.</span><span class="n">apply</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-19" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-19">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-20" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-20">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">apply</span></code> call generates a report detailing how the request was inferred, propagated to other layers, and eventually realized.</p>
+</section>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-21" name="sd-tab-set-7" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-21">
+PyTorch</label><div class="sd-tab-content docutils">
+<p><strong>Top-level API for Manual mixed precision</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.v2.mixed_precision.</span></span><span class="sig-name descname"><span class="pre">MixedPrecisionConfigurator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_torch/v2/mixed_precision/manual_mixed_precision.html#MixedPrecisionConfigurator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator" title="Link to this definition">¶</a></dt>
+<dd><p>Mixed Precision Configurator helps set up a mixed precision profile in the QuantSim object. The user is expected to
+follow the below steps to set the sim in Mixed Precision.</p>
+<ol class="arabic simple">
+<li><p>Create QuantSim object</p></li>
+<li><p>Create the MixedPrecisionConfigurator object by passing in the QuantSim object</p></li>
+<li><p>Make a series of set_precision/set_model_input_precision/set_model_output_precision calls</p></li>
+<li><p>Call apply() method by passing in the config file and strict flag</p></li>
+<li><p>Run compute_encodings on the above QuantSim object</p></li>
+<li><p>Export the encodings/onnx artifacts</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/torch/quantsim.html#aimet_torch.QuantizationSimModel" title="aimet_torch.v2.quantsim.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – QuantSim object</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_precision">
+<span class="sig-name descname"><span class="pre">set_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_torch/v2/mixed_precision/manual_mixed_precision.html#MixedPrecisionConfigurator.set_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_precision" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]]</span>) – Module can be of type torch.nn.Module or the type of the module.</p></li>
+<li><p><strong>activation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]], <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]</span>) – A string representing the activation dtype of the module input(s)</p></li>
+<li><p><strong>param</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]]</span>) – Dict with name of the param as key and its dtype as value</p></li>
+</ul>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>If the ‘module’ is a leaf-module(the module doesnt compose of other torch.nn.module), the specified settings
+would be applied to the module.</p></li>
+<li><p>If the ‘module’ is a non-leaf-module (module is composed of other torch.nn.module), the specified settings
+would be applied to all the leaf modules in ‘module’.</p></li>
+<li><p>If the ‘module’ is Type of module, all the modules in the model which satisfy the specified module type would
+be set to the specified activation and param settings</p></li>
+<li><p>If the same ‘module’ is specified through multiple set_precision(…) calls, the latest one will be applied.</p></li>
+</ul>
+<p>Examples: TODO</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_model_input_precision">
+<span class="sig-name descname"><span class="pre">set_model_input_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_torch/v2/mixed_precision/manual_mixed_precision.html#MixedPrecisionConfigurator.set_model_input_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_model_input_precision" title="Link to this definition">¶</a></dt>
+<dd><p>Activation precision which needs to be set to the model inputs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>activation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]], <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]], <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]</span>) – Activation dtypes for inputs of the model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_model_output_precision">
+<span class="sig-name descname"><span class="pre">set_model_output_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_torch/v2/mixed_precision/manual_mixed_precision.html#MixedPrecisionConfigurator.set_model_output_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_model_output_precision" title="Link to this definition">¶</a></dt>
+<dd><p>Activation precision which needs to be set to the model outputs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>activation</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]], <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]], <code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'int16'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int8'</span></code>, <code class="docutils literal notranslate"><span class="pre">'int4'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fp16'</span></code>]]</span>) – Activation dtypes for outputs of the model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./mmp_log.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_torch/v2/mixed_precision/manual_mixed_precision.html#MixedPrecisionConfigurator.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Apply the mp settings specified through the set_precision/set_model_input_precision/set_model_output_precision
+calls to the QuantSim object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">IO</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – log_file to store the logs. log_file can either be a string representing the path or the IO
+object to write the logs into.</p></li>
+<li><p><strong>strict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Boolean flag to indicate whether to fail (strict=True) on incorrect/conflicting inputs made by
+the user or (strict=False) take a best-effort approach to realize the MP settings</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<input id="sd-tab-item-22" name="sd-tab-set-7" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="tf" for="sd-tab-item-22">
+TensorFlow</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+<input id="sd-tab-item-23" name="sd-tab-set-7" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-23">
+ONNX</label><div class="sd-tab-content docutils">
+<p>Not supported.</p>
+</div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="amp.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Automatic mixed precision</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Mixed precision</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Manual mixed precision</a><ul>
+<li><a class="reference internal" href="#context">Context</a></li>
+<li><a class="reference internal" href="#workflow">Workflow</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#setup">Setup</a><ul>
+<li><a class="reference internal" href="#step-1-applying-mmp-api-options">Step 1: Applying MMP API options</a></li>
+<li><a class="reference internal" href="#set-precision-of-a-leaf-layer">Set precision of a leaf layer</a></li>
+<li><a class="reference internal" href="#set-precision-of-a-non-leaf-layer">Set precision of a non-leaf layer</a></li>
+<li><a class="reference internal" href="#set-precision-based-on-layer-type">Set precision based on layer type</a></li>
+<li><a class="reference internal" href="#set-model-input-precision">Set model input precision</a></li>
+<li><a class="reference internal" href="#set-model-output-precision">Set model output precision</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-2-applying-the-profile">Step 2: Applying the profile</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator"><code class="docutils literal notranslate"><span class="pre">MixedPrecisionConfigurator</span></code></a><ul>
+<li><a class="reference internal" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_precision"><code class="docutils literal notranslate"><span class="pre">MixedPrecisionConfigurator.set_precision()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_model_input_precision"><code class="docutils literal notranslate"><span class="pre">MixedPrecisionConfigurator.set_model_input_precision()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.set_model_output_precision"><code class="docutils literal notranslate"><span class="pre">MixedPrecisionConfigurator.set_model_output_precision()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.v2.mixed_precision.MixedPrecisionConfigurator.apply"><code class="docutils literal notranslate"><span class="pre">MixedPrecisionConfigurator.apply()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
