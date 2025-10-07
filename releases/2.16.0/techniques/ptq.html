@@ -1,0 +1,1133 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Quantization-aware training" href="qat.html"><link rel="prev" title="Techniques" href="index.html">
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+        <title>Post Training Quantization - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/aimet-furo.css?v=58822075" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.16.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../overview/index.html">Overview</a><input aria-label="Toggle navigation of Overview" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overview/install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overview/install/index.html">Install</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/index.html">Tutorials</a><input aria-label="Toggle navigation of Tutorials" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/quantization_workflow.html">Quantization Workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorials/quantsim.html">Quantization Simulation</a><input aria-label="Toggle navigation of Quantization Simulation" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorials/notebooks.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/on_target_inference.html">Running Quantized Models on-device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/debugging_guidelines.html">Debugging Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Techniques</a><input aria-label="Toggle navigation of Techniques" checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Post Training Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qat.html">Quantization Aware Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blockwise.html">Blockwise Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lpbq.html">Low-Power Blockwise Quantization</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="mixed_precision/index.html">Mixed precision</a><input aria-label="Toggle navigation of Mixed precision" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="mixed_precision/litemp.html">Lite mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mixed_precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mixed_precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="analysis_tools/index.html">Analysis tools</a><input aria-label="Toggle navigation of Analysis tools" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="analysis_tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis_tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analysis_tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="compression/index.html">Compression</a><input aria-label="Toggle navigation of Compression" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="compression/channel_pruning.html">Channel pruning</a><input aria-label="Toggle navigation of Channel pruning" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ptq_techniques/index.html">PTQ Techniques</a><input aria-label="Toggle navigation of PTQ Techniques" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/adascale.html">AdaScale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/omniquant.html">OmniQuant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/spinquant.html">SpinQuant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../apiref/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../external/index.html">External Resources</a><input aria-label="Toggle navigation of External Resources" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-models/">Qualcomm Hub Models</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-apps/">Qualcomm Hub Apps</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://aihub.qualcomm.com/">Qualcomm AI Hub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="post-training-quantization">
+<span id="techniques-ptq"></span><h1>Post Training Quantization<a class="headerlink" href="#post-training-quantization" title="Link to this heading">¶</a></h1>
+<p>Post-Training Quantization (PTQ) is the process of determining the appropriate scale and offset parameters for the quantizers inserted into a model’s computation graph.
+While quantization parameters for weights can typically be precomputed,
+determining parameters for activations requires running a small, representative dataset through the model to collect range statistics.</p>
+<p>This process of computing scale and offset values is commonly referred to as calibration.</p>
+<p>Both <a class="reference external" href="https://pypi.org/project/aimet-onnx/">aimet-onnx</a> or <a class="reference external" href="https://pypi.org/project/aimet-torch/">aimet-torch</a> supports PTQ.</p>
+<img alt="../_images/ptq_overview.png" src="../_images/ptq_overview.png" />
+<p>We recommend using <a class="reference external" href="https://pypi.org/project/aimet-onnx/">aimet-onnx</a> for PTQ for the following reasons:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Captured graph</dt><dd><ul class="simple">
+<li><p>Optimize model before quantization</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Better alignment downstream</dt><dd><ul class="simple">
+<li><p>PyTorch may export certain operation to multiple operations in ONNX leading to missing quantizer information.</p></li>
+<li><p>This missing quantizer information could lead to accuracy difference between on-target and off-target(simulation).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<section id="workflow">
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">¶</a></h2>
+<img alt="../_images/ptq.png" src="../_images/ptq.png" />
+<p>Let’s take an example for calibrating a MobileNetV2 model.</p>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Download ImageNet dataset</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>-P<span class="w"> </span>./imagenet_dataset<span class="w"> </span>https://image-net.org/data/ILSVRC/2012/ILSVRC2012_devkit_t12.tar.gz
+wget<span class="w"> </span>-P<span class="w"> </span>./imagenet_dataset<span class="w"> </span>https://image-net.org/data/ILSVRC/2012/ILSVRC2012_img_val.tar
+</pre></div>
+</div>
+<p>If you already have imagenet dataset locally that you would like to use, simply replace dataset path from <cite>imagenet_dataset</cite> later.</p>
+<ol class="arabic simple" start="2">
+<li><p>Load PyTorch model and dataset</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The examples below use a pre-trained MobileNetV2 model. You can also load your model instead.</p>
+</div>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-0">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>aimet_torch 2 is fully backward compatible with all the public APIs of aimet_torch 1.x. If you are
+using low-level components of <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code>, see the <a class="reference internal" href="../apiref/torch/migration_guide.html"><span class="doc">aimet_torch 1 to aimet_torch 2 Migration Guide</span></a>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.cuda</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageNet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+</pre></div>
+</div>
+<p>To perform quantization simulation with <code class="xref py py-mod docutils literal notranslate"><span class="pre">aimet_torch</span></code>, your model definition must conform to
+the guidelines at <a class="reference internal" href="torch/model_guidelines.html#torch-model-guidelines"><span class="std std-ref">PyTorch model guidelines</span></a>.
+For example, <code class="xref py py-func docutils literal notranslate"><span class="pre">torch.nn.functional()</span></code> defined in the forward pass should be changed to the equivalent
+<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">mobilenet_v2</span><span class="p">,</span> <span class="n">MobileNet_V2_Weights</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">MobileNet_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">random_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">transforms</span>
+
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">NUM_CALIBRATION_SAMPLES</span> <span class="o">=</span> <span class="mi">1024</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_calibration_and_eval_data_loaders</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns calibration and evaluation data-loader for ImageNet dataset from provided path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span><span class="mi">224</span><span class="p">),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">ImageNet</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+    <span class="n">calibration_dataset</span><span class="p">,</span> <span class="n">eval_dataset</span> <span class="o">=</span> <span class="n">random_split</span><span class="p">(</span>
+        <span class="n">dataset</span><span class="p">,</span> <span class="p">[</span><span class="mf">.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">calibration_data_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">calibration_dataset</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">eval_data_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">eval_dataset</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">calibration_data_loader</span><span class="p">,</span> <span class="n">eval_data_loader</span>
+
+<span class="n">PATH_TO_IMAGENET</span> <span class="o">=</span> <span class="s1">&#39;./imagenet_dataset&#39;</span>
+<span class="n">calibration_data_loader</span><span class="p">,</span> <span class="n">eval_data_loader</span> <span class="o">=</span> <span class="n">get_calibration_and_eval_data_loaders</span><span class="p">(</span><span class="n">PATH_TO_IMAGENET</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-1">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">onnx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MobileNet_V2_Weights</span><span class="p">,</span> <span class="n">mobilenet_v2</span>
+<span class="n">pt_model</span> <span class="o">=</span> <span class="n">mobilenet_v2</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="n">MobileNet_V2_Weights</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">)</span>
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+
+<span class="c1"># Modify file_path to save model at a different location</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="s1">&#39;mobilenet_v2.onnx&#39;</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">pt_model</span><span class="p">,</span>
+                  <span class="p">(</span><span class="n">dummy_input</span><span class="p">,),</span>
+                  <span class="n">file_path</span><span class="p">,</span>
+                  <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">],</span>
+                  <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">],</span>
+                  <span class="n">dynamic_axes</span><span class="o">=</span><span class="p">{</span>
+                      <span class="s1">&#39;input&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;batch_size&#39;</span><span class="p">},</span>
+                      <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;batch_size&#39;</span><span class="p">},</span>
+                  <span class="p">},</span>
+                  <span class="p">)</span>
+
+<span class="c1"># Load exported ONNX model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">onnx</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">datasets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">random_split</span>
+
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">NUM_CALIBRATION_SAMPLES</span> <span class="o">=</span> <span class="mi">1024</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_calibration_and_eval_data_loaders</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns calibration and evaluation data-loader for ImageNet dataset from provided path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span><span class="mi">224</span><span class="p">),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+            <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ImageNet</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+    <span class="n">calibration_dataset</span><span class="p">,</span> <span class="n">eval_dataset</span> <span class="o">=</span> <span class="n">random_split</span><span class="p">(</span>
+        <span class="n">dataset</span><span class="p">,</span> <span class="p">[</span><span class="mf">.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">calibration_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">calibration_dataset</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">eval_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">eval_dataset</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">calibration_data_loader</span><span class="p">,</span> <span class="n">eval_data_loader</span>
+
+<span class="c1"># Change path here to point to different dataset</span>
+<span class="n">PATH_TO_IMAGENET</span> <span class="o">=</span> <span class="s1">&#39;./imagenet_dataset&#39;</span>
+<span class="n">calibration_data_loader</span><span class="p">,</span> <span class="n">eval_data_loader</span> <span class="o">=</span> <span class="n">get_calibration_and_eval_data_loaders</span><span class="p">(</span><span class="n">PATH_TO_IMAGENET</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Optionally simplify the exported onnx graph before quantization. This is not strictly required but
+may improve accuracy and runtime performance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">onnxsim</span>
+<span class="n">model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">onnxsim</span><span class="o">.</span><span class="n">simplify</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-1-creating-a-quantsim-model">
+<h3>Step 1: Creating a QuantSim model<a class="headerlink" href="#step-1-creating-a-quantsim-model" title="Link to this heading">¶</a></h3>
+<p>Use AIMET to create a <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code>. AIMET inserts
+fake quantization operations in the model graph and configures them.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-2">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.defs</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantScheme</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.quantsim_config.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_path_for_per_channel_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.quantsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                           <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="p">,</span>
+                           <span class="n">quant_scheme</span><span class="o">=</span><span class="n">QuantScheme</span><span class="o">.</span><span class="n">training_range_learning_with_tf_init</span><span class="p">,</span>
+                           <span class="n">default_param_bw</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                           <span class="n">default_output_bw</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                           <span class="n">config_file</span><span class="o">=</span><span class="n">get_path_for_per_channel_config</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-3">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_common.defs</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantScheme</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">aimet_onnx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+
+<span class="c1"># Optionally use [&quot;CUDAExecutionProvider&quot;, &quot;CPUExecutionProvider&quot;] to accelerate quantization with Nvidia GPU</span>
+<span class="n">providers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CPUExecutionProvider&quot;</span><span class="p">]</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                           <span class="n">param_type</span><span class="o">=</span><span class="n">aimet_onnx</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span>
+                           <span class="n">activation_type</span><span class="o">=</span><span class="n">aimet_onnx</span><span class="o">.</span><span class="n">int16</span><span class="p">,</span>
+                           <span class="n">quant_scheme</span><span class="o">=</span><span class="n">QuantScheme</span><span class="o">.</span><span class="n">min_max</span><span class="p">,</span>
+                           <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+                           <span class="n">providers</span><span class="o">=</span><span class="n">providers</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-creating-a-calibration-callback">
+<h3>Step 2: Creating a calibration callback<a class="headerlink" href="#step-2-creating-a-calibration-callback" title="Link to this heading">¶</a></h3>
+<p>Before you can use the <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code> for inference or training, you must compute
+scale and offset quantization parameters for each ‘quantizer’ node.</p>
+<p>Create a routine to pass small, representative data samples through the model. A quick way to do this
+is to use the existing train or validation data loader to extract samples and pass them
+to the model.</p>
+<p>500 to 1000 representative data samples are sufficient to compute the quantization parameters.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-4">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pass_calibration_data</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">forward_pass_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The User of the QuantizationSimModel API is expected to write this callback based on their dataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data_loader</span> <span class="o">=</span> <span class="n">forward_pass_args</span>
+    <span class="n">num_batches</span> <span class="o">=</span> <span class="n">NUM_CALIBRATION_SAMPLES</span> <span class="o">//</span> <span class="n">BATCH_SIZE</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data_loader</span><span class="p">):</span>
+            <span class="n">inputs_batch</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># labels are ignored</span>
+            <span class="n">model</span><span class="p">(</span><span class="n">inputs_batch</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">batch</span> <span class="o">&gt;=</span> <span class="n">num_batches</span><span class="p">:</span>
+                <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-5">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">input_name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onnx_data_generator</span><span class="p">(</span><span class="n">num_batches</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Example conversion from torch dataloader to onnx model inputs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">calibration_data_loader</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">num_batches</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">yield</span> <span class="p">{</span><span class="n">input_name</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-computing-encodings">
+<h3>Step 3: Computing encodings<a class="headerlink" href="#step-3-computing-encodings" title="Link to this heading">¶</a></h3>
+<p>Next, call <code class="xref py py-func docutils literal notranslate"><span class="pre">QuantizationSimModel.compute_encodings()</span></code> to use the callback to pass representative
+data through the quantized model. The quantizers in the quantized model use the observed inputs
+to initialize their quantization encodings. “Encodings” refers to the scale and offset quantization parameters.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-6">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">pass_calibration_data</span><span class="p">,</span> <span class="n">forward_pass_callback_args</span><span class="o">=</span><span class="n">calibration_data_loader</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-7">
+ONNX</label><div class="sd-tab-content docutils">
+<p>In onnx, calibration can be done through a callback function or by passing calibration
+data directly as an iterable of model inputs (<code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable[Dict[str,</span> <span class="pre">np.ndarray]]</span></code>)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">onnx_data_generator</span><span class="p">(</span><span class="n">NUM_CALIBRATION_SAMPLES</span> <span class="o">//</span> <span class="n">BATCH_SIZE</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-evaluation">
+<h3>Step 4: Evaluation<a class="headerlink" href="#step-4-evaluation" title="Link to this heading">¶</a></h3>
+<p>Next, evaluate the <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code> to measure the model’s accuracy after quantization.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-8">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Determine simulated quantized accuracy</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">eval_data_loader</span><span class="p">):</span>
+        <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">predicted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">correct</span> <span class="o">+=</span> <span class="p">(</span><span class="n">predicted</span> <span class="o">==</span> <span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Accuracy: </span><span class="si">{</span><span class="n">correct</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-9" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-9">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">correct_predictions</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">total_samples</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">eval_data_loader</span><span class="p">)):</span>
+    <span class="n">pred_probs</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="n">input_name</span><span class="p">:</span> <span class="n">inputs</span><span class="o">.</span><span class="n">numpy</span><span class="p">()})</span>
+    <span class="n">pred_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">correct_predictions</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_labels</span> <span class="o">==</span> <span class="n">labels</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+    <span class="n">total_samples</span> <span class="o">+=</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">correct_predictions</span> <span class="o">/</span> <span class="n">total_samples</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Quantized accuracy (W8A16): </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="script-output highlight-none notranslate"><div class="highlight"><pre><span></span>Quantized accuracy (W8A16): 0.7173
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-5-exporting-the-model">
+<h3>Step 5: Exporting the model<a class="headerlink" href="#step-5-exporting-the-model" title="Link to this heading">¶</a></h3>
+<p>If the off-target accuracy of the quantized model is within acceptable limits (Step 4), we can proceed with deployment and export the model to ONNX format.
+During export, all intermediate quantization operations are removed, and the quantization parameters—scale and offset—are serialized into a JSON file.</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-10">
+PyTorch</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export the model for on-target inference.</span>
+<span class="c1"># Export the model which saves pytorch model without any simulation nodes and saves encodings file for both</span>
+<span class="c1"># activations and parameters in JSON format at provided path.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;quantized_mobilenet_v2&#39;</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">=</span><span class="n">dummy_input</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-11" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-11">
+ONNX</label><div class="sd-tab-content docutils">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export the model for on-target inference. Saves ONNX model without quantization nodes</span>
+<span class="c1"># and encodings file with all tensor encodings in JSON format at provided path.</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="s1">&#39;quantized_mobilenet_v2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h2>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-12" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="torch" for="sd-tab-item-12">
+PyTorch</label><div class="sd-tab-content docutils">
+<p><strong>Top level APIs</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.quantsim.</span></span><span class="sig-name descname"><span class="pre">QuantizationSimModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_output_bw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_param_bw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">QuantizationDataType.int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/quantsim.html#QuantizationSimModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Class that simulates the quantized model execution on a target hardware backend.</p>
+<p>QuantizationSimModel simulates quantization of a given model by converting
+all PyTorch modules into <span class="xref std std-ref">quantized modules</span>
+with input/output/parameter <span class="xref std std-ref">quantizers</span> as necessary.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">resnet18</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="go">ResNet(</span>
+<span class="go">  (conv1): Conv2d(</span>
+<span class="go">    3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False</span>
+<span class="go">  )</span>
+<span class="go">  ...</span>
+<span class="go">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+<span class="go">ResNet(</span>
+<span class="go">  (conv1): QuantizedConv2d(</span>
+<span class="go">    3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False</span>
+<span class="go">    (param_quantizers): ModuleDict(</span>
+<span class="go">      (weight): QuantizeDequantize(shape=(), qmin=-128, qmax=127, symmetric=True)</span>
+<span class="go">    )</span>
+<span class="go">    (input_quantizers): ModuleList(</span>
+<span class="go">      (0): QuantizeDequantize(shape=(), qmin=0, qmax=255, symmetric=False)</span>
+<span class="go">    )</span>
+<span class="go">    (output_quantizers): ModuleList(</span>
+<span class="go">      (0): None</span>
+<span class="go">    )</span>
+<span class="go">  )</span>
+<span class="go">  ...</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><cite>rounding_mode</cite> parameter is deprecated.
+Passing <cite>rounding_mode</cite> will throw runtime error in &gt;=1.35.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The default value of <cite>quant_scheme</cite> has changed
+from <cite>QuantScheme.post_training_tf_enhanced</cite> to <cite>QuantScheme.training_range_learning_with_tf_init</cite>
+since 2.0.0, and will be deprecated in the longer term.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – Model to simulate the quantized execution of</p></li>
+<li><p><strong>dummy_input</strong> (<em>Tensor</em><em> | </em><em>Sequence</em><em>[</em><em>Tensor</em><em>]</em>) – Dummy input to be used to capture
+the computational graph of the model. All input tensors are expected to be
+already placed on the appropriate devices to run forward pass of the model.</p></li>
+<li><p><strong>quant_scheme</strong> (<a class="reference internal" href="../apiref/torch/v1/quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><em>QuantScheme</em></a><em>, </em><em>optional</em>) – Quantization scheme that indicates
+how to observe and calibrate the quantization encodings (Default: <cite>QuantScheme.post_training_tf_enhanced</cite>)</p></li>
+<li><p><strong>rounding_mode</strong> – Deprecated</p></li>
+<li><p><strong>default_output_bw</strong> (<em>int</em><em>, </em><em>optional</em>) – Default bitwidth (4-31) to use for quantizing all layer inputs and outputs
+unless otherwise specified in the config file. (Default: 8)</p></li>
+<li><p><strong>default_param_bw</strong> (<em>int</em><em>, </em><em>optional</em>) – Default bitwidth (4-31) to use for quantizing all layer parameters
+unless otherwise specified in the config file. (Default: 8)</p></li>
+<li><p><strong>in_place</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then the given model is modified in-place into a quantized model. (Default: <cite>False</cite>)</p></li>
+<li><p><strong>config_file</strong> (<em>str</em><em>, </em><em>optional</em>) – File path or alias of the configuration file.
+Alias can be one of { default, htp_v66, htp_v68, htp_v69, htp_v73, htp_v75, htp_v79, htp_v81 } (Default: <cite>“default”</cite>)</p></li>
+<li><p><strong>default_data_type</strong> (<em>QuantizationDataType</em><em>, </em><em>optional</em>) – Default data type to use for quantizing all
+inputs, outputs and parameters unless otherwise specified in the config file.
+Possible options are QuantizationDataType.int and QuantizationDataType.float.
+Note that the mode default_data_type=QuantizationDataType.float is only supported with
+default_output_bw=16 or 32 and default_param_bw=16 or 32. (Default: <cite>QuantizationDataType.int</cite>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward_pass_callback_args=&lt;class</span> <span class="pre">'aimet_torch.v2.quantsim.quantsim._NOT_SPECIFIED'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Computes encodings for all quantizers in the model.</p>
+<p>This API will invoke <cite>forward_pass_callback</cite>, a function written by the user that runs
+forward pass(es) of the quantized model with a small, representative subset of the training dataset.
+By doing so, the quantizers in the quantized model will observe the inputs and initialize
+their quantization encodings according to the observed input statistics.</p>
+<p>This function is overloaded with the following signatures:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forward_pass_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – A function that takes a quantized model and runs forward passes
+with a small, representative subset of training dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward_pass_callback_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forward_pass_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>T</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – A function that takes a quantized model and runs forward passes
+with a small, representative subset of training dataset</p></li>
+<li><p><strong>forward_pass_callback_args</strong> (<em>T</em>) – The second argument to <cite>forward_pass_callback</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="c1"># Can&#39;t run forward until quantizer encodings are initialized</span>
+<span class="go">RuntimeError: Failed to run QuantizeDequantize since quantization parameters are not initialized.</span>
+<span class="go">Please initialize the quantization parameters using `compute_encodings()`.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">run_forward_pass</span><span class="p">(</span><span class="n">quantized_model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">train_dataloader</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+<span class="gp">... </span>            <span class="n">_</span> <span class="o">=</span> <span class="n">quantized_model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">run_forward_pass</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="c1"># Now runs successfully!</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_input</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_torch/v2/quantsim/quantsim.html#QuantizationSimModel.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>This method exports out the quant-sim model so it is ready to be run on-target.</p>
+<p>Specifically, the following are saved:</p>
+<ol class="arabic simple">
+<li><p>The sim-model is exported to a regular PyTorch model without any simulation ops</p></li>
+<li><p>The quantization encodings are exported to a separate JSON-formatted file that can
+then be imported by the on-target runtime (if desired)</p></li>
+<li><p>Optionally, An equivalent model in ONNX format is exported. In addition, nodes in the ONNX model are named
+the same as the corresponding PyTorch module names. This helps with matching ONNX node to their quant
+encoding from #2.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – path where to store model pth and encodings</p></li>
+<li><p><strong>filename_prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Prefix to use for filenames of the model pth and encodings files</p></li>
+<li><p><strong>dummy_input</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>]</span>) – Dummy input to the model. Used to parse model graph. It is required for the dummy_input to
+be placed on CPU.</p></li>
+<li><p><strong>onnx_export_args</strong> – Optional export argument with onnx specific overrides provided as a dictionary or
+OnnxExportApiArgs object. If not provided, defaults to “opset_version” = None, “input_names” = None,
+“output_names” = None, and for torch version &lt; 1.10.0, “enable_onnx_checker” = False.</p></li>
+<li><p><strong>propagate_encodings</strong> – If True, encoding entries for intermediate ops (when one PyTorch ops results in
+multiple ONNX nodes) are filled with the same BW and data_type as the output tensor for that series of
+ops. Defaults to False.</p></li>
+<li><p><strong>export_to_torchscript</strong> – If True, export to torchscript. Export to onnx otherwise. Defaults to False.</p></li>
+<li><p><strong>use_embedded_encodings</strong> – If True, another onnx model embedded with fakequant nodes will be exported</p></li>
+<li><p><strong>export_model</strong> – If True, then ONNX model is exported. When False, only encodings are exported. User should
+disable (False) this flag only if the corresponding ONNX model already exists in the path
+specified</p></li>
+<li><p><strong>filename_prefix_encodings</strong> – File name prefix to be used when saving encodings.
+If None, then user defaults to filename_prefix value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">load_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encodings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requires_grad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encodings</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PathLike</span></code>]</span>) – Encoding dictionary or path to the encoding dictionary json file.</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – If True, an error will be thrown if the model doesn’t
+have a quantizer corresponding to the specified encodings.</p></li>
+<li><p><strong>partial</strong> (<em>bool</em>) – If True, the encoding will be interpreted as a partial encoding,
+and the dangling quantizers with no corresponding encoding will be kept untouched.
+Otherwise, the dangling quantizers will be removed from the model.</p></li>
+<li><p><strong>requires_grad</strong> (<em>bool</em>) – Whether or not the quantization parameters loaded from the
+encodings require gradient computation during training.
+If None, <code class="docutils literal notranslate"><span class="pre">requires_grad</span></code> flag of the quantization parameters will be kept unchanged.</p></li>
+<li><p><strong>allow_overwrite</strong> (<em>bool</em>) – Whether or not the quantization parameters loaded from the
+encodings can be overwriiten by <span class="xref std std-ref">compute_encodings</span> or another <span class="xref std std-ref">load_encodings</span>.
+If None, whether the quantizer is overwrieable will be kept unchanged.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Quant Scheme Enum</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_common.defs.</span></span><span class="sig-name descname"><span class="pre">QuantScheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_common/defs.html#QuantScheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Quantization schemes</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alias</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_common/defs.html#QuantScheme.from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns QuantScheme object from string alias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../apiref/torch/v1/quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<input id="sd-tab-item-13" name="sd-tab-set-6" type="radio">
+<label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-13">
+ONNX</label><div class="sd-tab-content docutils">
+<p><strong>Top level APIs</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_onnx.quantsim.</span></span><span class="sig-name descname"><span class="pre">QuantizationSimModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">int8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">int8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">QuantScheme.min_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_onnx_libs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">providers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/quantsim.html#QuantizationSimModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Class that simulates the quantized model execution on a target hardware backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>onnx.ModelProto</em>) – ONNX ModelProto to quantize</p></li>
+<li><p><strong>param_type</strong> (<em>qtype</em><em> | </em><em>str</em>) – quantized type to use for parameter tensors.
+Can be { int4, int8, int16, float16, float32 } or <code class="xref py py-class docutils literal notranslate"><span class="pre">aimet_onnx.qtype</span></code></p></li>
+<li><p><strong>activation_type</strong> (<em>qtype</em><em> | </em><em>str</em>) – quantized type to use for activation tensors.
+Can be { int4, int8, int16, float16, float32 } or <code class="xref py py-class docutils literal notranslate"><span class="pre">aimet_onnx.qtype</span></code></p></li>
+<li><p><strong>quant_scheme</strong> (<a class="reference internal" href="../apiref/torch/v1/quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><em>QuantScheme</em></a><em> | </em><em>str</em>) – Quantization scheme to use for calibration.
+Can be { tf_enhanced, min_max } or <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></p></li>
+<li><p><strong>config_file</strong> (<em>str</em><em>, </em><em>optional</em>) – File path or alias of the configuration file.
+Alias can be one of { default, htp_v66, htp_v68, htp_v69, htp_v73, htp_v75, htp_v79, htp_v81 } (Default: <cite>“default”</cite>)</p></li>
+<li><p><strong>dummy_input</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Sample input to the model. Only needed for non shape-inferable models with parameterized shapes</p></li>
+<li><p><strong>user_onnx_libs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of paths to all compiled ONNX custom ops libraries</p></li>
+<li><p><strong>providers</strong> (<em>List</em><em>, </em><em>optional</em>) – Onnxruntime execution providers to use when building InferenceSession.
+If <cite>None</cite>, default provider is “CPUExecutionProvider”</p></li>
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to save temporary artifacts.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Computes encodings for all quantizers in the model.</p>
+<p>This API will invoke <cite>forward_pass_callback</cite>, a function written by the user that runs
+forward pass(es) of the quantized model with a small, representative subset of the training dataset.
+By doing so, the quantizers in the quantized model will observe the inputs and initialize
+their quantization encodings according to the observed input statistics.</p>
+<p>This function is overloaded with the following signatures:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Iterable</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em>) – The set of model input samples to use during calibration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forward_pass_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>ort.InferenceSession</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – A function that takes a quantized model and runs forward passes
+with a small, representative subset of training dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward_pass_callback_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forward_pass_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>ort.InferenceSession</em><em>, </em><em>T</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – A function that takes a quantized model and runs forward passes
+with a small, representative subset of training dataset</p></li>
+<li><p><strong>forward_pass_callback_args</strong> (<em>T</em>) – The second argument to <cite>forward_pass_callback</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">run_forward_pass</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">_</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="p">})</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">run_forward_pass</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute encodings and export to files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – dir to save encoding files</p></li>
+<li><p><strong>filename_prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – filename to save encoding files</p></li>
+<li><p><strong>export_model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, then ONNX model is exported. When False, only encodings are exported.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>We recommend you use onnx-simplifier before creating the QuantSim model.</p></li>
+<li><p>Since ONNX Runtime is used for optimized inference only, ONNX framework supports Post Training Quantization schemes (such as TF or TF-enhanced) to compute the encodings.</p></li>
+</ul>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">aimet_onnx.quantsim.</span></span><span class="sig-name descname"><span class="pre">load_encodings_to_sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quant_sim_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onnx_encoding_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_missing_quantizers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/quantsim.html#load_encodings_to_sim"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Loads the saved encodings to quant sim model. The encoding filename to load should end in .encodings,
+generated as part of quantsim export.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quant_sim_model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantized model to load encodings for. Note: The model configuration should be the same as
+when encodings were exported.</p></li>
+<li><p><strong>onnx_encoding_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path of the encodings file to load.</p></li>
+<li><p><strong>strict</strong> – If set to True and encoding settings between encodings to load do not line up with Quantsim
+initialized settings, an assertion will be thrown. If set to False, quantizer settings will update to align with
+encodings to load.</p></li>
+<li><p><strong>allow_overwrite</strong> – If true, loaded encodings will be overwritten by subsequent compute_encodings calls
+If false, loaded quantizer encodings will be frozen.</p></li>
+<li><p><strong>diable_missing_quantizers</strong> – If true, quantizers which do not have encodings will be disabled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">_EncodingMismatchInfo</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of EncodingMismatchInfo objects containing quantizer names and mismatched settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p><strong>Quant Scheme Enum</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_common.defs.</span></span><span class="sig-name descname"><span class="pre">QuantScheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_common/defs.html#QuantScheme"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Quantization schemes</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alias</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_common/defs.html#QuantScheme.from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Returns QuantScheme object from string alias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../apiref/torch/v1/quantsim.html#aimet_common.defs.QuantScheme" title="aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="qat.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Quantization-aware training</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Techniques</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Post Training Quantization</a><ul>
+<li><a class="reference internal" href="#workflow">Workflow</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#step-1-creating-a-quantsim-model">Step 1: Creating a QuantSim model</a></li>
+<li><a class="reference internal" href="#step-2-creating-a-calibration-callback">Step 2: Creating a calibration callback</a></li>
+<li><a class="reference internal" href="#step-3-computing-encodings">Step 3: Computing encodings</a></li>
+<li><a class="reference internal" href="#step-4-evaluation">Step 4: Evaluation</a></li>
+<li><a class="reference internal" href="#step-5-exporting-the-model">Step 5: Exporting the model</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
