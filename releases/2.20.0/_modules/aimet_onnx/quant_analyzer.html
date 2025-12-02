@@ -1,0 +1,1190 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+        <title>aimet_onnx.quant_analyzer - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/aimet-furo.css?v=58822075" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.20.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../overview/index.html">Overview</a><input aria-label="Toggle navigation of Overview" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../overview/install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../overview/install/index.html">Install</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a><input aria-label="Toggle navigation of Tutorials" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/quantization_workflow.html">Quantization Workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/quantsim.html">Quantization Simulation</a><input aria-label="Toggle navigation of Quantization Simulation" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tutorials/notebooks.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/on_target_inference.html">Running Quantized Models on-device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/debugging_guidelines.html">Debugging Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../techniques/index.html">Techniques</a><input aria-label="Toggle navigation of Techniques" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../techniques/ptq.html">Post Training Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../techniques/qat.html">Quantization Aware Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../techniques/blockwise.html">Blockwise Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../techniques/lpbq.html">Low-Power Blockwise Quantization</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../techniques/mixed_precision/index.html">Mixed precision</a><input aria-label="Toggle navigation of Mixed precision" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/mixed_precision/litemp.html">Lite mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/mixed_precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/mixed_precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../techniques/analysis_tools/index.html">Analysis tools</a><input aria-label="Toggle navigation of Analysis tools" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/analysis_tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/analysis_tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/analysis_tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../techniques/compression/index.html">Compression</a><input aria-label="Toggle navigation of Compression" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../techniques/compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../techniques/compression/channel_pruning.html">Channel pruning</a><input aria-label="Toggle navigation of Channel pruning" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../techniques/compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../ptq_techniques/index.html">PTQ Techniques</a><input aria-label="Toggle navigation of PTQ Techniques" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/adascale.html">AdaScale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/omniquant.html">OmniQuant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/spinquant.html">SpinQuant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../apiref/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../external/index.html">External Resources</a><input aria-label="Toggle navigation of External Resources" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-models/">Qualcomm Hub Models</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-apps/">Qualcomm Hub Apps</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://aihub.qualcomm.com/">Qualcomm AI Hub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for aimet_onnx.quant_analyzer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- mode: python -*-</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#  @@-COPYRIGHT-START-@@</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Redistribution and use in source and binary forms, with or without</span>
+<span class="c1">#  modification, are permitted provided that the following conditions are met:</span>
+<span class="c1">#</span>
+<span class="c1">#  1. Redistributions of source code must retain the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer.</span>
+<span class="c1">#</span>
+<span class="c1">#  2. Redistributions in binary form must reproduce the above copyright notice,</span>
+<span class="c1">#     this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#     and/or other materials provided with the distribution.</span>
+<span class="c1">#</span>
+<span class="c1">#  3. Neither the name of the copyright holder nor the names of its contributors</span>
+<span class="c1">#     may be used to endorse or promote products derived from this software</span>
+<span class="c1">#     without specific prior written permission.</span>
+<span class="c1">#</span>
+<span class="c1">#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="c1">#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="c1">#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="c1">#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span>
+<span class="c1">#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="c1">#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="c1">#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="c1">#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="c1">#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="c1">#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="c1">#  POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="c1">#</span>
+<span class="c1">#  SPDX-License-Identifier: BSD-3-Clause</span>
+<span class="c1">#</span>
+<span class="c1">#  @@-COPYRIGHT-END-@@</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot;Quant Analyzer&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">onnx</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelProto</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">onnxruntime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ort</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">onnxruntime.quantization.onnx_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ONNXModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">AimetLogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.common.defs</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantScheme</span><span class="p">,</span> <span class="n">qtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.common.quant_analyzer</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">save_json</span><span class="p">,</span>
+    <span class="n">export_per_layer_sensitivity_analysis_plot</span><span class="p">,</span>
+    <span class="n">create_and_export_min_max_ranges_plot</span><span class="p">,</span>
+    <span class="n">export_per_layer_mse_plot</span><span class="p">,</span>
+    <span class="n">export_stats_histogram_plot</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.qc_quantize_op</span><span class="w"> </span><span class="kn">import</span> <span class="n">QcQuantizeOp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.quantsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.batch_norm_fold</span><span class="w"> </span><span class="kn">import</span> <span class="n">fold_all_batch_norms_to_weight</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.meta.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Op</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleData</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">QuantAnalyzer</span><span class="p">)</span>
+
+
+<span class="c1"># TODO: Remove redundant session build/teardown</span>
+<span class="c1">#       and and always use &quot;EXHUASTIVE&quot; (ORT default policy)</span>
+<span class="k">if</span> <span class="n">ort</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&lt;</span> <span class="s2">&quot;1.20&quot;</span><span class="p">:</span>
+    <span class="n">_cudnn_conv_algo_search</span> <span class="o">=</span> <span class="s2">&quot;DEFAULT&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">_cudnn_conv_algo_search</span> <span class="o">=</span> <span class="s2">&quot;HEURISTIC&quot;</span>
+
+
+<div class="viewcode-block" id="QuantAnalyzer">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QuantAnalyzer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    QuantAnalyzer provides following utilities:</span>
+
+<span class="sd">     1) model sensitivity to weight and activation quantization</span>
+<span class="sd">     2) per layer sensitivity analysis</span>
+<span class="sd">     3) per layer encoding (min - max range)</span>
+<span class="sd">     4) per layer quantizer historgram analysis and</span>
+<span class="sd">     5) per layer MSE analysis</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ModelProto</span><span class="p">,</span> <span class="n">ONNXModel</span><span class="p">],</span>
+        <span class="n">dummy_input</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">forward_pass_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">eval_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param model: FP32 model to analyze for quantization.</span>
+<span class="sd">        :param dummy_input: Dummy input to model.</span>
+<span class="sd">        :param forward_pass_callback: A callback function for model calibration that simply runs</span>
+<span class="sd">                forward passes on the model to compute encoding (delta/offset). This</span>
+<span class="sd">                callback function should use representative data and should be subset of</span>
+<span class="sd">                entire train/validation dataset (~1000 images/samples).</span>
+<span class="sd">        :param eval_callback: A callback function for model evaluation that determines model</span>
+<span class="sd">                performance. This callback function is expected to return scalar value</span>
+<span class="sd">                representing the model performance evaluated against entire test/evaluation dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">forward_pass_callback</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;forward_pass_callback is expected to be callable; got {type(forward_pass_callback)}&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">eval_callback</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;eval_callback is expected to be callable; got {type(eval_callback)}&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span><span class="p">,</span> <span class="n">ONNXModel</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span> <span class="o">=</span> <span class="n">ONNXModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input</span> <span class="o">=</span> <span class="n">dummy_input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pass_callback</span> <span class="o">=</span> <span class="n">forward_pass_callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eval_callback</span> <span class="o">=</span> <span class="n">eval_callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unlabeled_dataset_iterable</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_batches</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="QuantAnalyzer.analyze">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.analyze">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">quant_scheme</span><span class="p">:</span> <span class="n">QuantScheme</span> <span class="o">=</span> <span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span><span class="p">,</span>
+        <span class="n">default_param_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">default_activation_bw</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./tmp/&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analyzes model for quantization and point out sensitive parts/hotspots of the model by performing</span>
+<span class="sd">            1) model sensitivity to quantization,</span>
+<span class="sd">            2) perform per layer sensitivity analysis by enabling and disabling quantizers,</span>
+<span class="sd">            3) export per layer encodings min - max ranges,</span>
+<span class="sd">            4) export per layer quantizer stats histogram,</span>
+<span class="sd">            5) per layer MSE analysis</span>
+
+<span class="sd">        :param quant_scheme: Quantization scheme. Supported values are</span>
+<span class="sd">                QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced.</span>
+<span class="sd">        :param default_param_bw: Default bitwidth (4-31) to use for quantizing layer parameters.</span>
+<span class="sd">        :param default_activation_bw: Default bitwidth (4-31) to use for quantizing layer inputs and outputs.</span>
+<span class="sd">        :param config_file: Path to configuration file for model quantizers.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_quantsim_and_encodings</span><span class="p">(</span>
+            <span class="n">quant_scheme</span><span class="p">,</span> <span class="n">default_param_bw</span><span class="p">,</span> <span class="n">default_activation_bw</span><span class="p">,</span> <span class="n">config_file</span>
+        <span class="p">)</span>
+
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Check model sensitivity to weight and activation quantization individually.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_model_sensitivity_to_quantization</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+
+        <span class="c1"># Perform per layer analysis by enabling its quantizers (OPTION-1).</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perform_per_layer_analysis_by_enabling_quantizers</span><span class="p">(</span>
+            <span class="n">sim</span><span class="p">,</span> <span class="n">results_dir</span>
+        <span class="p">)</span>
+        <span class="n">save_json</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;per_layer_quant_enabled.json&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Perform per layer analysis by disabling its quantizers (OPTION-2).</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perform_per_layer_analysis_by_disabling_quantizers</span><span class="p">(</span>
+            <span class="n">sim</span><span class="p">,</span> <span class="n">results_dir</span>
+        <span class="p">)</span>
+        <span class="n">save_json</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;per_layer_quant_disabled.json&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Export encoding min-max range.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">export_per_layer_encoding_min_max_range</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
+
+        <span class="c1"># Export PDF of statistics.</span>
+        <span class="k">if</span> <span class="n">quant_scheme</span> <span class="o">==</span> <span class="n">QuantScheme</span><span class="o">.</span><span class="n">post_training_tf_enhanced</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">export_per_layer_stats_histogram</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span>
+
+        <span class="c1"># Export per layer MSE loss between fp32 and quantized output activations.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unlabeled_dataset_iterable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">export_per_layer_mse_loss</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="QuantAnalyzer.create_quantsim_and_encodings">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.create_quantsim_and_encodings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_quantsim_and_encodings</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">quant_scheme</span><span class="p">:</span> <span class="n">QuantScheme</span><span class="p">,</span>
+        <span class="n">default_param_bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">default_activation_bw</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantizationSimModel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates quantsim object and computes encodings.</span>
+
+<span class="sd">        :param quant_scheme: Quantization scheme.</span>
+<span class="sd">        :param default_param_bw: Default bitwidth (4-31) to use for quantizing layer parameters.</span>
+<span class="sd">        :param default_activation_bw: Default bitwidth (4-31) to use for quantizing layer inputs and outputs.</span>
+<span class="sd">        :param config_file: Path to configuration file for model quantizers.</span>
+<span class="sd">        :return: Quantsim object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">fold_all_batch_norms_to_weight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span><span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;quant_scheme&quot;</span><span class="p">:</span> <span class="n">quant_scheme</span><span class="p">,</span>
+            <span class="s2">&quot;param_type&quot;</span><span class="p">:</span> <span class="n">qtype</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">default_param_bw</span><span class="p">),</span>
+            <span class="s2">&quot;activation_type&quot;</span><span class="p">:</span> <span class="n">qtype</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">default_activation_bw</span><span class="p">),</span>
+            <span class="s2">&quot;config_file&quot;</span><span class="p">:</span> <span class="n">config_file</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span><span class="p">),</span> <span class="n">dummy_input</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dummy_input</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pass_callback</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pass_callback</span><span class="o">.</span><span class="n">args</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">sim</span></div>
+
+
+<div class="viewcode-block" id="QuantAnalyzer.check_model_sensitivity_to_quantization">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.check_model_sensitivity_to_quantization">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_model_sensitivity_to_quantization</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs model sensitivity analysis to weight and activation quantization individually.</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :return: FP32 eval score, weight-quantized eval score, act-quantized eval score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=protected-access</span>
+        <span class="n">fp32_eval_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;FP32 eval score (W: float32, A: float32): </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fp32_eval_score</span><span class="p">)</span>
+
+        <span class="n">weight_quantized_eval_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_weight_quantized_model</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Weight-quantized eval score (W: </span><span class="si">%s</span><span class="s2">, A: float32): </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">_param_type</span><span class="p">,</span>
+            <span class="n">weight_quantized_eval_score</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">act_quantized_eval_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_activation_quantized_model</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Activation-quantized eval score (W: float32, A: </span><span class="si">%s</span><span class="s2">): </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">_activation_type</span><span class="p">,</span>
+            <span class="n">act_quantized_eval_score</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fp32_eval_score</span><span class="p">,</span> <span class="n">weight_quantized_eval_score</span><span class="p">,</span> <span class="n">act_quantized_eval_score</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_eval_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the model performance.</span>
+
+<span class="sd">        :param model: ONNX model to be evaluated.</span>
+<span class="sd">        :return: Scaler value representing model performance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;CUDAExecutionProvider&quot;</span> <span class="ow">in</span> <span class="n">ort</span><span class="o">.</span><span class="n">get_available_providers</span><span class="p">():</span>
+            <span class="n">providers</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;CUDAExecutionProvider&quot;</span><span class="p">,</span>
+                    <span class="p">{</span><span class="s2">&quot;cudnn_conv_algo_search&quot;</span><span class="p">:</span> <span class="n">_cudnn_conv_algo_search</span><span class="p">},</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;CPUExecutionProvider&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">providers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CPUExecutionProvider&quot;</span><span class="p">]</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">(</span>
+            <span class="n">path_or_bytes</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">(),</span>
+            <span class="n">providers</span><span class="o">=</span><span class="n">providers</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_callback</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_eval_weight_quantized_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate weight quantized model performance.</span>
+<span class="sd">        For weight quantized model performance, disable enabled activation quantizers, measure</span>
+<span class="sd">        eval score and enable again.</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :return: Quantized model performance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">enabled_activation_quantizers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_enabled_activation_quantizers</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_activation_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">eval_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_callback</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_activation_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">eval_score</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_eval_activation_quantized_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate activation quantized model performance.</span>
+<span class="sd">        For activation quantized model performance, disable enabled param quantizers, measure</span>
+<span class="sd">        eval score and enable again.</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :return: Quantized model performance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">enabled_param_quantizers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_enabled_param_quantizers</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_param_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">eval_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_callback</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_param_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">eval_score</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_enabled_param_quantizers</span><span class="p">(</span><span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">QcQuantizeOp</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For given quantsim model, get all enabled param quantizers.</span>
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :return: List of enabled param quantizers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">param_quantizers</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_all_quantizers</span><span class="p">()</span>
+        <span class="n">enabled_param_quantizers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">quantizer</span> <span class="k">for</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">param_quantizers</span> <span class="k">if</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">enabled</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">enabled_param_quantizers</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_enabled_activation_quantizers</span><span class="p">(</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">QcQuantizeOp</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For given quantsim model, get all enabled activation quantizers.</span>
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :return: List of enabled activation quantizers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">act_quantizers</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_all_quantizers</span><span class="p">()</span>
+        <span class="n">enabled_activation_quantizers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">quantizer</span> <span class="k">for</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">act_quantizers</span> <span class="k">if</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">enabled</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">enabled_activation_quantizers</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enable_disable_quantizers</span><span class="p">(</span><span class="n">quantizers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">QcQuantizeOp</span><span class="p">],</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For given list of quantizers, set (enable/disable) quantizer&#39;s enabled.</span>
+
+<span class="sd">        :param quantizers: List of quantizers.</span>
+<span class="sd">        :param enabled: Enabled flag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">quantizers</span><span class="p">:</span>
+            <span class="n">quantizer</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span>
+
+<div class="viewcode-block" id="QuantAnalyzer.perform_per_layer_analysis_by_enabling_quantizers">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.perform_per_layer_analysis_by_enabling_quantizers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">perform_per_layer_analysis_by_enabling_quantizers</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+        <span class="n">results_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs layer-wise quantization sensitivity analysis by enabling its quantizers</span>
+
+<span class="sd">        1. All parameter and activation quantizers are disabled.</span>
+<span class="sd">        2. For every layer, based on occurrence:</span>
+<span class="sd">              a. Each layer&#39;s parameters and activations quantizers are enabled as per JSON config file</span>
+<span class="sd">                 and set to bit-width specified.</span>
+<span class="sd">              b. Measure and record eval score on subset of dataset.</span>
+<span class="sd">              c. Disable enabled quantizers in step a.</span>
+<span class="sd">        3. Returns dictionary containing layer name and corresponding eval score.</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :param filename: Name of the file to save the results to</span>
+<span class="sd">        :return: layer wise eval score dictionary. dict[layer_name] = eval_score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;per_layer_quant_enabled&quot;</span>
+
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Starting per-layer analysis by enabling layer-specific quantizers as per config file.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">layer_wise_eval_score_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perform_per_layer_analysis</span><span class="p">(</span>
+            <span class="n">sim</span><span class="p">,</span> <span class="n">disable_all_quantizers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">enabled_before</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">enabled_after</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">results_dir</span><span class="p">:</span>
+            <span class="n">results_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">export_per_layer_sensitivity_analysis_plot</span><span class="p">(</span>
+                <span class="n">layer_wise_eval_score_dict</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">&quot;per_layer_quant_enabled&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exported per-layer quant analysis (enabled) plot.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">layer_wise_eval_score_dict</span></div>
+
+
+<div class="viewcode-block" id="QuantAnalyzer.perform_per_layer_analysis_by_disabling_quantizers">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.perform_per_layer_analysis_by_disabling_quantizers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">perform_per_layer_analysis_by_disabling_quantizers</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+        <span class="n">results_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs layer-wise quantization sensitivity analysis by disabling its quantizers</span>
+
+<span class="sd">        1. All parameter and activation quantizers are enabled as per JSON config file</span>
+<span class="sd">           and set to bit-width specified.</span>
+<span class="sd">        2. For every layer, based on occurrence:</span>
+<span class="sd">              a. Each layer&#39;s parameters and activations quantizers are disabled.</span>
+<span class="sd">              b. Measure and record eval score on subset of dataset.</span>
+<span class="sd">              c. Enable disabled quantizers in step a.</span>
+<span class="sd">        3. Returns dictionary containing layer name and corresponding eval score.</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :param filename: Name of the file to save the results to</span>
+<span class="sd">        :return: layer wise eval score dictionary. dict[layer_name] = eval_score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;per_layer_quant_disabled&quot;</span>
+
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Starting per-layer analysis by disabling layer-specific quantizers.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">layer_wise_eval_score_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perform_per_layer_analysis</span><span class="p">(</span>
+            <span class="n">sim</span><span class="p">,</span> <span class="n">disable_all_quantizers</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enabled_before</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">enabled_after</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">results_dir</span><span class="p">:</span>
+            <span class="n">results_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">export_per_layer_sensitivity_analysis_plot</span><span class="p">(</span>
+                <span class="n">layer_wise_eval_score_dict</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">&quot;per_layer_quant_disabled&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exported per-layer quant analysis (disabled) plot.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">layer_wise_eval_score_dict</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_perform_per_layer_analysis</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+        <span class="n">disable_all_quantizers</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">enabled_before</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">enabled_after</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function for perform_per_layer_analysis_by_enabling_quantizers() and</span>
+<span class="sd">        perform_per_layer_analysis_by_disabling_quantizers()</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :param disable_all_quantizers: Flag to disable all the quantizers before per-layer analysis.</span>
+<span class="sd">        :param enabled_before: Flag to set enabled for quantizers before computing encodings.</span>
+<span class="sd">        :param enabled_after: Flag to set enabled for quantizers after computing encodings.</span>
+<span class="sd">        :return: layer wise eval score dictionary. dict[layer_name] = eval_score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Mapping of ops and their enabled quantizers</span>
+        <span class="n">op_to_quantizers_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">connected_graph</span><span class="o">.</span><span class="n">ordered_ops</span><span class="p">:</span>
+            <span class="n">input_quantizers</span><span class="p">,</span> <span class="n">output_quantizers</span><span class="p">,</span> <span class="n">param_quantizers</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get_op_quantizers</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">sim</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">input_quantizers</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output_quantizers</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">param_quantizers</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">op_to_quantizers_dict</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name_op</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">input_quantizers</span><span class="p">)</span>
+            <span class="n">op_to_quantizers_dict</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name_op</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">output_quantizers</span><span class="p">)</span>
+            <span class="n">op_to_quantizers_dict</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name_op</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">param_quantizers</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+        <span class="k">if</span> <span class="n">disable_all_quantizers</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">enabled_quantizers</span> <span class="ow">in</span> <span class="n">op_to_quantizers_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">eval_score_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">op_name</span><span class="p">,</span> <span class="n">enabled_quantizers</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">op_to_quantizers_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="n">enabled_before</span><span class="p">)</span>
+
+            <span class="c1"># Record eval score.</span>
+            <span class="n">eval_score_dict</span><span class="p">[</span><span class="n">op_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_callback</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;For layer: </span><span class="si">%s</span><span class="s2">, the eval score is: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">op_name</span><span class="p">,</span>
+                <span class="n">eval_score_dict</span><span class="p">[</span><span class="n">op_name</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="n">enabled_after</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">disable_all_quantizers</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">enabled_quantizers</span> <span class="ow">in</span> <span class="n">op_to_quantizers_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_enable_disable_quantizers</span><span class="p">(</span><span class="n">enabled_quantizers</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">eval_score_dict</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_op_quantizers</span><span class="p">(</span>
+        <span class="n">op</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns the enabled input, output and param quantizers of the given connected graph op.</span>
+
+<span class="sd">        :param op: Connected Graph Op</span>
+<span class="sd">        :param sim: QuantSim object</span>
+<span class="sd">        :return: list of input quantizers, list of output quantizers and dictionary of param quantizers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_quantizers</span><span class="p">,</span> <span class="n">output_quantizers</span><span class="p">,</span> <span class="n">param_quantizers</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_op_quantizers</span><span class="p">(</span>
+            <span class="n">op</span>
+        <span class="p">)</span>
+        <span class="n">input_quantizers</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">input_quantizers</span> <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">enabled</span><span class="p">]</span>
+        <span class="n">output_quantizers</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">output_quantizers</span> <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">enabled</span><span class="p">]</span>
+        <span class="n">param_quantizers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">q</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">param_quantizers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">enabled</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">input_quantizers</span><span class="p">,</span> <span class="n">output_quantizers</span><span class="p">,</span> <span class="n">param_quantizers</span>
+
+    <span class="c1"># pylint: disable=too-many-branches, too-many-locals</span>
+<div class="viewcode-block" id="QuantAnalyzer.export_per_layer_encoding_min_max_range">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.export_per_layer_encoding_min_max_range">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_per_layer_encoding_min_max_range</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exports encoding min and max range for all weights and activations. results_dir has</span>
+<span class="sd">        html files in following format.</span>
+
+<span class="sd">        -results_dir</span>
+<span class="sd">            -activations.html,</span>
+<span class="sd">            -weights.html</span>
+
+<span class="sd">        If per channel quantization(PCQ) is enabled then,</span>
+
+<span class="sd">        -results_dir</span>
+<span class="sd">            -activations.html,</span>
+<span class="sd">            -{layer_name}_{param_name}.html</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :return: layer wise min-max range for weights and activations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">min_max_ranges_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;min_max_ranges&quot;</span><span class="p">)</span>
+
+        <span class="n">min_max_range_for_activations_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">min_max_range_for_weights_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">connected_graph</span><span class="o">.</span><span class="n">ordered_ops</span><span class="p">:</span>
+            <span class="n">input_quantizers</span><span class="p">,</span> <span class="n">output_quantizers</span><span class="p">,</span> <span class="n">param_quantizers</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get_op_quantizers</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">sim</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">op_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">name_op</span><span class="p">)</span>
+
+            <span class="c1"># Get input activations&#39; encodings if starting op</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_quantizers</span><span class="p">):</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">_input_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">encodings</span> <span class="o">=</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">get_encodings</span><span class="p">()</span>
+                <span class="n">min_max_range_for_activations_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">encodings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+                    <span class="n">encodings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Get output activations&#39; encodings</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">output_quantizers</span><span class="p">):</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">_output_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">encodings</span> <span class="o">=</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">get_encodings</span><span class="p">()</span>
+                <span class="n">min_max_range_for_activations_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">encodings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+                    <span class="n">encodings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Get parameters&#39; encodings</span>
+            <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">param_quantizers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">encodings</span> <span class="o">=</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">get_encodings</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">encodings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># per-channel</span>
+                    <span class="n">per_channel_encodings</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">encoding</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">encodings</span><span class="p">):</span>
+                        <span class="n">per_channel_encodings</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">encoding</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+                            <span class="n">encoding</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="n">min_max_range_for_weights_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">per_channel_encodings</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># per-tensor</span>
+                    <span class="n">min_max_range_for_weights_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">encodings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+                        <span class="n">encodings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+        <span class="n">create_and_export_min_max_ranges_plot</span><span class="p">(</span>
+            <span class="n">min_max_range_for_weights_dict</span><span class="p">,</span> <span class="n">min_max_ranges_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;weights&quot;</span>
+        <span class="p">)</span>
+        <span class="n">create_and_export_min_max_ranges_plot</span><span class="p">(</span>
+            <span class="n">min_max_range_for_activations_dict</span><span class="p">,</span> <span class="n">min_max_ranges_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;activations&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">save_json</span><span class="p">(</span>
+            <span class="n">min_max_range_for_weights_dict</span><span class="p">,</span> <span class="n">min_max_ranges_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;weights.json&quot;</span>
+        <span class="p">)</span>
+        <span class="n">save_json</span><span class="p">(</span>
+            <span class="n">min_max_range_for_activations_dict</span><span class="p">,</span>
+            <span class="n">min_max_ranges_dir</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;activations.json&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exported per layer encodings min-max ranges plot(s).&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">min_max_range_for_weights_dict</span><span class="p">,</span> <span class="n">min_max_range_for_activations_dict</span></div>
+
+
+    <span class="c1"># pylint: disable=too-many-branches, too-many-locals</span>
+<div class="viewcode-block" id="QuantAnalyzer.export_per_layer_stats_histogram">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.export_per_layer_stats_histogram">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_per_layer_stats_histogram</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+        <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        NOTE: Not to invoke when quantization scheme is not TF-Enhanced.</span>
+
+<span class="sd">        Exports histogram that represents a PDF of collected statistics by a quantizer.</span>
+<span class="sd">        After invoking this API, results_dir should have html files in following</span>
+<span class="sd">        format for every quantizers in the model.</span>
+
+<span class="sd">        -results_dir</span>
+<span class="sd">            -activations_pdf</span>
+<span class="sd">                name_{input/output}_{index}.html</span>
+<span class="sd">            -weights_pdf</span>
+<span class="sd">                -name</span>
+<span class="sd">                    param_name_{channel_index}.html</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weights_pdf_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;weights_pdf&quot;</span><span class="p">)</span>
+        <span class="n">activations_pdf_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="s2">&quot;activations_pdf&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">connected_graph</span><span class="o">.</span><span class="n">ordered_ops</span><span class="p">:</span>
+            <span class="n">input_quantizers</span><span class="p">,</span> <span class="n">output_quantizers</span><span class="p">,</span> <span class="n">param_quantizers</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get_op_quantizers</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">sim</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">op_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">name_op</span><span class="p">)</span>
+
+            <span class="c1"># Collect stats histogram of input activation quantizers</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_quantizers</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_create_and_export_stats_histogram_plot</span><span class="p">(</span>
+                    <span class="n">quantizer</span><span class="p">,</span> <span class="n">activations_pdf_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">_input_q</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Collect stats histogram of output activation quantizers</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">output_quantizers</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_create_and_export_stats_histogram_plot</span><span class="p">(</span>
+                    <span class="n">quantizer</span><span class="p">,</span> <span class="n">activations_pdf_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">_output_q</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Collect stats histogram of param quantizers</span>
+            <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">quantizer</span> <span class="ow">in</span> <span class="n">param_quantizers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">sanitized_param_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_create_and_export_stats_histogram_plot</span><span class="p">(</span>
+                    <span class="n">quantizer</span><span class="p">,</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">weights_pdf_dir</span><span class="p">,</span> <span class="n">op_name</span><span class="p">),</span>
+                    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sanitized_param_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exported per layer stats histogram plot(s).&quot;</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_and_export_stats_histogram_plot</span><span class="p">(</span>
+        <span class="n">quantizer</span><span class="p">:</span> <span class="n">QcQuantizeOp</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For given quantizer, create and export histogram (PDF) of statistics in html format.</span>
+
+<span class="sd">        :param quantizer: Quantizer.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :param title: Title of the plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">histograms</span> <span class="o">=</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">get_stats_histogram</span><span class="p">()</span>
+        <span class="n">encodings</span> <span class="o">=</span> <span class="n">quantizer</span><span class="o">.</span><span class="n">get_encodings</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encodings</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+            <span class="n">encodings</span> <span class="o">=</span> <span class="p">[</span><span class="n">encodings</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">histogram</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">histograms</span><span class="p">,</span> <span class="n">encodings</span><span class="p">)):</span>
+            <span class="n">export_stats_histogram_plot</span><span class="p">(</span>
+                <span class="n">histogram</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="QuantAnalyzer.enable_per_layer_mse_loss">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.enable_per_layer_mse_loss">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enable_per_layer_mse_loss</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">unlabeled_dataset_iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">num_batches</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables per layer MSE loss analysis.</span>
+
+<span class="sd">        :param unlabeled_dataset_iterable: A collection (i.e. iterable with `__len__`)</span>
+<span class="sd">                that iterates over an unlabeled dataset. The values yielded by this iterable are expected</span>
+<span class="sd">                to be able to be passed directly to the model.</span>
+<span class="sd">        :param num_batches: Number of batches. Approximately 256 samples/images are recommended,</span>
+<span class="sd">                so if batch size of data loader is 64, then 4 number of batches leads to 256 samples/images.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unlabeled_dataset_iterable</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_batches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Can not fetch </span><span class="si">{</span><span class="n">num_batches</span><span class="si">}</span><span class="s2"> batches from &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;a data loader of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unlabeled_dataset_iterable</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unlabeled_dataset_iterable</span> <span class="o">=</span> <span class="n">unlabeled_dataset_iterable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_batches</span> <span class="o">=</span> <span class="n">num_batches</span></div>
+
+
+<div class="viewcode-block" id="QuantAnalyzer.export_per_layer_mse_loss">
+<a class="viewcode-back" href="../../techniques/analysis_tools/quant_analyzer.html#aimet_onnx.quant_analyzer.QuantAnalyzer.export_per_layer_mse_loss">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_per_layer_mse_loss</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exports MSE loss between fp32 and quantized output activations for each layer.</span>
+
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :param results_dir: Directory to save the results.</span>
+<span class="sd">        :return: layer wise MSE loss. dict[layer_name] = MSE loss.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">results_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">mse_loss_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">op_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">op_node</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s2">&quot;Constant&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">op_output</span> <span class="o">=</span> <span class="n">op_node</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">op_output</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">:</span>
+                <span class="n">quantized_op_output</span> <span class="o">=</span> <span class="n">op_output</span> <span class="o">+</span> <span class="s2">&quot;_updated&quot;</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_mse_loss</span><span class="p">(</span>
+                    <span class="n">op_output</span><span class="p">,</span> <span class="n">quantized_op_output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_onnx_model</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span>
+                <span class="p">)</span>
+                <span class="n">mse_loss_dict</span><span class="p">[</span><span class="n">op_node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">loss</span>
+
+        <span class="n">export_per_layer_mse_plot</span><span class="p">(</span>
+            <span class="n">mse_loss_dict</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;per_layer_mse_loss&quot;</span>
+        <span class="p">)</span>
+        <span class="n">save_json</span><span class="p">(</span><span class="n">mse_loss_dict</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;per_layer_mse_loss.json&quot;</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exported per layer MSE loss plot.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mse_loss_dict</span></div>
+
+
+    <span class="c1"># pylint: disable=too-many-locals</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_mse_loss</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fp32_act_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">quantized_act_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">fp32_model</span><span class="p">:</span> <span class="n">ONNXModel</span><span class="p">,</span>
+        <span class="n">quantized_model</span><span class="p">:</span> <span class="n">ONNXModel</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute MSE loss between fp32 and quantized output activations for each batch, add for</span>
+<span class="sd">        all the batches and return averaged mse loss.</span>
+
+<span class="sd">        :param fp32_act_name: module from the fp32_model.</span>
+<span class="sd">        :param quantized_act_name: Corresponding quant wrapper from the QuantSim model.</span>
+<span class="sd">        :param fp32_model: PyTorch model.</span>
+<span class="sd">        :param sim: Quantsim model.</span>
+<span class="sd">        :return: MSE loss between fp32 and quantized output activations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">providers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CPUExecutionProvider&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;CUDAExecutionProvider&quot;</span> <span class="ow">in</span> <span class="n">ort</span><span class="o">.</span><span class="n">get_available_providers</span><span class="p">():</span>
+            <span class="n">providers</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;CUDAExecutionProvider&quot;</span><span class="p">,</span>
+                    <span class="p">{</span><span class="s2">&quot;cudnn_conv_algo_search&quot;</span><span class="p">:</span> <span class="n">_cudnn_conv_algo_search</span><span class="p">},</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;CPUExecutionProvider&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+
+        <span class="c1"># output activations collector.</span>
+        <span class="n">orig_module_collector</span> <span class="o">=</span> <span class="n">ModuleData</span><span class="p">(</span><span class="n">fp32_model</span><span class="p">,</span> <span class="n">fp32_act_name</span><span class="p">,</span> <span class="n">providers</span><span class="p">)</span>
+        <span class="n">quant_module_collector</span> <span class="o">=</span> <span class="n">ModuleData</span><span class="p">(</span>
+            <span class="n">quantized_model</span><span class="p">,</span> <span class="n">quantized_act_name</span><span class="p">,</span> <span class="n">providers</span>
+        <span class="p">)</span>
+
+        <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">batch_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">model_inputs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unlabeled_dataset_iterable</span><span class="p">:</span>
+            <span class="n">model_inputs</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">create_input_dict</span><span class="p">(</span><span class="n">fp32_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">model_inputs</span><span class="p">)</span>
+            <span class="n">quantized_out_acts</span> <span class="o">=</span> <span class="n">quant_module_collector</span><span class="o">.</span><span class="n">collect_activation</span><span class="p">(</span><span class="n">model_inputs</span><span class="p">)</span>
+            <span class="n">fp32_out_acts</span> <span class="o">=</span> <span class="n">orig_module_collector</span><span class="o">.</span><span class="n">collect_activation</span><span class="p">(</span><span class="n">model_inputs</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">+=</span> <span class="n">mean_squared_error</span><span class="p">(</span>
+                <span class="n">fp32_out_acts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">fp32_out_acts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">quantized_out_acts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">fp32_out_acts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">fp32_out_acts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">batch_index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">batch_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_batches</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">average_loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">/</span> <span class="n">total</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">average_loss</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_per_layer_sensitivity</span><span class="p">(</span>
+    <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+    <span class="n">eval_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analyzes the QuantSim model&#39;s per-layer sensitivity to quantization by evaluating sim with a single layer&#39;s</span>
+<span class="sd">    quantizers enabled at a time.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        sim: Calibrated QuantizationSimModel object to analyze</span>
+<span class="sd">        eval_fn: Function which takes in an InferenceSession and returns an evaluation score</span>
+<span class="sd">        filename: If provided, saves an html visualization of the model&#39;s per-layer sensitivity at the provided path</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dictionary mapping onnx node name to the sim&#39;s eval score with only that node&#39;s quantizers enable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">quant_analyzer</span> <span class="o">=</span> <span class="n">QuantAnalyzer</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">eval_fn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+        <span class="n">abs_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">results_dir</span><span class="p">,</span> <span class="n">fname</span> <span class="o">=</span> <span class="n">abs_path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">abs_path</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">results_dir</span> <span class="o">=</span> <span class="n">fname</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">quant_analyzer</span><span class="o">.</span><span class="n">perform_per_layer_analysis_by_enabling_quantizers</span><span class="p">(</span>
+        <span class="n">sim</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">,</span> <span class="n">fname</span>
+    <span class="p">)</span>
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
