@@ -1,0 +1,715 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
+        <title>QuantizationMixin - AIMET</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/aimet-furo.css?v=58822075" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">AIMET</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <span class="sidebar-brand-text">AIMET</span>
+  
+</a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
+
+  <span class="doc-current-version" data-toggle="doc-current-version">
+    Version: 2.25.0
+  </span>
+  <br>
+  <span class="doc-other-versions" data-toggle="doc-other-versions">
+        <a href="https://quic.github.io/aimet-pages/releases/latest/versions.html">Other versions</a>
+  </span>
+
+</div><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../overview/index.html">Overview</a><input aria-label="Toggle navigation of Overview" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview/install/quick-start.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview/install/index.html">Install</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a><input aria-label="Toggle navigation of Tutorials" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/quantization_workflow.html">Quantization Workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../tutorials/quantsim.html">Quantization Simulation</a><input aria-label="Toggle navigation of Quantization Simulation" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/quantization_recipe.html">Quantization Recipes for LLMs</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../tutorials/notebooks.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/on_target_inference.html">Running Quantized Models on-device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/debugging_guidelines.html">Debugging Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../techniques/index.html">Techniques</a><input aria-label="Toggle navigation of Techniques" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../techniques/ptq.html">Post Training Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../techniques/qat.html">Quantization Aware Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../techniques/blockwise.html">Blockwise Quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../techniques/lpbq.html">Low-Power Blockwise Quantization</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../techniques/mixed_precision/index.html">Mixed precision</a><input aria-label="Toggle navigation of Mixed precision" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/mixed_precision/litemp.html">Lite mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/mixed_precision/mmp.html">Manual mixed precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/mixed_precision/amp.html">Automatic mixed precision</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../techniques/analysis_tools/index.html">Analysis tools</a><input aria-label="Toggle navigation of Analysis tools" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/analysis_tools/interactive_visualization.html">Interactive visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/analysis_tools/quant_analyzer.html">Quantization analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/analysis_tools/layer_output_generation.html">Layer output generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../techniques/compression/index.html">Compression</a><input aria-label="Toggle navigation of Compression" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/compression/feature_guidebook.html">Compression guidebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/compression/greedy_compression_ratio_selection.html">Greedy compression ratio selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/compression/visualization_compression.html">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/compression/weight_svd.html">Weight SVD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../techniques/compression/spatial_svd.html">Spatial SVD</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../techniques/compression/channel_pruning.html">Channel pruning</a><input aria-label="Toggle navigation of Channel pruning" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../techniques/compression/winnowing.html">Winnowing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ptq_techniques/index.html">PTQ Techniques</a><input aria-label="Toggle navigation of PTQ Techniques" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/adaround.html">Adaptive rounding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/seq_mse.html">Sequential MSE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/bnf.html">Batch norm folding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/cle.html">Cross-layer equalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/adascale.html">AdaScale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/bn.html">Batch norm re-estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/omniquant.html">OmniQuant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/autoquant.html">Automatic quantization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ptq_techniques/spinquant.html">SpinQuant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../external/index.html">External Resources</a><input aria-label="Toggle navigation of External Resources" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-models/">Qualcomm Hub Models</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://github.com/quic/ai-hub-apps/">Qualcomm Hub Apps</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://aihub.qualcomm.com/">Qualcomm AI Hub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="quantizationmixin">
+<span id="api-aimet-torch-nn-quantizationmixin"></span><h1>QuantizationMixin<a class="headerlink" href="#quantizationmixin" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_torch.nn.</span></span><span class="sig-name descname"><span class="pre">QuantizationMixin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin" title="Link to this definition">¶</a></dt>
+<dd><p>Quantization mixin class for torch.nn.Module.</p>
+<p>Specifically, a quantized module will quantize input, output, and parameter tensors with
+its held <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects during the <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.forward" title="aimet_torch.nn.QuantizationMixin.forward"><code class="xref py py-meth docutils literal notranslate"><span class="pre">forward()</span></code></a> method and use the inherited <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>
+forward method to compute the layer operation. If all input, output, and parameter quantizers are <code class="docutils literal notranslate"><span class="pre">None</span></code>, a
+quantized module will behave exactly the same as its parent <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.input_quantizers">
+<span class="sig-name descname"><span class="pre">input_quantizers</span></span><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.input_quantizers" title="Link to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.ModuleList</span></code> containing <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects to be applied
+to the layer’s input tensors</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.output_quantizers">
+<span class="sig-name descname"><span class="pre">output_quantizers</span></span><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.output_quantizers" title="Link to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.ModuleList</span></code> containing <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects to be applied
+to the layer’s output tensors</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.param_quantizers">
+<span class="sig-name descname"><span class="pre">param_quantizers</span></span><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.param_quantizers" title="Link to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.ModuleDict</span></code> mapping parameter names to associated <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code>
+objects</p>
+</dd></dl>
+
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span> <span class="o">=</span> <span class="n">QuantizedLinear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">qlinear</span><span class="p">)</span>
+<span class="go">QuantizedLinear(</span>
+<span class="go">  in_features=10, out_features=10, bias=True</span>
+<span class="go">  (param_quantizers): ModuleDict(</span>
+<span class="go">    (weight): None</span>
+<span class="go">    (bias): None</span>
+<span class="go">  )</span>
+<span class="go">  (input_quantizers): ModuleList(</span>
+<span class="go">    (0): None</span>
+<span class="go">  )</span>
+<span class="go">  (output_quantizers): ModuleList(</span>
+<span class="go">    (0): None</span>
+<span class="go">  )</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.compute_encodings">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.compute_encodings" title="Link to this definition">¶</a></dt>
+<dd><p>Enters the <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.compute_encodings" title="aimet_torch.nn.QuantizationMixin.compute_encodings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_encodings()</span></code></a> context for all <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerBase</span></code> objects in the layer.</p>
+<p>Inside this context, each quantizer will observe all inputs passed to the quantizer and will compute
+quantization encodings upon exiting the context.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span> <span class="o">=</span> <span class="n">QuantizedLinear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qlinear</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Quantize</span><span class="p">((),</span> <span class="mi">8</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">qlinear</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">qlinear</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">qlinear</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.forward">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.forward" title="Link to this definition">¶</a></dt>
+<dd><p>Computes a quantized version of the parent module’s forward method.</p>
+<p>The <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.forward" title="aimet_torch.nn.QuantizationMixin.forward"><code class="xref py py-meth docutils literal notranslate"><span class="pre">forward()</span></code></a> method should perform the following logic in order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Apply existing input quantizers to input tensors</p></li>
+<li><p>Apply existing param quantizers to the layer’s parameters</p></li>
+<li><p>Call the inherited <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code> forward method with quantized inputs and parameters</p></li>
+<li><p>Apply existing output quantizers to the outputs of the forward method</p></li>
+</ol>
+</div></blockquote>
+<p>If all input, output, and parameter quantizers are <code class="docutils literal notranslate"><span class="pre">None</span></code>, this method will behave exactly the same as
+its parent module’s forward pass.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.from_module">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.from_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.from_module" title="Link to this definition">¶</a></dt>
+<dd><p>Create an instance of quantized module from a regular module instance.</p>
+<p>The resulting quantized module contains the same attributes and parameters as the original module, but may
+be assigned input, output and parameter quantizers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></span>) – Floating point module to quantize</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Quantized version of the original module</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linear</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quantized_linear</span> <span class="o">=</span> <span class="n">QuantizationMixin</span><span class="o">.</span><span class="n">from_module</span><span class="p">(</span><span class="n">linear</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">quantized_linear</span><span class="o">.</span><span class="n">param_quantizers</span><span class="p">)</span>
+<span class="go">QuantizedLinear(</span>
+<span class="go">  in_features=10, out_features=10, bias=True</span>
+<span class="go">  (param_quantizers): ModuleDict(</span>
+<span class="go">    (weight): None</span>
+<span class="go">    (bias): None</span>
+<span class="go">  )</span>
+<span class="go">  (input_quantizers): ModuleList(</span>
+<span class="go">    (0): None</span>
+<span class="go">  )</span>
+<span class="go">  (output_quantizers): ModuleList(</span>
+<span class="go">    (0): None</span>
+<span class="go">  )</span>
+<span class="go">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">quantized_linear</span><span class="o">.</span><span class="n">weight</span> <span class="ow">is</span> <span class="n">linear</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.get_default_kernel">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default_kernel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.get_default_kernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.get_default_kernel" title="Link to this definition">¶</a></dt>
+<dd><p>Return the default kernel of the class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Default kernel of the class. None if the default kernel is not set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.get_kernel">
+<span class="sig-name descname"><span class="pre">get_kernel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.get_kernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.get_kernel" title="Link to this definition">¶</a></dt>
+<dd><p>Return the kernel to be used by this instance of quantized module.</p>
+<p>If the current instance does not have any kernel set, it will retrieve the default kernel of the class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kernel to be used by this instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.ignore">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ignore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.ignore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.ignore" title="Link to this definition">¶</a></dt>
+<dd><p>Exclude given module type from quantization</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method will exclude <cite>module_cls</cite> from quantization
+even if its quantized module definition is already registered
+with <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.implements" title="aimet_torch.nn.QuantizationMixin.implements"><code class="xref py py-meth docutils literal notranslate"><span class="pre">implements()</span></code></a>.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyModule</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">QuantizationMixin</span><span class="o">.</span><span class="n">ignore</span><span class="p">(</span><span class="n">MyModule</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">MyModule</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">aimet_torch</span><span class="o">.</span><span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+<span class="go">Sequential(</span>
+<span class="go">  (0): MyModule()</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.ignore_unknown_modules">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ignore_unknown_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.ignore_unknown_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.ignore_unknown_modules" title="Link to this definition">¶</a></dt>
+<dd><p>Exclude all unkown module types from quantization</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyModule</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">QuantizationMixin</span><span class="o">.</span><span class="n">ignore_unknown_modules</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">MyModule</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">aimet_torch</span><span class="o">.</span><span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+<span class="go">Sequential(</span>
+<span class="go">  (0): MyModule()</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.implements">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">implements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.implements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.implements" title="Link to this definition">¶</a></dt>
+<dd><p>Decorator for registering quantized definition of the given base class.</p>
+<p>Even though AIMET supports quantization of all built-in modules in torch.nn subpackage
+such as <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code> or <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear</span></code> that AIMET is already aware of,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code> will throw a runtime error when it encounters custom modules
+defined by the users, asking the users to provide the quantized definition of the custom modules
+that AIMET doesn’t know of.</p>
+<p>To declare the quantized definition of a module, <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code> requires you
+to define a subclass of your module decorated with <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.implements" title="aimet_torch.nn.QuantizationMixin.implements"><code class="xref py py-meth docutils literal notranslate"><span class="pre">implements()</span></code></a>,
+in which you will implement <code class="docutils literal notranslate"><span class="pre">__quant_init__</span></code> and <code class="docutils literal notranslate"><span class="pre">forward</span></code> methods.</p>
+<p>As an example, given a custom module as below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MaskedAdd</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+       <span class="k">return</span> <span class="nb">input</span> <span class="o">+</span> <span class="n">mask</span> <span class="o">*</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>its quantized definition should be declared before creating <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code>, typically as below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@QuantizationMixin</span><span class="o">.</span><span class="n">implements</span><span class="p">(</span><span class="n">MaskedAdd</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">QuantizedMaskedAdd</span><span class="p">(</span><span class="n">QuantizationMixin</span><span class="p">,</span> <span class="n">MaskedAdd</span><span class="p">):</span>
+    <span class="c1"># The quantized definition of MaskedAdd should be a subclass of</span>
+    <span class="c1"># QuantizationMixin and MaskedAdd (Order matters!)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__quant_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__quant_init__</span><span class="p">()</span>
+
+        <span class="c1"># Declare the number of input/output quantizers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">([</span><span class="kc">None</span><span class="p">])</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+       <span class="n">input_qtzr</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+       <span class="n">_</span>           <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># I don&#39;t want to quantize the boolean masks!</span>
+       <span class="n">value_qtzr</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+       <span class="n">output_qtzr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_quantizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+       <span class="k">if</span> <span class="n">input_qtzr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="nb">input</span> <span class="o">=</span> <span class="n">input_qtzr</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+
+       <span class="k">if</span> <span class="n">value_qtzr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">value</span> <span class="o">=</span> <span class="n">value_qtzr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+       <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+       <span class="k">if</span> <span class="n">output_qtzr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">output</span> <span class="o">=</span> <span class="n">output_qtzr</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+       <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.set_default_kernel">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_default_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.set_default_kernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.set_default_kernel" title="Link to this definition">¶</a></dt>
+<dd><p>Set default kernel for the class.</p>
+<p>In general, this signature will follow the signature of the equivalent <code class="xref py py-mod docutils literal notranslate"><span class="pre">torch.nn.functional</span></code> function,
+but should return a <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizedTensor</span></code> object and take in the additional keyword argument <code class="docutils literal notranslate"><span class="pre">output_encodings</span></code>.</p>
+<p>Once set, all instances of cls will call into kernel in the forward pass unless:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The instance is within the <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.compute_encodings" title="aimet_torch.nn.QuantizationMixin.compute_encodings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_encodings()</span></code></a> context, or</p></li>
+<li><p>The kernel has been overridden by a <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.set_kernel" title="aimet_torch.nn.QuantizationMixin.set_kernel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_kernel()</span></code></a> call</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kernel</strong> – Callable object to be used as the default kernel by all the instances of this class.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantization</span> <span class="k">as</span> <span class="n">Q</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">int_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">output_encodings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">encodings</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span> <span class="n">output_encodings</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">enc</span><span class="o">.</span><span class="n">mapping</span> <span class="o">==</span> <span class="s2">&quot;affine&quot;</span> <span class="k">for</span> <span class="n">enc</span> <span class="ow">in</span> <span class="n">encodings</span><span class="p">):</span>
+<span class="gp">... </span>            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+<span class="gp">... </span>    <span class="n">q_output</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">quantized_repr</span><span class="p">()</span> <span class="o">+</span> <span class="n">a</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">quantized_repr</span><span class="p">()</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">dq_output</span> <span class="o">=</span> <span class="n">q_output</span> <span class="o">*</span>  <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Q</span><span class="o">.</span><span class="n">QuantizedTensor</span><span class="p">(</span><span class="n">output_encodings</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">dq_output</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="n">output_encodings</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">QuantizedMultiply</span><span class="o">.</span><span class="n">set_default_kernel</span><span class="p">(</span><span class="n">int_multiply</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmult</span> <span class="o">=</span> <span class="n">QuantizedMultiply</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmult</span><span class="o">.</span><span class="n">get_kernel</span><span class="p">()</span>
+<span class="go">&lt;function int_multiply at ...&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.set_kernel">
+<span class="sig-name descname"><span class="pre">set_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.set_kernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.set_kernel" title="Link to this definition">¶</a></dt>
+<dd><p>Set kernel for this instance of quantized module.</p>
+<p>In general, this signature will follow the signature of the equivalent <code class="xref py py-mod docutils literal notranslate"><span class="pre">torch.nn.functional</span></code> function,
+but should return a <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizedTensor</span></code> object and take in the additional keyword argument <code class="docutils literal notranslate"><span class="pre">output_encodings</span></code>.</p>
+<p>Once set, the layer will call into <code class="docutils literal notranslate"><span class="pre">kernel</span></code> in the forward pass unless within the <a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.compute_encodings" title="aimet_torch.nn.QuantizationMixin.compute_encodings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_encodings()</span></code></a>
+context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kernel</strong> – Callable object to be used as the underlying kernel.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aimet_torch.v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantization</span> <span class="k">as</span> <span class="n">Q</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">int_multiply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">output_encodings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">encodings</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span> <span class="n">output_encodings</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">enc</span><span class="o">.</span><span class="n">mapping</span> <span class="o">==</span> <span class="s2">&quot;affine&quot;</span> <span class="k">for</span> <span class="n">enc</span> <span class="ow">in</span> <span class="n">encodings</span><span class="p">):</span>
+<span class="gp">... </span>            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+<span class="gp">... </span>    <span class="n">q_output</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">quantized_repr</span><span class="p">()</span> <span class="o">+</span> <span class="n">a</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">quantized_repr</span><span class="p">()</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">dq_output</span> <span class="o">=</span> <span class="n">q_output</span> <span class="o">*</span>  <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">b</span><span class="o">.</span><span class="n">encoding</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">Q</span><span class="o">.</span><span class="n">QuantizedTensor</span><span class="p">(</span><span class="n">output_encodings</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">dq_output</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="n">output_encodings</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmult</span> <span class="o">=</span> <span class="n">QuantizedMultiply</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmult</span><span class="o">.</span><span class="n">set_kernel</span><span class="p">(</span><span class="n">int_multiply</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_torch.nn.QuantizationMixin.wrap">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/aimet_torch/v2/nn/true_quant.html#QuantizationMixin.wrap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_torch.nn.QuantizationMixin.wrap" title="Link to this definition">¶</a></dt>
+<dd><p>Wrap a regular module class into a quantized module class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020, Qualcomm Innovation Center, Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/quic/aimet" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">QuantizationMixin</a><ul>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin</span></code></a><ul>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.input_quantizers"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.input_quantizers</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.output_quantizers"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.output_quantizers</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.param_quantizers"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.param_quantizers</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.compute_encodings"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.compute_encodings()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.forward"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.forward()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.from_module"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.from_module()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.get_default_kernel"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.get_default_kernel()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.get_kernel"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.get_kernel()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.ignore"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.ignore()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.ignore_unknown_modules"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.ignore_unknown_modules()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.implements"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.implements()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.set_default_kernel"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.set_default_kernel()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.set_kernel"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.set_kernel()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_torch.nn.QuantizationMixin.wrap"><code class="docutils literal notranslate"><span class="pre">QuantizationMixin.wrap()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>
