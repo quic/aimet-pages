@@ -701,6 +701,45 @@ should not be running any sort of eval, creating full dataloader inside the meth
 <label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-9">
 ONNX</label><div class="sd-tab-content docutils">
 <p><strong>Top level APIs</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_onnx.experimental.adascale.adascale_optimizer.apply_adascale">
+<span class="sig-prename descclassname"><span class="pre">aimet_onnx.experimental.adascale.adascale_optimizer.</span></span><span class="sig-name descname"><span class="pre">apply_adascale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adascale_model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1500</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aimet_onnx.experimental.adascale.adascale_optimizer.apply_adascale" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantization Sim model</p></li>
+<li><p><strong>inputs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Collection</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]</span>) – (Collection[Dict[str, np.ndarray]]): The set of input samples to use during optimization.</p></li>
+<li><p><strong>adascale_model_config</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#aimet_onnx.experimental.adascale.adascale_optimizer.AdaScaleModelConfig" title="aimet_onnx.experimental.adascale.adascale_optimizer.AdaScaleModelConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdaScaleModelConfig</span></code></a></span>) – Adascale model config. There are pre-defined configs for
+Llama, Qwen2, Mistral, Qwen3, Phi3. For other models use AdaScaleModelConfig</p></li>
+<li><p><strong>num_iterations</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of iterations to optimize for during AdaScale</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Example usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">DummyModel</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span> <span class="o">=</span> <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adascale_model_config</span> <span class="o">=</span> <span class="n">adascale_model_config</span><span class="p">[</span><span class="s1">&#39;llama&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apply_adascale</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">adascale_model_config</span><span class="p">,</span> <span class="n">num_iterations</span><span class="o">=</span><span class="n">num_iterations</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<ol class="arabic simple">
+<li><p>apply_adascale modifies the weights in-place in the model</p></li>
+<li><p>compute encodings should not be called before the apply_adascale call</p></li>
+<li><p>Activation quantizers will remain uninitialized throughout the feature, and so compute encodings needs to be called by the user afterwards. This is so activation encodings will be computed with updated weights taken into account.</p></li>
+</ol>
+<p>Warning: This feature is currently considered experimental pending API changes</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_onnx.experimental.adascale.adascale_optimizer.AdaScaleModelConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_onnx.experimental.adascale.adascale_optimizer.</span></span><span class="sig-name descname"><span class="pre">AdaScaleModelConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_gamma_lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scales_lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0005</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/aimet_onnx/experimental/adascale/adascale_optimizer.html#AdaScaleModelConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.experimental.adascale.adascale_optimizer.AdaScaleModelConfig" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 </section>
@@ -783,6 +822,8 @@ ONNX</label><div class="sd-tab-content docutils">
 </li>
 <li><a class="reference internal" href="#api">API</a><ul>
 <li><a class="reference internal" href="#aimet_torch.experimental.adascale.apply_adascale"><code class="docutils literal notranslate"><span class="pre">apply_adascale()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.experimental.adascale.adascale_optimizer.apply_adascale"><code class="docutils literal notranslate"><span class="pre">apply_adascale()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.experimental.adascale.adascale_optimizer.AdaScaleModelConfig"><code class="docutils literal notranslate"><span class="pre">AdaScaleModelConfig</span></code></a></li>
 </ul>
 </li>
 </ul>

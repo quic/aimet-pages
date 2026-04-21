@@ -653,11 +653,160 @@ between fp32 outputs and fake-quantized outputs</p>
 <label class="sd-tab-label" data-sync-group="platform" data-sync-id="onnx" for="sd-tab-item-5">
 ONNX</label><div class="sd-tab-content docutils">
 <p><strong>Top-level API</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_onnx.mixed_precision.choose_mixed_precision">
+<span class="sig-prename descclassname"><span class="pre">aimet_onnx.mixed_precision.</span></span><span class="sig-name descname"><span class="pre">choose_mixed_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_callback_for_phase1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_callback_for_phase2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_accuracy_drop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_all_amp_candidates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase1_optimize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amp_search_algo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AMPSearchAlgo.Binary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/mixed_precision.html#choose_mixed_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.mixed_precision.choose_mixed_precision" title="Link to this definition">¶</a></dt>
+<dd><p>High-level API to perform in place Mixed Precision evaluation on the given sim model. A pareto list is created and
+a curve for Accuracy vs BitOps is saved under the results directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantized sim model</p></li>
+<li><p><strong>candidates</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationDataType</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationDataType</span></code>]]]</span>) – <p>List of tuples for all possible bitwidth values for activations and parameters
+Suppose the possible combinations are-
+((Activation bitwidth - 8, Activation data type - int), (Parameter bitwidth - 16, parameter data type - int))
+((Activation bitwidth - 16, Activation data type - float), (Parameter bitwidth - 16, parameter data type - float))
+candidates will be [((8, QuantizationDataType.int), (16, QuantizationDataType.int)),</p>
+<blockquote>
+<div><p>((16, QuantizationDataType.float), (16, QuantizationDataType.float))]</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>eval_callback_for_phase1</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">InferenceSession</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Callable object used to measure sensitivity of each
+quantizer group during phase 1. The phase 1 involves finding accuracy list/sensitivity of each
+module. Therefore, a user might want to run the phase 1 with a smaller dataset</p></li>
+<li><p><strong>eval_callback_for_phase2</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">InferenceSession</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Callale object used to get accuracy of quantized model
+for phase 2 calculations. The phase 2 involves finding pareto front curve</p></li>
+<li><p><strong>allowed_accuracy_drop</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Maximum allowed drop in accuracy from FP32 baseline. The pareto front curve is plotted only till the point where the allowable
+accuracy drop is met. To get a complete plot for picking points on the curve, the user
+can set the allowable accuracy drop to None.</p></li>
+<li><p><strong>results_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to save results and cache intermediate results</p></li>
+<li><p><strong>clean_start</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If true, any cached information from previous runs will be deleted prior to starting the
+mixed-precision analysis. If false, prior cached information will be used if applicable. Note
+it is the user’s responsibility to set this flag to true if anything in the model or
+quantization parameters changes compared to the previous run.</p></li>
+<li><p><strong>forward_pass_callback</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">InferenceSession</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Callable object used to compute quantization encodings</p></li>
+<li><p><strong>use_all_amp_candidates</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Using the “supported_kernels” field in the config file (under defaults
+and op_type sections), a list of supported candidates can be specified. All the AMP candidates
+which are passed through the “candidates” field may not be supported based on the data passed
+through “supported_kernels”. When the field “use_all_amp_candidates” is set to True, the AMP
+algorithm will ignore the “supported_kernels” in the config file and continue to use all candidates.</p></li>
+<li><p><strong>amp_search_algo</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">AMPSearchAlgo</span></code></span>) – A valid value from the Enum AMPSearchAlgo. Defines the search algorithm to be used for
+the phase 2 of AMP.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Phase1_optimize<span class="colon">:</span></dt>
+<dd class="field-even"><p>If user set this parameter to false then phase1 default logic will be executed else optimized logic will be executed.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup" title="aimet_onnx.amp.quantizer_groups.QuantizerGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizerGroup</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pareto front list containing information including Bitops, QuantizerGroup candidates and
+corresponding eval scores. The Pareto front list can be used for plotting a pareto front curve which
+provides information regarding how bit ops vary w.r.t. accuracy. If the allowable accuracy drop is set to
+100% then a user can use the pareto front curve to pick points and re-run,
+None if we early exit the mixed precision algorithm.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is recommended to use onnx-simplifier before applying mixed-precision.</p>
 </div>
 <p><strong>Quantizer Groups definition</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_onnx.amp.quantizer_groups.QuantizerGroup">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_onnx.amp.quantizer_groups.</span></span><span class="sig-name descname"><span class="pre">QuantizerGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_quantizers=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_quantizers=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/quantizer_groups.html#QuantizerGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup" title="Link to this definition">¶</a></dt>
+<dd><p>Group of modules and quantizers</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_activation_quantizers">
+<span class="sig-name descname"><span class="pre">get_activation_quantizers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_to_quantizer_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/quantizer_groups.html#QuantizerGroup.get_activation_quantizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_activation_quantizers" title="Link to this definition">¶</a></dt>
+<dd><p>Gets activation quantizers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_to_quantizer_dict</strong> – Gets module from module name</p>
+</dd>
+</dl>
+<p>:return List of activation quantizers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_active_quantizers">
+<span class="sig-name descname"><span class="pre">get_active_quantizers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_to_quantizer_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/quantizer_groups.html#QuantizerGroup.get_active_quantizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_active_quantizers" title="Link to this definition">¶</a></dt>
+<dd><p>Find all active tensor quantizers associated with this quantizer group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_to_quantizer_dict</strong> – Gets module from module name</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">QcQuantizeOp</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of active quantizers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_candidate">
+<span class="sig-name descname"><span class="pre">get_candidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_to_quantizer_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/quantizer_groups.html#QuantizerGroup.get_candidate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_candidate" title="Link to this definition">¶</a></dt>
+<dd><p>Gets Activation &amp; parameter bitwidth</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_to_quantizer_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></span>) – Gets module from module name</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationDataType</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationDataType</span></code>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple of Activation, parameter bitwidth and data type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_param_quantizers">
+<span class="sig-name descname"><span class="pre">get_param_quantizers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_to_quantizer_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/quantizer_groups.html#QuantizerGroup.get_param_quantizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_param_quantizers" title="Link to this definition">¶</a></dt>
+<dd><p>Gets parameter quantizers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name_to_quantizer_dict</strong> – Gets module from module name</p>
+</dd>
+</dl>
+<p>:return List of parameter quantizers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.amp.quantizer_groups.QuantizerGroup.set_quantizers_to_candidate">
+<span class="sig-name descname"><span class="pre">set_quantizers_to_candidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_to_quantizer_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/quantizer_groups.html#QuantizerGroup.set_quantizers_to_candidate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.set_quantizers_to_candidate" title="Link to this definition">¶</a></dt>
+<dd><p>Sets a quantizer group to a given candidate bitwidth</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name_to_quantizer_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></span>) – Gets module from module name</p></li>
+<li><p><strong>candidate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationDataType</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationDataType</span></code>]]</span>) – candidate with act and param bw and data types</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.amp.quantizer_groups.QuantizerGroup.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/quantizer_groups.html#QuantizerGroup.to_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.to_list" title="Link to this definition">¶</a></dt>
+<dd><p>Converts quantizer group to a list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List containing input/output quantizers &amp; weight quantizers</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <p><strong>CallbackFunc Definition</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aimet_onnx.common.defs.CallbackFunc">
@@ -671,6 +820,44 @@ ONNX</label><div class="sd-tab-content docutils">
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_onnx.amp.mixed_precision_algo.</span></span><span class="sig-name descname"><span class="pre">EvalCallbackFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/mixed_precision_algo.html#EvalCallbackFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory" title="Link to this definition">¶</a></dt>
+<dd><p>Factory class for various built-in eval callbacks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_loader</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></span>) – Data loader to be used for evaluation</p></li>
+<li><p><strong>forward_fn</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">InferenceSession</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]</span>) – Function that runs forward pass and returns the output tensor.
+This function is expected to take 1) a model 2) List of starting op names
+3) List of output op names and 4) batch yielded from the data set, and
+return a single tf.Tensor (or np.ndarray) object which represents the output of the model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory.sqnr">
+<span class="sig-name descname"><span class="pre">sqnr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/amp/mixed_precision_algo.html#EvalCallbackFactory.sqnr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory.sqnr" title="Link to this definition">¶</a></dt>
+<dd><p>Returns SQNR eval callback.
+NOTE: sim object is required to enable/disable quantizer_info objects associated with quant ops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantized sim model</p></li>
+<li><p><strong>num_samples</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of samples used for evaluation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">InferenceSession</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A callback function that evaluates model SQNR between fp32_outputs and quantized outputs.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -775,7 +962,21 @@ ONNX</label><div class="sd-tab-content docutils">
 <li><a class="reference internal" href="#aimet_torch.amp.mixed_precision_algo.EvalCallbackFactory.sqnr"><code class="docutils literal notranslate"><span class="pre">EvalCallbackFactory.sqnr()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#aimet_onnx.mixed_precision.choose_mixed_precision"><code class="docutils literal notranslate"><span class="pre">choose_mixed_precision()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup"><code class="docutils literal notranslate"><span class="pre">QuantizerGroup</span></code></a><ul>
+<li><a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_activation_quantizers"><code class="docutils literal notranslate"><span class="pre">QuantizerGroup.get_activation_quantizers()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_active_quantizers"><code class="docutils literal notranslate"><span class="pre">QuantizerGroup.get_active_quantizers()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_candidate"><code class="docutils literal notranslate"><span class="pre">QuantizerGroup.get_candidate()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.get_param_quantizers"><code class="docutils literal notranslate"><span class="pre">QuantizerGroup.get_param_quantizers()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.set_quantizers_to_candidate"><code class="docutils literal notranslate"><span class="pre">QuantizerGroup.set_quantizers_to_candidate()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.amp.quantizer_groups.QuantizerGroup.to_list"><code class="docutils literal notranslate"><span class="pre">QuantizerGroup.to_list()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#aimet_onnx.common.defs.CallbackFunc"><code class="docutils literal notranslate"><span class="pre">CallbackFunc</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory"><code class="docutils literal notranslate"><span class="pre">EvalCallbackFactory</span></code></a><ul>
+<li><a class="reference internal" href="#aimet_onnx.amp.mixed_precision_algo.EvalCallbackFactory.sqnr"><code class="docutils literal notranslate"><span class="pre">EvalCallbackFactory.sqnr()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

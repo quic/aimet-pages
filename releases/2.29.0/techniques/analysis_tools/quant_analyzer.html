@@ -906,10 +906,280 @@ ONNX</label><div class="sd-tab-content docutils">
 <p class="admonition-title">Note</p>
 <p>It is recommended to use onnx-simplifier before applying quant-analyzer.</p>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_onnx.quant_analyzer.QuantAnalyzer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_onnx.quant_analyzer.</span></span><span class="sig-name descname"><span class="pre">QuantAnalyzer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.quant_analyzer.QuantAnalyzer" title="Link to this definition">¶</a></dt>
+<dd><p>QuantAnalyzer provides following utilities:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>model sensitivity to weight and activation quantization</p></li>
+<li><p>per layer sensitivity analysis</p></li>
+<li><p>per layer encoding (min - max range)</p></li>
+<li><p>per layer quantizer historgram analysis and</p></li>
+<li><p>per layer MSE analysis</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ModelProto</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ONNXModel</span></code>]</span>) – FP32 model to analyze for quantization.</p></li>
+<li><p><strong>dummy_input</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – Dummy input to model.</p></li>
+<li><p><strong>forward_pass_callback</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">InferenceSession</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – A callback function for model calibration that simply runs
+forward passes on the model to compute encoding (delta/offset). This
+callback function should use representative data and should be subset of
+entire train/validation dataset (~1000 images/samples).</p></li>
+<li><p><strong>eval_callback</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">InferenceSession</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – A callback function for model evaluation that determines model
+performance. This callback function is expected to return scalar value
+representing the model performance evaluated against entire test/evaluation dataset.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.quant_analyzer.QuantAnalyzer.enable_per_layer_mse_loss">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">enable_per_layer_mse_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unlabeled_dataset_iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_batches</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.enable_per_layer_mse_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.quant_analyzer.QuantAnalyzer.enable_per_layer_mse_loss" title="Link to this definition">¶</a></dt>
+<dd><p>Enables per layer MSE loss analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unlabeled_dataset_iterable</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></span>) – A collection (i.e. iterable with <cite>__len__</cite>)
+that iterates over an unlabeled dataset. The values yielded by this iterable are expected
+to be able to be passed directly to the model.</p></li>
+<li><p><strong>num_batches</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of batches. Approximately 256 samples/images are recommended,
+so if batch size of data loader is 64, then 4 number of batches leads to 256 samples/images.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.quant_analyzer.QuantAnalyzer.analyze">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quant_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">QuantScheme.post_training_tf_enhanced</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_param_bw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_activation_bw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./tmp/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.quant_analyzer.QuantAnalyzer.analyze" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Analyzes model for quantization and point out sensitive parts/hotspots of the model by performing</dt><dd><ol class="arabic simple">
+<li><p>model sensitivity to quantization,</p></li>
+<li><p>perform per layer sensitivity analysis by enabling and disabling quantizers,</p></li>
+<li><p>export per layer encodings min - max ranges,</p></li>
+<li><p>export per layer quantizer stats histogram,</p></li>
+<li><p>per layer MSE analysis</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quant_scheme</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/torch/v1/quantsim.html#aimet_torch.common.defs.QuantScheme" title="_aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a></span>) – Quantization scheme. Supported values are
+QuantScheme.post_training_tf or QuantScheme.post_training_tf_enhanced.</p></li>
+<li><p><strong>default_param_bw</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default bitwidth (4-31) to use for quantizing layer parameters.</p></li>
+<li><p><strong>default_activation_bw</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default bitwidth (4-31) to use for quantizing layer inputs and outputs.</p></li>
+<li><p><strong>config_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Path to configuration file for model quantizers.</p></li>
+<li><p><strong>results_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to save the results.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <p><strong>Alternatively, you can run specific utility</strong></p>
 <p>You can avoid running all the utilities that QuantAnalyzer offers and only run those of your interest.
 For this you need to have the <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code> object, Then you call the desired
 QuantAnalyzer utility of your interest and pass the same object to it.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">create_quantsim_and_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quant_scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_param_bw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_activation_bw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.create_quantsim_and_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Creates quantsim object and computes encodings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quant_scheme</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/torch/v1/quantsim.html#aimet_torch.common.defs.QuantScheme" title="_aimet_common.defs.QuantScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></a></span>) – Quantization scheme.</p></li>
+<li><p><strong>default_param_bw</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default bitwidth (4-31) to use for quantizing layer parameters.</p></li>
+<li><p><strong>default_activation_bw</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Default bitwidth (4-31) to use for quantizing layer inputs and outputs.</p></li>
+<li><p><strong>config_file</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to configuration file for model quantizers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantsim object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">check_model_sensitivity_to_quantization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.check_model_sensitivity_to_quantization"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Performs model sensitivity analysis to weight and activation quantization individually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FP32 eval score, weight-quantized eval score, act-quantized eval score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">perform_per_layer_analysis_by_enabling_quantizers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.perform_per_layer_analysis_by_enabling_quantizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Performs layer-wise quantization sensitivity analysis by enabling its quantizers</p>
+<ol class="arabic simple">
+<li><p>All parameter and activation quantizers are disabled.</p></li>
+<li><dl class="simple">
+<dt>For every layer, based on occurrence:</dt><dd><ol class="loweralpha simple">
+<li><p>Each layer’s parameters and activations quantizers are enabled as per JSON config file
+and set to bit-width specified.</p></li>
+<li><p>Measure and record eval score on subset of dataset.</p></li>
+<li><p>Disable enabled quantizers in step a.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>Returns dictionary containing layer name and corresponding eval score.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim model.</p></li>
+<li><p><strong>results_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Directory to save the results.</p></li>
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Name of the file to save the results to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>layer wise eval score dictionary. dict[layer_name] = eval_score</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">perform_per_layer_analysis_by_disabling_quantizers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.perform_per_layer_analysis_by_disabling_quantizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Performs layer-wise quantization sensitivity analysis by disabling its quantizers</p>
+<ol class="arabic simple">
+<li><p>All parameter and activation quantizers are enabled as per JSON config file
+and set to bit-width specified.</p></li>
+<li><dl class="simple">
+<dt>For every layer, based on occurrence:</dt><dd><ol class="loweralpha simple">
+<li><p>Each layer’s parameters and activations quantizers are disabled.</p></li>
+<li><p>Measure and record eval score on subset of dataset.</p></li>
+<li><p>Enable disabled quantizers in step a.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>Returns dictionary containing layer name and corresponding eval score.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim model.</p></li>
+<li><p><strong>results_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Directory to save the results.</p></li>
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Name of the file to save the results to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>layer wise eval score dictionary. dict[layer_name] = eval_score</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">export_per_layer_encoding_min_max_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.export_per_layer_encoding_min_max_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Exports encoding min and max range for all weights and activations. results_dir has
+html files in following format.</p>
+<dl class="option-list">
+<dt><kbd><span class="option">-r<var>esults_dir</var></span></kbd></dt>
+<dd><p>-activations.html,
+-weights.html</p>
+</dd>
+</dl>
+<p>If per channel quantization(PCQ) is enabled then,</p>
+<dl class="option-list">
+<dt><kbd><span class="option">-r<var>esults_dir</var></span></kbd></dt>
+<dd><p>-activations.html,
+-{layer_name}_{param_name}.html</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim model.</p></li>
+<li><p><strong>results_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to save the results.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>layer wise min-max range for weights and activations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">export_per_layer_stats_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.export_per_layer_stats_histogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>NOTE: Not to invoke when quantization scheme is not TF-Enhanced.</p>
+<p>Exports histogram that represents a PDF of collected statistics by a quantizer.
+After invoking this API, results_dir should have html files in following
+format for every quantizers in the model.</p>
+<dl class="option-list">
+<dt><kbd><span class="option">-r<var>esults_dir</var></span></kbd></dt>
+<dd><dl class="option-list">
+<dt><kbd><span class="option">-a<var>ctivations_pdf</var></span></kbd></dt>
+<dd><p>name_{input/output}_{index}.html</p>
+</dd>
+<dt><kbd><span class="option">-w<var>eights_pdf</var></span></kbd></dt>
+<dd><dl class="option-list">
+<dt><kbd><span class="option">-n<var>ame</var></span></kbd></dt>
+<dd><p>param_name_{channel_index}.html</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim model.</p></li>
+<li><p><strong>results_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to save the results.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">QuantAnalyzer.</span></span><span class="sig-name descname"><span class="pre">export_per_layer_mse_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quant_analyzer.html#QuantAnalyzer.export_per_layer_mse_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Exports MSE loss between fp32 and quantized output activations for each layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../../apiref/onnx/quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – Quantsim model.</p></li>
+<li><p><strong>results_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Directory to save the results.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>layer wise MSE loss. dict[layer_name] = MSE loss.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 </section>
@@ -1007,6 +1277,9 @@ QuantAnalyzer utility of your interest and pass the same object to it.</p>
 <li><a class="reference internal" href="#aimet_torch.quant_analyzer.QuantAnalyzer.export_per_layer_encoding_min_max_range"><code class="docutils literal notranslate"><span class="pre">QuantAnalyzer.export_per_layer_encoding_min_max_range()</span></code></a></li>
 <li><a class="reference internal" href="#aimet_torch.quant_analyzer.QuantAnalyzer.export_per_layer_stats_histogram"><code class="docutils literal notranslate"><span class="pre">QuantAnalyzer.export_per_layer_stats_histogram()</span></code></a></li>
 <li><a class="reference internal" href="#aimet_torch.quant_analyzer.QuantAnalyzer.export_per_layer_mse_loss"><code class="docutils literal notranslate"><span class="pre">QuantAnalyzer.export_per_layer_mse_loss()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.quant_analyzer.QuantAnalyzer"><code class="docutils literal notranslate"><span class="pre">QuantAnalyzer</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.quant_analyzer.QuantAnalyzer.enable_per_layer_mse_loss"><code class="docutils literal notranslate"><span class="pre">QuantAnalyzer.enable_per_layer_mse_loss()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.quant_analyzer.QuantAnalyzer.analyze"><code class="docutils literal notranslate"><span class="pre">QuantAnalyzer.analyze()</span></code></a></li>
 </ul>
 </li>
 </ul>
