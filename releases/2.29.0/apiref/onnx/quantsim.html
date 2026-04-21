@@ -311,6 +311,196 @@
 <p class="admonition-title">Note</p>
 <p>It is recommended to use onnx-simplifier before creating quantsim model.</p>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="aimet_onnx.QuantizationSimModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">aimet_onnx.</span></span><span class="sig-name descname"><span class="pre">QuantizationSimModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">int8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">int8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quant_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">QuantScheme.min_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_onnx_libs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">providers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.QuantizationSimModel" title="Link to this definition">¶</a></dt>
+<dd><p>Class that simulates the quantized model execution on a target hardware backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>onnx.ModelProto</em>) – ONNX ModelProto to quantize</p></li>
+<li><p><strong>param_type</strong> (<em>qtype</em><em> | </em><em>str</em>) – quantized type to use for parameter tensors.
+Can be { int2, int4, int8, int16, float16, float32 } or <code class="xref py py-class docutils literal notranslate"><span class="pre">aimet_onnx.qtype</span></code></p></li>
+<li><p><strong>activation_type</strong> (<em>qtype</em><em> | </em><em>str</em>) – quantized type to use for activation tensors.
+Can be { int2, int4, int8, int16, float16, float32 } or <code class="xref py py-class docutils literal notranslate"><span class="pre">aimet_onnx.qtype</span></code></p></li>
+<li><p><strong>quant_scheme</strong> (<a class="reference internal" href="#aimet_onnx.common.defs.QuantScheme" title="aimet_onnx.common.defs.QuantScheme"><em>QuantScheme</em></a><em> | </em><em>str</em>) – Quantization scheme to use for calibration.
+Can be { tf_enhanced, min_max } or <code class="xref py py-class docutils literal notranslate"><span class="pre">QuantScheme</span></code></p></li>
+<li><p><strong>config_file</strong> (<em>str</em><em>, </em><em>optional</em>) – File path or alias of the configuration file.
+Alias can be one of { default, htp_v66, htp_v68, htp_v69, htp_v73, htp_v75, htp_v79, htp_v81, enpu_v6 } (Default: <cite>“default”</cite>)</p></li>
+<li><p><strong>dummy_input</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Sample input to the model. Only needed for non shape-inferable models with parameterized shapes</p></li>
+<li><p><strong>user_onnx_libs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of paths to all compiled ONNX custom ops libraries</p></li>
+<li><p><strong>providers</strong> (<em>List</em><em>, </em><em>optional</em>) – Onnxruntime execution providers to use when building InferenceSession.
+If <cite>None</cite>, default provider is “CPUExecutionProvider”</p></li>
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to save temporary artifacts.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.QuantizationSimModel.compute_encodings">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.QuantizationSimModel.compute_encodings" title="Link to this definition">¶</a></dt>
+<dd><p>Computes encodings for all quantizers in the model.</p>
+<p>This API will invoke <cite>forward_pass_callback</cite>, a function written by the user that runs
+forward pass(es) of the quantized model with a small, representative subset of the training dataset.
+By doing so, the quantizers in the quantized model will observe the inputs and initialize
+their quantization encodings according to the observed input statistics.</p>
+<p>This function is overloaded with the following signatures:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Iterable</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em><em>]</em>) – The set of model input samples to use during calibration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forward_pass_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>ort.InferenceSession</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – A function that takes a quantized model and runs forward passes
+with a small, representative subset of training dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_pass_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forward_pass_callback_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forward_pass_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>ort.InferenceSession</em><em>, </em><em>T</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – A function that takes a quantized model and runs forward passes
+with a small, representative subset of training dataset</p></li>
+<li><p><strong>forward_pass_callback_args</strong> (<em>T</em>) – The second argument to <cite>forward_pass_callback</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">run_forward_pass</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">_</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="p">})</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">compute_encodings</span><span class="p">(</span><span class="n">run_forward_pass</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.QuantizationSimModel.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_int32_bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_activation_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unsigned'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.QuantizationSimModel.export" title="Link to this definition">¶</a></dt>
+<dd><p>Compute encodings and export to files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – dir to save encoding files</p></li>
+<li><p><strong>filename_prefix</strong> – filename to save encoding files</p></li>
+<li><p><strong>export_model</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then ONNX model is exported. When False, only encodings are exported.</p></li>
+<li><p><strong>export_int32_bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, generate and export int32 bias encoding on the fly.
+Default: <cite>True</cite> if encoding version is 2.0.0 or higher, otherwise <cite>False</cite>.</p></li>
+<li><p><strong>encoding_version</strong> (<em>str</em><em>, </em><em>optional</em>) – Version of the encoding format to use. (default: 1.0.0)
+Supported versions are: [‘0.6.1’, ‘1.0.0’, ‘2.0.0’]</p></li>
+<li><p><strong>force_activation_as</strong> (<em>str</em><em>, </em><em>optional</em>) – Force representing quantized activations as signed or unsigned integers.
+This argument is only applicable for encoding version 2.0.0.
+For versions 0.6.1 and 1.0.0, this argument is ignored. (default: <cite>“unsigned”</cite>)</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">filename_prefix</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">encoding_version</span><span class="o">=</span><span class="s2">&quot;2.0.0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.QuantizationSimModel.from_onnx_qdq">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_onnx_qdq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.from_onnx_qdq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.QuantizationSimModel.from_onnx_qdq" title="Link to this definition">¶</a></dt>
+<dd><p>Create sim from an ONNX QDQ model that contains QuantizeLinear/DequantizeLinear nodes.</p>
+<p>This method is designed to construct a fully quantized model
+based on a partially quantized ONNX QDQ model exported from
+aimet-torch (<a class="reference internal" href="../torch/onnx.html#aimet_torch.onnx.export" title="aimet_torch.onnx.export"><code class="xref py py-func docutils literal notranslate"><span class="pre">aimet_torch.onnx.export()</span></code></a>) or other 3rd party tools.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>model</strong> – ONNX model that contains QuantizeLinear/DequantizeLinear</p></li>
+<li><p><strong>strict</strong> – If True, raises error if there are QuantizeLinear/DequantizeLinear nodes
+in the model that cannot be mapped to any quantizer in the sim.
+If False, ignores incompatible QuantizeLinear/DequantizeLinear nodes and
+only loads the rest of the encodings. (Default: False)</p></li>
+<li><p><strong>**kwargs</strong> – same as QuantizationSimModel.__init__</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>QuantizationSimModel created from ONNX QDQ model</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#aimet_onnx.QuantizationSimModel" title="aimet_onnx.QuantizationSimModel">QuantizationSimModel</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">aimet_onnx</span><span class="o">.</span><span class="n">QuantizationSimModel</span><span class="o">.</span><span class="n">from_onnx_qdq</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">onnx</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;model_qdq.onnx&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;htp_v81&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">Quant - INFO - Loaded 26 out of 63 encodings from QuantizeLinear/DequantizeLinear nodes</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aimet_onnx.QuantizationSimModel.to_onnx_qdq">
+<span class="sig-name descname"><span class="pre">to_onnx_qdq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_int32_bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prequantize_constants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_activation_as</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unsigned'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#QuantizationSimModel.to_onnx_qdq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.QuantizationSimModel.to_onnx_qdq" title="Link to this definition">¶</a></dt>
+<dd><p>Return a copy of ModelProto with all QcQuantizeOp nodes replaced with
+QuantizeLinear and/or DequantizeLinear.</p>
+<p>Example:
+:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelProto</span></code></span></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">([</span><span class="n">qc_op</span> <span class="k">for</span> <span class="n">qc_op</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="n">dq</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s2">&quot;QcQuantizeOp&quot;</span><span class="p">])</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">onnx_qdq</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">to_onnx_qdq</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">([</span><span class="n">qc_op</span> <span class="k">for</span> <span class="n">qc_op</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="n">dq</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s2">&quot;QcQuantizeOp&quot;</span><span class="p">])</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">([</span><span class="n">dq</span> <span class="k">for</span> <span class="n">dq</span> <span class="ow">in</span> <span class="n">onnx_qdq</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">node</span> <span class="k">if</span> <span class="n">dq</span><span class="o">.</span><span class="n">op_type</span> <span class="o">==</span> <span class="s2">&quot;DequantizeLinear&quot;</span><span class="p">])</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>export_int32_bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, generate and export int32 bias encoding on the fly (default: <cite>True</cite>)</p></li>
+<li><p><strong>prequantize_constants</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, weights will be represented as quantized weight followed by DequantizeLinear nodes.
+If False, weights will be represented as float tensors followed by QuantizeLinear and DequantizeLinear nodes.</p></li>
+<li><p><strong>force_activation_as</strong> (<em>str</em><em>, </em><em>optional</em>) – Force representing quantized activations as signed or unsigned integers (default: <cite>“unsigned”</cite>)</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="../../_images/conv_qdq.onnx.svg" class="align-center" src="../../_images/conv_qdq.onnx.svg" />
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="aimet_onnx.compute_encodings">
+<span class="sig-prename descclassname"><span class="pre">aimet_onnx.</span></span><span class="sig-name descname"><span class="pre">compute_encodings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/quantsim.html#compute_encodings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#aimet_onnx.compute_encodings" title="Link to this definition">¶</a></dt>
+<dd><p>Computes encodings for all quantizers in the model.</p>
+<p>Under this context manager, <a class="reference internal" href="#aimet_onnx.QuantizationSimModel" title="aimet_onnx.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a> will
+observe all inputs that run through the model to calibrate
+the quantization encoding of each quantizer.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">compute_encodings</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">_</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="nb">input</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <p><strong>Quant Scheme Enum</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="aimet_onnx.common.defs.QuantScheme">
@@ -376,6 +566,14 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">aimet_onnx.quantsim</a><ul>
+<li><a class="reference internal" href="#aimet_onnx.QuantizationSimModel"><code class="docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a><ul>
+<li><a class="reference internal" href="#aimet_onnx.QuantizationSimModel.compute_encodings"><code class="docutils literal notranslate"><span class="pre">QuantizationSimModel.compute_encodings()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.QuantizationSimModel.export"><code class="docutils literal notranslate"><span class="pre">QuantizationSimModel.export()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.QuantizationSimModel.from_onnx_qdq"><code class="docutils literal notranslate"><span class="pre">QuantizationSimModel.from_onnx_qdq()</span></code></a></li>
+<li><a class="reference internal" href="#aimet_onnx.QuantizationSimModel.to_onnx_qdq"><code class="docutils literal notranslate"><span class="pre">QuantizationSimModel.to_onnx_qdq()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#aimet_onnx.compute_encodings"><code class="docutils literal notranslate"><span class="pre">compute_encodings()</span></code></a></li>
 <li><a class="reference internal" href="#aimet_onnx.common.defs.QuantScheme"><code class="docutils literal notranslate"><span class="pre">QuantScheme</span></code></a><ul>
 <li><a class="reference internal" href="#aimet_onnx.common.defs.QuantScheme.from_str"><code class="docutils literal notranslate"><span class="pre">QuantScheme.from_str()</span></code></a></li>
 </ul>

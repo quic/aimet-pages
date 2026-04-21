@@ -2,8 +2,7 @@
 <html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
         <title>aimet_onnx.lite_mp - AIMET</title>
@@ -265,7 +264,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/spinquant.html">SpinQuant</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../apiref/index.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../external/index.html">External Resources</a><input aria-label="Toggle navigation of External Resources" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference external" href="http://www.qualcomm.com/developer/artificial-intelligence#overview">Qualcomm AI Stack</a></li>
@@ -305,27 +304,70 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="aimet-onnx-lite-mp">
-<span id="apiref-onnx-litemp"></span><h1>aimet_onnx.lite_mp<a class="headerlink" href="#aimet-onnx-lite-mp" title="Link to this heading">¶</a></h1>
-<p><strong>Top-level API</strong></p>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">aimet_onnx.lite_mp.</span></span><span class="sig-name descname"><span class="pre">flip_layers_to_higher_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_sensitivity_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_to_flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">float16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/aimet_onnx/lite_mp.html#flip_layers_to_higher_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Given a sim object and a layer-sensitivity dictionary, flip a given percentage of the layers to higher precision.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sim</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="quantsim.html#aimet_onnx.QuantizationSimModel" title="aimet_onnx.quantsim.QuantizationSimModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuantizationSimModel</span></code></a></span>) – QuantizationSimModel instance initialized with the base precision</p></li>
-<li><p><strong>layer_sensitivity_dict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Dict of (layer_name: sqnr_metric) that is output from analyze_per_layer_sensitivity</p></li>
-<li><p><strong>percent_to_flip</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Percentage of layers to flip</p></li>
-<li><p><strong>override_precision</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">qtype</span></code></span>) – Precision to sets layers to. At present, either int16 (w16a16) or float16 are supported.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
+          <h1>Source code for aimet_onnx.lite_mp</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.</span>
+<span class="c1"># SPDX-License-Identifier: BSD-3-Clause</span>
 
-</section>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx</span><span class="w"> </span><span class="kn">import</span> <span class="n">qtype</span><span class="p">,</span> <span class="n">int16</span><span class="p">,</span> <span class="n">float16</span><span class="p">,</span> <span class="n">QuantizationSimModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">AimetLogger</span>
 
+<span class="n">logger</span> <span class="o">=</span> <span class="n">AimetLogger</span><span class="o">.</span><span class="n">get_area_logger</span><span class="p">(</span><span class="n">AimetLogger</span><span class="o">.</span><span class="n">LogAreas</span><span class="o">.</span><span class="n">Quant</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="flip_layers_to_higher_precision">
+<a class="viewcode-back" href="../../techniques/mixed_precision/litemp.html#aimet_onnx.lite_mp.flip_layers_to_higher_precision">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flip_layers_to_higher_precision</span><span class="p">(</span>
+    <span class="n">sim</span><span class="p">:</span> <span class="n">QuantizationSimModel</span><span class="p">,</span>
+    <span class="n">layer_sensitivity_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">percent_to_flip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">override_precision</span><span class="p">:</span> <span class="n">qtype</span> <span class="o">=</span> <span class="n">float16</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a sim object and a layer-sensitivity dictionary, flip a given percentage of the layers to higher precision.</span>
+
+<span class="sd">    :param sim: QuantizationSimModel instance initialized with the base precision</span>
+<span class="sd">    :param layer_sensitivity_dict: Dict of (layer_name: sqnr_metric) that is output from analyze_per_layer_sensitivity</span>
+<span class="sd">    :param percent_to_flip: Percentage of layers to flip</span>
+<span class="sd">    :param override_precision: Precision to sets layers to. At present, either int16 (w16a16) or float16 are supported.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Sanity check</span>
+    <span class="k">if</span> <span class="n">override_precision</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">int16</span><span class="p">,</span> <span class="n">float16</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;higher_precision must be int16 or float16&quot;</span><span class="p">)</span>
+
+    <span class="n">sqnr_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">layer_sensitivity_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">sqnr_list</span> <span class="o">=</span> <span class="n">sqnr_list</span><span class="p">[:</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sqnr_list</span><span class="p">)</span> <span class="o">*</span> <span class="n">percent_to_flip</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)]</span>
+    <span class="n">cg_ops</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">connected_graph</span><span class="o">.</span><span class="n">get_all_ops</span><span class="p">()</span>
+
+    <span class="n">layer_names_to_override</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer_name</span> <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">sqnr_list</span><span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Overriding the following layers to </span><span class="si">%s</span><span class="s2"> precision: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">override_precision</span><span class="p">,</span>
+        <span class="n">layer_names_to_override</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">layer_names_to_override</span><span class="p">:</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">cg_ops</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span>
+        <span class="p">(</span>
+            <span class="n">input_quantizers</span><span class="p">,</span>
+            <span class="n">output_quantizers</span><span class="p">,</span>
+            <span class="n">param_quantizers</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_op_quantizers</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">input_quantizers</span> <span class="o">+</span> <span class="n">output_quantizers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">override_precision</span> <span class="o">==</span> <span class="n">int16</span><span class="p">:</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">set_bitwidth</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">param_quantizers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">override_precision</span> <span class="o">==</span> <span class="n">int16</span><span class="p">:</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">set_bitwidth</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+</pre></div>
         </article>
       </div>
       <footer>
