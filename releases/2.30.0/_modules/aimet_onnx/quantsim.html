@@ -189,7 +189,7 @@
 </a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
 
   <span class="doc-current-version" data-toggle="doc-current-version">
-    Version: 2.30.0
+    Version: 2.31.0
   </span>
   <br>
   <span class="doc-other-versions" data-toggle="doc-other-versions">
@@ -260,7 +260,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/adascale.html">AdaScale</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/bn.html">Batch norm re-estimation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/omniquant.html">OmniQuant</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/autoquant.html">Automatic quantization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../ptq_techniques/spinquant.html">SpinQuant</a></li>
 </ul>
 </li>
@@ -458,6 +457,8 @@
     <span class="s2">&quot;Relu&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">_tie_qtzrs</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">_fuse_supergroups</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="n">data_types_to_quantize</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">]</span>
 
@@ -755,20 +756,13 @@
                 <span class="s2">&quot;Quantizing models with BFLOAT16 tensors is not supported&quot;</span>
             <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_op_domain</span> <span class="o">=</span> <span class="n">op_domain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">providers</span> <span class="o">=</span> <span class="n">providers</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dummy_input</span><span class="p">:</span>
-            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">make_dummy_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">make_dummy_input</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">_has_unfolded_batchnorms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Model contains unfolded BatchNormalization layers. To accurately simulate quantization behavior, &quot;</span>
-                <span class="s2">&quot;please call aimet_onnx.batch_norm_fold.fold_all_batch_norms_to_weight(model) before creating QuantizationSimModel.&quot;</span>
-            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_quant_scheme</span> <span class="o">=</span> <span class="n">quant_scheme</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_param_type</span> <span class="o">=</span> <span class="n">param_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_activation_type</span> <span class="o">=</span> <span class="n">activation_type</span>
@@ -785,6 +779,23 @@
         <span class="k">for</span> <span class="n">lib</span> <span class="ow">in</span> <span class="n">user_onnx_libs</span> <span class="ow">or</span> <span class="p">[]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ort_session_options</span><span class="o">.</span><span class="n">register_custom_ops_library</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span>
 
+        <span class="n">quantsim_configurator</span> <span class="o">=</span> <span class="n">QuantSimConfigurator</span><span class="p">(</span>
+            <span class="n">config_file</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_param_type</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_activation_type</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">_fuse_supergroups</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">quantsim_configurator</span><span class="o">.</span><span class="n">apply_fusions</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span> <span class="o">=</span> <span class="n">ConnectedGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_has_unfolded_batchnorms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Model contains unfolded BatchNormalization layers. To accurately simulate quantization behavior, &quot;</span>
+                <span class="s2">&quot;please call aimet_onnx.batch_norm_fold.fold_all_batch_norms_to_weight(model) before creating QuantizationSimModel.&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Get names of parameters and activations to quantize</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_param_names</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_activations_to_quantize</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">)</span>
@@ -797,7 +808,14 @@
         <span class="p">}</span>
 
         <span class="c1"># Apply configurations based on provided config file.</span>
-        <span class="n">quantsim_configurator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_configuration_</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="n">quantsim_configurator</span><span class="o">.</span><span class="n">configure_quantizers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers_name</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hw_version</span> <span class="o">=</span> <span class="n">quantsim_configurator</span><span class="o">.</span><span class="n">_get_hw_version</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supported_kernels</span> <span class="o">=</span> <span class="n">quantsim_configurator</span><span class="o">.</span><span class="n">get_supported_kernels</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_op_to_supported_kernel</span> <span class="o">=</span> <span class="p">(</span>
@@ -977,28 +995,6 @@
 <span class="sd">        :return: Dictionary containing supported_kernels</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_supported_kernels</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_configuration_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Add configuration based on config file</span>
-
-<span class="sd">        :param config_file: Path to Configuration file for model quantizers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">quantsim_configurator</span> <span class="o">=</span> <span class="n">QuantSimConfigurator</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">connected_graph</span><span class="p">,</span>
-            <span class="n">config_file</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_param_type</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_activation_type</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">quantsim_configurator</span><span class="o">.</span><span class="n">configure_quantizers</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">qc_quantize_op_dict</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">param_names</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">activation_names</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">input_quantizers_name</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">quantsim_configurator</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_param_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2357,6 +2353,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rebuilds `self.session` object to reflect any changes in the source model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">OrtInferenceSession</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">providers</span><span class="p">,</span>

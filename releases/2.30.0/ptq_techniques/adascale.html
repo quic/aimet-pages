@@ -190,7 +190,7 @@
 </a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
 
   <span class="doc-current-version" data-toggle="doc-current-version">
-    Version: 2.30.0
+    Version: 2.31.0
   </span>
   <br>
   <span class="doc-other-versions" data-toggle="doc-other-versions">
@@ -261,7 +261,6 @@
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">AdaScale</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bn.html">Batch norm re-estimation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="omniquant.html">OmniQuant</a></li>
-<li class="toctree-l2"><a class="reference internal" href="autoquant.html">Automatic quantization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spinquant.html">SpinQuant</a></li>
 </ul>
 </li>
@@ -356,7 +355,7 @@ with a static graph — required for both the PyTorch and ONNX workflows.</p>
 PyTorch</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.utils.model_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ONNXExportableModuleWithCache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.models.utils.exportable</span><span class="w"> </span><span class="kn">import</span> <span class="n">ONNXExportableModuleWithCache</span>
 
 <span class="n">SEQUENCE_LENGTH</span> <span class="o">=</span> <span class="mi">2048</span>
 <span class="n">CONTEXT_LENGTH</span> <span class="o">=</span> <span class="mi">4096</span>
@@ -375,7 +374,7 @@ PyTorch</label><div class="sd-tab-content docutils">
 ONNX</label><div class="sd-tab-content docutils">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.utils.model_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ONNXExportableModuleWithCache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.models.utils.exportable</span><span class="w"> </span><span class="kn">import</span> <span class="n">ONNXExportableModuleWithCache</span>
 
 <span class="n">SEQUENCE_LENGTH</span> <span class="o">=</span> <span class="mi">2048</span>
 <span class="n">CONTEXT_LENGTH</span> <span class="o">=</span> <span class="mi">4096</span>
@@ -405,13 +404,15 @@ PyTorch</label><div class="sd-tab-content docutils">
 <span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.models.generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generator</span>
 
-<span class="n">assembled_dummy_inputs</span> <span class="o">=</span> <span class="n">Generator</span><span class="o">.</span><span class="n">prepare_inputs</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">traceable_model</span><span class="p">,</span>
-    <span class="n">input_ids</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
-    <span class="n">attention_mask</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
-    <span class="n">past_key_values</span><span class="o">=</span><span class="p">[],</span>
-    <span class="n">context_length</span><span class="o">=</span><span class="n">CONTEXT_LENGTH</span><span class="p">,</span>
-    <span class="n">sequence_length</span><span class="o">=</span><span class="n">SEQUENCE_LENGTH</span><span class="p">,</span>
+<span class="n">assembled_dummy_inputs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+    <span class="n">Generator</span><span class="o">.</span><span class="n">prepare_inputs</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">traceable_model</span><span class="p">,</span>
+        <span class="n">input_ids</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
+        <span class="n">attention_mask</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
+        <span class="n">past_key_values</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">context_length</span><span class="o">=</span><span class="n">CONTEXT_LENGTH</span><span class="p">,</span>
+        <span class="n">sequence_length</span><span class="o">=</span><span class="n">SEQUENCE_LENGTH</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 <span class="p">)</span>
 
 <span class="n">quantsim</span> <span class="o">=</span> <span class="n">QuantizationSimModel</span><span class="p">(</span>
@@ -436,7 +437,7 @@ ONNX</label><div class="sd-tab-content docutils">
 <span class="kn">import</span><span class="w"> </span><span class="nn">onnx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.quantsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantizationSimModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.utils.layer_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_layer_cache_descriptors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.models.utils.layer_cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_layer_cache_descriptors</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.models.generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.backends.onnx.torch_onnx_interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">TorchONNXInterface</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.backends.onnx.quantsim_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -447,25 +448,25 @@ ONNX</label><div class="sd-tab-content docutils">
 <span class="kn">from</span><span class="w"> </span><span class="nn">GenAILab.qai_hub_lm.precision</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeightPrecision</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">aimet_onnx.common.defs</span><span class="w"> </span><span class="kn">import</span> <span class="n">int8</span>
 
-<span class="n">assembled_dummy_inputs</span> <span class="o">=</span> <span class="n">Generator</span><span class="o">.</span><span class="n">prepare_inputs</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="n">traceable_model</span><span class="p">,</span>
-    <span class="n">input_ids</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
-    <span class="n">attention_mask</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
-    <span class="n">past_key_values</span><span class="o">=</span><span class="p">[],</span>
-    <span class="n">context_length</span><span class="o">=</span><span class="n">CONTEXT_LENGTH</span><span class="p">,</span>
-    <span class="n">sequence_length</span><span class="o">=</span><span class="n">SEQUENCE_LENGTH</span><span class="p">,</span>
+<span class="n">assembled_dummy_inputs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+    <span class="n">Generator</span><span class="o">.</span><span class="n">prepare_inputs</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">traceable_model</span><span class="p">,</span>
+        <span class="n">input_ids</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
+        <span class="n">attention_mask</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">SEQUENCE_LENGTH</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">),</span>
+        <span class="n">past_key_values</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">context_length</span><span class="o">=</span><span class="n">CONTEXT_LENGTH</span><span class="p">,</span>
+        <span class="n">sequence_length</span><span class="o">=</span><span class="n">SEQUENCE_LENGTH</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 <span class="p">)</span>
 
-<span class="c1"># Export to ONNX using LLM.get_backbone_input_names to produce the input naming</span>
-<span class="c1"># convention required by AdaScale (input_ids, attention_mask, position_ids,</span>
-<span class="c1"># past_key_0_in, past_value_0_in, ...)</span>
+<span class="n">layer_cache_descs</span> <span class="o">=</span> <span class="n">build_layer_cache_descriptors</span><span class="p">(</span><span class="n">hf_model</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span>
         <span class="n">traceable_model</span><span class="p">,</span>
         <span class="n">assembled_dummy_inputs</span><span class="p">,</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s2">&quot;model.onnx&quot;</span><span class="p">),</span>
-        <span class="n">input_names</span><span class="o">=</span><span class="n">LLM</span><span class="o">.</span><span class="n">get_backbone_input_names</span><span class="p">(</span><span class="n">build_layer_cache_descriptors</span><span class="p">(</span><span class="n">hf_model</span><span class="o">.</span><span class="n">config</span><span class="p">)),</span>
-        <span class="n">output_names</span><span class="o">=</span><span class="n">LLM</span><span class="o">.</span><span class="n">get_backbone_output_names</span><span class="p">(</span><span class="n">build_layer_cache_descriptors</span><span class="p">(</span><span class="n">hf_model</span><span class="o">.</span><span class="n">config</span><span class="p">)),</span>
+        <span class="n">input_names</span><span class="o">=</span><span class="n">LLM</span><span class="o">.</span><span class="n">get_backbone_input_names</span><span class="p">(</span><span class="n">layer_cache_descs</span><span class="p">),</span>
+        <span class="n">output_names</span><span class="o">=</span><span class="n">LLM</span><span class="o">.</span><span class="n">get_backbone_output_names</span><span class="p">(</span><span class="n">layer_cache_descs</span><span class="p">),</span>
         <span class="n">opset_version</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span>
         <span class="n">dynamo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
