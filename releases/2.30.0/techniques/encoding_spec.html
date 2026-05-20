@@ -190,7 +190,7 @@
 </a><div class="doc-versions" data-toggle="doc-versions" role="note" aria-label="versions">
 
   <span class="doc-current-version" data-toggle="doc-current-version">
-    Version: 2.30.0
+    Version: 2.31.0
   </span>
   <br>
   <span class="doc-other-versions" data-toggle="doc-other-versions">
@@ -261,7 +261,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/adascale.html">AdaScale</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/bn.html">Batch norm re-estimation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/omniquant.html">OmniQuant</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/autoquant.html">Automatic quantization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ptq_techniques/spinquant.html">SpinQuant</a></li>
 </ul>
 </li>
@@ -344,7 +343,7 @@ The resulting encoding file can be consumed by target runtimes such as QualcommÂ
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">output_dtype</span></code></p></td>
 <td><p>string</p></td>
 <td><p>Yes</p></td>
-<td><p>Data type of the quantized tensor. One of: <code class="docutils literal notranslate"><span class="pre">int2</span></code>, <code class="docutils literal notranslate"><span class="pre">uint2</span></code>, <code class="docutils literal notranslate"><span class="pre">int4</span></code>, <code class="docutils literal notranslate"><span class="pre">uint4</span></code>, <code class="docutils literal notranslate"><span class="pre">int8</span></code>, <code class="docutils literal notranslate"><span class="pre">uint8</span></code>, <code class="docutils literal notranslate"><span class="pre">int16</span></code>, <code class="docutils literal notranslate"><span class="pre">uint16</span></code>, <code class="docutils literal notranslate"><span class="pre">int32</span></code>, <code class="docutils literal notranslate"><span class="pre">uint32</span></code></p></td>
+<td><p>Data type of the quantized tensor. One of: <code class="docutils literal notranslate"><span class="pre">int2</span></code>, <code class="docutils literal notranslate"><span class="pre">uint2</span></code>, <code class="docutils literal notranslate"><span class="pre">int4</span></code>, <code class="docutils literal notranslate"><span class="pre">uint4</span></code>, <code class="docutils literal notranslate"><span class="pre">int8</span></code>, <code class="docutils literal notranslate"><span class="pre">uint8</span></code>, <code class="docutils literal notranslate"><span class="pre">int16</span></code>, <code class="docutils literal notranslate"><span class="pre">uint16</span></code>, <code class="docutils literal notranslate"><span class="pre">int32</span></code>, <code class="docutils literal notranslate"><span class="pre">float4e2m1</span></code>, <code class="docutils literal notranslate"><span class="pre">float8e4m3fn</span></code>, <code class="docutils literal notranslate"><span class="pre">float8e4m3fnuz</span></code>, <code class="docutils literal notranslate"><span class="pre">float8e5m2</span></code>, <code class="docutils literal notranslate"><span class="pre">float8e5m2fnuz</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">y_scale</span></code></p></td>
 <td><p>float or nested list of float</p></td>
@@ -620,7 +619,7 @@ Certain keys will only be present for certain quantization types, as indicated i
 </tr>
 <tr class="row-even"><td><p>bw</p></td>
 <td><p>uint8</p></td>
-<td><p>Encoding bw (&gt;=4 and &lt;= 32)</p></td>
+<td><p>Encoding bw (&gt;=2 and &lt;= 32)</p></td>
 <td><p>X</p></td>
 <td><p>X</p></td>
 <td><p>X</p></td>
@@ -650,7 +649,15 @@ Certain keys will only be present for certain quantization types, as indicated i
 <td><p>X (INT only)</p></td>
 <td><p>X</p></td>
 </tr>
-<tr class="row-even"><td><p>compressed_bw</p></td>
+<tr class="row-even"><td><p>zero_point_shift</p></td>
+<td><p>float32[]</p></td>
+<td><p>Flattened array of fractional zero point shifts for int2 quantization</p></td>
+<td><p>X (INT only)</p></td>
+<td><p>X (INT only)</p></td>
+<td><p>X (INT only)</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>compressed_bw</p></td>
 <td><p>uint8</p></td>
 <td><p>Compressed bw</p></td>
 <td></td>
@@ -658,7 +665,7 @@ Certain keys will only be present for certain quantization types, as indicated i
 <td></td>
 <td><p>X</p></td>
 </tr>
-<tr class="row-odd"><td><p>per_block_int_scale</p></td>
+<tr class="row-even"><td><p>per_block_int_scale</p></td>
 <td><p>uint16[]</p></td>
 <td><p>Flattened array of scales per block</p></td>
 <td></td>
